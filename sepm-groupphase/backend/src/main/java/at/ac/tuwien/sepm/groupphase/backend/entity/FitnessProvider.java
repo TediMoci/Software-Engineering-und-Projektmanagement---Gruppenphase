@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(name = "fitness_provider")
@@ -36,6 +37,9 @@ public class FitnessProvider {
     @Column(nullable = false, length = 100)
     @Size(max = 100)
     private String website = "No website given.";
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProviders")
+    private Set<Dude> dudes;
 
     public Long getId() {
         return id;

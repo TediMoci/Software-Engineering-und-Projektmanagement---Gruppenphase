@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 public class Dude {
@@ -51,6 +52,14 @@ public class Dude {
     @Min(1)
     private Double weight;
     // in kilograms
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "dude_fitness_provider_follows",
+        joinColumns = @JoinColumn(name = "dude_id"),
+        inverseJoinColumns = @JoinColumn(name = "fitness_provider_id")
+    )
+    private Set<FitnessProvider> fitnessProviders;
 
     public Long getId() {
         return id;
