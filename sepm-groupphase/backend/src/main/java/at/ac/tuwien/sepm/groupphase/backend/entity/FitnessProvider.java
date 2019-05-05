@@ -41,6 +41,9 @@ public class FitnessProvider {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProviders")
     private Set<Dude> dudes;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProvider")
+    private Set<Course> courses;
+
     public Long getId() {
         return id;
     }
@@ -97,6 +100,22 @@ public class FitnessProvider {
         this.website = website;
     }
 
+    public Set<Dude> getDudes() {
+        return dudes;
+    }
+
+    public void setDudes(Set<Dude> dudes) {
+        this.dudes = dudes;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
     public static FitnessProviderBuilder builder() {
         return new FitnessProviderBuilder();
     }
@@ -111,6 +130,8 @@ public class FitnessProvider {
             ", email='" + email + '\'' +
             ", phoneNumber='" + phoneNumber + '\'' +
             ", website='" + website + '\'' +
+            ", dudes=" + dudes +
+            ", courses=" + courses +
             '}';
     }
 
@@ -127,7 +148,9 @@ public class FitnessProvider {
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
-        return website != null ? website.equals(that.website) : that.website == null;
+        if (website != null ? !website.equals(that.website) : that.website != null) return false;
+        if (dudes != null ? !dudes.equals(that.dudes) : that.dudes != null) return false;
+        return courses != null ? courses.equals(that.courses) : that.courses == null;
 
     }
 
@@ -140,6 +163,8 @@ public class FitnessProvider {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (website != null ? website.hashCode() : 0);
+        result = 31 * result + (dudes != null ? dudes.hashCode() : 0);
+        result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
     }
 
@@ -151,6 +176,8 @@ public class FitnessProvider {
         private String email;
         private String phoneNumber;
         private String website;
+        private Set<Dude> dudes;
+        private Set<Course> courses;
 
         public FitnessProviderBuilder() {
         }
@@ -190,6 +217,16 @@ public class FitnessProvider {
             return this;
         }
 
+        public FitnessProviderBuilder dudes(Set<Dude> dudes) {
+            this.dudes = dudes;
+            return this;
+        }
+
+        public FitnessProviderBuilder courses(Set<Course> courses) {
+            this.courses = courses;
+            return this;
+        }
+
         public FitnessProvider build() {
             FitnessProvider fitnessProvider = new FitnessProvider();
             fitnessProvider.setId(id);
@@ -199,6 +236,8 @@ public class FitnessProvider {
             fitnessProvider.setEmail(email);
             fitnessProvider.setPhoneNumber(phoneNumber);
             fitnessProvider.setWebsite(website);
+            fitnessProvider.setDudes(dudes);
+            fitnessProvider.setCourses(courses);
             return fitnessProvider;
         }
     }

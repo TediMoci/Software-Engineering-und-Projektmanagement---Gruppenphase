@@ -61,6 +61,14 @@ public class Dude {
     )
     private Set<FitnessProvider> fitnessProviders;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "dude_course_bookmarks",
+        joinColumns = @JoinColumn(name = "dude_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses;
+
     public Long getId() {
         return id;
     }
@@ -141,6 +149,22 @@ public class Dude {
         this.weight = weight;
     }
 
+    public Set<FitnessProvider> getFitnessProviders() {
+        return fitnessProviders;
+    }
+
+    public void setFitnessProviders(Set<FitnessProvider> fitnessProviders) {
+        this.fitnessProviders = fitnessProviders;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
     public static DudeBuilder builder() {
         return new DudeBuilder();
     }
@@ -158,6 +182,8 @@ public class Dude {
             ", birthday=" + birthday +
             ", height=" + height +
             ", weight=" + weight +
+            ", fitnessProviders=" + fitnessProviders +
+            ", courses=" + courses +
             '}';
     }
 
@@ -178,7 +204,10 @@ public class Dude {
             return false;
         if (birthday != null ? !birthday.equals(dude.birthday) : dude.birthday != null) return false;
         if (height != null ? !height.equals(dude.height) : dude.height != null) return false;
-        return weight != null ? weight.equals(dude.weight) : dude.weight == null;
+        if (weight != null ? !weight.equals(dude.weight) : dude.weight != null) return false;
+        if (fitnessProviders != null ? !fitnessProviders.equals(dude.fitnessProviders) : dude.fitnessProviders != null)
+            return false;
+        return courses != null ? courses.equals(dude.courses) : dude.courses == null;
 
     }
 
@@ -194,6 +223,8 @@ public class Dude {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
+        result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
     }
 
@@ -208,6 +239,8 @@ public class Dude {
         private LocalDate birthday;
         private Double height;
         private Double weight;
+        private Set<FitnessProvider> fitnessProviders;
+        private Set<Course> courses;
 
         public DudeBuilder() {
         }
@@ -262,6 +295,16 @@ public class Dude {
             return this;
         }
 
+        public DudeBuilder fitnessProviders(Set<FitnessProvider> fitnessProviders) {
+            this.fitnessProviders = fitnessProviders;
+            return this;
+        }
+
+        public DudeBuilder courses(Set<Course> courses) {
+            this.courses = courses;
+            return this;
+        }
+
         public Dude build() {
             Dude dude = new Dude();
             dude.setId(id);
@@ -274,6 +317,8 @@ public class Dude {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
+            dude.setFitnessProviders(fitnessProviders);
+            dude.setCourses(courses);
             return dude;
         }
     }
