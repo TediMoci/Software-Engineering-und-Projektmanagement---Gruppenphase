@@ -1,73 +1,44 @@
-package at.ac.tuwien.sepm.groupphase.backend.entity;
+package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
-import java.util.Set;
 
-@Entity
-public class Dude {
+@ApiModel(value = "DudeDto", description = "A dto for dude entries via rest")
+public class DudeDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_dude_id")
-    @SequenceGenerator(name = "seq_dude_id", sequenceName = "seq_dude_id")
+    @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
-    @Column(nullable = false, length = 20)
-    @Size(min = 8, max = 20)
+    @ApiModelProperty(required = true, name = "Name of Dude")
     private String name;
 
-    @Column(nullable = false, length = 500)
-    @Size(max = 500)
+    @ApiModelProperty(name = "Self description of Dude")
     private String description = "No description given.";
 
-    @Column(nullable = false, length = 50)
-    @Size(max = 50)
+    @ApiModelProperty(required = true, name = "Email adress of Dude")
     private String email;
 
-    @Column(nullable = false)
+    @ApiModelProperty(required = true, name = "Sex of Dude: female (F), male (M) or other (O)")
     private Character sex;
-    // M = Male; F = Female; O = Other;
 
-    @Column(nullable = false)
-    @Min(1) @Max(3)
+    @ApiModelProperty(required = true, name = "System status of Dude: 1-3")
     private Integer status = 1;
-    // 1 = New Dude; 2 = Experienced Dude; 3 = Ancient Dude
 
-    @Column(nullable = false, name = "self_assessment")
-    @Min(1) @Max(3)
+    @ApiModelProperty(required = true, name = "Self assessment status of Dude")
     private Integer selfAssessment;
-    // 1 = Beginner; 2 = Advanced; 3 = Pro
 
-    @Column(nullable = false)
-    @Past
+    @ApiModelProperty(required = true, name = "Birthday of Dude")
     private LocalDate birthday;
 
-    @Column(nullable = false)
-    @Min(1)
+    @ApiModelProperty(required = true, name = "Height of Dude")
     private Double height;
-    // in centimeters
 
-    @Column(nullable = false)
-    @Min(1)
+    @ApiModelProperty(required = true, name = "Weight of Dude")
     private Double weight;
-    // in kilograms
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "dude_fitness_provider_follows",
-        joinColumns = @JoinColumn(name = "dude_id"),
-        inverseJoinColumns = @JoinColumn(name = "fitness_provider_id")
-    )
-    private Set<FitnessProvider> fitnessProviders;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "dude_course_bookmarks",
-        joinColumns = @JoinColumn(name = "dude_id"),
-        inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private Set<Course> courses;
+    // TODO: save fitness providers and courses
 
     public Long getId() {
         return id;
@@ -149,24 +120,9 @@ public class Dude {
         this.weight = weight;
     }
 
-    public Set<FitnessProvider> getFitnessProviders() {
-        return fitnessProviders;
-    }
 
-    public void setFitnessProviders(Set<FitnessProvider> fitnessProviders) {
-        this.fitnessProviders = fitnessProviders;
-    }
-
-    public Set<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
-    }
-
-    public static DudeBuilder builder() {
-        return new DudeBuilder();
+    public static DudeDtoBuilder builder() {
+        return new DudeDtoBuilder();
     }
 
     @Override
@@ -182,8 +138,6 @@ public class Dude {
             ", birthday=" + birthday +
             ", height=" + height +
             ", weight=" + weight +
-            ", fitnessProviders=" + fitnessProviders +
-            ", courses=" + courses +
             '}';
     }
 
@@ -194,20 +148,17 @@ public class Dude {
 
         Dude dude = (Dude) o;
 
-        if (id != null ? !id.equals(dude.id) : dude.id != null) return false;
-        if (name != null ? !name.equals(dude.name) : dude.name != null) return false;
-        if (description != null ? !description.equals(dude.description) : dude.description != null) return false;
-        if (email != null ? !email.equals(dude.email) : dude.email != null) return false;
-        if (sex != null ? !sex.equals(dude.sex) : dude.sex != null) return false;
-        if (status != null ? !status.equals(dude.status) : dude.status != null) return false;
-        if (selfAssessment != null ? !selfAssessment.equals(dude.selfAssessment) : dude.selfAssessment != null)
+        if (id != null ? !id.equals(dude.getId()) : dude.getId() != null) return false;
+        if (name != null ? !name.equals(dude.getName()) : dude.getName() != null) return false;
+        if (description != null ? !description.equals(dude.getDescription()) : dude.getDescription() != null) return false;
+        if (email != null ? !email.equals(dude.getEmail()) : dude.getEmail() != null) return false;
+        if (sex != null ? !sex.equals(dude.getSex()) : dude.getSex() != null) return false;
+        if (status != null ? !status.equals(dude.getStatus()) : dude.getStatus() != null) return false;
+        if (selfAssessment != null ? !selfAssessment.equals(dude.getSelfAssessment()) : dude.getSelfAssessment() != null)
             return false;
-        if (birthday != null ? !birthday.equals(dude.birthday) : dude.birthday != null) return false;
-        if (height != null ? !height.equals(dude.height) : dude.height != null) return false;
-        if (weight != null ? !weight.equals(dude.weight) : dude.weight != null) return false;
-        if (fitnessProviders != null ? !fitnessProviders.equals(dude.fitnessProviders) : dude.fitnessProviders != null)
-            return false;
-        return courses != null ? courses.equals(dude.courses) : dude.courses == null;
+        if (birthday != null ? !birthday.equals(dude.getBirthday()) : dude.getBirthday() != null) return false;
+        if (height != null ? !height.equals(dude.getHeight()) : dude.getHeight() != null) return false;
+        return (weight != null ? !weight.equals(dude.getWeight()) : dude.getWeight() != null);
 
     }
 
@@ -223,12 +174,10 @@ public class Dude {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
-        result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
-        result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
     }
 
-    public static final class DudeBuilder {
+    public static final class DudeDtoBuilder {
         private Long id;
         private String name;
         private String description;
@@ -239,74 +188,62 @@ public class Dude {
         private LocalDate birthday;
         private Double height;
         private Double weight;
-        private Set<FitnessProvider> fitnessProviders;
-        private Set<Course> courses;
 
-        public DudeBuilder() {
+        public DudeDtoBuilder() {
         }
 
-        public DudeBuilder id(Long id) {
+        public DudeDtoBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public DudeBuilder name(String name) {
+        public DudeDtoBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public DudeBuilder description(String description) {
+        public DudeDtoBuilder description(String description) {
             this.description = description;
             return this;
         }
 
-        public DudeBuilder email(String email) {
+        public DudeDtoBuilder email(String email) {
             this.email = email;
             return this;
         }
 
-        public DudeBuilder sex(Character sex) {
+        public DudeDtoBuilder sex(Character sex) {
             this.sex = sex;
             return this;
         }
 
-        public DudeBuilder status(Integer status) {
+        public DudeDtoBuilder status(Integer status) {
             this.status = status;
             return this;
         }
 
-        public DudeBuilder selfAssessment(Integer selfAssessment) {
+        public DudeDtoBuilder selfAssessment(Integer selfAssessment) {
             this.selfAssessment = selfAssessment;
             return this;
         }
 
-        public DudeBuilder birthday(LocalDate birthday) {
+        public DudeDtoBuilder birthday(LocalDate birthday) {
             this.birthday = birthday;
             return this;
         }
 
-        public DudeBuilder height(Double height) {
+        public DudeDtoBuilder height(Double height) {
             this.height = height;
             return this;
         }
 
-        public DudeBuilder weight(Double weight) {
+        public DudeDtoBuilder weight(Double weight) {
             this.weight = weight;
             return this;
         }
 
-        public DudeBuilder fitnessProviders(Set<FitnessProvider> fitnessProviders) {
-            this.fitnessProviders = fitnessProviders;
-            return this;
-        }
-
-        public DudeBuilder courses(Set<Course> courses) {
-            this.courses = courses;
-            return this;
-        }
-
-        public Dude build() {
-            Dude dude = new Dude();
+        public DudeDto build() {
+            DudeDto dude = new DudeDto();
             dude.setId(id);
             dude.setName(name);
             dude.setDescription(description);
@@ -317,10 +254,7 @@ public class Dude {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
-            dude.setFitnessProviders(fitnessProviders);
-            dude.setCourses(courses);
             return dude;
         }
     }
-
 }
