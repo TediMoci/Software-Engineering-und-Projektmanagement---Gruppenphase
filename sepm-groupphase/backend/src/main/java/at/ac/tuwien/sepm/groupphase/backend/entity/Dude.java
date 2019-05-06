@@ -22,6 +22,7 @@ public class Dude {
     private String description = "No description given.";
 
     @Column(nullable = false, length = 50)
+    @NotNull
     @Size(max = 50)
     private String email;
 

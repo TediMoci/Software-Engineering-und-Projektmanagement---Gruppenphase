@@ -32,7 +32,6 @@ public class DudeEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasRole('unregistered')")
     @ApiOperation(value = "Save a new Dude", authorizations = {@Authorization(value = "apiKey")})
     public DudeDto saveDude(@RequestBody DudeDto dudeDto) {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
