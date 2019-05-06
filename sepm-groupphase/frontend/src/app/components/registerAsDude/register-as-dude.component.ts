@@ -19,7 +19,7 @@ export class RegisterAsDudeComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required]],
-      sex: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
       selfAssessment: ['', [Validators.required]],
       birthday: ['', [Validators.required]],
       height: ['', [Validators.required]],
@@ -36,9 +36,9 @@ export class RegisterAsDudeComponent implements OnInit {
 
     if (this.registerForm.invalid) {
       console.log('input is invalid');
+      console.log(this.registerForm.get('gender').value);
       return;
     }
-
     this.router.navigate(['/login']);
   }
 }
