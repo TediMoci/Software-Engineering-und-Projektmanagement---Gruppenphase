@@ -13,4 +13,11 @@ public interface IDudeRepository extends JpaRepository<Dude, Long> {
      * @return
      */
      Dude save(Dude dude);
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+     Dude findByName(String name);
 }

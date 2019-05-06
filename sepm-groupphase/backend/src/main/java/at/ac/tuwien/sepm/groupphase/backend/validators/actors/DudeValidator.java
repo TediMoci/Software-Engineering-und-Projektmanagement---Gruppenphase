@@ -76,4 +76,18 @@ public class DudeValidator {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @throws ValidationException
+     */
+    public void validateName(String name) throws ValidationException {
+        if (name == null){
+            throw new ValidationException(name_is_null);
+        }
+        if (name.isBlank()){
+            throw new ValidationException(name_is_blank);
+        }
+    }
+
 }

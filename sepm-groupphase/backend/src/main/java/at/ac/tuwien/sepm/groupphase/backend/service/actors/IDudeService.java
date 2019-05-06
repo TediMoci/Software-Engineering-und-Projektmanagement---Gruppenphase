@@ -28,4 +28,12 @@ public interface IDudeService {
      * @return
      */
     Dude save(Dude dude) throws ServiceException;
+
+    /**
+     *
+     * @param name
+     * @return
+     * @throws ServiceException
+     */
+    Dude findByName(String name) throws ServiceException;
 }
