@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -27,8 +28,9 @@ public class FitnessProvider {
     private String description = "No description given.";
 
     @Column(nullable = false, length = 50)
+    @NotNull
     @Size(max = 50)
-    private String email = "No e-mail given.";
+    private String email;
 
     @Column(nullable = false, length = 30, name = "phone_number")
     @Size(max = 30)

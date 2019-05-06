@@ -71,7 +71,7 @@ public class DudeValidator {
         if (dude.getWeight() == null){
             throw new ValidationException(weight_is_null);
         }
-        if ((dude.getWeight() < 0.0) || (dude.getWeight() > 700.0)){
+        if ((dude.getWeight() < 1.0) || (dude.getWeight() > 700.0)){
             throw new ValidationException(invalid_weight);
         }
     }
