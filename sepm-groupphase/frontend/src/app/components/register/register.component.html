@@ -1,0 +1,26 @@
+<h2>Register</h2>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+  <div class="form-group">
+    <label for="username">User Name</label>
+    <input type="text" name="username" formControlName="username" class="form-control" id="username"
+           aria-describedby="usernameHelp" placeholder="Enter username">
+    <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
+      <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="text" name="username" formControlName="username" class="form-control" id="password"
+           aria-describedby="usernameHelp" placeholder="Enter password">
+    <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
+      <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your password is
+        required!
+      </small>
+    </div>
+  </div>
+
+</form>
