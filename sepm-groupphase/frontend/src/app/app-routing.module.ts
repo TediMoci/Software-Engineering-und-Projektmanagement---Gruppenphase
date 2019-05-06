@@ -9,7 +9,7 @@ import {MessageComponent} from './components/message/message.component';
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
-  { path: 'register', component: RegisterComponent },
+  {path: 'register', component: RegisterComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent}
 ];
 
