@@ -13,7 +13,7 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {Globals} from './global/globals';
-import {RegisterComponent} from './components/register/register.component';
+import {RegisterAsDudeComponent} from './components/registerAsDude/register-as-dude.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import {RegisterComponent} from './components/register/register.component';
     HomeComponent,
     LoginComponent,
     MessageComponent,
-    RegisterComponent
+    RegisterAsDudeComponent
   ],
   imports: [
     BrowserModule,

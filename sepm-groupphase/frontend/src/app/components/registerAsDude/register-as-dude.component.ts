@@ -1,39 +1,44 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {passwordCheck } from '../../validator/validator';
 import {AuthService} from '../../services/auth.service';
 import {AuthRegister} from '../../dtos/auth-register';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-register-as-dude',
+  templateUrl: './register-as-dude.component.html',
+  styleUrls: ['./register-as-dude.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterAsDudeComponent implements OnInit {
   registerForm: FormGroup;
-  success: boolean = false;
-  constructor( private formBuilder: FormBuilder) { }
+  submitted: boolean = false;
+  constructor( private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      passwordConfirmed: ['', [Validators.required, Validators.minLength(8)] ],
       email: ['', [Validators.required]],
       sex: ['', [Validators.required]],
       selfAssessment: ['', [Validators.required]],
       birthday: ['', [Validators.required]],
       height: ['', [Validators.required]],
-      weight: ['', [Validators.required]]
+      weight: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      passwordConfirmed: ['', Validators.required]
+    }, {
+      validator: passwordCheck('password', 'passwordConfirmed')
     });
   }
 
   registerUser() {
+    this.submitted = true;
 
     if (this.registerForm.invalid) {
+      console.log('input is invalid');
       return;
     }
 
-    this.success = true;
+    this.router.navigate(['/login']);
   }
 }

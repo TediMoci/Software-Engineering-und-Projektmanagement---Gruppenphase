@@ -1,12 +1,17 @@
 <h2>Register as Dude</h2>
-<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+
+  <div class="pt-3">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <span class="anchor" id="formRegister"></span>
+          <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
 
   <div class="form-group">
     <label for="name">Name</label>
     <input type="text" name="name" formControlName="name" class="form-control" id="name"
            aria-describedby="nameHelp" placeholder="Enter name">
-    <div *ngIf="success && registerForm.controls.name.errors" class="error">
-    <small class="form-text text-warning" *ngIf="registerForm.controls.name.errors.required">Your name is
+    <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
+    <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
       required!
     </small>
   </div>
@@ -16,11 +21,11 @@
     <label for="password">Password</label>
     <input type="password" name="password" formControlName="password" class="form-control" id="password"
            placeholder="Enter password">
-    <div *ngIf="success && registerForm.controls.password.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.required">Your password is
+    <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
         required!
       </small>
-      <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.minlength">Your password
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.minlength">Your password
         must be at least 8 characters long!
       </small>
     </div>
@@ -30,12 +35,11 @@
     <label for="passwordConfirmed">Password Confirmed</label>
     <input type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
            placeholder="Enter password">
-    <div *ngIf="success && registerForm.controls.passwordConfirmed.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.passwordConfirmed.errors.required">Your password is
+    <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
+      <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
         required!
       </small>
-      <small class="form-text text-warning" *ngIf="registerForm.controls.passwordConfirmed.errors.minlength">Your password
-        must be at least 8 characters long!
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
       </small>
     </div>
   </div>
@@ -44,8 +48,8 @@
     <label for="email">Email</label>
     <input type="text" name="email" formControlName="email" class="form-control" id="email"
            aria-describedby="emailHelp" placeholder="Enter email">
-    <div *ngIf="success && registerForm.controls.email.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.email.errors.required">Your email is
+    <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
         required!
       </small>
     </div>
@@ -55,8 +59,8 @@
     <label for="sex">Sex</label>
     <input type="text" name="sex" formControlName="sex" class="form-control" id="sex"
            aria-describedby="sexHelp" placeholder="Enter sex">
-    <div *ngIf="success && registerForm.controls.sex.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.sex.errors.required">Your sex is
+    <div *ngIf="submitted && !!registerForm.controls.sex.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.sex.errors.required">Your sex is
         required!
       </small>
     </div>
@@ -66,8 +70,8 @@
     <label for="selfAssessment">SelfAssessment</label>
     <input type="text" name="selfAssessment" formControlName="selfAssessment" class="form-control" id="selfAssessment"
            aria-describedby="selfAssessmentHelp" placeholder="Enter selfAssessment">
-    <div *ngIf="success && registerForm.controls.selfAssessment.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.selfAssessment.errors.required">Your selfAssessment is
+    <div *ngIf="submitted && !!registerForm.controls.selfAssessment.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.selfAssessment.errors.required">Your selfAssessment is
         required!
       </small>
     </div>
@@ -77,8 +81,8 @@
     <label for="birthday">Birthday</label>
     <input type="text" name="birthday" formControlName="birthday" class="form-control" id="birthday"
            aria-describedby="birthdayHelp" placeholder="Enter birthday">
-    <div *ngIf="success && registerForm.controls.birthday.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.birthday.errors.required">Your birthday is
+    <div *ngIf="submitted && !!registerForm.controls.birthday.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.birthday.errors.required">Your birthday is
         required!
       </small>
     </div>
@@ -88,8 +92,8 @@
     <label for="name">Height</label>
     <input type="text" name="height" formControlName="height" class="form-control" id="height"
            aria-describedby="heightHelp" placeholder="Enter height">
-    <div *ngIf="success && registerForm.controls.height.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.height.errors.required">Your height is
+    <div *ngIf="submitted && !!registerForm.controls.height.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.height.errors.required">Your height is
         required!
       </small>
     </div>
@@ -99,8 +103,8 @@
     <label for="weight">Weight</label>
     <input type="text" name="weight" formControlName="weight" class="form-control" id="weight"
            aria-describedby="weightHelp" placeholder="Enter weight">
-    <div *ngIf="success && registerForm.controls.weight.errors" class="error">
-      <small class="form-text text-warning" *ngIf="registerForm.controls.weight.errors.required">Your weight is
+    <div *ngIf="submitted && !!registerForm.controls.weight.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.weight.errors.required">Your weight is
         required!
       </small>
     </div>
@@ -108,5 +112,9 @@
 
 
   <button type="button" (click)="registerUser()" class="btn btn-success float-right">Register</button>
+            <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
+          </form>
 
-</form>
+      </div>
+    </div>
+  </div>
