@@ -17,6 +17,10 @@ public class Dude {
     @Size(min = 8, max = 20)
     private String name;
 
+    @Column(nullable = false)
+    @Size(min = 8)
+    private String password;
+
     @Column(nullable = false, length = 500)
     @Size(max = 500)
     private String description = "No description given.";
@@ -85,6 +89,10 @@ public class Dude {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getPassword(){ return password; }
+
+    public void setPassword(String password){ this.password = password; }
 
     public String getDescription() {
         return description;
@@ -175,6 +183,7 @@ public class Dude {
         return "Dude{" +
             "id=" + id +
             ", name='" + name + '\'' +
+            ", password='" + password + '\'' +
             ", description='" + description + '\'' +
             ", email='" + email + '\'' +
             ", sex=" + sex +
@@ -197,6 +206,7 @@ public class Dude {
 
         if (id != null ? !id.equals(dude.id) : dude.id != null) return false;
         if (name != null ? !name.equals(dude.name) : dude.name != null) return false;
+        if (password != null ? !password.equals(dude.password) : dude.password != null) return false;
         if (description != null ? !description.equals(dude.description) : dude.description != null) return false;
         if (email != null ? !email.equals(dude.email) : dude.email != null) return false;
         if (sex != null ? !sex.equals(dude.sex) : dude.sex != null) return false;
@@ -216,6 +226,7 @@ public class Dude {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
@@ -232,6 +243,7 @@ public class Dude {
     public static final class DudeBuilder {
         private Long id;
         private String name;
+        private String password;
         private String description;
         private String email;
         private Character sex;
@@ -253,6 +265,11 @@ public class Dude {
 
         public DudeBuilder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public DudeBuilder password(String password){
+            this.password = password;
             return this;
         }
 
@@ -310,6 +327,7 @@ public class Dude {
             Dude dude = new Dude();
             dude.setId(id);
             dude.setName(name);
+            dude.setPassword(password);
             dude.setDescription(description);
             dude.setEmail(email);
             dude.setSex(sex);

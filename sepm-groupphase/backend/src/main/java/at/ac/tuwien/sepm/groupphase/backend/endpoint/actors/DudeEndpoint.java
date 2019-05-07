@@ -31,12 +31,11 @@ public class DudeEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "Save a new Dude", authorizations = {@Authorization(value = "apiKey")})
+   // @ApiOperation(value = "Save a new Dude", authorizations = {@Authorization(value = "apiKey")})
     public DudeDto saveDude(@RequestBody DudeDto dudeDto) {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
         try {
-            dude = iDudeService.save(dude);
-            return dudeMapper.dudeToDudeDto(dude);
+            return dudeMapper.dudeToDudeDto(iDudeService.save(dude));
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during saving Dude: " + e.getMessage(), e);
         }

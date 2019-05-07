@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,6 +15,9 @@ public class DudeDto {
 
     @ApiModelProperty(required = true, name = "Name of Dude")
     private String name;
+
+    @ApiModelProperty(required = true, name = "Password of Dude")
+    private String password;
 
     @ApiModelProperty(name = "Self description of Dude")
     private String description = "No description given.";
@@ -62,6 +64,10 @@ public class DudeDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getPassword(){ return password; }
+
+    public void setPassword(String password){ this.password = password; }
 
     public String getDescription() {
         return description;
@@ -152,6 +158,7 @@ public class DudeDto {
         return "Dude{" +
             "id=" + id +
             ", name='" + name + '\'' +
+            ", password='" + password + '\'' +
             ", description='" + description + '\'' +
             ", email='" + email + '\'' +
             ", sex=" + sex +
@@ -174,6 +181,7 @@ public class DudeDto {
 
         if (id != null ? !id.equals(dude.id) : dude.id != null) return false;
         if (name != null ? !name.equals(dude.name) : dude.name != null) return false;
+        if (password != null ? !password.equals(dude.password) : dude.password != null) return false;
         if (description != null ? !description.equals(dude.description) : dude.description != null) return false;
         if (email != null ? !email.equals(dude.email) : dude.email != null) return false;
         if (sex != null ? !sex.equals(dude.sex) : dude.sex != null) return false;
@@ -193,6 +201,7 @@ public class DudeDto {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
@@ -209,6 +218,7 @@ public class DudeDto {
     public static final class DudeDtoBuilder {
         private Long id;
         private String name;
+        private String password;
         private String description;
         private String email;
         private String sex;
@@ -230,6 +240,11 @@ public class DudeDto {
 
         public DudeDtoBuilder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public DudeDtoBuilder password(String password){
+            this.password = password;
             return this;
         }
 
@@ -287,6 +302,7 @@ public class DudeDto {
             DudeDto dude = new DudeDto();
             dude.setId(id);
             dude.setName(name);
+            dude.setPassword(password);
             dude.setDescription(description);
             dude.setEmail(email);
             dude.setSex(sex);

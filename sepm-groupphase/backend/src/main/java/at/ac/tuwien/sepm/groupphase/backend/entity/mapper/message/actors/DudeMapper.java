@@ -17,6 +17,7 @@ public class DudeMapper {
         Dude.DudeBuilder builder = new Dude.DudeBuilder();
         builder.id(dudedto.getId());
         builder.name(dudedto.getName());
+        builder.password(dudedto.getPassword());
         builder.description(dudedto.getDescription());
         builder.email(dudedto.getEmail());
         if (dudedto.getSex().equals("Male")){
@@ -47,6 +48,7 @@ public class DudeMapper {
         DudeDto.DudeDtoBuilder builder = new DudeDto.DudeDtoBuilder();
         builder.id(dude.getId());
         builder.name(dude.getName());
+        builder.password(dude.getPassword());
         builder.description(dude.getDescription());
         builder.email(dude.getEmail());
         if (dude.getSex().equals('M')){
