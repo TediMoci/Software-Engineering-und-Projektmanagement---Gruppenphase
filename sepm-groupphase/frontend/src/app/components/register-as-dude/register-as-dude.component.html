@@ -56,25 +56,25 @@
   </div>
 
   <div class="form-group">
-    <span class="gender">Gender</span>
+    <span class="sex">Gender</span>
     <div class="gap_space">
     <div class= "custom-control custom-radio custom-control-inline">
-      <input id="male" type="radio" class="custom-control-input" value="male" name="gender" formControlName="gender">
+      <input id="male" type="radio" class="custom-control-input" value="Male" name="sex" formControlName="sex">
       <label class="custom-control-label" for="male">Male</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input id="female" type="radio" class="custom-control-input" value="female" name="gender" formControlName="gender">
+      <input id="female" type="radio" class="custom-control-input" value="Female" name="sex" formControlName="sex">
       <label class="custom-control-label" for="female">Female</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input id="others" type="radio" class="custom-control-input" value="others" name="gender" formControlName="gender">
+      <input id="others" type="radio" class="custom-control-input" value="Others" name="sex" formControlName="sex">
       <label class="custom-control-label" for="others">Other</label>
     </div>
 
-    <div *ngIf="submitted && !!registerForm.controls.gender.errors" class="error">
-      <small class="form-text text-warning" *ngIf="!!registerForm.controls.gender.errors.required">Your gender is
+    <div *ngIf="submitted && !!registerForm.controls.sex.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.sex.errors.required">Your gender is
         required!
       </small>
     </div>
@@ -85,17 +85,17 @@
     <span class="selfAssessment">Self-assessment, bro!!</span>
     <div class="gap_space">
     <div class= "custom-control custom-radio custom-control-inline">
-      <input id="beginner" type="radio" class="custom-control-input" value="beginner" name="selfAssessment" formControlName="selfAssessment">
+      <input id="beginner" type="radio" class="custom-control-input" value= 1 name="selfAssessment" formControlName="selfAssessment">
       <label class="custom-control-label" for="beginner">Beginner</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input id="advanced" type="radio" class="custom-control-input" value="advanced" name="selfAssessment" formControlName="selfAssessment">
+      <input id="advanced" type="radio" class="custom-control-input" value= 2 name="selfAssessment" formControlName="selfAssessment">
       <label class="custom-control-label" for="advanced">Advanced</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input id="pro" type="radio" class="custom-control-input" value="pro" name="selfAssessment" formControlName="selfAssessment">
+      <input id="pro" type="radio" class="custom-control-input" value= 3 name="selfAssessment" formControlName="selfAssessment">
       <label class="custom-control-label" for="pro">Pro</label>
     </div>
     <div *ngIf="submitted && !!registerForm.controls.selfAssessment.errors" class="error">
