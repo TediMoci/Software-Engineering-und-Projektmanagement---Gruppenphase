@@ -44,12 +44,14 @@
               </div>
             </div>
 
-
-            <div class="form-group">
-              <button type="button" routerLink="/register-as-dude" class="btn btn-link">Register as Dude</button>
+            <div class="registration">
+            <button type="button" routerLink="/register-as-dude" class="btn btn-link">Register as Dude</button>
             </div>
 
-            <button type="button" (click)="loginUser()" class="btn btn-success float-right">Login</button>
+            <div class="registration">
+              <button type="button" routerLink="/register-as-fitness-provider" class="btn btn-link">Register as Fitness Provider</button>
+              <button type="button" (click)="loginUser()" class="btn btn-success float-right">Login</button>
+            </div>
 
           </form>
         </div>

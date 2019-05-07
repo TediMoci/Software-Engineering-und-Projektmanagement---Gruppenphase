@@ -1,4 +1,4 @@
-<h2>Register as Dude</h2>
+<h3 class="registerTitle">Register as Dude</h3>
 
   <div class="pt-3">
     <div class="row">
@@ -14,7 +14,7 @@
     <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
       required!
     </small>
-  </div>
+    </div>
   </div>
 
   <div class="form-group">
@@ -99,7 +99,7 @@
       <label class="custom-control-label" for="pro">Pro</label>
     </div>
     <div *ngIf="submitted && !!registerForm.controls.selfAssessment.errors" class="error">
-      <small class="form-text text-warning" *ngIf="!!registerForm.controls.selfAssessment.errors.required">Your selfAssessment is
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.selfAssessment.errors.required">Your self-assessment is
         required!
       </small>
     </div>
@@ -140,7 +140,7 @@
   </div>
 
 
-  <button type="button" (click)="registerUser()" class="btn btn-success float-right">Register</button>
+  <button type="button" (click)="registerUser()" class="btn btn-success float-right">Submit</button>
             <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
           </form>
 

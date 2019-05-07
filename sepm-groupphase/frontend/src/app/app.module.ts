@@ -14,8 +14,9 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {Globals} from './global/globals';
-import {RegisterAsDudeComponent} from './components/registerAsDude/register-as-dude.component';
+import {RegisterAsDudeComponent} from './components/register-as-dude/register-as-dude.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegisterAsFitnessProviderComponent } from './components/register-as-fitness-provider/register-as-fitness-provider.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HomeComponent,
     LoginComponent,
     MessageComponent,
-    RegisterAsDudeComponent
+    RegisterAsDudeComponent,
+    RegisterAsFitnessProviderComponent
   ],
   imports: [
     BrowserModule,

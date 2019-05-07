@@ -5,3 +5,9 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.registerTitle{
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
