@@ -65,4 +65,21 @@ public class DudeService implements IDudeService {
 
         return iDudeRepository.save(dude);
     }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @throws ServiceException
+     */
+    @Override
+    public Dude findByName(String name) throws ServiceException {
+        try {
+            dudeValidator.validateName(name);
+        } catch (ValidationException e){
+            throw new ServiceException(e.getMessage());
+        }
+
+        return iDudeRepository.findByName(name);
+    }
 }

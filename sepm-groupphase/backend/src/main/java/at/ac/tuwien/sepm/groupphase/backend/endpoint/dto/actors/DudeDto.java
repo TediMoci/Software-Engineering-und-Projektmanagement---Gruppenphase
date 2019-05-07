@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
+import java.util.Set;
 
 @ApiModel(value = "DudeDto", description = "A dto for dude entries via rest")
 public class DudeDto {
@@ -37,6 +40,12 @@ public class DudeDto {
 
     @ApiModelProperty(required = true, name = "Weight of Dude")
     private Double weight;
+
+    @ApiModelProperty(name = "FitnessProviders the Dude follows")
+    private Set<FitnessProvider> fitnessProviders;
+
+    @ApiModelProperty(name = "Courses the Dude takes")
+    private Set<Course> courses;
 
     public Long getId() {
         return id;
@@ -118,6 +127,21 @@ public class DudeDto {
         this.weight = weight;
     }
 
+    public Set<FitnessProvider> getFitnessProviders() {
+        return fitnessProviders;
+    }
+
+    public void setFitnessProviders(Set<FitnessProvider> fitnessProviders) {
+        this.fitnessProviders = fitnessProviders;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
 
     public static DudeDtoBuilder builder() {
         return new DudeDtoBuilder();
@@ -136,6 +160,8 @@ public class DudeDto {
             ", birthday=" + birthday +
             ", height=" + height +
             ", weight=" + weight +
+            ", fitnessProviders=" + fitnessProviders +
+            ", courses=" + courses +
             '}';
     }
 
@@ -144,19 +170,22 @@ public class DudeDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Dude dude = (Dude) o;
+        DudeDto dude = (DudeDto) o;
 
-        if (id != null ? !id.equals(dude.getId()) : dude.getId() != null) return false;
-        if (name != null ? !name.equals(dude.getName()) : dude.getName() != null) return false;
-        if (description != null ? !description.equals(dude.getDescription()) : dude.getDescription() != null) return false;
-        if (email != null ? !email.equals(dude.getEmail()) : dude.getEmail() != null) return false;
-        if (sex != null ? !sex.equals(dude.getSex()) : dude.getSex() != null) return false;
-        if (status != null ? !status.equals(dude.getStatus()) : dude.getStatus() != null) return false;
-        if (selfAssessment != null ? !selfAssessment.equals(dude.getSelfAssessment()) : dude.getSelfAssessment() != null)
+        if (id != null ? !id.equals(dude.id) : dude.id != null) return false;
+        if (name != null ? !name.equals(dude.name) : dude.name != null) return false;
+        if (description != null ? !description.equals(dude.description) : dude.description != null) return false;
+        if (email != null ? !email.equals(dude.email) : dude.email != null) return false;
+        if (sex != null ? !sex.equals(dude.sex) : dude.sex != null) return false;
+        if (status != null ? !status.equals(dude.status) : dude.status != null) return false;
+        if (selfAssessment != null ? !selfAssessment.equals(dude.selfAssessment) : dude.selfAssessment != null)
             return false;
-        if (birthday != null ? !birthday.equals(dude.getBirthday()) : dude.getBirthday() != null) return false;
-        if (height != null ? !height.equals(dude.getHeight()) : dude.getHeight() != null) return false;
-        return (weight != null ? !weight.equals(dude.getWeight()) : dude.getWeight() != null);
+        if (birthday != null ? !birthday.equals(dude.birthday) : dude.birthday != null) return false;
+        if (height != null ? !height.equals(dude.height) : dude.height != null) return false;
+        if (weight != null ? !weight.equals(dude.weight) : dude.weight != null) return false;
+        if (fitnessProviders != null ? !fitnessProviders.equals(dude.fitnessProviders) : dude.fitnessProviders != null)
+            return false;
+        return courses != null ? courses.equals(dude.courses) : dude.courses == null;
 
     }
 
@@ -172,6 +201,8 @@ public class DudeDto {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
+        result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
     }
 
@@ -186,6 +217,8 @@ public class DudeDto {
         private LocalDate birthday;
         private Double height;
         private Double weight;
+        private Set<FitnessProvider> fitnessProviders;
+        private Set<Course> courses;
 
         public DudeDtoBuilder() {
         }
@@ -240,6 +273,16 @@ public class DudeDto {
             return this;
         }
 
+        public DudeDtoBuilder fitnessProviders(Set<FitnessProvider> fitnessProviders) {
+            this.fitnessProviders = fitnessProviders;
+            return this;
+        }
+
+        public DudeDtoBuilder courses(Set<Course> courses) {
+            this.courses = courses;
+            return this;
+        }
+
         public DudeDto build() {
             DudeDto dude = new DudeDto();
             dude.setId(id);
@@ -252,6 +295,8 @@ public class DudeDto {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
+            dude.setFitnessProviders(fitnessProviders);
+            dude.setCourses(courses);
             return dude;
         }
     }
