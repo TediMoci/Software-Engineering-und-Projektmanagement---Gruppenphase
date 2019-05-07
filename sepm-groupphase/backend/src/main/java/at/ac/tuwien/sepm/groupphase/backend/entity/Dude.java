@@ -14,7 +14,7 @@ public class Dude {
     private Long id;
 
     @Column(nullable = false, length = 20)
-    @Size(min = 8, max = 20)
+    @Size(min = 1, max = 50)
     private String name;
 
     @Column(nullable = false)
