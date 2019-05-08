@@ -2,6 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import { NgKnifeModule } from 'ng-knife';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -13,6 +14,9 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {Globals} from './global/globals';
+import {RegisterAsDudeComponent} from './components/register-as-dude/register-as-dude.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegisterAsFitnessProviderComponent } from './components/register-as-fitness-provider/register-as-fitness-provider.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +26,8 @@ import {Globals} from './global/globals';
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    RegisterAsDudeComponent,
+    RegisterAsFitnessProviderComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +35,9 @@ import {Globals} from './global/globals';
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    NgKnifeModule
   ],
   providers: [httpInterceptorProviders, Globals],
   bootstrap: [AppComponent]

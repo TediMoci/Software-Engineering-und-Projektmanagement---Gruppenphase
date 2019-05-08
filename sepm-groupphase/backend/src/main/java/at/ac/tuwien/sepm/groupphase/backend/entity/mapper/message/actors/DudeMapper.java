@@ -5,15 +5,38 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DudeMapper {
+public class DudeMapper implements IDudeMapper{
 
     /**
      *
      * @param dudedto
      * @return
      */
+    @Override
     public Dude dudeDtoToDude(DudeDto dudedto){
-        return new Dude();
+
+        Dude.DudeBuilder builder = new Dude.DudeBuilder();
+        builder.id(dudedto.getId());
+        builder.name(dudedto.getName());
+        builder.password(dudedto.getPassword());
+        builder.description(dudedto.getDescription());
+        builder.email(dudedto.getEmail());
+        if (dudedto.getSex().equals("Male")){
+            builder.sex('M');
+        } else if (dudedto.getSex().equals("Female")){
+            builder.sex('F');
+        } else {
+            builder.sex('O');
+        }
+        builder.status(dudedto.getStatus());
+        builder.selfAssessment(dudedto.getSelfAssessment());
+        builder.birthday(dudedto.getBirthday());
+        builder.height(dudedto.getHeight());
+        builder.weight(dudedto.getWeight());
+        builder.fitnessProviders(null);
+        builder.courses(null);
+
+        return builder.build();
     }
 
     /**
@@ -21,7 +44,30 @@ public class DudeMapper {
      * @param dude
      * @return
      */
+    @Override
     public DudeDto dudeToDudeDto(Dude dude){
-        return new DudeDto();
+
+        DudeDto.DudeDtoBuilder builder = new DudeDto.DudeDtoBuilder();
+        builder.id(dude.getId());
+        builder.name(dude.getName());
+        builder.password(dude.getPassword());
+        builder.description(dude.getDescription());
+        builder.email(dude.getEmail());
+        if (dude.getSex().equals('M')){
+            builder.sex("Male");
+        } else if (dude.getSex().equals('F')){
+            builder.sex("Female");
+        } else {
+            builder.sex("Other");
+        }
+        builder.status(dude.getStatus());
+        builder.selfAssessment(dude.getSelfAssessment());
+        builder.birthday(dude.getBirthday());
+        builder.height(dude.getHeight());
+        builder.weight(dude.getWeight());
+        builder.fitnessProviders(null);
+        builder.courses(null);
+
+        return builder.build();
     }
 }

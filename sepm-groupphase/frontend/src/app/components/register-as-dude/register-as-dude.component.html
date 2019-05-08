@@ -1,0 +1,149 @@
+<h3 class="registerTitle">Register as Dude</h3>
+
+  <div class="pt-3">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <span class="anchor" id="formRegister"></span>
+          <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" name="name" formControlName="name" class="form-control" id="name"
+           aria-describedby="nameHelp" placeholder="Enter name">
+    <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
+    <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
+      required!
+    </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" name="password" formControlName="password" class="form-control" id="password"
+           placeholder="Enter password">
+    <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
+        required!
+      </small>
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.minlength">Your password
+        must be at least 8 characters long!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="passwordConfirmed">Password Confirmed</label>
+    <input type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
+           placeholder="Enter password">
+    <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
+      <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
+        required!
+      </small>
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" name="email" formControlName="email" class="form-control" id="email"
+           aria-describedby="emailHelp" placeholder="Enter email">
+    <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <span class="sex">Gender</span>
+    <div class="gap_space">
+    <div class= "custom-control custom-radio custom-control-inline">
+      <input id="male" type="radio" class="custom-control-input" value="Male" name="sex" formControlName="sex">
+      <label class="custom-control-label" for="male">Male</label>
+    </div>
+
+    <div class="custom-control custom-radio custom-control-inline">
+      <input id="female" type="radio" class="custom-control-input" value="Female" name="sex" formControlName="sex">
+      <label class="custom-control-label" for="female">Female</label>
+    </div>
+
+    <div class="custom-control custom-radio custom-control-inline">
+      <input id="others" type="radio" class="custom-control-input" value="Others" name="sex" formControlName="sex">
+      <label class="custom-control-label" for="others">Other</label>
+    </div>
+
+    <div *ngIf="submitted && !!registerForm.controls.sex.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.sex.errors.required">Your gender is
+        required!
+      </small>
+    </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <span class="selfAssessment">Self-assessment, bro!!</span>
+    <div class="gap_space">
+    <div class= "custom-control custom-radio custom-control-inline">
+      <input id="beginner" type="radio" class="custom-control-input" value= 1 name="selfAssessment" formControlName="selfAssessment">
+      <label class="custom-control-label" for="beginner">Beginner</label>
+    </div>
+
+    <div class="custom-control custom-radio custom-control-inline">
+      <input id="advanced" type="radio" class="custom-control-input" value= 2 name="selfAssessment" formControlName="selfAssessment">
+      <label class="custom-control-label" for="advanced">Advanced</label>
+    </div>
+
+    <div class="custom-control custom-radio custom-control-inline">
+      <input id="pro" type="radio" class="custom-control-input" value= 3 name="selfAssessment" formControlName="selfAssessment">
+      <label class="custom-control-label" for="pro">Pro</label>
+    </div>
+    <div *ngIf="submitted && !!registerForm.controls.selfAssessment.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.selfAssessment.errors.required">Your self-assessment is
+        required!
+      </small>
+    </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="birthday">Birthday</label>
+    <input type="date" name="birthday" formControlName="birthday" class="form-control" id="birthday"
+           aria-describedby="birthdayHelp" placeholder="yyyy-MM-dd">
+    <div *ngIf="submitted && !!registerForm.controls.birthday.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.birthday.errors.required">Your birthday is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="name">Height in cm</label>
+    <input knifeOnlyNumbers type="text" maxlength="3" formControlName="height" class="form-control" id="height"
+           aria-describedby="heightHelp" placeholder="Enter height">
+    <div *ngIf="submitted && !!registerForm.controls.height.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.height.errors.required">Your height is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="weight">Weight in kg</label>
+    <input knifeOnlyNumbers type="text" maxlength="3" name="weight" formControlName="weight" class="form-control" id="weight"
+           aria-describedby="weightHelp" placeholder="Enter weight">
+    <div *ngIf="submitted && !!registerForm.controls.weight.errors" class="error">
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.weight.errors.required">Your weight is
+        required!
+      </small>
+    </div>
+  </div>
+
+
+  <button type="button" (click)="registerUser()" class="btn btn-success float-right">Submit</button>
+            <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
+          </form>
+
+      </div>
+    </div>
+  </div>

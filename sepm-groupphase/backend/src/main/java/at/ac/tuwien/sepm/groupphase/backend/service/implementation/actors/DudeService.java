@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
@@ -16,11 +17,13 @@ public class DudeService implements IDudeService {
 
     private final IDudeRepository iDudeRepository;
     private final DudeValidator dudeValidator;
+    private final IDudeMapper dudeMapper;
 
     @Autowired
-    public DudeService(IDudeRepository iDudeRepository, DudeValidator dudeValidator) {
+    public DudeService(IDudeRepository iDudeRepository, DudeValidator dudeValidator, IDudeMapper dudeMapper) {
         this.iDudeRepository = iDudeRepository;
         this.dudeValidator = dudeValidator;
+        this.dudeMapper = dudeMapper;
     }
 
     // TODO: refresh age and bmi calculation upon login; apply age/bmi calculation automatically after registration
@@ -64,5 +67,43 @@ public class DudeService implements IDudeService {
         int age = calculateAge(dude.getBirthday());
 
         return iDudeRepository.save(dude);
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @throws ServiceException
+     */
+    @Override
+    public Dude findByName(String name) throws ServiceException {
+        try {
+            dudeValidator.validateName(name);
+        } catch (ValidationException e){
+            throw new ServiceException(e.getMessage());
+        }
+
+        return iDudeRepository.findByName(name);
+    }
+
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     * @throws ServiceException
+     */
+    @Override
+    public Dude findByNameAndPassword(String name, String password) throws ServiceException {
+        try {
+            dudeValidator.validateNameAndPassword(name, password);
+        } catch (ValidationException e){
+            throw new ServiceException(e.getMessage());
+        }
+
+        Dude dude = iDudeRepository.findByNameAndPassword(name, password);
+        dude.setPassword("XXXXXXXX");
+
+        return dude;
     }
 }
