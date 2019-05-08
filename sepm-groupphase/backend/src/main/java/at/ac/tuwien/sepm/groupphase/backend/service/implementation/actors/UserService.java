@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IUserService;
@@ -14,6 +15,21 @@ public class UserService implements IUserService {
     public UserService(IFitnessProviderRepository iFitnessProviderRepository, IDudeRepository iDudeRepository) {
         this.iFitnessProviderRepository = iFitnessProviderRepository;
         this.iDudeRepository = iDudeRepository;
+    }
+
+    public int nameTaken(String name) throws ServiceException {
+
+        /*
+        if (iFitnessProviderRepository.findByName(name) != null){
+            return 0;
+        } else
+         */
+         if (iDudeRepository.findByName(name) != null){
+            return 1;
+        } else {
+            return 2;
+        }
+
     }
 
 }
