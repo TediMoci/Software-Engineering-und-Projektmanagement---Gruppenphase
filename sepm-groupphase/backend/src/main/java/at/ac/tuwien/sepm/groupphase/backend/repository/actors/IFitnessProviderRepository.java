@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IFitnessProviderRepository extends JpaRepository<FitnessProvider, Long> {
+    FitnessProvider save(FitnessProvider fitnessProvider);
 }

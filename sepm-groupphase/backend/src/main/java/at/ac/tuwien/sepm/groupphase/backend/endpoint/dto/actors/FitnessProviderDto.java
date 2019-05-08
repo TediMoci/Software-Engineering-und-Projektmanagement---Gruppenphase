@@ -124,5 +124,58 @@ public class FitnessProviderDto {
         return result;
     }
 
-    //todo Builder methods
+    public static final class FitnessProviderDtoBuilder {
+        private Long id;
+        private String name;
+        private String address;
+        private String description;
+        private String email;
+        private String phoneNumber;
+        private String website;
+
+        public FitnessProviderDtoBuilder(){
+
+        }
+
+        public FitnessProviderDtoBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+        public FitnessProviderDtoBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+        public FitnessProviderDtoBuilder address(String address) {
+            this.address = address;
+            return this;
+        }
+        public FitnessProviderDtoBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+        public FitnessProviderDtoBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+        public FitnessProviderDtoBuilder website(String website) {
+            this.website = website;
+            return this;
+        }
+        public FitnessProviderDtoBuilder phoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+        public FitnessProviderDto build() {
+            FitnessProviderDto fitnessProviderDto = new FitnessProviderDto();
+            fitnessProviderDto.setId(id);
+            fitnessProviderDto.setName(name);
+            fitnessProviderDto.setAddress(address);
+            fitnessProviderDto.setDescription(description);
+            fitnessProviderDto.setEmail(email);
+            fitnessProviderDto.setPhoneNumber(phoneNumber);
+            fitnessProviderDto.setWebsite(website);
+
+            return fitnessProviderDto;
+        }
+    }
 }
