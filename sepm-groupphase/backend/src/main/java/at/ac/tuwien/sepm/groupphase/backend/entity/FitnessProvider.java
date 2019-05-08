@@ -16,7 +16,7 @@ public class FitnessProvider {
     private Long id;
 
     @Column(nullable = false, length = 40)
-    @Size(min = 8, max = 40)
+    @Size(min = 1, max = 50)
     private String name;
 
     @Column(nullable = false, length = 100)

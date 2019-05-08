@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
-import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.FitnessProviderMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IFitnessProviderService;
 import io.swagger.annotations.Api;
@@ -22,10 +22,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class FitnessProviderEndpoint {
 
     private final IFitnessProviderService iFitnessProviderService;
-    private final FitnessProviderMapper fitnessProviderMapper;
+    private final IFitnessProviderMapper fitnessProviderMapper;
 
     @Autowired
-    public FitnessProviderEndpoint(IFitnessProviderService iFitnessProviderService, FitnessProviderMapper fitnessProviderMapper){
+    public FitnessProviderEndpoint(IFitnessProviderService iFitnessProviderService, IFitnessProviderMapper fitnessProviderMapper){
         this.iFitnessProviderService = iFitnessProviderService;
         this.fitnessProviderMapper = fitnessProviderMapper;
     }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class FitnessProviderValidator {
     private String name_is_null = "Username must be set!";
     private String name_is_blank = "Username must not be blank!";
+    private String name_lenght_invalid = "Username must be min 1 characters and max 50 characters";
     private String address_is_null = "Address must be set!";
     private String address_is_blank = "Address must not be blank!";
     private String email_is_null = "Email address must be set!";
@@ -17,6 +18,7 @@ public class FitnessProviderValidator {
         //Name Validation
         if(fitnessProvider.getName() == null){throw new ValidationException( name_is_null);}
         if(fitnessProvider.getName().isBlank()){throw new ValidationException( name_is_blank);}
+        if(fitnessProvider.getName().length()<= 1 || fitnessProvider.getName().length() >= 50){ throw new ValidationException(name_lenght_invalid);}
         //Address Validation
         if(fitnessProvider.getAddress() == null){throw new ValidationException( address_is_null);}
         if(fitnessProvider.getAddress().isBlank()){throw new ValidationException( address_is_blank);}

@@ -18,7 +18,7 @@ public class FitnessProviderDto {
     @ApiModelProperty(name = "Self description of Fitness Provider")
     private String description = "No description given.";
 
-    @ApiModelProperty(required = true, name = "Email adress of  Fitness Provider")
+    @ApiModelProperty(required = true, name = "Email address of  Fitness Provider")
     private String email;
 
     @ApiModelProperty(name = "Phone number of the Fitness Provider")
@@ -157,12 +157,14 @@ public class FitnessProviderDto {
             this.email = email;
             return this;
         }
-        public FitnessProviderDtoBuilder website(String website) {
-            this.website = website;
-            return this;
-        }
+
         public FitnessProviderDtoBuilder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public FitnessProviderDtoBuilder website(String website) {
+            this.website = website;
             return this;
         }
         public FitnessProviderDto build() {
