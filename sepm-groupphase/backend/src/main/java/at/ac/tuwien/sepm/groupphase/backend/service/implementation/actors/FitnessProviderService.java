@@ -29,4 +29,17 @@ public class FitnessProviderService implements IFitnessProviderService {
         }
         return iFitnessProviderRepository.save(fitnessProvider);
     }
+
+    @Override
+    public FitnessProvider findByNameAndPassword(String name, String password) throws ServiceException {
+        try {
+            fitnessProviderValidator.validateNameAndPassword(name, password);
+        }catch (ValidationException e){
+            throw new ServiceException(e.getMessage());
+        }
+        FitnessProvider fitnessProvider = iFitnessProviderRepository.findByNameAndPassword(name, password);
+        fitnessProvider.setPassword("XXXXXXXX");
+
+        return fitnessProvider;
+    }
 }

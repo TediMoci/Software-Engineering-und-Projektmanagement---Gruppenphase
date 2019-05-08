@@ -41,4 +41,14 @@ public class FitnessProviderEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during saving fitness provider: " + e.getMessage(), e);
         }
     }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation(value = "Get a fitness provider by name and passwort", authorizations ={ @Authorization(value = "apiKey")})
+    public FitnessProviderDto findByNameAndPassword(@RequestBody String name, String password){
+        try{
+            return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findByNameAndPassword(name, password));
+        }catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading fitness provider: "+ e.getMessage(), e);
+        }
+    }
 }

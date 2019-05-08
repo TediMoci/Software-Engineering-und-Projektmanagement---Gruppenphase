@@ -19,6 +19,10 @@ public class FitnessProvider {
     @Size(min = 1, max = 50)
     private String name;
 
+    @Column(nullable = false)
+    @Size(min = 8)
+    private String password;
+
     @Column(nullable = false, length = 100)
     @NotBlank @Size(max = 100)
     private String address;
@@ -60,6 +64,14 @@ public class FitnessProvider {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getAddress() {
@@ -127,6 +139,7 @@ public class FitnessProvider {
         return "FitnessProvider{" +
             "id=" + id +
             ", name='" + name + '\'' +
+            ", password='" + password + '\'' +
             ", address='" + address + '\'' +
             ", description='" + description + '\'' +
             ", email='" + email + '\'' +
@@ -146,6 +159,7 @@ public class FitnessProvider {
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
@@ -153,13 +167,13 @@ public class FitnessProvider {
         if (website != null ? !website.equals(that.website) : that.website != null) return false;
         if (dudes != null ? !dudes.equals(that.dudes) : that.dudes != null) return false;
         return courses != null ? courses.equals(that.courses) : that.courses == null;
-
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
@@ -173,6 +187,7 @@ public class FitnessProvider {
     public static final class FitnessProviderBuilder {
         private Long id;
         private String name;
+        private String password;
         private String address;
         private String description;
         private String email;
@@ -191,6 +206,11 @@ public class FitnessProvider {
 
         public FitnessProviderBuilder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public FitnessProviderBuilder password(String password){
+            this.password =    password;
             return this;
         }
 
@@ -233,6 +253,7 @@ public class FitnessProvider {
             FitnessProvider fitnessProvider = new FitnessProvider();
             fitnessProvider.setId(id);
             fitnessProvider.setName(name);
+            fitnessProvider.setPassword(password);
             fitnessProvider.setAddress(address);
             fitnessProvider.setDescription(description);
             fitnessProvider.setEmail(email);

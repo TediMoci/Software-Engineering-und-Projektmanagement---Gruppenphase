@@ -12,6 +12,9 @@ public class FitnessProviderDto {
     @ApiModelProperty(required = true, name = "Name of Fitness Provider")
     private String name;
 
+    @ApiModelProperty(required = true, name = "Password of fitness provider")
+    private String password;
+
     @ApiModelProperty(required = true, name = "Address of Fitness Provider")
     private String address;
 
@@ -41,6 +44,14 @@ public class FitnessProviderDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getAddress() {
@@ -88,6 +99,7 @@ public class FitnessProviderDto {
         return "FitnessProviderDto{" +
             "id=" + id +
             ", name='" + name + '\'' +
+            ", password='" + password + '\'' +
             ", address='" + address + '\'' +
             ", description='" + description + '\'' +
             ", email='" + email + '\'' +
@@ -105,6 +117,7 @@ public class FitnessProviderDto {
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
@@ -116,6 +129,7 @@ public class FitnessProviderDto {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
@@ -127,6 +141,7 @@ public class FitnessProviderDto {
     public static final class FitnessProviderDtoBuilder {
         private Long id;
         private String name;
+        private String password;
         private String address;
         private String description;
         private String email;
@@ -143,6 +158,10 @@ public class FitnessProviderDto {
         }
         public FitnessProviderDtoBuilder name(String name) {
             this.name = name;
+            return this;
+        }
+        public FitnessProviderDtoBuilder password(String name){
+            this.password = password;
             return this;
         }
         public FitnessProviderDtoBuilder address(String address) {
@@ -171,6 +190,7 @@ public class FitnessProviderDto {
             FitnessProviderDto fitnessProviderDto = new FitnessProviderDto();
             fitnessProviderDto.setId(id);
             fitnessProviderDto.setName(name);
+            fitnessProviderDto.setPassword(password);
             fitnessProviderDto.setAddress(address);
             fitnessProviderDto.setDescription(description);
             fitnessProviderDto.setEmail(email);
