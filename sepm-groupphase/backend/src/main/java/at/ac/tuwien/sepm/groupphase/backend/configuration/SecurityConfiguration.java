@@ -97,6 +97,7 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers(HttpMethod.POST).permitAll()
                 .antMatchers(HttpMethod.GET,
+                    "/dudes",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
