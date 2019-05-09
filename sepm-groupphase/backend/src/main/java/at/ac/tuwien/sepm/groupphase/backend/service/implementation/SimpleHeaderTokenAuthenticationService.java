@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service.implementation;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.authentication.AuthenticationToken;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.authentication.AuthenticationTokenInfo;
 import at.ac.tuwien.sepm.groupphase.backend.configuration.properties.AuthenticationConfigurationProperties;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationConstants;
 import at.ac.tuwien.sepm.groupphase.backend.service.HeaderTokenAuthenticationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -66,7 +65,6 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
     public AuthenticationToken authenticate(String username, CharSequence password) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(username, password));
-
         Instant now = Instant.now();
         String authorities = "";
         try {
