@@ -13,7 +13,7 @@ public class Dude {
     @SequenceGenerator(name = "seq_dude_id", sequenceName = "seq_dude_id")
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     @Size(min = 1, max = 50)
     private String name;
 

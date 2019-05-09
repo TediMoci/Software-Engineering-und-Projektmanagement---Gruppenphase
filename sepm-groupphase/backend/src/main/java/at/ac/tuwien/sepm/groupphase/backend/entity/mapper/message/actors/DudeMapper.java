@@ -5,13 +5,14 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DudeMapper {
+public class DudeMapper implements IDudeMapper{
 
     /**
      *
      * @param dudedto
      * @return
      */
+    @Override
     public Dude dudeDtoToDude(DudeDto dudedto){
 
         Dude.DudeBuilder builder = new Dude.DudeBuilder();
@@ -43,6 +44,7 @@ public class DudeMapper {
      * @param dude
      * @return
      */
+    @Override
     public DudeDto dudeToDudeDto(Dude dude){
 
         DudeDto.DudeDtoBuilder builder = new DudeDto.DudeDtoBuilder();
