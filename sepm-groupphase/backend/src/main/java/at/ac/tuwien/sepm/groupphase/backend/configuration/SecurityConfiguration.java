@@ -97,11 +97,15 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers(HttpMethod.POST).permitAll()
                 .antMatchers(HttpMethod.GET,
+                    "/dudes",
+                    "/fitnessProvider",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html")
                 .permitAll()
+                .antMatchers(HttpMethod.DELETE).permitAll()
+                .antMatchers(HttpMethod.PUT).permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {
                 http
@@ -131,7 +135,7 @@ public class SecurityConfiguration {
                 registry
                     .addMapping("/**")
                     .allowedOrigins("*")
-                    .allowedMethods("PUT","POST","OPTION","GET");
+                    .allowedMethods("PUT","POST","OPTION","GET", "PUT", "DELETE");
             }
         };
     }

@@ -5,18 +5,20 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DudeMapper {
+public class DudeMapper implements IDudeMapper{
 
     /**
      *
      * @param dudedto
      * @return
      */
+    @Override
     public Dude dudeDtoToDude(DudeDto dudedto){
 
         Dude.DudeBuilder builder = new Dude.DudeBuilder();
         builder.id(dudedto.getId());
         builder.name(dudedto.getName());
+        builder.password(dudedto.getPassword());
         builder.description(dudedto.getDescription());
         builder.email(dudedto.getEmail());
         if (dudedto.getSex().equals("Male")){
@@ -42,11 +44,13 @@ public class DudeMapper {
      * @param dude
      * @return
      */
+    @Override
     public DudeDto dudeToDudeDto(Dude dude){
 
         DudeDto.DudeDtoBuilder builder = new DudeDto.DudeDtoBuilder();
         builder.id(dude.getId());
         builder.name(dude.getName());
+        builder.password(dude.getPassword());
         builder.description(dude.getDescription());
         builder.email(dude.getEmail());
         if (dude.getSex().equals('M')){

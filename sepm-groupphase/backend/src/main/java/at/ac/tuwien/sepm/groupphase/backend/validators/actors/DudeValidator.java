@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import org.springframework.stereotype.Component;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 
 @Component
 public class DudeValidator {
@@ -19,10 +20,13 @@ public class DudeValidator {
     private String invalid_selfAssessment = "Self assessment must be 1 (Beginner), 2 (Advanced) or 3 (Pro)!";
     private String birthday_is_null = "Birthday must not be null!";
     private String invalid_birthday = "Invalid birthday!";
+    private String born_in_the_future = "You can not be born after the current day.";
     private String height_is_null = "Height must not be null!";
     private String invalid_height = "Unnatural height. Check your entry!";
     private String weight_is_null = "Weight must not be null!";
     private String invalid_weight = "Unnatural weight. Check your entry!";
+    private String password_too_short = "Your password is too short. The minimum length is 8.";
+    private String password_is_null = "Passwort must be given!";
 
     /**
      *
@@ -62,6 +66,9 @@ public class DudeValidator {
         } catch (DateTimeException e){
             throw new ValidationException(invalid_birthday);
         }
+        if (dude.getBirthday().isAfter(LocalDate.now())){
+            throw new ValidationException(born_in_the_future);
+        }
         if (dude.getHeight() == null){
             throw new ValidationException(height_is_null);
         }
@@ -87,6 +94,27 @@ public class DudeValidator {
         }
         if (name.isBlank()){
             throw new ValidationException(name_is_blank);
+        }
+    }
+
+    /**
+     *
+     * @param name
+     * @param password
+     * @throws ValidationException
+     */
+    public void validateNameAndPassword(String name, String password) throws ValidationException{
+        if (name == null){
+            throw new ValidationException(name_is_null);
+        }
+        if (name.isBlank()){
+            throw new ValidationException(name_is_blank);
+        }
+        if (password == null){
+            throw new ValidationException(password_is_null);
+        }
+        if (password.isBlank() || password.length() < 8){
+            throw new ValidationException(password_too_short);
         }
     }
 

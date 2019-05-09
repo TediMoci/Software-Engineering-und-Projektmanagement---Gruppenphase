@@ -8,6 +8,9 @@ import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.DudeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -33,7 +36,9 @@ public class DudeService implements IDudeService {
      */
     @Override
     public double calculateBMI(double height, double weight){
-        return weight/Math.pow((height/100), 2);
+
+        double bmi = weight/Math.pow((height/100), 2);
+        return new BigDecimal(String.valueOf(bmi)).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     /**
@@ -81,5 +86,26 @@ public class DudeService implements IDudeService {
         }
 
         return iDudeRepository.findByName(name);
+    }
+
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     * @throws ServiceException
+     */
+    @Override
+    public Dude findByNameAndPassword(String name, String password) throws ServiceException {
+        try {
+            dudeValidator.validateNameAndPassword(name, password);
+        } catch (ValidationException e){
+            throw new ServiceException(e.getMessage());
+        }
+
+        Dude dude = iDudeRepository.findByNameAndPassword(name, password);
+        dude.setPassword("XXXXXXXX");
+
+        return dude;
     }
 }
