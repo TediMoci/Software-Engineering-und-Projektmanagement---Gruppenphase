@@ -2,8 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.configuration;
 
 import at.ac.tuwien.sepm.groupphase.backend.configuration.properties.H2ConsoleConfigurationProperties;
 import at.ac.tuwien.sepm.groupphase.backend.security.HeaderTokenAuthenticationFilter;
-import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
-import at.ac.tuwien.sepm.groupphase.backend.service.actors.InternalUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -14,8 +12,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -42,7 +38,6 @@ import java.util.Map;
 public class SecurityConfiguration {
 
     private final PasswordEncoder passwordEncoder;
-    private InternalUserDetailService userDetailService;
 
     public SecurityConfiguration(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -65,16 +60,13 @@ public class SecurityConfiguration {
     }
 
     @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailService);
-        authenticationProvider();
-    }
-
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        return authProvider;
+    public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList) throws Exception {
+        new InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder>()
+            .withUser("user").password(passwordEncoder.encode("password")).authorities("USER").and()
+            .withUser("admin").password(passwordEncoder.encode("password")).authorities("ADMIN", "USER").and()
+            .passwordEncoder(passwordEncoder)
+            .configure(auth);
+        providerList.forEach(auth::authenticationProvider);
     }
 
     @Configuration
