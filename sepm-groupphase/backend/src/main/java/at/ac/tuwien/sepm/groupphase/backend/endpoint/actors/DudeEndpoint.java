@@ -5,16 +5,17 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
+import at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors.DudeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/dudes")
@@ -50,4 +51,27 @@ public class DudeEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading Dude: " + e.getMessage(), e);
         }
     }
-}
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all dudes", authorizations = {@Authorization(value = "apiKey")})
+    public List<DudeDto> findAll() {
+        List<DudeDto> dudeListDTO = new ArrayList<>();
+        try {
+            for (int i=0; i< iDudeService.findAll().size(); i++){
+                dudeListDTO.add(dudeMapper.dudeToDudeDto(iDudeService.findAll().get(i)));
+            }
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading Dude: " + e.getMessage(), e);
+        }
+        return dudeListDTO;
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get a Dude by id", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto findDudeById(@PathVariable("id") Long id) {
+        try {
+            return dudeMapper.dudeToDudeDto(iDudeService.findDudeById(id));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading Dude: " + e.getMessage(), e);
+        }
+    }}

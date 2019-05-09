@@ -49,8 +49,8 @@ public class DudeServiceTest {
     public void bmi_calculatorTest(){
         double d1height = Dude1.getHeight(); //185.0
         double d1weight = Dude1.getWeight(); //85.0
-        double calcBMI = 24.8;
-        assertEquals(dudeService.calculateBMI(d1height,d1weight),calcBMI,1.0);
+        double calcBMI = 24.84;
+        assertEquals(dudeService.calculateBMI(d1height,d1weight),calcBMI,0.0);
 
     }
 }

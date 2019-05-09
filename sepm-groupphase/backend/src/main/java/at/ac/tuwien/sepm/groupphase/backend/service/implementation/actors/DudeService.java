@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
@@ -13,6 +14,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DudeService implements IDudeService {
@@ -107,5 +110,21 @@ public class DudeService implements IDudeService {
         dude.setPassword("XXXXXXXX");
 
         return dude;
+    }
+    @Override
+    public List<Dude> findAll(){
+        List<Dude> dudes = new ArrayList<>();
+        iDudeRepository.findAll().forEach(dudes::add);
+        return dudes;
+    }
+
+    @Override
+    public Dude findDudeById(Long id) throws ServiceException{
+        try{
+            Dude dude = iDudeRepository.findById(id).get();
+            return dude;
+        } catch (NotFoundException e){
+            throw new ServiceException(e.getMessage());
+        }
     }
 }
