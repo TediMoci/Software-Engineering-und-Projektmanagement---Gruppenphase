@@ -6,12 +6,14 @@ import {RegisterAsDudeComponent} from './components/register-as-dude/register-as
 import {RegisterAsFitnessProviderComponent} from './components/register-as-fitness-provider/register-as-fitness-provider.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
+import {DudeProfileComponent} from './components/dude-profile/dude-profile.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register-as-dude', component: RegisterAsDudeComponent},
   {path: 'register-as-fitness-provider', component: RegisterAsFitnessProviderComponent},
+  {path: 'dude-profile', component: DudeProfileComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent}
 ];
 

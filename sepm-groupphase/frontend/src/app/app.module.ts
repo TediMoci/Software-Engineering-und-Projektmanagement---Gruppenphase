@@ -18,6 +18,7 @@ import {Globals} from './global/globals';
 import {RegisterAsDudeComponent} from './components/register-as-dude/register-as-dude.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterAsFitnessProviderComponent } from './components/register-as-fitness-provider/register-as-fitness-provider.component';
+import { DudeProfileComponent } from './components/dude-profile/dude-profile.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RegisterAsFitnessProviderComponent } from './components/register-as-fit
     LoginComponent,
     MessageComponent,
     RegisterAsDudeComponent,
-    RegisterAsFitnessProviderComponent
+    RegisterAsFitnessProviderComponent,
+    DudeProfileComponent
   ],
   imports: [
     BrowserModule,
