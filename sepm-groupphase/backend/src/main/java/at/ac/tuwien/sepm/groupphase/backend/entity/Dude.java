@@ -45,7 +45,6 @@ public class Dude {
     // 1 = Beginner; 2 = Advanced; 3 = Pro
 
     @Column(nullable = false)
-    @Past
     private LocalDate birthday;
 
     @Column(nullable = false)

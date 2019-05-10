@@ -14,12 +14,15 @@
     <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
       required!
     </small>
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.nameCheck">Your name is
+        already taken!
+      </small>
     </div>
   </div>
 
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" name="password" formControlName="password" class="form-control" id="password"
+    <input knifeNoSpaces type="password" name="password" formControlName="password" class="form-control" id="password"
            placeholder="Enter password">
     <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
       <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
@@ -33,7 +36,7 @@
 
   <div class="form-group">
     <label for="passwordConfirmed">Password Confirmed</label>
-    <input type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
+    <input knifeNoSpaces  type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
            placeholder="Enter password">
     <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
       <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
@@ -51,6 +54,9 @@
     <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
       <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
         required!
+      </small>
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.email">Your email is
+        invalid!
       </small>
     </div>
   </div>
