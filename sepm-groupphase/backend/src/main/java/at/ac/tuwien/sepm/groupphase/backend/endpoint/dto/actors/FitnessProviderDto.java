@@ -1,54 +1,34 @@
-package at.ac.tuwien.sepm.groupphase.backend.entity;
+package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Set;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-@Entity
-@Table(name = "fitness_provider")
-public class FitnessProvider {
+@ApiModel(value = "FitnessProviderDto", description = "A dto for fitness provider entries via rest")
+public class FitnessProviderDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_fitness_provider_id")
-    @SequenceGenerator(name = "seq_fitness_provider_id", sequenceName = "seq_fitness_provider_id")
+    @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
-    @Column(nullable = false, length = 40)
-    @Size(min = 1, max = 50)
+    @ApiModelProperty(required = true, name = "Name of Fitness Provider")
     private String name;
 
-    @Column(nullable = false)
-    @Size(min = 8)
+    @ApiModelProperty(required = true, name = "Password of Fitness provider")
     private String password;
 
-    @Column(nullable = false, length = 100)
-    @NotBlank @Size(max = 100)
+    @ApiModelProperty(required = true, name = "Address of Fitness Provider")
     private String address;
 
-    @Column(nullable = false, length = 1000)
-    @Size(max = 1000)
+    @ApiModelProperty(name = "Self description of Fitness Provider")
     private String description = "No description given.";
 
-    @Column(nullable = false, length = 50)
-    @NotNull
-    @Size(max = 50)
+    @ApiModelProperty(required = true, name = "Email address of  Fitness Provider")
     private String email;
 
-    @Column(nullable = false, length = 30, name = "phone_number")
-    @Size(max = 30)
+    @ApiModelProperty(name = "Phone number of the Fitness Provider")
     private String phoneNumber = "No phone number given.";
 
-    @Column(nullable = false, length = 100)
-    @Size(max = 100)
+    @ApiModelProperty(name = "Website of the Fitness Provider")
     private String website = "No website given.";
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProviders")
-    private Set<Dude> dudes;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProvider")
-    private Set<Course> courses;
 
     public Long getId() {
         return id;
@@ -114,29 +94,9 @@ public class FitnessProvider {
         this.website = website;
     }
 
-    public Set<Dude> getDudes() {
-        return dudes;
-    }
-
-    public void setDudes(Set<Dude> dudes) {
-        this.dudes = dudes;
-    }
-
-    public Set<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
-    }
-
-    public static FitnessProviderBuilder builder() {
-        return new FitnessProviderBuilder();
-    }
-
     @Override
     public String toString() {
-        return "FitnessProvider{" +
+        return "FitnessProviderDto{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", password='" + password + '\'' +
@@ -145,8 +105,6 @@ public class FitnessProvider {
             ", email='" + email + '\'' +
             ", phoneNumber='" + phoneNumber + '\'' +
             ", website='" + website + '\'' +
-            ", dudes=" + dudes +
-            ", courses=" + courses +
             '}';
     }
 
@@ -155,7 +113,7 @@ public class FitnessProvider {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FitnessProvider that = (FitnessProvider) o;
+        FitnessProviderDto that = (FitnessProviderDto) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -164,9 +122,7 @@ public class FitnessProvider {
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
-        if (website != null ? !website.equals(that.website) : that.website != null) return false;
-        if (dudes != null ? !dudes.equals(that.dudes) : that.dudes != null) return false;
-        return courses != null ? courses.equals(that.courses) : that.courses == null;
+        return website != null ? website.equals(that.website) : that.website == null;
     }
 
     @Override
@@ -179,12 +135,10 @@ public class FitnessProvider {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (website != null ? website.hashCode() : 0);
-        result = 31 * result + (dudes != null ? dudes.hashCode() : 0);
-        result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
     }
 
-    public static final class FitnessProviderBuilder {
+    public static final class FitnessProviderDtoBuilder {
         private Long id;
         private String name;
         private String password;
@@ -193,75 +147,57 @@ public class FitnessProvider {
         private String email;
         private String phoneNumber;
         private String website;
-        private Set<Dude> dudes;
-        private Set<Course> courses;
 
-        public FitnessProviderBuilder() {
+        public FitnessProviderDtoBuilder(){
+
         }
 
-        public FitnessProviderBuilder id(Long id) {
+        public FitnessProviderDtoBuilder id(Long id) {
             this.id = id;
             return this;
         }
-
-        public FitnessProviderBuilder name(String name) {
+        public FitnessProviderDtoBuilder name(String name) {
             this.name = name;
             return this;
         }
-
-        public FitnessProviderBuilder password(String password){
-            this.password =    password;
+        public FitnessProviderDtoBuilder password(String name){
+            this.password = password;
             return this;
         }
-
-        public FitnessProviderBuilder address(String address) {
+        public FitnessProviderDtoBuilder address(String address) {
             this.address = address;
             return this;
         }
-
-        public FitnessProviderBuilder description(String description) {
+        public FitnessProviderDtoBuilder description(String description) {
             this.description = description;
             return this;
         }
-
-        public FitnessProviderBuilder email(String email) {
+        public FitnessProviderDtoBuilder email(String email) {
             this.email = email;
             return this;
         }
 
-        public FitnessProviderBuilder phoneNumber(String phoneNumber) {
+        public FitnessProviderDtoBuilder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
 
-        public FitnessProviderBuilder website(String website) {
+        public FitnessProviderDtoBuilder website(String website) {
             this.website = website;
             return this;
         }
+        public FitnessProviderDto build() {
+            FitnessProviderDto fitnessProviderDto = new FitnessProviderDto();
+            fitnessProviderDto.setId(id);
+            fitnessProviderDto.setName(name);
+            fitnessProviderDto.setPassword(password);
+            fitnessProviderDto.setAddress(address);
+            fitnessProviderDto.setDescription(description);
+            fitnessProviderDto.setEmail(email);
+            fitnessProviderDto.setPhoneNumber(phoneNumber);
+            fitnessProviderDto.setWebsite(website);
 
-        public FitnessProviderBuilder dudes(Set<Dude> dudes) {
-            this.dudes = dudes;
-            return this;
-        }
-
-        public FitnessProviderBuilder courses(Set<Course> courses) {
-            this.courses = courses;
-            return this;
-        }
-
-        public FitnessProvider build() {
-            FitnessProvider fitnessProvider = new FitnessProvider();
-            fitnessProvider.setId(id);
-            fitnessProvider.setName(name);
-            fitnessProvider.setPassword(password);
-            fitnessProvider.setAddress(address);
-            fitnessProvider.setDescription(description);
-            fitnessProvider.setEmail(email);
-            fitnessProvider.setPhoneNumber(phoneNumber);
-            fitnessProvider.setWebsite(website);
-            fitnessProvider.setDudes(dudes);
-            fitnessProvider.setCourses(courses);
-            return fitnessProvider;
+            return fitnessProviderDto;
         }
     }
 }
