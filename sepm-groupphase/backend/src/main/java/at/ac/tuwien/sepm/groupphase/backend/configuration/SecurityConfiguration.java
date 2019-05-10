@@ -98,6 +98,8 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.POST).permitAll()
                 .antMatchers(HttpMethod.GET,
                     "/dudes",
+                    "/dudes/all",
+                    "/dudes/{id}",
                     "/fitnessProvider",
                     "/v2/api-docs",
                     "/swagger-resources/**",

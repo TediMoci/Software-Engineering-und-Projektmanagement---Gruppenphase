@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface IDudeService {
 
@@ -45,4 +46,11 @@ public interface IDudeService {
      * @throws ServiceException
      */
     Dude findByNameAndPassword(String name, String password) throws ServiceException;
+
+    //TODO
+    List<Dude> findAll() throws ServiceException;
+
+    //TODO
+    Dude findDudeById(Long id) throws ServiceException;
+
 }
