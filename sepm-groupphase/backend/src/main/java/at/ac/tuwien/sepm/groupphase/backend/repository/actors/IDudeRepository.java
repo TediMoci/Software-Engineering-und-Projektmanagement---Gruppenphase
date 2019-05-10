@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface IDudeRepository extends JpaRepository<Dude, Long> {
 
@@ -29,7 +31,13 @@ public interface IDudeRepository extends JpaRepository<Dude, Long> {
      * @param password
      * @return
      */
-    @Query("SELECT u FROM Dude u WHERE u.name = name and u.password = password")
-    Dude findByNameAndPassword(@Param("name") String name, @Param("password") String password);
+    @Query("SELECT u FROM Dude u WHERE u.name = ?1 and u.password = ?2")
+    Dude findByNameAndPassword(String name, String password);
+
+    /**
+     *
+     * @return
+     */
+    List<Dude> findAll();
 
 }

@@ -65,10 +65,6 @@ export class RegisterAsDudeComponent implements OnInit {
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
-    if (error.error.message !== 'No message available') {
-      this.errorMessage = error.error.message;
-    } else {
-      this.errorMessage = error.error.error;
-    }
+    this.errorMessage = error.error.message;
   }
 }

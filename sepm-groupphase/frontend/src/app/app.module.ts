@@ -1,8 +1,9 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { NgKnifeModule } from 'ng-knife';
+import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -17,6 +18,7 @@ import {Globals} from './global/globals';
 import {RegisterAsDudeComponent} from './components/register-as-dude/register-as-dude.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterAsFitnessProviderComponent } from './components/register-as-fitness-provider/register-as-fitness-provider.component';
+import { DudeProfileComponent } from './components/dude-profile/dude-profile.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { RegisterAsFitnessProviderComponent } from './components/register-as-fit
     LoginComponent,
     MessageComponent,
     RegisterAsDudeComponent,
-    RegisterAsFitnessProviderComponent
+    RegisterAsFitnessProviderComponent,
+    DudeProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,8 @@ import { RegisterAsFitnessProviderComponent } from './components/register-as-fit
     BrowserAnimationsModule,
     NgKnifeModule
   ],
-  providers: [httpInterceptorProviders, Globals],
+  providers: [httpInterceptorProviders, Globals, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
+    multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule {
