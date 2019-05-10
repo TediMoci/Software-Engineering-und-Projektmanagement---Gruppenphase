@@ -25,11 +25,7 @@ public class UserEndpoint {
 
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Check if username exists in database", authorizations = {@Authorization(value = "apiKey")})
-    public int nameTaken(String name) {
-        try {
-            return iUserService.nameTaken(name);
-        } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during checking username availability: " + e.getMessage(), e);
-        }
+    public int nameTaken(@RequestBody String name) {
+        return iUserService.nameTaken(name);
     }
 }
