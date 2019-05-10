@@ -46,7 +46,7 @@ export class RegisterAsFitnessProviderComponent implements OnInit {
     this.registerAsFitnessProviderService.addFitnessProvider(fitnessProvider).subscribe(
       () => {
         console.log(fitnessProvider);
-        this.router.navigate(['/login']);
+        this.router.navigate(['']);
       },
       error => {
         this.defaultServiceErrorHandling(error);

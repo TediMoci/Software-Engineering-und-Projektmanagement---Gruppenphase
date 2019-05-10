@@ -54,7 +54,7 @@ export class RegisterAsDudeComponent implements OnInit {
 
     this.registerAsDudeService.addDude(dude).subscribe(
       () => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['']);
       },
       error => {
         this.defaultServiceErrorHandling(error);

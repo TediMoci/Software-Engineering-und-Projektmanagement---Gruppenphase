@@ -26,6 +26,7 @@ public class FitnessProviderValidator {
     }
 
     public void validateFitnessProvider(FitnessProvider fitnessProvider)throws ValidationException {
+        validateNameUnique(fitnessProvider.getName());
         //Name Validation
         validateName(fitnessProvider.getName());
         //Address Validation
@@ -46,7 +47,6 @@ public class FitnessProviderValidator {
     }
 
     public void validateName(String name) throws ValidationException {
-        validateNameUnique(name);
         if(name == null){throw new ValidationException( name_is_null);}
         if(name.isBlank()){throw new ValidationException( name_is_blank);}
         if(name.length()< 1 || name.length() > 50){ throw new ValidationException(name_lenght_invalid);}

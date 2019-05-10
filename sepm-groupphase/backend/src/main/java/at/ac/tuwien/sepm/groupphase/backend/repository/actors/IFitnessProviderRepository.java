@@ -21,7 +21,7 @@ public interface IFitnessProviderRepository extends JpaRepository<FitnessProvide
      * @param name
      * @return
      */
-    FitnessProvider findByName(@Param("name")String name);
+    FitnessProvider findByName(String name);
 
     /**
      *
