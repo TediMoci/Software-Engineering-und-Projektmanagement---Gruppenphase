@@ -41,7 +41,7 @@ public class FitnessProviderEndpoint {
 
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get a fitness provider by name and password", authorizations ={ @Authorization(value = "apiKey")})
-    public FitnessProviderDto findByNameAndPassword(@RequestParam(name = "name") String name, @RequestParam(name = "password") String password){
+    public FitnessProviderDto findByNameAndPassword(String name, String password){
         try{
             return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findByNameAndPassword(name, password));
         }catch (ServiceException e){

@@ -12,7 +12,7 @@ public class FitnessProviderDto {
     @ApiModelProperty(required = true, name = "Name of Fitness Provider")
     private String name;
 
-    @ApiModelProperty(required = true, name = "Password of fitness provider")
+    @ApiModelProperty(required = true, name = "Password of Fitness provider")
     private String password;
 
     @ApiModelProperty(required = true, name = "Address of Fitness Provider")

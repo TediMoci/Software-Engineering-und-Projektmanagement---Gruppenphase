@@ -19,10 +19,16 @@ public interface IFitnessProviderRepository extends JpaRepository<FitnessProvide
     /**
      *
      * @param name
+     * @return
+     */
+    FitnessProvider findByName(@Param("name")String name);
+
+    /**
+     *
+     * @param name
      * @param password
      * @return
      */
-    //todo expand database with password
-    @Query("select u FROM FitnessProvider u where u.name = name and u.password = password")
-    FitnessProvider findByNameAndPassword(@Param("name")String name,@Param("password") String password);
+    @Query("select u FROM FitnessProvider u where u.name = ?1 and u.password = ?2")
+    FitnessProvider findByNameAndPassword(String name, String password);
 }
