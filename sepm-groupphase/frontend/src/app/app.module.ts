@@ -9,7 +9,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -25,13 +24,13 @@ import { FindComponent } from './components/find/find.component';
 import { HistoryComponent } from './components/history/history.component';
 import { MyContentComponent } from './components/my-content/my-content.component';
 import { FavouritesComponent } from './components/favourites/favourites.component';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent,
     LoginComponent,
     MessageComponent,
     RegisterAsDudeComponent,
@@ -42,7 +41,8 @@ import { FavouritesComponent } from './components/favourites/favourites.componen
     FindComponent,
     HistoryComponent,
     MyContentComponent,
-    FavouritesComponent
+    FavouritesComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,
