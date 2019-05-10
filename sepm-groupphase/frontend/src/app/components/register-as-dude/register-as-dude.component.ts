@@ -16,8 +16,6 @@ export class RegisterAsDudeComponent implements OnInit {
   errorMessage: string = '';
   registerForm: FormGroup;
   submitted: boolean = false;
-  productsObservable: Observable<number> ;
-  userId: number;
   constructor(private registerAsDudeService: RegisterAsDudeService, private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {

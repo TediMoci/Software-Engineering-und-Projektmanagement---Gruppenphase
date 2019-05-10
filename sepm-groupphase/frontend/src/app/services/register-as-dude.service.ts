@@ -9,7 +9,7 @@ import {Globals} from '../global/globals';
 })
 export class RegisterAsDudeService {
   private dudeBaseUri: string = this.globals.backendUri + '/dudes';
-  private userBaseUri: string = this.globals.backendUri + '/user'
+  private userBaseUri: string = this.globals.backendUri + '/user';
   constructor(private httpClient: HttpClient , private globals: Globals) { }
 
   addDude(dude: RegisterAsDude): Observable<RegisterAsDude> {

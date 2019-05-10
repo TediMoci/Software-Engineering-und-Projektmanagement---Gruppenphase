@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {AuthRequest} from '../dtos/auth-request';
 import {interval, Observable} from 'rxjs';
 import {AuthResponse} from '../dtos/auth-response';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import * as jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
@@ -13,6 +13,7 @@ import {Globals} from '../global/globals';
 export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
+  private userBaseUri: string = this.globals.backendUri + '/user';
   private authScheduler: Observable<any> = interval(1000);
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
@@ -50,6 +51,12 @@ export class AuthService {
 
   getFutureToken() {
     return localStorage.getItem('futureToken');
+  }
+
+  getUserByNameAndPassword(name: string, password: string): Observable<any> {
+    const params = new HttpParams().set('name', name).set('password', password);
+    console.log('check user by name ' + name);
+    return this.httpClient.get(this.userBaseUri, { params: params});
   }
 
   /**
