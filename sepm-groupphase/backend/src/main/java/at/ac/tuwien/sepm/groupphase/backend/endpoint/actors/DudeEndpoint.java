@@ -44,7 +44,7 @@ public class DudeEndpoint {
 
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get a Dude by name and password", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto findByNameAndPassword(@RequestBody String name, String password) {
+    public DudeDto findByNameAndPassword(String name, String password) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findByNameAndPassword(name, password));
         } catch (ServiceException e){
@@ -74,4 +74,15 @@ public class DudeEndpoint {
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading Dude: " + e.getMessage(), e);
         }
-    }}
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto updateDude(@PathVariable("id") Long id, @RequestBody Dude dude) {
+        try {
+            return dudeMapper.dudeToDudeDto(iDudeService.update(id, dude));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during updating Dude: " + e.getMessage(), e);
+        }
+    }
+}

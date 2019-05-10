@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
@@ -16,6 +15,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class DudeService implements IDudeService {
@@ -123,7 +123,60 @@ public class DudeService implements IDudeService {
         try{
             Dude dude = iDudeRepository.findById(id).get();
             return dude;
-        } catch (NotFoundException e){
+        } catch (NoSuchElementException e){
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    //TODO: Separate validator class to be written
+    //TODO: Description and status taking default values if null
+    @Override
+    public Dude update(Long id, Dude newDude) throws ServiceException {
+        try {
+            Dude oldDude = findDudeById(id);
+            if (newDude.getName()!=null){
+                dudeValidator.validateName(newDude.getName());
+                oldDude.setName(newDude.getName());
+            }
+
+            if (newDude.getPassword()!=null){
+                oldDude.setPassword(newDude.getPassword());
+            }
+
+            if (newDude.getDescription()!=null){
+                oldDude.setDescription(newDude.getDescription());
+            }
+
+            if (newDude.getEmail()!=null){
+                oldDude.setEmail(newDude.getEmail());
+            }
+
+            if (newDude.getSex()!=null){
+                oldDude.setSex(newDude.getSex());
+            }
+
+            if (newDude.getStatus()!=null){
+                oldDude.setStatus(newDude.getStatus());
+            }
+
+            if (newDude.getSelfAssessment() !=null){
+                oldDude.setSelfAssessment(newDude.getSelfAssessment());
+            }
+
+            if (newDude.getBirthday()!=null){
+                oldDude.setBirthday(newDude.getBirthday());
+            }
+
+            if (newDude.getHeight()!=null){
+                oldDude.setHeight(newDude.getHeight());
+            }
+
+            if (newDude.getWeight()!=null){
+                oldDude.setWeight(newDude.getWeight());
+            }
+
+            return save(oldDude);
+        } catch (NoSuchElementException | ValidationException e) {
             throw new ServiceException(e.getMessage());
         }
     }
