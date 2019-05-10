@@ -43,7 +43,7 @@ public class DudeEndpoint {
 
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get a Dude by name and password", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto findByNameAndPassword(@RequestBody String name, String password) {
+    public DudeDto findByNameAndPassword(String name, String password) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findByNameAndPassword(name, password));
         } catch (ServiceException e){
