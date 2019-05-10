@@ -9,12 +9,12 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/message" routerLinkActive="active">Message</a>
-        <a href="#"><a [routerLink]="['/login']" class="btn btn-link">Bros</a></a>
-        <a href="#"><a [routerLink]="['/login']" class="btn btn-link">Create</a></a>
-        <a href="#"><a [routerLink]="['/login']" class="btn btn-link">Find</a></a>
-        <a href="#"><a [routerLink]="['/login']" class="btn btn-link">History</a></a>
-        <a href="#"><a [routerLink]="['/login']" class="btn btn-link">My Content</a></a>
-        <a href="#"><a [routerLink]="['/login']" class="btn btn-link">Favourites</a></a>
+        <a href="#"><a [routerLink]="['/bros']" class="btn btn-link">Bros</a></a>
+        <a href="#"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>
+        <a href="#"><a [routerLink]="['/find']" class="btn btn-link">Find</a></a>
+        <a href="#"><a [routerLink]="['/history']" class="btn btn-link">History</a></a>
+        <a href="#"><a [routerLink]="['/myContent']" class="btn btn-link">My Content</a></a>
+        <a href="#"><a [routerLink]="['/favourites']" class="btn btn-link">Favourites</a></a>
       </li>
     </ul>
     <ul class="navbar-nav mr-5">
