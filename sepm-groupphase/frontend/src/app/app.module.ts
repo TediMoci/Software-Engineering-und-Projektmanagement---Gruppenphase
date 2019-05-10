@@ -19,6 +19,12 @@ import {RegisterAsDudeComponent} from './components/register-as-dude/register-as
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterAsFitnessProviderComponent } from './components/register-as-fitness-provider/register-as-fitness-provider.component';
 import { DudeProfileComponent } from './components/dude-profile/dude-profile.component';
+import { BrosComponent } from './components/bros/bros.component';
+import { CreateComponent } from './components/create/create.component';
+import { FindComponent } from './components/find/find.component';
+import { HistoryComponent } from './components/history/history.component';
+import { MyContentComponent } from './components/my-content/my-content.component';
+import { FavouritesComponent } from './components/favourites/favourites.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +36,13 @@ import { DudeProfileComponent } from './components/dude-profile/dude-profile.com
     MessageComponent,
     RegisterAsDudeComponent,
     RegisterAsFitnessProviderComponent,
-    DudeProfileComponent
+    DudeProfileComponent,
+    BrosComponent,
+    CreateComponent,
+    FindComponent,
+    HistoryComponent,
+    MyContentComponent,
+    FavouritesComponent
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,12 @@ import {RegisterAsFitnessProviderComponent} from './components/register-as-fitne
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
 import {DudeProfileComponent} from './components/dude-profile/dude-profile.component';
+import {BrosComponent} from './components/bros/bros.component';
+import {CreateComponent} from './components/create/create.component';
+import {FindComponent} from './components/find/find.component';
+import {HistoryComponent} from './components/history/history.component';
+import {MyContentComponent} from './components/my-content/my-content.component';
+import {FavouritesComponent} from './components/favourites/favourites.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -14,7 +20,13 @@ const routes: Routes = [
   {path: 'register-as-dude', component: RegisterAsDudeComponent},
   {path: 'register-as-fitness-provider', component: RegisterAsFitnessProviderComponent},
   {path: 'dude-profile', component: DudeProfileComponent},
-  {path: 'message', canActivate: [AuthGuard], component: MessageComponent}
+  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+  {path: 'bros', component: BrosComponent},
+  {path: 'create', component: CreateComponent},
+  {path: 'find', component: FindComponent},
+  {path: 'history', component: HistoryComponent},
+  {path: 'myContent', component: MyContentComponent},
+  {path: 'favourites', component: FavouritesComponent},
 ];
 
 @NgModule({
