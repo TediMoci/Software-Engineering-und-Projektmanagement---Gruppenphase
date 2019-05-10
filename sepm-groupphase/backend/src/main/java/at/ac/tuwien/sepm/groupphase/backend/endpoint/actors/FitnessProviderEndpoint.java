@@ -10,10 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -43,8 +40,8 @@ public class FitnessProviderEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "Get a fitness provider by name and passwort", authorizations ={ @Authorization(value = "apiKey")})
-    public FitnessProviderDto findByNameAndPassword(@RequestBody String name, String password){
+    @ApiOperation(value = "Get a fitness provider by name and password", authorizations ={ @Authorization(value = "apiKey")})
+    public FitnessProviderDto findByNameAndPassword(@RequestParam(name = "name") String name, @RequestParam(name = "password") String password){
         try{
             return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findByNameAndPassword(name, password));
         }catch (ServiceException e){
