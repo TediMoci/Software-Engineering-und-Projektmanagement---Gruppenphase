@@ -48,4 +48,15 @@ public class FitnessProviderEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading fitness provider: "+ e.getMessage(), e);
         }
     }
+
+    // not working like this yet (401 error)
+    @RequestMapping(value = "/{name}/followers", method = RequestMethod.GET)
+    @ApiOperation(value = "Get the number of followers of the fitness provider with the given name", authorizations ={ @Authorization(value = "apiKey")})
+    public Integer getNumberOfFollowers(@PathVariable String name) {
+        try {
+            return iFitnessProviderService.getNumberOfFollowers(name);
+        } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during getting fitness provider followers: " + e.getMessage(), e);
+        }
+    }
 }
