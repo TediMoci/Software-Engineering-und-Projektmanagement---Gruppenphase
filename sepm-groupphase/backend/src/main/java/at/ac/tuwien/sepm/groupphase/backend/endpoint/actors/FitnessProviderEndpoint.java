@@ -49,7 +49,6 @@ public class FitnessProviderEndpoint {
         }
     }
 
-    // not working like this yet (401 error)
     @RequestMapping(value = "/{name}/followers", method = RequestMethod.GET)
     @ApiOperation(value = "Get the number of followers of the fitness provider with the given name", authorizations ={ @Authorization(value = "apiKey")})
     public Integer getNumberOfFollowers(@PathVariable String name) {
