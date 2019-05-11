@@ -22,11 +22,11 @@ public class DudeMapper implements IDudeMapper{
         builder.description(dudedto.getDescription());
         builder.email(dudedto.getEmail());
         if (dudedto.getSex().equals("Male")){
-            builder.sex('M');
+            builder.sex(1);
         } else if (dudedto.getSex().equals("Female")){
-            builder.sex('F');
+            builder.sex(2);
         } else {
-            builder.sex('O');
+            builder.sex(3);
         }
         builder.status(dudedto.getStatus());
         builder.selfAssessment(dudedto.getSelfAssessment());
@@ -53,9 +53,9 @@ public class DudeMapper implements IDudeMapper{
         builder.password(dude.getPassword());
         builder.description(dude.getDescription());
         builder.email(dude.getEmail());
-        if (dude.getSex().equals('M')){
+        if (dude.getSex().equals(1)){
             builder.sex("Male");
-        } else if (dude.getSex().equals('F')){
+        } else if (dude.getSex().equals(2)){
             builder.sex("Female");
         } else {
             builder.sex("Other");

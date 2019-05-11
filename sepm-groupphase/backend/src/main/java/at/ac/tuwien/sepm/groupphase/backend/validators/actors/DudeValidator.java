@@ -16,7 +16,7 @@ public class DudeValidator {
     private String email_is_null = "Email adress must be set!";
     private String email_is_blank = "Email adress must not be blank!";
     private String sex_is_null = "Sex must be set!";
-    private String invalid_sex = "Sex must be male (M), female (F) or other (O)!";
+    private String invalid_sex = "Sex must be Male (1), Female (2) or Other (3)!";
     private String selfAssessment_is_null = "Self assessment must not be null!";
     private String invalid_selfAssessment = "Self assessment must be 1 (Beginner), 2 (Advanced) or 3 (Pro)!";
     private String birthday_is_null = "Birthday must not be null!";
@@ -60,7 +60,7 @@ public class DudeValidator {
         if (dude.getSex() == null) {
             throw new ValidationException(sex_is_null);
         }
-        if (!(dude.getSex().equals('F') || dude.getSex().equals('f') || dude.getSex().equals('M') || dude.getSex().equals('m') || dude.getSex().equals('O') || dude.getSex().equals('o'))) {
+        if (!(dude.getSex().equals(1) || dude.getSex().equals(2) || dude.getSex().equals(3))) {
             throw new ValidationException(invalid_sex);
         }
         if (dude.getSelfAssessment() == null) {
