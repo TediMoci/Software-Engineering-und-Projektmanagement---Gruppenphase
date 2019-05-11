@@ -25,6 +25,7 @@ import { HistoryComponent } from './components/history/history.component';
 import { MyContentComponent } from './components/my-content/my-content.component';
 import { FavouritesComponent } from './components/favourites/favourites.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { FitnessProviderProfileComponent } from './components/fitness-provider-profile/fitness-provider-profile.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     HistoryComponent,
     MyContentComponent,
     FavouritesComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    FitnessProviderProfileComponent
   ],
   imports: [
     BrowserModule,

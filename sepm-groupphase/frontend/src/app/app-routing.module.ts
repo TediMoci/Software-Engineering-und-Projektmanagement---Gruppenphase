@@ -13,8 +13,10 @@ import {HistoryComponent} from './components/history/history.component';
 import {MyContentComponent} from './components/my-content/my-content.component';
 import {FavouritesComponent} from './components/favourites/favourites.component';
 import {EditProfileComponent} from './components/edit-profile/edit-profile.component';
+import {FitnessProviderProfileComponent} from './components/fitness-provider-profile/fitness-provider-profile.component';
 
 const routes: Routes = [
+
   {path: '', component: LoginComponent},
   {path: 'register-as-dude', component: RegisterAsDudeComponent},
   {path: 'register-as-fitness-provider', component: RegisterAsFitnessProviderComponent},
@@ -26,7 +28,8 @@ const routes: Routes = [
   {path: 'history', component: HistoryComponent},
   {path: 'myContent', component: MyContentComponent},
   {path: 'favourites', component: FavouritesComponent},
-  {path: 'edit', component: EditProfileComponent}
+  {path: 'edit', component: EditProfileComponent},
+  {path: 'fitnessProvider-profile', component: FitnessProviderProfileComponent}
 ];
 
 @NgModule({

@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./bros.component.scss']
 })
 export class BrosComponent implements OnInit {
-
+  imagePath: string = '/assets/img/kugelfisch.jpg';
+  userName: string = 'Username';
   constructor() { }
 
   ngOnInit() {
