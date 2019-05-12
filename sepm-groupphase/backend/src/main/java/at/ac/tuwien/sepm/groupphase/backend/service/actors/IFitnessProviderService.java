@@ -8,4 +8,6 @@ public interface IFitnessProviderService {
     FitnessProvider save(FitnessProvider fitnessProvider) throws ServiceException;
 
     FitnessProvider findByNameAndPassword(String name, String password) throws ServiceException;
+
+    FitnessProvider registerNewUserAccount(FitnessProvider fitnessProvider) throws  ServiceException;
 }
