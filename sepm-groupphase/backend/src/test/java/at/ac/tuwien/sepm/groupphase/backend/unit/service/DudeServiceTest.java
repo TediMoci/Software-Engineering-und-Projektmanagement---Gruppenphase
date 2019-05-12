@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(SpringRunner.class)
@@ -34,6 +35,7 @@ public class DudeServiceTest {
 
     @Before
     public void beforeEach() {
+        Dude1.setId(1L);
         Dude1.setName("John");
         Dude1.setPassword("123456789");
         Dude1.setEmail("john1@dude.com");
@@ -45,6 +47,7 @@ public class DudeServiceTest {
         Dude1.setHeight(185.0);
         Dude1.setWeight(85.0);
 
+        Dude2.setId(2L);
         Dude2.setName("Linda");
         Dude2.setPassword("987654321");
         Dude2.setEmail("linda1@dude.com");
@@ -77,17 +80,26 @@ public class DudeServiceTest {
     }
 
     @Test
+    public void TestUpdate() throws ServiceException {
+        Mockito.when(dudeRepository.findByName("John")).thenReturn(Dude1);
+        Mockito.when(dudeRepository.findByName("Linda")).thenReturn(null);
+
+        Mockito.when(dudeRepository.save(anyObject())).thenReturn(Dude2);
+        Dude updatedDude = dudeService.update("John",Dude2);
+        assertEquals(updatedDude,Dude2);
+
+    }
+
+    @Test
     public void TestBMI(){
         double d1height = Dude1.getHeight(); //185.0
         double d1weight = Dude1.getWeight(); //85.0
         double calcBMI = 24.84;
         assertEquals(dudeService.calculateBMI(d1height,d1weight),calcBMI,0.0);
-
     }
 
     @Test
     public void TestAge(){
         assertEquals(dudeService.calculateAge(Dude1.getBirthday()),2019-1982);
-
     }
 }
