@@ -10,5 +10,5 @@ public interface IUserService {
      * @return
      * @throws ServiceException
      */
-    int nameTaken(String name) throws ServiceException;
+    int nameTaken(String name);
 }

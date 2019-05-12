@@ -50,7 +50,7 @@ public class  DudeIntegrationTest {
     }
 
     @Test
-    public void testGetUser() throws ServiceException {
+    public void TestFindByNameAndPassword() throws ServiceException {
         Dude Dude1 = new Dude();
         Dude1.setName("John");
         Dude1.setPassword("123456789");

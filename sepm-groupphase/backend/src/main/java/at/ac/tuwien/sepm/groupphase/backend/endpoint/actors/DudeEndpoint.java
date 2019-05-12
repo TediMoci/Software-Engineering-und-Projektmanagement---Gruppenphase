@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
-import at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors.DudeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -76,13 +75,14 @@ public class DudeEndpoint {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto updateDude(@PathVariable("id") Long id, @RequestBody Dude dude) {
+    public DudeDto updateDude(@PathVariable("name") String name, @RequestBody Dude dude) {
         try {
-            return dudeMapper.dudeToDudeDto(iDudeService.update(id, dude));
+            return dudeMapper.dudeToDudeDto(iDudeService.update(name, dude));
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during updating Dude: " + e.getMessage(), e);
         }
     }
 }
+

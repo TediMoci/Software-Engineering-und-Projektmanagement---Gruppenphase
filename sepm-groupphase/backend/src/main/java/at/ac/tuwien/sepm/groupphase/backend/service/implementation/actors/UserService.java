@@ -17,14 +17,11 @@ public class UserService implements IUserService {
         this.iDudeRepository = iDudeRepository;
     }
 
-    public int nameTaken(String name) throws ServiceException {
+    public int nameTaken(String name) {
 
-        /*
         if (iFitnessProviderRepository.findByName(name) != null){
             return 0;
-        } else
-         */
-         if (iDudeRepository.findByName(name) != null){
+        } else if (iDudeRepository.findByName(name) != null){
             return 1;
         } else {
             return 2;

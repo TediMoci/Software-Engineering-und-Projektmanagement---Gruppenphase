@@ -8,7 +8,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.DudeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -107,6 +106,7 @@ public class DudeService implements IDudeService {
         }
 
         Dude dude = iDudeRepository.findByNameAndPassword(name, password);
+        if (dude==null) throw new ServiceException("Could not find dude");
         dude.setPassword("XXXXXXXX");
 
         return dude;
@@ -131,52 +131,15 @@ public class DudeService implements IDudeService {
     //TODO: Separate validator class to be written
     //TODO: Description and status taking default values if null
     @Override
-    public Dude update(Long id, Dude newDude) throws ServiceException {
+    public Dude update(String name, Dude newDude) throws ServiceException {
         try {
-            Dude oldDude = findDudeById(id);
-            if (newDude.getName()!=null){
-                dudeValidator.validateName(newDude.getName());
-                oldDude.setName(newDude.getName());
-            }
+            Dude oldDude = findByName(name);
+            if (oldDude==null) throw new ServiceException("There is no dude with that name in the database.");
+            Dude dude = dudeValidator.validateUpdate(oldDude, newDude);
 
-            if (newDude.getPassword()!=null){
-                oldDude.setPassword(newDude.getPassword());
-            }
+            return iDudeRepository.save(dude);
 
-            if (newDude.getDescription()!=null){
-                oldDude.setDescription(newDude.getDescription());
-            }
-
-            if (newDude.getEmail()!=null){
-                oldDude.setEmail(newDude.getEmail());
-            }
-
-            if (newDude.getSex()!=null){
-                oldDude.setSex(newDude.getSex());
-            }
-
-            if (newDude.getStatus()!=null){
-                oldDude.setStatus(newDude.getStatus());
-            }
-
-            if (newDude.getSelfAssessment() !=null){
-                oldDude.setSelfAssessment(newDude.getSelfAssessment());
-            }
-
-            if (newDude.getBirthday()!=null){
-                oldDude.setBirthday(newDude.getBirthday());
-            }
-
-            if (newDude.getHeight()!=null){
-                oldDude.setHeight(newDude.getHeight());
-            }
-
-            if (newDude.getWeight()!=null){
-                oldDude.setWeight(newDude.getWeight());
-            }
-
-            return save(oldDude);
-        } catch (NoSuchElementException | ValidationException e) {
+        } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());
         }
     }
