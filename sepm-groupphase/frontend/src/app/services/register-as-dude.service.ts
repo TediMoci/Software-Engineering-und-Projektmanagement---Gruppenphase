@@ -14,6 +14,7 @@ export class RegisterAsDudeService {
 
   addDude(dude: RegisterAsDude): Observable<RegisterAsDude> {
     console.log('add dude with name ' + dude.name);
+    console.log('add dude with sex ' + dude.sex);
     return this.httpClient.post<RegisterAsDude>(this.dudeBaseUri, dude);
   }
 

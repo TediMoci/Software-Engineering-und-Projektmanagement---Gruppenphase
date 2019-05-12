@@ -2,7 +2,7 @@ export class RegisterAsDude {
   constructor(
     public name: string,
     public password: string,
-    public sex: string,
+    public sex: number,
     public email:  string,
     public selfAssessment: number,
     public birthday: Date,
