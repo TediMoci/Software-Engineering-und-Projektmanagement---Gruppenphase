@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        this.router.navigate(['/message']);
+        this.router.navigate(['/dude-profile']); // TODO: route to fitnessProvider or dude-profile according to who is logged in
       },
       error => {
         console.log('Could not log in due to: ' + error.message);

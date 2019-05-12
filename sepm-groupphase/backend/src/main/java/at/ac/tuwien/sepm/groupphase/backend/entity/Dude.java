@@ -31,8 +31,8 @@ public class Dude {
     private String email;
 
     @Column(nullable = false)
-    private Character sex;
-    // M = Male; F = Female; O = Other;
+    private Integer sex;
+    // 1 = Male; 2 = Female; 3 = Other;
 
     @Column(nullable = false)
     @Min(1) @Max(3)
@@ -109,11 +109,11 @@ public class Dude {
         this.email = email;
     }
 
-    public Character getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(Character sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
@@ -245,7 +245,7 @@ public class Dude {
         private String password;
         private String description;
         private String email;
-        private Character sex;
+        private Integer sex;
         private Integer status;
         private Integer selfAssessment;
         private LocalDate birthday;
@@ -282,7 +282,7 @@ public class Dude {
             return this;
         }
 
-        public DudeBuilder sex(Character sex) {
+        public DudeBuilder sex(Integer sex) {
             this.sex = sex;
             return this;
         }

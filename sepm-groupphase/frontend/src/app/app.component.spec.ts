@@ -23,7 +23,7 @@ describe('AppComponent', () => {
   it(`should have as title 'sepm-group-phase'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('sepm-group-phase');
+    expect(app.title).toEqual('Dudes');
   });
 
   it('should render title in a h1 tag', () => {

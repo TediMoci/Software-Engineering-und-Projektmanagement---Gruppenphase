@@ -25,7 +25,7 @@ public class DudeDto {
     @ApiModelProperty(required = true, name = "Email adress of Dude")
     private String email;
 
-    @ApiModelProperty(required = true, name = "Sex of Dude: female (F), male (M) or other (O)")
+    @ApiModelProperty(required = true, name = "Sex of Dude: Male (1), Female (2) or Other (3)")
     private String sex;
 
     @ApiModelProperty(required = true, name = "System status of Dude: 1-3")

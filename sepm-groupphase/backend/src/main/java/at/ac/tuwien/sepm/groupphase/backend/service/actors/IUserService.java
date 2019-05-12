@@ -11,4 +11,13 @@ public interface IUserService {
      * @throws ServiceException
      */
     int nameTaken(String name);
+
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     * @throws ServiceException
+     */
+    Object findUserByNameAndPassword(String name, String password) throws ServiceException;
 }
