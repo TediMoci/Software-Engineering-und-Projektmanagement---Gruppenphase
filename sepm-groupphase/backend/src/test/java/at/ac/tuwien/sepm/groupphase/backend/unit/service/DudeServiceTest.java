@@ -60,48 +60,20 @@ public class DudeServiceTest {
 
     @Test
     public void TestSaveDude() throws ServiceException {
-        Mockito.when(dudeRepository.save(Dude1)).thenReturn(Dude1);
-        assertEquals(dudeService.save(Dude1),Dude1);
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestSaveDude_invalidName() throws ServiceException {
-        Dude1.setName("");
-        dudeService.save(Dude1);
-    }
-
-    //TODO: Validator for password needs to be written
-    @Test(expected = ServiceException.class)
-    public void TestSaveDude_invalidPassword_returnsNull() throws ServiceException {
-        Dude1.setPassword("");
-        dudeService.save(Dude1);
+        Mockito.when(dudeRepository.save(Dude1)).thenReturn(Dude2);
+        assertEquals(dudeService.save(Dude1),Dude2);
     }
 
     @Test
     public void TestFindByName() throws ServiceException{
         Mockito.when(dudeRepository.findByName(anyString())).thenReturn(Dude1);
-        assertEquals(dudeService.findByName("John"),Dude1);
+        assertEquals(dudeService.findByName("hfhkfdh"),Dude1);
     }
 
     @Test
     public void TestFindByNameAndPassword() throws ServiceException{
-        Dude testDude = new Dude();
-        testDude.setName(Dude1.getName());
-        testDude.setPassword(Dude1.getPassword());
-        testDude.setEmail(Dude1.getEmail());
-        testDude.setDescription(Dude1.getDescription());
-        testDude.setBirthday(Dude1.getBirthday());
-        testDude.setSex(Dude1.getSex());
-        testDude.setStatus(Dude1.getStatus());
-        testDude.setSelfAssessment(Dude1.getSelfAssessment());
-        testDude.setHeight(Dude1.getHeight());
-        testDude.setWeight(Dude1.getWeight());
-
-        Mockito.when(dudeRepository.findByNameAndPassword(anyString(),anyString())).thenReturn(testDude);
-        Dude dude = dudeService.findByNameAndPassword("John","John's Password");
-        assertEquals(dude.getName(),Dude1.getName());
-        assertNotEquals(dude.getPassword(),Dude1.getPassword());
-        assertEquals(dude.getPassword(),"XXXXXXXX");
+        Mockito.when(dudeRepository.findByNameAndPassword(anyString(),anyString())).thenReturn(Dude1);
+        assertEquals(dudeService.findByNameAndPassword("John","John's Password"),Dude1);
     }
 
     @Test
