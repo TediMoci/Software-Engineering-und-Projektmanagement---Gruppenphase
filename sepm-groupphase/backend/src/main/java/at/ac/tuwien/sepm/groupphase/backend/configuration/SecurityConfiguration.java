@@ -102,6 +102,7 @@ public class SecurityConfiguration {
                     "/dudes",
                     "/dudes/all",
                     "/dudes/{id}",
+                    "/user",
                     "/fitnessProvider",
                     "/v2/api-docs",
                     "/swagger-resources/**",

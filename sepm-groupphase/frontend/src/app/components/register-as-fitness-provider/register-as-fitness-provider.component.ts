@@ -20,7 +20,7 @@ export class RegisterAsFitnessProviderComponent implements OnInit {
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       address: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirmed: ['', Validators.required]

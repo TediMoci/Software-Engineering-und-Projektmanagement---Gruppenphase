@@ -14,12 +14,15 @@
     <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
       required!
     </small>
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.nameCheck">Your name is
+        already taken!
+      </small>
     </div>
   </div>
 
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" name="password" formControlName="password" class="form-control" id="password"
+    <input knifeNoSpaces type="password" name="password" formControlName="password" class="form-control" id="password"
            placeholder="Enter password">
     <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
       <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
@@ -33,7 +36,7 @@
 
   <div class="form-group">
     <label for="passwordConfirmed">Password Confirmed</label>
-    <input type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
+    <input knifeNoSpaces  type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
            placeholder="Enter password">
     <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
       <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
@@ -52,6 +55,9 @@
       <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
         required!
       </small>
+      <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.email">Your email is
+        invalid!
+      </small>
     </div>
   </div>
 
@@ -59,17 +65,17 @@
     <span class="sex">Gender</span>
     <div class="gap_space">
     <div class= "custom-control custom-radio custom-control-inline">
-      <input id="male" type="radio" class="custom-control-input" value="Male" name="sex" formControlName="sex">
+      <input id="male" type="radio" class="custom-control-input" value= 1 name="sex" formControlName="sex">
       <label class="custom-control-label" for="male">Male</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input id="female" type="radio" class="custom-control-input" value="Female" name="sex" formControlName="sex">
+      <input id="female" type="radio" class="custom-control-input" value= 2 name="sex" formControlName="sex">
       <label class="custom-control-label" for="female">Female</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input id="others" type="radio" class="custom-control-input" value="Others" name="sex" formControlName="sex">
+      <input id="others" type="radio" class="custom-control-input" value= 3 name="sex" formControlName="sex">
       <label class="custom-control-label" for="others">Other</label>
     </div>
 
