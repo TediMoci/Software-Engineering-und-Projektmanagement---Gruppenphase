@@ -53,4 +53,14 @@ public class FitnessProviderService implements IFitnessProviderService {
         return null;
     }
 
+
+    @Override
+    public Integer getNumberOfFollowers(String name) throws ServiceException {
+        try {
+            fitnessProviderValidator.validateName(name);
+        } catch (ValidationException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        return iFitnessProviderRepository.findByName(name).getDudes().size();
+    }
 }
