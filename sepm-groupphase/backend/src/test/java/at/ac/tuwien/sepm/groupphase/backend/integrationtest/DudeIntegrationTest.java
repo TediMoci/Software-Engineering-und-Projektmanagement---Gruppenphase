@@ -1,14 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.actors.DudeEndpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.SimpleMessageDTO;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
-import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors.DudeService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -17,8 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +23,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -46,11 +39,8 @@ public class  DudeIntegrationTest extends BaseIntegrationTest {
     @MockBean
     IDudeRepository dudeRepository;
 
-    @Autowired
-    DudeEndpoint dudeEndpoint;
-
     @Before
-    public void setUp() throws Exception{
+    public void setUp(){
         testDude.setId(1L);
         testDude.setName("John");
         testDude.setPassword("123456789");
@@ -65,7 +55,7 @@ public class  DudeIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void TestFindAll() throws ServiceException{
+    public void TestFindAll(){
         Dude Dude1 = new Dude();
         Dude1.setId(1L);
         Dude1.setName("John");
