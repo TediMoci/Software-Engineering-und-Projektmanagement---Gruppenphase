@@ -95,7 +95,7 @@ public class FitnessProviderEndpoint {
         try {
             return iFitnessProviderService.getNumberOfFollowers(name);
         } catch (ServiceException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during getting fitness provider followers: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 }
