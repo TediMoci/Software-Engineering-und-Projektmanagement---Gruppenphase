@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
@@ -15,6 +14,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class DudeService implements IDudeService {
@@ -106,6 +106,7 @@ public class DudeService implements IDudeService {
         }
 
         Dude dude = iDudeRepository.findByNameAndPassword(name, password);
+        if (dude==null) throw new ServiceException("Could not find dude");
         dude.setPassword("XXXXXXXX");
 
         return dude;
@@ -122,7 +123,23 @@ public class DudeService implements IDudeService {
         try{
             Dude dude = iDudeRepository.findById(id).get();
             return dude;
-        } catch (NotFoundException e){
+        } catch (NoSuchElementException e){
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    //TODO: Separate validator class to be written
+    //TODO: Description and status taking default values if null
+    @Override
+    public Dude update(String name, Dude newDude) throws ServiceException {
+        try {
+            Dude oldDude = findByName(name);
+            if (oldDude==null) throw new ServiceException("There is no dude with that name in the database.");
+            Dude dude = dudeValidator.validateUpdate(oldDude, newDude);
+
+            return iDudeRepository.save(dude);
+
+        } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());
         }
     }

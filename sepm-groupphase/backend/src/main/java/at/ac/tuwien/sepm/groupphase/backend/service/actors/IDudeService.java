@@ -53,4 +53,8 @@ public interface IDudeService {
     //TODO
     Dude findDudeById(Long id) throws ServiceException;
 
-}
+    //TODO
+    Dude update(String name, Dude newDude) throws ServiceException;
+
+
+    }

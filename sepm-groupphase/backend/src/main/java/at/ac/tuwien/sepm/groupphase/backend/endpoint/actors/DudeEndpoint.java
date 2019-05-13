@@ -73,4 +73,16 @@ public class DudeEndpoint {
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-    }}
+    }
+
+    @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {
+        try {
+            return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during updating Dude: " + e.getMessage(), e);
+        }
+    }
+}
+

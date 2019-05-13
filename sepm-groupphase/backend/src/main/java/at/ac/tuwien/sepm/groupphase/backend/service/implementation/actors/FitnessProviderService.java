@@ -8,6 +8,8 @@ import at.ac.tuwien.sepm.groupphase.backend.validators.actors.FitnessProviderVal
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 @Service
 public class FitnessProviderService implements IFitnessProviderService {
 
@@ -22,11 +24,13 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     @Override
     public FitnessProvider save(FitnessProvider fitnessProvider) throws ServiceException {
+
         try{
             fitnessProviderValidator.validateFitnessProvider(fitnessProvider);
         }catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
+        fitnessProvider.setRoles(Arrays.asList("ROLE_USER"));
         return iFitnessProviderRepository.save(fitnessProvider);
     }
 
@@ -42,4 +46,10 @@ public class FitnessProviderService implements IFitnessProviderService {
 
         return fitnessProvider;
     }
+
+    @Override
+    public FitnessProvider registerNewUserAccount(FitnessProvider fitnessProvider) throws ServiceException {
+        return null;
+    }
+
 }
