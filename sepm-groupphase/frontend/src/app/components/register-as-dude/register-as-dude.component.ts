@@ -12,8 +12,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./register-as-dude.component.scss']
 })
 export class RegisterAsDudeComponent implements OnInit {
-  error: boolean = false;
-  errorMessage: string = '';
+  error: any;
   registerForm: FormGroup;
   submitted: boolean = false;
   constructor(private registerAsDudeService: RegisterAsDudeService, private formBuilder: FormBuilder, private router: Router) { }
@@ -53,21 +52,17 @@ export class RegisterAsDudeComponent implements OnInit {
       return;
     }
 
-
     this.registerAsDudeService.addDude(dude).subscribe(
       () => {
         this.router.navigate(['']);
       },
       error => {
-        this.defaultServiceErrorHandling(error);
+        this.error = error;
       }
     );
   }
 
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    this.errorMessage = error.error.message;
+  vanishError() {
+    this.error = false;
   }
-
 }

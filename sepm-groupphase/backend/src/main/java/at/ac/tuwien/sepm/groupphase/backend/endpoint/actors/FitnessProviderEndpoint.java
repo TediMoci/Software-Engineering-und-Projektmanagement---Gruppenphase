@@ -35,7 +35,7 @@ public class FitnessProviderEndpoint {
             fitnessProvider = iFitnessProviderService.save(fitnessProvider);
             return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(fitnessProvider);
         } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during saving fitness provider: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
@@ -45,7 +45,7 @@ public class FitnessProviderEndpoint {
         try{
             return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findByNameAndPassword(name, password));
         }catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading fitness provider: "+ e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 }
