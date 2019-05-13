@@ -41,7 +41,7 @@ public class DudeServiceTest {
         Dude1.setEmail("john1@dude.com");
         Dude1.setDescription("Description 1");
         Dude1.setBirthday(LocalDate.of(1982,1,1));
-        Dude1.setSex('M');
+        Dude1.setSex(1);
         Dude1.setStatus(1);
         Dude1.setSelfAssessment(1);
         Dude1.setHeight(185.0);
@@ -53,7 +53,7 @@ public class DudeServiceTest {
         Dude2.setEmail("linda1@dude.com");
         Dude2.setDescription("Description 2");
         Dude2.setBirthday(LocalDate.of(1995,5,7));
-        Dude2.setSex('M');
+        Dude2.setSex(1);
         Dude2.setStatus(3);
         Dude2.setSelfAssessment(3);
         Dude2.setHeight(165.0);

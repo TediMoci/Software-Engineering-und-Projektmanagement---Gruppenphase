@@ -1,24 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
+import {Router} from '@angular/router';
 import {AuthRequest} from '../../dtos/auth-request';
-import {RegisterAsDude} from '../../dtos/register-as-dude';
-
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector: 'app-login-as-fitness-provider',
+  templateUrl: './login-as-fitness-provider.component.html',
+  styleUrls: ['./login-as-fitness-provider.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginAsFitnessProviderComponent implements OnInit {
 
   loginForm: FormGroup;
   // After first submission attempt, form validation will start
   submitted: boolean = false;
   // Error flag
   error: any;
-  dude: RegisterAsDude;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
@@ -32,21 +29,20 @@ export class LoginComponent implements OnInit {
    */
   loginUser() {
     this.submitted = true;
-    this.authService.getUserByNameAndPasswordFromDude(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe((data) => {
-        console.log(data);
+    this.authService.getUserByNameAndPasswordFromFitnessProvider(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe((data) => {
+      console.log(data);
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
           this.authenticateUser(authRequest);
-          this.setDudeForProfile(data);
         } else {
           console.log('Invalid input');
         }
       },
       error => {
         this.error = error;
-        console.log(error);
       }
     );
+
 
   }
 
@@ -59,7 +55,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        this.router.navigate(['/dude-profile']); // TODO: route to fitnessProvider or dude-profile according to who is logged in
+        this.router.navigate(['/fitnessProvider-profile']); // TODO: route to fitnessProvider or dude-profile according to who is logged in
       },
       error => {
         console.log('Could not log in due to: ' + error.message);
@@ -76,13 +72,5 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  setDudeForProfile(dudeHelp: RegisterAsDude){
-    this.dude = dudeHelp;
-  }
-
-  getDudeForProfile() {
-    return this.dude;
   }
 }

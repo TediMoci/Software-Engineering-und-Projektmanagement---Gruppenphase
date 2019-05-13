@@ -11,7 +11,7 @@ import {RegisterAsFitnessProvider} from '../../dtos/register-as-fitness-provider
   styleUrls: ['./register-as-fitness-provider.component.scss']
 })
 export class RegisterAsFitnessProviderComponent implements OnInit {
-  
+
   error: any;
   registerForm: FormGroup;
   submitted: boolean = false;
@@ -46,7 +46,7 @@ export class RegisterAsFitnessProviderComponent implements OnInit {
     this.registerAsFitnessProviderService.addFitnessProvider(fitnessProvider).subscribe(
       () => {
         console.log(fitnessProvider);
-        this.router.navigate(['']);
+        this.router.navigate(['login-as-fitness-provider']);
       },
       error => {
         this.error = error;

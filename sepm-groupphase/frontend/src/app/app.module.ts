@@ -26,6 +26,7 @@ import { MyContentComponent } from './components/my-content/my-content.component
 import { FavouritesComponent } from './components/favourites/favourites.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { FitnessProviderProfileComponent } from './components/fitness-provider-profile/fitness-provider-profile.component';
+import { LoginAsFitnessProviderComponent } from './components/login-as-fitness-provider/login-as-fitness-provider.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { FitnessProviderProfileComponent } from './components/fitness-provider-p
     MyContentComponent,
     FavouritesComponent,
     EditProfileComponent,
-    FitnessProviderProfileComponent
+    FitnessProviderProfileComponent,
+    LoginAsFitnessProviderComponent
   ],
   imports: [
     BrowserModule,

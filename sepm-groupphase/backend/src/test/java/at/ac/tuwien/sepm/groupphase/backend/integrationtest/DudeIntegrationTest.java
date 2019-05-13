@@ -63,7 +63,7 @@ public class  DudeIntegrationTest extends BaseIntegrationTest {
         Dude1.setEmail("john1@dude.com");
         Dude1.setDescription("Description 1");
         Dude1.setBirthday(LocalDate.of(1982,1,1));
-        Dude1.setSex('M');
+        Dude1.setSex(1);
         Dude1.setStatus(1);
         Dude1.setSelfAssessment(1);
         Dude1.setHeight(185.0);

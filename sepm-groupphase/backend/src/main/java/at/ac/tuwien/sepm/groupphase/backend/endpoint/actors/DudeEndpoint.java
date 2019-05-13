@@ -81,7 +81,7 @@ public class DudeEndpoint {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
         } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during updating Dude: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 }

@@ -42,6 +42,7 @@ public class FitnessProviderService implements IFitnessProviderService {
             throw new ServiceException(e.getMessage());
         }
         FitnessProvider fitnessProvider = iFitnessProviderRepository.findByNameAndPassword(name, password);
+        if (fitnessProvider==null) throw new ServiceException("Could not find your Fitness Provider Profile");
         fitnessProvider.setPassword("XXXXXXXX");
 
         return fitnessProvider;

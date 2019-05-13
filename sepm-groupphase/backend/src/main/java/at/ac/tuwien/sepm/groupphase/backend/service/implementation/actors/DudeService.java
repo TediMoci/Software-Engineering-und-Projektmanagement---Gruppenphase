@@ -106,7 +106,7 @@ public class DudeService implements IDudeService {
         }
 
         Dude dude = iDudeRepository.findByNameAndPassword(name, password);
-        if (dude==null) throw new ServiceException("Could not find dude");
+        if (dude==null) throw new ServiceException("Could not find your Dude Profile");
         dude.setPassword("XXXXXXXX");
 
         return dude;
