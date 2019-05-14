@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import io.restassured.RestAssured;
@@ -19,15 +20,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,7 +44,7 @@ public class  DudeIntegrationTest extends BaseIntegrationTest {
         testDude.setEmail("john1@dude.com");
         testDude.setDescription("Description 1");
         testDude.setBirthday(LocalDate.of(1982,1,1));
-        testDude.setSex(1);
+        testDude.setSex(Sex.Female);
         testDude.setStatus(1);
         testDude.setSelfAssessment(1);
         testDude.setHeight(185.0);
@@ -63,7 +60,7 @@ public class  DudeIntegrationTest extends BaseIntegrationTest {
         Dude1.setEmail("john1@dude.com");
         Dude1.setDescription("Description 1");
         Dude1.setBirthday(LocalDate.of(1982,1,1));
-        Dude1.setSex(1);
+        Dude1.setSex(Sex.Female);
         Dude1.setStatus(1);
         Dude1.setSelfAssessment(1);
         Dude1.setHeight(185.0);
@@ -101,7 +98,7 @@ public class  DudeIntegrationTest extends BaseIntegrationTest {
         Dude1.setEmail("john1@dude.com");
         Dude1.setDescription("Description 1");
         Dude1.setBirthday(LocalDate.of(1982,1,1));
-        Dude1.setSex('M');
+        Dude1.setSex(Sex.Male);
         Dude1.setStatus(1);
         Dude1.setSelfAssessment(1);
         Dude1.setHeight(185.0);

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -31,8 +32,7 @@ public class Dude {
     private String email;
 
     @Column(nullable = false)
-    private Integer sex;
-    // 1 = Male; 2 = Female; 3 = Other;
+    private Sex sex;
 
     @Column(nullable = false)
     @Min(1) @Max(3)
@@ -73,6 +73,12 @@ public class Dude {
     )
     private Set<Course> courses;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
+    private Set<Exercise> exercises;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
+    private Set<Workout> workouts;
+
     public Long getId() {
         return id;
     }
@@ -109,11 +115,11 @@ public class Dude {
         this.email = email;
     }
 
-    public Integer getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(Integer sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -173,6 +179,22 @@ public class Dude {
         this.courses = courses;
     }
 
+    public Set<Exercise> getExercises() {
+        return exercises;
+    }
+
+    public void setExercises(Set<Exercise> exercises) {
+        this.exercises = exercises;
+    }
+
+    public Set<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void setWorkouts(Set<Workout> workouts) {
+        this.workouts = workouts;
+    }
+
     public static DudeBuilder builder() {
         return new DudeBuilder();
     }
@@ -193,6 +215,8 @@ public class Dude {
             ", weight=" + weight +
             ", fitnessProviders=" + fitnessProviders +
             ", courses=" + courses +
+            ", exercises=" + exercises +
+            ", workouts=" + workouts +
             '}';
     }
 
@@ -217,7 +241,9 @@ public class Dude {
         if (weight != null ? !weight.equals(dude.weight) : dude.weight != null) return false;
         if (fitnessProviders != null ? !fitnessProviders.equals(dude.fitnessProviders) : dude.fitnessProviders != null)
             return false;
-        return courses != null ? courses.equals(dude.courses) : dude.courses == null;
+        if (courses != null ? !courses.equals(dude.courses) : dude.courses != null) return false;
+        if (exercises != null ? !exercises.equals(dude.exercises) : dude.exercises != null) return false;
+        return workouts != null ? workouts.equals(dude.workouts) : dude.workouts == null;
 
     }
 
@@ -236,6 +262,8 @@ public class Dude {
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
         result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
         result = 31 * result + (courses != null ? courses.hashCode() : 0);
+        result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
+        result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         return result;
     }
 
@@ -245,7 +273,7 @@ public class Dude {
         private String password;
         private String description;
         private String email;
-        private Integer sex;
+        private Sex sex;
         private Integer status;
         private Integer selfAssessment;
         private LocalDate birthday;
@@ -253,6 +281,8 @@ public class Dude {
         private Double weight;
         private Set<FitnessProvider> fitnessProviders;
         private Set<Course> courses;
+        private Set<Exercise> exercises;
+        private Set<Workout> workouts;
 
         public DudeBuilder() {
         }
@@ -282,7 +312,7 @@ public class Dude {
             return this;
         }
 
-        public DudeBuilder sex(Integer sex) {
+        public DudeBuilder sex(Sex sex) {
             this.sex = sex;
             return this;
         }
@@ -322,6 +352,16 @@ public class Dude {
             return this;
         }
 
+        public DudeBuilder exercises(Set<Exercise> exercises) {
+            this.exercises = exercises;
+            return this;
+        }
+
+        public DudeBuilder workouts(Set<Workout> workouts) {
+            this.workouts = workouts;
+            return this;
+        }
+
         public Dude build() {
             Dude dude = new Dude();
             dude.setId(id);
@@ -337,6 +377,8 @@ public class Dude {
             dude.setWeight(weight);
             dude.setFitnessProviders(fitnessProviders);
             dude.setCourses(courses);
+            dude.setExercises(exercises);
+            dude.setWorkouts(workouts);
             return dude;
         }
     }

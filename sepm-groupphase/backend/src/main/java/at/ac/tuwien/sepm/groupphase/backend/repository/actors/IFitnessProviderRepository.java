@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface IFitnessProviderRepository extends JpaRepository<FitnessProvider, Long> {
 
@@ -31,4 +33,6 @@ public interface IFitnessProviderRepository extends JpaRepository<FitnessProvide
      */
     @Query("select u FROM FitnessProvider u where u.name = ?1 and u.password = ?2")
     FitnessProvider findByNameAndPassword(String name, String password);
+
+    List<FitnessProvider> findAll();
 }

@@ -8,7 +8,9 @@ import at.ac.tuwien.sepm.groupphase.backend.validators.actors.FitnessProviderVal
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class FitnessProviderService implements IFitnessProviderService {
@@ -37,7 +39,7 @@ public class FitnessProviderService implements IFitnessProviderService {
     public FitnessProvider findByNameAndPassword(String name, String password) throws ServiceException {
         try {
             fitnessProviderValidator.validateNameAndPassword(name, password);
-        }catch (ValidationException e){
+        } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
         FitnessProvider fitnessProvider = iFitnessProviderRepository.findByNameAndPassword(name, password);
@@ -65,4 +67,37 @@ public class FitnessProviderService implements IFitnessProviderService {
             throw new ServiceException("The Fitness Provider with the name '" + name + "' does not exist.");
         }
     }
+
+    @Override
+    public List<FitnessProvider> findAll(){
+        List<FitnessProvider> fitnessProviders = new ArrayList<>();
+        iFitnessProviderRepository.findAll().forEach(fitnessProviders::add);
+        return fitnessProviders;
+    }
+
+    @Override
+    public FitnessProvider findByName(String name) throws ServiceException {
+        try {
+            fitnessProviderValidator.validateName(name);
+        } catch (ValidationException e){
+            throw new ServiceException(e.getMessage());
+        }
+
+        return iFitnessProviderRepository.findByName(name);
+    }
+
+    @Override
+    public FitnessProvider update(String name, FitnessProvider newFP) throws ServiceException{
+        try {
+            FitnessProvider oldFP = findByName(name);
+            if (oldFP==null) throw new ServiceException("There is no fitness provider with that name in the database.");
+            FitnessProvider fitnessProvider = fitnessProviderValidator.validateUpdate(oldFP, newFP);
+
+            return iFitnessProviderRepository.save(fitnessProvider);
+
+        } catch (ValidationException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
 }

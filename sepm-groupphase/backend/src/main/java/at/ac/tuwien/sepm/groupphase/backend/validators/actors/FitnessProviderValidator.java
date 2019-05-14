@@ -29,6 +29,10 @@ public class FitnessProviderValidator {
         validateNameUnique(fitnessProvider.getName());
         //Name Validation
         validateName(fitnessProvider.getName());
+        //Password Validation
+        if (fitnessProvider.getPassword()==null || fitnessProvider.getPassword().isBlank()) {throw new ValidationException(password_is_null);}
+        if (fitnessProvider.getPassword().length()<8) {throw new ValidationException(password_too_short);}
+
         //Address Validation
         if(fitnessProvider.getAddress() == null){throw new ValidationException( address_is_null);}
         if(fitnessProvider.getAddress().isBlank()){throw new ValidationException( address_is_blank);}
@@ -36,18 +40,16 @@ public class FitnessProviderValidator {
         if(fitnessProvider.getEmail() == null){throw new ValidationException( email_is_null);}
         if(fitnessProvider.getEmail().isBlank()){throw new ValidationException( email_is_blank);}
     }
+
     public void validateNameAndPassword (String name, String password) throws ValidationException{
         //Name Validation
         validateName(name);
         //Password Validation
         if(password == null){throw new  ValidationException(password_is_null);}
         if(password.length() < 8){throw new ValidationException(password_too_short);}
-
-
     }
 
     public void validateName(String name) throws ValidationException {
-        validateNameUnique(name);
         if(name == null){throw new ValidationException( name_is_null);}
         if(name.isBlank()){throw new ValidationException( name_is_blank);}
         if(name.length()< 1 || name.length() > 50){ throw new ValidationException(name_lenght_invalid);}
@@ -63,6 +65,39 @@ public class FitnessProviderValidator {
         if (taken == 0 || taken == 1) {
             throw new ValidationException(name_not_unique);
         }
+    }
+
+    public FitnessProvider validateUpdate(FitnessProvider oldFP, FitnessProvider newFP) throws ValidationException {
+
+        if (newFP.getName() != null && !(newFP.getName().isBlank()) && !(newFP.getName().equals(oldFP.getName()))) {
+            validateNameUnique(newFP.getName());
+            oldFP.setName(newFP.getName());
+        }
+
+        if (newFP.getPassword()!=null && !(newFP.getPassword().isBlank()) && newFP.getPassword().length()>=8){
+            oldFP.setPassword(newFP.getPassword());
+        }
+
+        if (newFP.getDescription()!=null && !(newFP.getDescription().isBlank())){
+            oldFP.setDescription(newFP.getDescription());
+        }
+
+        if (newFP.getAddress()!=null && !(newFP.getAddress().isBlank())){
+            oldFP.setAddress(newFP.getAddress());
+        }
+
+        if (newFP.getEmail() != null && !(newFP.getEmail().isBlank())) {
+            oldFP.setEmail(newFP.getEmail());
+        }
+
+        if (newFP.getPhoneNumber() != null && !(newFP.getPhoneNumber().isBlank()) && newFP.getPhoneNumber().length()<=30) {
+            oldFP.setPhoneNumber(newFP.getPhoneNumber());
+        }
+
+        if (newFP.getWebsite() != null && !(newFP.getWebsite().isBlank()) && newFP.getWebsite().length()<=100) {
+            oldFP.setWebsite(newFP.getWebsite());
+        }
+        return oldFP;
     }
 
 }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.validators.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class DudeValidator {
     private String email_is_null = "Email adress must be set!";
     private String email_is_blank = "Email adress must not be blank!";
     private String sex_is_null = "Sex must be set!";
-    private String invalid_sex = "Sex must be Male (1), Female (2) or Other (3)!";
+    private String invalid_sex = "Sex must be Male, Female or Other!";
     private String selfAssessment_is_null = "Self assessment must not be null!";
     private String invalid_selfAssessment = "Self assessment must be 1 (Beginner), 2 (Advanced) or 3 (Pro)!";
     private String birthday_is_null = "Birthday must not be null!";
@@ -51,6 +52,10 @@ public class DudeValidator {
 
         validateNameUnique(dude.getName());
 
+        if (dude.getPassword()==null || dude.getPassword().isBlank() ||dude.getPassword().length() < 8) {
+            throw new ValidationException(password_too_short);
+        }
+
         if (dude.getEmail() == null) {
             throw new ValidationException(email_is_null);
         }
@@ -60,7 +65,7 @@ public class DudeValidator {
         if (dude.getSex() == null) {
             throw new ValidationException(sex_is_null);
         }
-        if (!(dude.getSex().equals(1) || dude.getSex().equals(2) || dude.getSex().equals(3))) {
+        if (!(dude.getSex() == Sex.Female || dude.getSex() == Sex.Male || dude.getSex() == Sex.Other)) {
             throw new ValidationException(invalid_sex);
         }
         if (dude.getSelfAssessment() == null) {
@@ -157,9 +162,7 @@ public class DudeValidator {
             oldDude.setEmail(dude.getEmail());
         }
 
-        if (dude.getSex() != null && (dude.getSex().equals('F') || dude.getSex().equals('f') || dude.getSex().equals('M') || dude.getSex().equals('m') || dude.getSex().equals('O') || dude.getSex().equals('o'))) {
-            oldDude.setSex(dude.getSex());
-        }
+        //if (!(dude.getSex() == Sex.Female || dude.getSex() == Sex.Male || dude.getSex() == Sex.Other))
 
         if (dude.getStatus()!=null && (dude.getStatus() == 1 || dude.getStatus() == 2 || dude.getStatus() == 3)) {
             oldDude.setStatus(dude.getStatus());
@@ -173,11 +176,11 @@ public class DudeValidator {
             oldDude.setBirthday(dude.getBirthday());
         }
 
-        if (dude.getHeight() != null && (dude.getHeight() > 50 || dude.getHeight() < 300)) {
+        if (dude.getHeight() != null && dude.getHeight() >= 50.0 && dude.getHeight() <= 300.0) {
             oldDude.setHeight(dude.getHeight());
         }
 
-        if (dude.getWeight() != null && ((dude.getWeight() < 1.0) || (dude.getWeight() > 700.0))) {
+        if (dude.getWeight() != null && dude.getWeight() >= 1.0 && dude.getWeight() <= 700.0) {
             oldDude.setWeight(dude.getWeight());
         }
 

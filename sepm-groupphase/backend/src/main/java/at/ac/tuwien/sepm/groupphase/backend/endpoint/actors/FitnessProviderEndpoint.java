@@ -19,6 +19,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/fitnessProvider")
 @Api(value = "fitnessProvider")
@@ -55,46 +58,36 @@ public class FitnessProviderEndpoint {
         }
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String showRegistation(WebRequest request, Model model){
-        FitnessProviderDto fitnessProviderDto = new FitnessProviderDto();
-        model.addAttribute("user", fitnessProviderDto);
-        return "registration";
-    }
-
-    @RequestMapping(value = "/registration", method =  RequestMethod.POST)
-    public ModelAndView registerUserAccount(@RequestBody FitnessProviderDto fitnessProviderDto, BindingResult result, WebRequest request, Errors errors){
-        FitnessProvider fitnessProvider = new FitnessProvider();
-        if(!result.hasErrors()){
-            fitnessProvider = createUserAccount(fitnessProviderDto, result);
-        }
-        if(fitnessProvider == null){
-            result.reject("name", "massage.regError");
-        }
-        if(result.hasErrors()){
-            return new ModelAndView("registration", "user", fitnessProviderDto);
-        } else {
-            return new ModelAndView("successRegister", "user", fitnessProviderDto);
-        }
-
-    }
-
-    private FitnessProvider createUserAccount(FitnessProviderDto fitnessProviderDto, BindingResult result){
-        FitnessProvider fitnessProvider = new FitnessProvider();
-        try{
-            fitnessProvider = iFitnessProviderService.save(fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(fitnessProviderDto));
-        } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-        return  fitnessProvider;
-    }
-
     @RequestMapping(value = "/{name}/followers", method = RequestMethod.GET)
     @ApiOperation(value = "Get the number of followers of the fitness provider with the given name", authorizations ={ @Authorization(value = "apiKey")})
     public Integer getNumberOfFollowers(@PathVariable String name) {
         try {
             return iFitnessProviderService.getNumberOfFollowers(name);
         } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all fitness providers", authorizations = {@Authorization(value = "apiKey")})
+    public List<FitnessProviderDto> findAll() {
+        List<FitnessProviderDto> fpListDto = new ArrayList<>();
+        try {
+            for (int i=0; i< iFitnessProviderService.findAll().size(); i++){
+                fpListDto.add(fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findAll().get(i)));
+            }
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        return fpListDto;
+    }
+
+    @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
+    public FitnessProviderDto updateFitnessProvider(@PathVariable("name") String name, @RequestBody FitnessProviderDto fitnessProvider) {
+        try {
+            return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.update(name, fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(fitnessProvider)));
+        } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
