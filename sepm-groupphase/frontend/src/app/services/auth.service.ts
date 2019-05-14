@@ -76,7 +76,7 @@ export class AuthService {
     if (this.getToken() != null) {
       const decoded: any = jwt_decode(this.getToken());
       const authInfo = decoded.aut;
-      if (authInfo.includes('ADMIN')) {
+      if (authInfo.includes('FITNESS_PROVIDER')) {
         return 'ADMIN';
       } else if (authInfo.includes('USER')) {
         return 'USER';

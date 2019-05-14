@@ -31,7 +31,7 @@ public class FitnessProviderService implements IFitnessProviderService {
         }catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-        fitnessProvider.setRoles(Arrays.asList("ROLE_USER"));
+        fitnessProvider.setRoles(Arrays.asList("FITNESS_PROVIDER"));
         return iFitnessProviderRepository.save(fitnessProvider);
     }
 

@@ -40,31 +40,16 @@ public class SecurityConfiguration {
 
     private final PasswordEncoder passwordEncoder;
     private final MyFitnessProviderDetailsService fitnessProviderDetailsService;
-    private final DataSource dataSource;
 
-    public SecurityConfiguration(PasswordEncoder passwordEncoder, MyFitnessProviderDetailsService fitnessProviderDetailsService, DataSource dataSource) {
+    public SecurityConfiguration(PasswordEncoder passwordEncoder, MyFitnessProviderDetailsService fitnessProviderDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.fitnessProviderDetailsService = fitnessProviderDetailsService;
-        this.dataSource = dataSource;
     }
 
     @Bean
     public static PasswordEncoder configureDefaultPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-
-    /*
-     @Bean
-    public DataSource getDataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(env.getProperty("mysql.driver"));
-        dataSource.setUrl(env.getProperty("mysql.jdbcUrl"));
-        dataSource.setUsername(env.getProperty("mysql.username"));
-        dataSource.setPassword(env.getProperty("mysql.password"));
-        return dataSource;
-    }
-     */
-
 
     @Bean
     public ErrorAttributes errorAttributes() {
@@ -78,10 +63,10 @@ public class SecurityConfiguration {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList, DataSource dataSource) throws Exception {
         auth.userDetailsService(fitnessProviderDetailsService);
         new JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder>()
-            //.dataSource(dataSource)
+            .dataSource(dataSource)
             .passwordEncoder(passwordEncoder)
             .configure(auth);
         providerList.forEach(auth::authenticationProvider);
