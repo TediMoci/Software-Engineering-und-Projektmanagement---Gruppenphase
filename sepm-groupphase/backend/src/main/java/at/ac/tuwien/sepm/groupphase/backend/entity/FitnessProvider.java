@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -45,10 +46,8 @@ public class FitnessProvider {
     @Size(max = 100)
     private String website = "No website given.";
 
-
     @ElementCollection
     private List<String> roles;
-
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProviders")
     private Set<Dude> dudes;
@@ -159,6 +158,7 @@ public class FitnessProvider {
             ", email='" + email + '\'' +
             ", phoneNumber='" + phoneNumber + '\'' +
             ", website='" + website + '\'' +
+            ", roles='" + roles + '\'' +
             ", dudes=" + dudes +
             ", courses=" + courses +
             '}';

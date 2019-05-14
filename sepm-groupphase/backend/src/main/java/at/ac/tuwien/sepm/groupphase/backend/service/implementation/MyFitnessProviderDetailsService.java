@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class MyFitnessProviderDetailsService {
+public class MyFitnessProviderDetailsService implements UserDetailsService{
 
     @Autowired
     private IFitnessProviderRepository fitnessProviderRepository;
