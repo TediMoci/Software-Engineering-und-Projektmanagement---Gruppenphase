@@ -37,7 +37,7 @@ public class DudeEndpoint {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.save(dude));
         } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during saving Dude: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
@@ -47,7 +47,7 @@ public class DudeEndpoint {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findByNameAndPassword(name, password));
         } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading Dude: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
@@ -60,7 +60,7 @@ public class DudeEndpoint {
                 dudeListDTO.add(dudeMapper.dudeToDudeDto(iDudeService.findAll().get(i)));
             }
         } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading Dude: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         return dudeListDTO;
     }
@@ -71,6 +71,18 @@ public class DudeEndpoint {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findDudeById(id));
         } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during reading Dude: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-    }}
+    }
+
+    @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {
+        try {
+            return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+}
+

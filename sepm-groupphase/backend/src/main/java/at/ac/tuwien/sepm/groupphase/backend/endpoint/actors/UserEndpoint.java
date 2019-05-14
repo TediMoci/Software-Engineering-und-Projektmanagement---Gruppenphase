@@ -51,7 +51,7 @@ public class UserEndpoint {
                 return fitnessProviderMapper.fitnessProviderToFitnessProviderDto((FitnessProvider)o);
             }
         } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during saving retrieving user: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } return null;
     }
 

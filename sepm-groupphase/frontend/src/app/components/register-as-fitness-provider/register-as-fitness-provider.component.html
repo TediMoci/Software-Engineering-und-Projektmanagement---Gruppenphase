@@ -1,3 +1,9 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
 <h3 class="registerTitle">Register as Fitness Provider</h3>
 
 <div class="pt-3">
@@ -70,8 +76,9 @@
           </div>
         </div>
 
+
         <button type="button" (click)="registerFitnessProvider()" class="btn btn-success float-right">Submit</button>
-        <a [routerLink]="['']" class="btn btn-link">Cancel</a>
+        <a [routerLink]="['/login-as-fitness-provider']" class="btn btn-link">Cancel</a>
       </form>
 
     </div>

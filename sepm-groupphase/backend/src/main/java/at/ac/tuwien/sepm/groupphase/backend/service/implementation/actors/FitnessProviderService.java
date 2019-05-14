@@ -24,13 +24,12 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     @Override
     public FitnessProvider save(FitnessProvider fitnessProvider) throws ServiceException {
-
         try{
             fitnessProviderValidator.validateFitnessProvider(fitnessProvider);
         }catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-        fitnessProvider.setRoles(Arrays.asList("FITNESS_PROVIDER"));
+        fitnessProvider.setRoles(Arrays.asList("ROLE_USER"));
         return iFitnessProviderRepository.save(fitnessProvider);
     }
 
@@ -42,6 +41,7 @@ public class FitnessProviderService implements IFitnessProviderService {
             throw new ServiceException(e.getMessage());
         }
         FitnessProvider fitnessProvider = iFitnessProviderRepository.findByNameAndPassword(name, password);
+        if (fitnessProvider==null) throw new ServiceException("Could not find your Fitness Provider Profile");
         fitnessProvider.setPassword("XXXXXXXX");
 
         return fitnessProvider;
@@ -52,4 +52,17 @@ public class FitnessProviderService implements IFitnessProviderService {
         return null;
     }
 
+
+    @Override
+    public Integer getNumberOfFollowers(String name) throws ServiceException {
+        if (name.isBlank()) {
+            throw new ServiceException("No name given.");
+        }
+        FitnessProvider fitnessProvider = iFitnessProviderRepository.findByName(name);
+        if (fitnessProvider != null) {
+            return fitnessProvider.getDudes().size();
+        } else {
+            throw new ServiceException("The Fitness Provider with the name '" + name + "' does not exist.");
+        }
+    }
 }

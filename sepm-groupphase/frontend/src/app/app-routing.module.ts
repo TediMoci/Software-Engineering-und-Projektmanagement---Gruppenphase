@@ -14,10 +14,12 @@ import {MyContentComponent} from './components/my-content/my-content.component';
 import {FavouritesComponent} from './components/favourites/favourites.component';
 import {EditProfileComponent} from './components/edit-profile/edit-profile.component';
 import {FitnessProviderProfileComponent} from './components/fitness-provider-profile/fitness-provider-profile.component';
+import {LoginAsFitnessProviderComponent } from './components/login-as-fitness-provider/login-as-fitness-provider.component';
 
 const routes: Routes = [
 
   {path: '', component: LoginComponent},
+  {path: 'login-as-fitness-provider', component: LoginAsFitnessProviderComponent},
   {path: 'register-as-dude', component: RegisterAsDudeComponent},
   {path: 'register-as-fitness-provider', component: RegisterAsFitnessProviderComponent},
   {path: 'dude-profile', component: DudeProfileComponent},

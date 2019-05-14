@@ -11,8 +11,8 @@ import {RegisterAsFitnessProvider} from '../../dtos/register-as-fitness-provider
   styleUrls: ['./register-as-fitness-provider.component.scss']
 })
 export class RegisterAsFitnessProviderComponent implements OnInit {
-  error: boolean = false;
-  errorMessage: string = '';
+
+  error: any;
   registerForm: FormGroup;
   submitted: boolean = false;
   constructor(private registerAsFitnessProviderService: RegisterAsFitnessProviderService, private formBuilder: FormBuilder, private router: Router) { }
@@ -46,21 +46,15 @@ export class RegisterAsFitnessProviderComponent implements OnInit {
     this.registerAsFitnessProviderService.addFitnessProvider(fitnessProvider).subscribe(
       () => {
         console.log(fitnessProvider);
-        this.router.navigate(['']);
+        this.router.navigate(['login-as-fitness-provider']);
       },
       error => {
-        this.defaultServiceErrorHandling(error);
+        this.error = error;
       }
     );
   }
 
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (error.error.message !== 'No message available') {
-      this.errorMessage = error.error.message;
-    } else {
-      this.errorMessage = error.error.error;
-    }
+  vanishError() {
+    this.error = false;
   }
 }

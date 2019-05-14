@@ -6,6 +6,8 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import * as jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
+import {RegisterAsFitnessProvider} from '../dtos/register-as-fitness-provider';
+import {RegisterAsDude} from '../dtos/register-as-dude';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,9 @@ export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
   private userBaseUri: string = this.globals.backendUri + '/user';
+  private dudesBaseUri: string = this.globals.backendUri + '/dudes';
+  private fitnessProviderBaseUri: string = this.globals.backendUri + '/fitnessProvider';
+
   private authScheduler: Observable<any> = interval(1000);
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
@@ -53,12 +58,17 @@ export class AuthService {
     return localStorage.getItem('futureToken');
   }
 
-  getUserByNameAndPassword(name: string, password: string): Observable<any> {
+  getUserByNameAndPasswordFromDude(name: string, password: string): Observable<RegisterAsDude> {
     const params = new HttpParams().set('name', name).set('password', password);
     console.log('check user by name ' + name);
-    return this.httpClient.get(this.userBaseUri, { params: params});
+    return this.httpClient.get<RegisterAsDude>(this.dudesBaseUri, { params: params});
   }
 
+  getUserByNameAndPasswordFromFitnessProvider(name: string, password: string): Observable<RegisterAsFitnessProvider> {
+    const params = new HttpParams().set('name', name).set('password', password);
+    console.log('check user by name ' + name);
+    return this.httpClient.get<RegisterAsFitnessProvider>(this.fitnessProviderBaseUri, { params: params});
+  }
   /**
    * Returns the user role based on the current token
    */

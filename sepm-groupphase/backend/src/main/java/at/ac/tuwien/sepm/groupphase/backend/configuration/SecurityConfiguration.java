@@ -122,6 +122,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}",
                     "/user",
                     "/fitnessProvider",
+                    "/fitnessProvider/{name}/followers",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",

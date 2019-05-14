@@ -11,7 +11,7 @@
 
       <div class="card rounded-0">
         <div class="card-header">
-          <h3 class="mb-0">Login as Dude</h3>
+          <h3 class="mb-0">Login as Fitness Provider</h3>
         </div>
 
         <div class="card-body">
@@ -44,17 +44,13 @@
             </div>
 
             <div class="registration">
-            <button type="button" routerLink="/register-as-dude" class="btn btn-link">Register as Dude</button>
+              <button type="button" routerLink="/register-as-fitness-provider" class="btn btn-link">Register as Fitness Provider</button>
             </div>
 
-            <div class="registration">
+            <div class="login-as-dude">
+              <a [routerLink]="['']" class="btn btn-link">Login as Dude</a>
               <button type="button" (click)="loginUser()" class="btn btn-success float-right">Login</button>
             </div>
-
-            <div class="login-as-fitness-provider">
-              <button type="button" routerLink="/login-as-fitness-provider" class="btn btn-link">Login as Fitness Provider</button>
-            </div>
-
           </form>
         </div>
 
