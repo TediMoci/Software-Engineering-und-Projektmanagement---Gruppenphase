@@ -54,6 +54,7 @@ public class DudeValidator {
         if (dude.getPassword()==null || dude.getPassword().isBlank() ||dude.getPassword().length() < 8) {
             throw new ValidationException(password_too_short);
         }
+
         if (dude.getEmail() == null) {
             throw new ValidationException(email_is_null);
         }
