@@ -56,11 +56,14 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     @Override
     public Integer getNumberOfFollowers(String name) throws ServiceException {
-        try {
-            fitnessProviderValidator.validateName(name);
-        } catch (ValidationException e) {
-            throw new ServiceException(e.getMessage());
+        if (name.isBlank()) {
+            throw new ServiceException("No name given.");
         }
-        return iFitnessProviderRepository.findByName(name).getDudes().size();
+        FitnessProvider fitnessProvider = iFitnessProviderRepository.findByName(name);
+        if (fitnessProvider != null) {
+            return fitnessProvider.getDudes().size();
+        } else {
+            throw new ServiceException("The Fitness Provider with the name '" + name + "' does not exist.");
+        }
     }
 }
