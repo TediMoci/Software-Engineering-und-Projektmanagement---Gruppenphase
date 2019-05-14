@@ -73,6 +73,12 @@ public class Dude {
     )
     private Set<Course> courses;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
+    private Set<Exercise> exercises;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
+    private Set<Workout> workouts;
+
     public Long getId() {
         return id;
     }
