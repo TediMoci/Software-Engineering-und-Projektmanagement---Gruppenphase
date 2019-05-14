@@ -1,6 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 public class Exercise {
@@ -9,5 +17,236 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_exercise_id")
     @SequenceGenerator(name = "seq_exercise_id", sequenceName = "seq_exercise_id")
     private Long id;
+
+    @Column(nullable = false, length = 50)
+    @Size(min = 1, max = 50)
+    private String name;
+
+    @Column(nullable = false, length = 1000)
+    @Size(max = 1000)
+    private String description = "No description given.";
+
+    @Column(nullable = false, length = 300)
+    @Size(max = 300)
+    private String equipment = "No needed equipment given.";
+
+    @Column(nullable = false, length = 100, name = "muscle_group")
+    @Size(max = 100)
+    private String muscleGroup = "No muscle group given";
+
+    @Column(nullable = false)
+    @Min(1) @Max(5)
+    private Double rating = 1.0;
+
+    @Column(nullable = false)
+    @NotNull
+    private Category category;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "exercise")
+    private Set<WorkoutExercise> workouts;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "dude_id")
+    private Dude creator;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
+    }
+
+    public String getMuscleGroup() {
+        return muscleGroup;
+    }
+
+    public void setMuscleGroup(String muscleGroup) {
+        this.muscleGroup = muscleGroup;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Set<WorkoutExercise> getWorkouts() {
+        return workouts;
+    }
+
+    public void setWorkouts(Set<WorkoutExercise> workouts) {
+        this.workouts = workouts;
+    }
+
+    public Dude getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Dude creator) {
+        this.creator = creator;
+    }
+
+    public static ExerciseBuilder builder() {
+        return new ExerciseBuilder();
+    }
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", equipment='" + equipment + '\'' +
+            ", muscleGroup='" + muscleGroup + '\'' +
+            ", rating=" + rating +
+            ", category=" + category +
+            ", workouts=" + workouts +
+            ", creator=" + creator +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Exercise exercise = (Exercise) o;
+
+        if (id != null ? !id.equals(exercise.id) : exercise.id != null) return false;
+        if (name != null ? !name.equals(exercise.name) : exercise.name != null) return false;
+        if (description != null ? !description.equals(exercise.description) : exercise.description != null)
+            return false;
+        if (equipment != null ? !equipment.equals(exercise.equipment) : exercise.equipment != null) return false;
+        if (muscleGroup != null ? !muscleGroup.equals(exercise.muscleGroup) : exercise.muscleGroup != null)
+            return false;
+        if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
+        if (category != exercise.category) return false;
+        if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
+        return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
+        result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
+        result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
+        result = 31 * result + (creator != null ? creator.hashCode() : 0);
+        return result;
+    }
+
+    public static final class ExerciseBuilder {
+        private Long id;
+        private String name;
+        private String description;
+        private String equipment;
+        private String muscleGroup;
+        private Double rating;
+        private Category category;
+        private Set<WorkoutExercise> workouts;
+        private Dude creator;
+
+        public ExerciseBuilder() {
+        }
+
+        public ExerciseBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public ExerciseBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ExerciseBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ExerciseBuilder equipment(String equipment) {
+            this.equipment = equipment;
+            return this;
+        }
+
+        public ExerciseBuilder muscleGroup(String muscleGroup) {
+            this.muscleGroup = muscleGroup;
+            return this;
+        }
+
+        public ExerciseBuilder rating(Double rating) {
+            this.rating = rating;
+            return this;
+        }
+
+        public ExerciseBuilder category(Category category) {
+            this.category = category;
+            return this;
+        }
+
+        public ExerciseBuilder workouts(Set<WorkoutExercise> workouts) {
+            this.workouts = workouts;
+            return this;
+        }
+
+        public ExerciseBuilder creator(Dude creator) {
+            this.creator = creator;
+            return this;
+        }
+
+        public Exercise build() {
+            Exercise exercise = new Exercise();
+            exercise.setId(id);
+            exercise.setName(name);
+            exercise.setDescription(description);
+            exercise.setEquipment(equipment);
+            exercise.setMuscleGroup(muscleGroup);
+            exercise.setRating(rating);
+            exercise.setCategory(category);
+            exercise.setWorkouts(workouts);
+            exercise.setCreator(creator);
+            return exercise;
+        }
+    }
 
 }
