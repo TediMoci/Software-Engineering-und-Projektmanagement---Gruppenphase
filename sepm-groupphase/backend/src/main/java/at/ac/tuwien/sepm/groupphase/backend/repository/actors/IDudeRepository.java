@@ -23,7 +23,7 @@ public interface IDudeRepository extends JpaRepository<Dude, Long> {
      * @param name
      * @return
      */
-    Dude findByName(@Param("name")String name);
+    Dude findByName(String name);
 
     /**
      *

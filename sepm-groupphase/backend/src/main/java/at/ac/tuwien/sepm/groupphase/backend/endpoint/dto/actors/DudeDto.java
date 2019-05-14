@@ -25,8 +25,8 @@ public class DudeDto {
     @ApiModelProperty(required = true, name = "Email adress of Dude")
     private String email;
 
-    @ApiModelProperty(required = true, name = "Sex of Dude: female (F), male (M) or other (O)")
-    private String sex;
+    @ApiModelProperty(required = true, name = "Sex of Dude: Male (1), Female (2) or Other (3)")
+    private Integer sex;
 
     @ApiModelProperty(required = true, name = "System status of Dude: 1-3")
     private Integer status = 1;
@@ -85,11 +85,11 @@ public class DudeDto {
         this.email = email;
     }
 
-    public String getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
@@ -221,7 +221,7 @@ public class DudeDto {
         private String password;
         private String description;
         private String email;
-        private String sex;
+        private Integer sex;
         private Integer status;
         private Integer selfAssessment;
         private LocalDate birthday;
@@ -258,7 +258,7 @@ public class DudeDto {
             return this;
         }
 
-        public DudeDtoBuilder sex(String sex) {
+        public DudeDtoBuilder sex(Integer sex) {
             this.sex = sex;
             return this;
         }

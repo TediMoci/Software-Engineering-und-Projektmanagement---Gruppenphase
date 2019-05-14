@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {passwordCheck } from '../../validator/validator';
+import {passwordCheck, checkName } from '../../validator/validator';
 import {RegisterAsDude} from '../../dtos/register-as-dude';
 import {RegisterAsDudeService} from '../../services/register-as-dude.service';
-
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-register-as-dude',
@@ -21,7 +21,7 @@ export class RegisterAsDudeComponent implements OnInit {
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       sex: ['', [Validators.required]],
       selfAssessment: ['', [Validators.required]],
       birthday: ['', [Validators.required]],
@@ -30,7 +30,7 @@ export class RegisterAsDudeComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirmed: ['', Validators.required]
     }, {
-      validator: passwordCheck('password', 'passwordConfirmed')
+      validator: passwordCheck('password', 'passwordConfirmed'),
     });
   }
 
@@ -38,10 +38,6 @@ export class RegisterAsDudeComponent implements OnInit {
   registerUser() {
     this.submitted = true;
 
-    if (this.registerForm.invalid) {
-      console.log('input is invalid');
-      return;
-    }
     const dude: RegisterAsDude = new RegisterAsDude(this.registerForm.controls.name.value,
       this.registerForm.controls.password.value,
       this.registerForm.controls.sex.value,
@@ -52,9 +48,15 @@ export class RegisterAsDudeComponent implements OnInit {
       this.registerForm.controls.weight.value,
     );
 
+    if (this.registerForm.invalid) {
+      console.log('input is invalid');
+      return;
+    }
+
+
     this.registerAsDudeService.addDude(dude).subscribe(
       () => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['']);
       },
       error => {
         this.defaultServiceErrorHandling(error);
@@ -67,4 +69,5 @@ export class RegisterAsDudeComponent implements OnInit {
     this.error = true;
     this.errorMessage = error.error.message;
   }
+
 }

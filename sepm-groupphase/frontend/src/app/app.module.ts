@@ -9,7 +9,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -19,18 +18,33 @@ import {RegisterAsDudeComponent} from './components/register-as-dude/register-as
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterAsFitnessProviderComponent } from './components/register-as-fitness-provider/register-as-fitness-provider.component';
 import { DudeProfileComponent } from './components/dude-profile/dude-profile.component';
+import { BrosComponent } from './components/bros/bros.component';
+import { CreateComponent } from './components/create/create.component';
+import { FindComponent } from './components/find/find.component';
+import { HistoryComponent } from './components/history/history.component';
+import { MyContentComponent } from './components/my-content/my-content.component';
+import { FavouritesComponent } from './components/favourites/favourites.component';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { FitnessProviderProfileComponent } from './components/fitness-provider-profile/fitness-provider-profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent,
     LoginComponent,
     MessageComponent,
     RegisterAsDudeComponent,
     RegisterAsFitnessProviderComponent,
-    DudeProfileComponent
+    DudeProfileComponent,
+    BrosComponent,
+    CreateComponent,
+    FindComponent,
+    HistoryComponent,
+    MyContentComponent,
+    FavouritesComponent,
+    EditProfileComponent,
+    FitnessProviderProfileComponent
   ],
   imports: [
     BrowserModule,

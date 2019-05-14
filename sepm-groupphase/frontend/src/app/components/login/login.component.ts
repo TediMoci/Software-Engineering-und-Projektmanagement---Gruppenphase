@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
    */
   loginUser() {
     this.submitted = true;
+    this.authService.getUserByNameAndPassword(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe(val => console.log(val));
     if (this.loginForm.valid) {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);
@@ -48,7 +49,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        this.router.navigate(['/message']);
+        this.router.navigate(['/dude-profile']); // TODO: route to fitnessProvider or dude-profile according to who is logged in
       },
       error => {
         console.log('Could not log in due to: ' + error.message);

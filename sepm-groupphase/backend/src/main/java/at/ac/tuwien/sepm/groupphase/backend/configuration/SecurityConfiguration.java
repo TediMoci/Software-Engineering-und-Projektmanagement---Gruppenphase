@@ -115,9 +115,12 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers(HttpMethod.POST).permitAll()
                 .antMatchers(HttpMethod.GET,
+                    "/user",
+                    "/user/name",
                     "/dudes",
                     "/dudes/all",
                     "/dudes/{id}",
+                    "/user",
                     "/fitnessProvider",
                     "/v2/api-docs",
                     "/swagger-resources/**",
