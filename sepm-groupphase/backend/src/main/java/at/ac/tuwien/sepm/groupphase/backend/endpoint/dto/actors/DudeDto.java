@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors;
 
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import io.swagger.annotations.ApiModel;
@@ -25,8 +26,8 @@ public class DudeDto {
     @ApiModelProperty(required = true, name = "Email adress of Dude")
     private String email;
 
-    @ApiModelProperty(required = true, name = "Sex of Dude: Male (1), Female (2) or Other (3)")
-    private Integer sex;
+    @ApiModelProperty(required = true, name = "Sex of Dude")
+    private Sex sex;
 
     @ApiModelProperty(required = true, name = "System status of Dude: 1-3")
     private Integer status = 1;
@@ -85,11 +86,11 @@ public class DudeDto {
         this.email = email;
     }
 
-    public Integer getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(Integer sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -177,24 +178,23 @@ public class DudeDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DudeDto dude = (DudeDto) o;
+        DudeDto dudeDto = (DudeDto) o;
 
-        if (id != null ? !id.equals(dude.id) : dude.id != null) return false;
-        if (name != null ? !name.equals(dude.name) : dude.name != null) return false;
-        if (password != null ? !password.equals(dude.password) : dude.password != null) return false;
-        if (description != null ? !description.equals(dude.description) : dude.description != null) return false;
-        if (email != null ? !email.equals(dude.email) : dude.email != null) return false;
-        if (sex != null ? !sex.equals(dude.sex) : dude.sex != null) return false;
-        if (status != null ? !status.equals(dude.status) : dude.status != null) return false;
-        if (selfAssessment != null ? !selfAssessment.equals(dude.selfAssessment) : dude.selfAssessment != null)
+        if (id != null ? !id.equals(dudeDto.id) : dudeDto.id != null) return false;
+        if (name != null ? !name.equals(dudeDto.name) : dudeDto.name != null) return false;
+        if (password != null ? !password.equals(dudeDto.password) : dudeDto.password != null) return false;
+        if (description != null ? !description.equals(dudeDto.description) : dudeDto.description != null) return false;
+        if (email != null ? !email.equals(dudeDto.email) : dudeDto.email != null) return false;
+        if (sex != null ? !sex.equals(dudeDto.sex) : dudeDto.sex != null) return false;
+        if (status != null ? !status.equals(dudeDto.status) : dudeDto.status != null) return false;
+        if (selfAssessment != null ? !selfAssessment.equals(dudeDto.selfAssessment) : dudeDto.selfAssessment != null)
             return false;
-        if (birthday != null ? !birthday.equals(dude.birthday) : dude.birthday != null) return false;
-        if (height != null ? !height.equals(dude.height) : dude.height != null) return false;
-        if (weight != null ? !weight.equals(dude.weight) : dude.weight != null) return false;
-        if (fitnessProviders != null ? !fitnessProviders.equals(dude.fitnessProviders) : dude.fitnessProviders != null)
+        if (birthday != null ? !birthday.equals(dudeDto.birthday) : dudeDto.birthday != null) return false;
+        if (height != null ? !height.equals(dudeDto.height) : dudeDto.height != null) return false;
+        if (weight != null ? !weight.equals(dudeDto.weight) : dudeDto.weight != null) return false;
+        if (fitnessProviders != null ? !fitnessProviders.equals(dudeDto.fitnessProviders) : dudeDto.fitnessProviders != null)
             return false;
-        return courses != null ? courses.equals(dude.courses) : dude.courses == null;
-
+        return courses != null ? courses.equals(dudeDto.courses) : dudeDto.courses == null;
     }
 
     @Override
@@ -221,7 +221,7 @@ public class DudeDto {
         private String password;
         private String description;
         private String email;
-        private Integer sex;
+        private Sex sex;
         private Integer status;
         private Integer selfAssessment;
         private LocalDate birthday;
@@ -258,7 +258,7 @@ public class DudeDto {
             return this;
         }
 
-        public DudeDtoBuilder sex(Integer sex) {
+        public DudeDtoBuilder sex(Sex sex) {
             this.sex = sex;
             return this;
         }

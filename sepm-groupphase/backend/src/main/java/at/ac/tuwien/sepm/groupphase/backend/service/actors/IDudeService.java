@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
-
 import java.time.LocalDate;
 import java.util.List;
 

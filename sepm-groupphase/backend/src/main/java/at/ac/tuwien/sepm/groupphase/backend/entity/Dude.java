@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -31,8 +32,7 @@ public class Dude {
     private String email;
 
     @Column(nullable = false)
-    private Integer sex;
-    // 1 = Male; 2 = Female; 3 = Other;
+    private Sex sex;
 
     @Column(nullable = false)
     @Min(1) @Max(3)
@@ -115,11 +115,11 @@ public class Dude {
         this.email = email;
     }
 
-    public Integer getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(Integer sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -273,7 +273,7 @@ public class Dude {
         private String password;
         private String description;
         private String email;
-        private Integer sex;
+        private Sex sex;
         private Integer status;
         private Integer selfAssessment;
         private LocalDate birthday;
@@ -312,7 +312,7 @@ public class Dude {
             return this;
         }
 
-        public DudeBuilder sex(Integer sex) {
+        public DudeBuilder sex(Sex sex) {
             this.sex = sex;
             return this;
         }

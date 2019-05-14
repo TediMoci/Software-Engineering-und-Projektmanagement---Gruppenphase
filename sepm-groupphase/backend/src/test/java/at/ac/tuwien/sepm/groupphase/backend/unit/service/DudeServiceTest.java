@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
@@ -43,7 +44,7 @@ public class DudeServiceTest {
         dude1.setEmail("john1@dude.com");
         dude1.setDescription("Description 1");
         dude1.setBirthday(LocalDate.of(1982,1,1));
-        dude1.setSex(1);
+        dude1.setSex(Sex.Female);
         dude1.setStatus(1);
         dude1.setSelfAssessment(1);
         dude1.setHeight(185.0);
@@ -55,7 +56,7 @@ public class DudeServiceTest {
         dude2.setEmail("linda1@dude.com");
         dude2.setDescription("Description 2");
         dude2.setBirthday(LocalDate.of(1995,5,7));
-        dude2.setSex(2);
+        dude2.setSex(Sex.Male);
         dude2.setStatus(3);
         dude2.setSelfAssessment(3);
         dude2.setHeight(165.0);
@@ -70,7 +71,7 @@ public class DudeServiceTest {
         dude.setEmail("harry@dude.com");
         dude.setDescription("Description 3");
         dude.setBirthday(LocalDate.of(1997,1,1));
-        dude.setSex(3);
+        dude.setSex(Sex.Other);
         dude.setStatus(1);
         dude.setSelfAssessment(2);
         dude.setHeight(185.0);
