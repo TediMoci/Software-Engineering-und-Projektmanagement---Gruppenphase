@@ -51,6 +51,9 @@ public class DudeValidator {
 
         validateNameUnique(dude.getName());
 
+        if (dude.getPassword()==null || dude.getPassword().isBlank() ||dude.getPassword().length() < 8) {
+            throw new ValidationException(password_too_short);
+        }
         if (dude.getEmail() == null) {
             throw new ValidationException(email_is_null);
         }
@@ -173,11 +176,11 @@ public class DudeValidator {
             oldDude.setBirthday(dude.getBirthday());
         }
 
-        if (dude.getHeight() != null && (dude.getHeight() > 50 || dude.getHeight() < 300)) {
+        if (dude.getHeight() != null && dude.getHeight() >= 50.0 && dude.getHeight() <= 300.0) {
             oldDude.setHeight(dude.getHeight());
         }
 
-        if (dude.getWeight() != null && ((dude.getWeight() < 1.0) || (dude.getWeight() > 700.0))) {
+        if (dude.getWeight() != null && dude.getWeight() >= 1.0 && dude.getWeight() <= 700.0) {
             oldDude.setWeight(dude.getWeight());
         }
 

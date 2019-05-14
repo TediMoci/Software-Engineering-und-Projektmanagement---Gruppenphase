@@ -19,6 +19,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/fitnessProvider")
 @Api(value = "fitnessProvider")
@@ -61,6 +64,30 @@ public class FitnessProviderEndpoint {
         try {
             return iFitnessProviderService.getNumberOfFollowers(name);
         } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all fitness providers", authorizations = {@Authorization(value = "apiKey")})
+    public List<FitnessProviderDto> findAll() {
+        List<FitnessProviderDto> fpListDto = new ArrayList<>();
+        try {
+            for (int i=0; i< iFitnessProviderService.findAll().size(); i++){
+                fpListDto.add(fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findAll().get(i)));
+            }
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        return fpListDto;
+    }
+
+    @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
+    public FitnessProviderDto updateFitnessProvider(@PathVariable("name") String name, @RequestBody FitnessProviderDto fitnessProvider) {
+        try {
+            return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.update(name, fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(fitnessProvider)));
+        } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
