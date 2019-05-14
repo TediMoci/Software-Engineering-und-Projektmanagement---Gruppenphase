@@ -19,11 +19,12 @@ import java.util.List;
 
 @Service
 @Transactional
-public class MyFitnessProviderDetailsService {
+public class MyFitnessProviderDetailsService implements UserDetailsService{
 
     @Autowired
     private IFitnessProviderRepository fitnessProviderRepository;
 
+    @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException  {
 
         FitnessProvider fitnessProvider = fitnessProviderRepository.findByName(name);
@@ -44,6 +45,7 @@ public class MyFitnessProviderDetailsService {
             getAuthorities(fitnessProvider.getRoles()));
 
     }
+
     private static List<GrantedAuthority> getAuthorities (List<String> roles){
         List<GrantedAuthority> authorityList = new ArrayList<>();
         for(String role : roles){
