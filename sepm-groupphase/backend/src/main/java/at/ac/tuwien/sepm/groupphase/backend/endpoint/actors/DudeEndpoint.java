@@ -75,6 +75,16 @@ public class DudeEndpoint {
         }
     }
 
+    @RequestMapping(value = "/nameIs{name}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get a Dude by name", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto findDudeByName(@PathVariable("name") String name){
+        try {
+            return dudeMapper.dudeToDudeDto(iDudeService.findByName(name));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
     public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {

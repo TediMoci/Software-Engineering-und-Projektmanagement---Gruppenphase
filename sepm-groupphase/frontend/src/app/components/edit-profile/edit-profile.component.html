@@ -1,3 +1,164 @@
-<p>
-  edit-profile works!
-</p>
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<h3 class="registerTitle">Edit Dude-Profile </h3>
+
+<div class="pt-3">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="formEditDude"></span>
+      <form [formGroup]="editForm" (ngSubmit)="editUser()">
+        <div class="form-group">
+          <label for="nameEdit">Name</label>
+          <input value = "{{userName}}" type="text" name="name" maxlength="50"  class="form-control" id="nameEdit"
+                 aria-describedby="nameEditHelp" autocomplete="off">
+          <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.nameCheck">Your name is
+              already taken!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="passwordEdit">Password</label>
+          <input value="{{password}}" knifeNoSpaces type="password" name="password"  class="form-control" id="passwordEdit">
+          <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.minlength">Your password
+              must be at least 8 characters long!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="passwordConfirmedEdit">Password Confirmed</label>
+          <input value="{{password}}" knifeNoSpaces  type="password" name="passwordConfirmed" class="form-control" id="passwordConfirmedEdit">
+          <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
+            <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+            <input type="text" name="description" formControlName="description" class="form-control" id="description"
+                   placeholder="{{description}}">
+        </div>
+
+        <div class="form-group">
+          <label for="emailEdit">Email</label>
+          <input value="{{email}}" type="text" name="email" class="form-control" id="emailEdit"
+                 aria-describedby="emailHelp">
+          <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.email">Your email is
+              invalid!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="sex">Gender</span>
+          <div class="gap_space">
+            <div class= "custom-control custom-radio custom-control-inline">
+              <input id="maleEdit" type="radio" class="custom-control-input" value= "Male" name="sex" checked = "{{male}}">
+              <label class="custom-control-label" for="maleEdit">Male</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline">
+              <input id="femaleEdit" type="radio" class="custom-control-input" value= "Female" name="sex" checked = "{{female}}">
+              <label class="custom-control-label" for="femaleEdit">Female</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline">
+              <input id="othersEdit" type="radio" class="custom-control-input" value= "Other" name="sex" checked = "{{other}}">
+              <label class="custom-control-label" for="othersEdit">Other</label>
+            </div>
+
+            <div *ngIf="submitted && !!registerForm.controls.sex.errors" class="error">
+              <small class="form-text text-warning" *ngIf="!!registerForm.controls.sex.errors.required">Your gender is
+                required!
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="selfAssessment">Self-assessment</span>
+          <div class="gap_space">
+            <div class= "custom-control custom-radio custom-control-inline">
+              <input id="beginnerEdit" type="radio" class="custom-control-input" value= 1 name="selfAssessment" checked = "{{beginner}}">
+              <label class="custom-control-label" for="beginnerEdit">Beginner</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline">
+              <input id="advancedEdit" type="radio" class="custom-control-input" value= 2 name="selfAssessment" checked = "{{advanced}}">
+              <label class="custom-control-label" for="advancedEdit">Advanced</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline">
+              <input id="proEdit" type="radio" class="custom-control-input" value= 3 name="selfAssessment" checked = "{{pro}}">
+              <label class="custom-control-label" for="proEdit">Pro</label>
+            </div>
+            <div *ngIf="submitted && !!registerForm.controls.selfAssessment.errors" class="error">
+              <small class="form-text text-warning" *ngIf="!!registerForm.controls.selfAssessment.errors.required">Your self-assessment is
+                required!
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="birthdayEdit">Birthday</label>
+          <input value="{{birthday}}" type="date" name="birthday" class="form-control" id="birthdayEdit"
+                 aria-describedby="birthdayHelp">
+          <div *ngIf="submitted && !!registerForm.controls.birthday.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.birthday.errors.required">Your birthday is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="heightEdit">Height in cm</label>
+          <input value="{{height}}" knifeOnlyNumbers type="text" maxlength="3" class="form-control" id="heightEdit"
+                 aria-describedby="heightHelp">
+          <div *ngIf="submitted && !!registerForm.controls.height.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.height.errors.required">Your height is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="weightEdit">Weight in kg</label>
+          <input value="{{weight}}" knifeOnlyNumbers type="text" maxlength="3" name="weight" formControlName="weight" class="form-control" id="weightEdit"
+                 aria-describedby="weightHelp">
+          <div *ngIf="submitted && !!registerForm.controls.weight.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.weight.errors.required">Your weight is
+              required!
+            </small>
+          </div>
+        </div>
+
+
+        <button type="button" (click)="editUser()" class="btn btn-success float-right">Submit</button>
+        <a [routerLink]="['/dude-profile']" class="btn btn-link">Cancel</a>
+      </form>
+
+    </div>
+  </div>
+</div>

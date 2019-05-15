@@ -30,7 +30,7 @@ const routes: Routes = [
   {path: 'history', component: HistoryComponent},
   {path: 'myContent', component: MyContentComponent},
   {path: 'favourites', component: FavouritesComponent},
-  {path: 'edit', component: EditProfileComponent},
+  {path: 'edit-dude', component: EditProfileComponent},
   {path: 'fitnessProvider-profile', component: FitnessProviderProfileComponent}
 ];
 
