@@ -13,6 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -38,11 +39,15 @@ import java.util.Map;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfiguration {
 
-    private final PasswordEncoder passwordEncoder;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
     private final MyFitnessProviderDetailsService fitnessProviderDetailsService;
 
-    public SecurityConfiguration(PasswordEncoder passwordEncoder, MyFitnessProviderDetailsService fitnessProviderDetailsService) {
-        this.passwordEncoder = passwordEncoder;
+    public SecurityConfiguration(MyFitnessProviderDetailsService fitnessProviderDetailsService) {
         this.fitnessProviderDetailsService = fitnessProviderDetailsService;
     }
 
@@ -63,13 +68,8 @@ public class SecurityConfiguration {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList, DataSource dataSource) throws Exception {
-        auth.userDetailsService(fitnessProviderDetailsService);
-        new JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder>()
-            .dataSource(dataSource)
-            .passwordEncoder(passwordEncoder)
-            .configure(auth);
-        providerList.forEach(auth::authenticationProvider);
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(fitnessProviderDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Configuration

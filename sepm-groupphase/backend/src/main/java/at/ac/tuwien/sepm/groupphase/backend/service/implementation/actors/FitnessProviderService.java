@@ -6,6 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRe
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IFitnessProviderService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.FitnessProviderValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ public class FitnessProviderService implements IFitnessProviderService {
     private final FitnessProviderValidator fitnessProviderValidator;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     public FitnessProviderService(IFitnessProviderRepository iFitnessProviderRepository, FitnessProviderValidator fitnessProviderValidator) {
         this.iFitnessProviderRepository = iFitnessProviderRepository;
         this.fitnessProviderValidator = fitnessProviderValidator;
@@ -27,11 +32,11 @@ public class FitnessProviderService implements IFitnessProviderService {
     @Override
     public FitnessProvider save(FitnessProvider fitnessProvider) throws ServiceException {
         try{
+            fitnessProvider.setPassword(passwordEncoder.encode(fitnessProvider.getPassword()));
             fitnessProviderValidator.validateFitnessProvider(fitnessProvider);
         }catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-        fitnessProvider.setRoles(Arrays.asList("FITNESS_PROVIDER"));
         return iFitnessProviderRepository.save(fitnessProvider);
     }
 
@@ -77,11 +82,6 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     @Override
     public FitnessProvider findByName(String name) throws ServiceException {
-        try {
-            fitnessProviderValidator.validateName(name);
-        } catch (ValidationException e){
-            throw new ServiceException(e.getMessage());
-        }
 
         return iFitnessProviderRepository.findByName(name);
     }

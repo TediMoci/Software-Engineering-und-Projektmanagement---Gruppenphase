@@ -64,8 +64,8 @@ export class AuthService {
     return this.httpClient.get<RegisterAsDude>(this.dudesBaseUri, { params: params});
   }
 
-  getUserByNameAndPasswordFromFitnessProvider(name: string, password: string): Observable<RegisterAsFitnessProvider> {
-    const params = new HttpParams().set('name', name).set('password', password);
+  getUserByNameFromFitnessProvider(name: string, password: string): Observable<RegisterAsFitnessProvider> {
+    const params = new HttpParams().set('name', name);
     console.log('check user by name ' + name);
     return this.httpClient.get<RegisterAsFitnessProvider>(this.fitnessProviderBaseUri, { params: params});
   }
@@ -77,7 +77,7 @@ export class AuthService {
       const decoded: any = jwt_decode(this.getToken());
       const authInfo = decoded.aut;
       if (authInfo.includes('FITNESS_PROVIDER')) {
-        return 'ADMIN';
+        return 'FITNESS_PROVIDER';
       } else if (authInfo.includes('USER')) {
         return 'USER';
       }
