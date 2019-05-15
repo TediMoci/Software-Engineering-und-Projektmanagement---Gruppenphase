@@ -26,7 +26,6 @@ public class FitnessProviderValidator {
     }
 
     public void validateFitnessProvider(FitnessProvider fitnessProvider)throws ValidationException {
-        validateNameUnique(fitnessProvider.getName());
         //Name Validation
         validateName(fitnessProvider.getName());
         //Password Validation
@@ -65,39 +64,6 @@ public class FitnessProviderValidator {
         if (taken == 0 || taken == 1) {
             throw new ValidationException(name_not_unique);
         }
-    }
-
-    public FitnessProvider validateUpdate(FitnessProvider oldFP, FitnessProvider newFP) throws ValidationException {
-
-        if (newFP.getName() != null && !(newFP.getName().isBlank()) && !(newFP.getName().equals(oldFP.getName()))) {
-            validateNameUnique(newFP.getName());
-            oldFP.setName(newFP.getName());
-        }
-
-        if (newFP.getPassword()!=null && !(newFP.getPassword().isBlank()) && newFP.getPassword().length()>=8){
-            oldFP.setPassword(newFP.getPassword());
-        }
-
-        if (newFP.getDescription()!=null && !(newFP.getDescription().isBlank())){
-            oldFP.setDescription(newFP.getDescription());
-        }
-
-        if (newFP.getAddress()!=null && !(newFP.getAddress().isBlank())){
-            oldFP.setAddress(newFP.getAddress());
-        }
-
-        if (newFP.getEmail() != null && !(newFP.getEmail().isBlank())) {
-            oldFP.setEmail(newFP.getEmail());
-        }
-
-        if (newFP.getPhoneNumber() != null && !(newFP.getPhoneNumber().isBlank()) && newFP.getPhoneNumber().length()<=30) {
-            oldFP.setPhoneNumber(newFP.getPhoneNumber());
-        }
-
-        if (newFP.getWebsite() != null && !(newFP.getWebsite().isBlank()) && newFP.getWebsite().length()<=100) {
-            oldFP.setWebsite(newFP.getWebsite());
-        }
-        return oldFP;
     }
 
 }

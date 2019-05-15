@@ -62,6 +62,7 @@ public class DudeService implements IDudeService {
     @Override
     public Dude save(Dude dude) throws ServiceException {
         try {
+            dudeValidator.validateNameUnique(dude.getName());
             dudeValidator.validateDude(dude);
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
@@ -113,8 +114,7 @@ public class DudeService implements IDudeService {
     }
     @Override
     public List<Dude> findAll(){
-        List<Dude> dudes = new ArrayList<>();
-        iDudeRepository.findAll().forEach(dudes::add);
+        List<Dude> dudes = new ArrayList<>(iDudeRepository.findAll());
         return dudes;
     }
 
@@ -135,9 +135,19 @@ public class DudeService implements IDudeService {
         try {
             Dude oldDude = findByName(name);
             if (oldDude==null) throw new ServiceException("There is no dude with that name in the database.");
-            Dude dude = dudeValidator.validateUpdate(oldDude, newDude);
+            if (!(newDude.getName().equals(oldDude.getName()))) dudeValidator.validateNameUnique(newDude.getName());
 
-            return iDudeRepository.save(dude);
+            oldDude.setName(newDude.getName());
+            oldDude.setPassword(newDude.getPassword());
+            oldDude.setDescription(newDude.getDescription());
+            oldDude.setEmail(newDude.getEmail());
+            oldDude.setSex(newDude.getSex());
+            oldDude.setSelfAssessment(newDude.getSelfAssessment());
+            oldDude.setBirthday(newDude.getBirthday());
+            oldDude.setHeight(newDude.getHeight());
+            oldDude.setWeight(newDude.getWeight());
+            dudeValidator.validateDude(oldDude);
+            return iDudeRepository.save(oldDude);
 
         } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());

@@ -49,13 +49,12 @@ public class DudeValidator {
         if (dude.getName().isBlank()) {
             throw new ValidationException(name_is_blank);
         }
-
-        validateNameUnique(dude.getName());
-
-        if (dude.getPassword()==null || dude.getPassword().isBlank() ||dude.getPassword().length() < 8) {
+        if (dude.getPassword()==null || dude.getPassword().isBlank()) {
+            throw new ValidationException(password_is_null);
+        }
+        if (dude.getPassword().length() < 8){
             throw new ValidationException(password_too_short);
         }
-
         if (dude.getEmail() == null) {
             throw new ValidationException(email_is_null);
         }
@@ -141,50 +140,6 @@ public class DudeValidator {
         if (taken == 0 || taken == 1) {
             throw new ValidationException("Name is already taken!");
         }
-    }
-
-    public Dude validateUpdate(Dude oldDude, Dude dude) throws ValidationException {
-
-        if (dude.getName() != null && !(dude.getName().isBlank()) && !(dude.getName().equals(oldDude.getName()))) {
-            validateNameUnique(dude.getName());
-            oldDude.setName(dude.getName());
-        }
-
-        if (dude.getPassword()!=null && !(dude.getPassword().isBlank()) && dude.getPassword().length()>=8){
-            oldDude.setPassword(dude.getPassword());
-        }
-
-        if (dude.getDescription()!=null && !(dude.getDescription().isBlank())){
-            oldDude.setDescription(dude.getDescription());
-        }
-
-        if (dude.getEmail() != null && !(dude.getEmail().isBlank())) {
-            oldDude.setEmail(dude.getEmail());
-        }
-
-        //if (!(dude.getSex() == Sex.Female || dude.getSex() == Sex.Male || dude.getSex() == Sex.Other))
-
-        if (dude.getStatus()!=null && (dude.getStatus() == 1 || dude.getStatus() == 2 || dude.getStatus() == 3)) {
-            oldDude.setStatus(dude.getStatus());
-        }
-
-        if (dude.getSelfAssessment() != null && (dude.getSelfAssessment() == 1 || dude.getSelfAssessment() == 2 || dude.getSelfAssessment() == 3)) {
-            oldDude.setSelfAssessment(dude.getSelfAssessment());
-        }
-
-        if (dude.getBirthday() != null && dude.getBirthday().isBefore(LocalDate.now())){
-            oldDude.setBirthday(dude.getBirthday());
-        }
-
-        if (dude.getHeight() != null && dude.getHeight() >= 50.0 && dude.getHeight() <= 300.0) {
-            oldDude.setHeight(dude.getHeight());
-        }
-
-        if (dude.getWeight() != null && dude.getWeight() >= 1.0 && dude.getWeight() <= 700.0) {
-            oldDude.setWeight(dude.getWeight());
-        }
-
-        return oldDude;
     }
 
 }

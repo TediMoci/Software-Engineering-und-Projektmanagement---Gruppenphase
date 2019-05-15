@@ -155,18 +155,15 @@ public class DudeServiceTest {
         dudeService.update("John",dude2);
     }
 
-    @Test
-    public void TestUpdate_newUserInvalidHeightandWeight_noChangeForDude1() throws ServiceException {
-        Dude dude = dudeBuilder();
-        dude.setHeight(9000.0);
-        dude.setWeight(9000.0);
-        Mockito.when(dudeRepository.findByName("John")).thenReturn(dude1);
-        Mockito.when(dudeRepository.findByName(dude.getName())).thenReturn(null);
-        Mockito.when(dudeRepository.save(anyObject())).thenReturn(dude);
-
-        Dude updatedDude = dudeService.update("John",dude);
-        assertNotEquals(updatedDude.getWeight(),dude1.getWeight());;
-        assertNotEquals(updatedDude.getHeight(),dude1.getHeight());
+    @Test(expected = ServiceException.class)
+    public void TestUpdate_newUserInvalid() throws ServiceException {
+        Dude invalidDude = dudeBuilder();
+        Dude validDude = dudeBuilder();
+        invalidDude.setHeight(9000.0);
+        invalidDude.setWeight(9000.0);
+        Mockito.when(dudeRepository.findByName("Valid Name")).thenReturn(validDude);
+        Mockito.when(dudeRepository.findByName(invalidDude.getName())).thenReturn(null);
+        dudeService.update("Valid Name",invalidDude);
     }
 
     @Test
