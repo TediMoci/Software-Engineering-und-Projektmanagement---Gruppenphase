@@ -11,14 +11,14 @@ import {FitnessProvider} from '../../dtos/fitness-provider';
 export class FitnessProviderProfileComponent implements OnInit {
   error: any;
   imagePath: string = 'assets/img/kugelfisch2.jpg';
-  userName: string = 'userName from dto';
-  address: string = 'adress from dto';
-  email: string = 'email from dto';
-  phoneNumber: string = 'number from dto';
-  website: string = 'website from dto';
-  numOfFollowers: number = 200;
-  courses: any = 'courses from dto';
-  description: string = 'Some time in the future we should be able to read some content from a dto and then show a real description here.';
+  userName: string;
+  address: string;
+  email: string;
+  phoneNumber: string;
+  website: string;
+  numOfFollowers: number = 0;
+  courses: any;
+  description: string;
   currentUser: FitnessProvider;
   constructor(private fitnessProviderProfile: FitnessProviderProfileService) { }
 
