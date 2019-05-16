@@ -7,8 +7,8 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/dude-profile']" class="btn btn-link">Profile</a></a>
-        <!-- route to dude-profile or fitnessProvider-profile according to who is logged in -->
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/dude-profile']" class="btn btn-link">Profile</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/fitnessProvider-profile']" class="btn btn-link">Profile</a></a>
         <!-- show different links according to who is logged in -->
         <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/bros']" class="btn btn-link">Bros</a></a>
         <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>

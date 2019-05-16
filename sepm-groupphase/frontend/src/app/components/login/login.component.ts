@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
-import {RegisterAsDude} from '../../dtos/register-as-dude';
+import {Dude} from '../../dtos/dude';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   submitted: boolean = false;
   // Error flag
   error: any;
-  dude: RegisterAsDude;
+  dude: Dude;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
           this.authenticateUser(authRequest);
-          this.setDudeForProfile(data);
+          //this.setDudeForProfile(data);
         } else {
           console.log('Invalid input');
         }
@@ -58,9 +58,10 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        this.router.navigate(['/dude-profile']); // TODO: route to fitnessProvider or dude-profile according to who is logged in
+        this.router.navigate(['/dude-profile']);
       },
       error => {
+        console.log(authRequest);
         console.log('Could not log in due to: ' + error.message);
         this.error = error;
       }
@@ -77,8 +78,8 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  setDudeForProfile(dudeHelp: RegisterAsDude){
-    this.dude = dudeHelp;
+  setDudeForProfile(dude: Dude) {
+    this.dude = dude;
   }
 
   getDudeForProfile() {

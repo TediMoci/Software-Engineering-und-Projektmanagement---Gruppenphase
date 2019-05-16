@@ -7,7 +7,7 @@ import {tap} from 'rxjs/operators';
 import * as jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
 import {RegisterAsFitnessProvider} from '../dtos/register-as-fitness-provider';
-import {RegisterAsDude} from '../dtos/register-as-dude';
+import {Dude} from '../dtos/dude';
 
 @Injectable({
   providedIn: 'root'
@@ -57,10 +57,10 @@ export class AuthService {
     return localStorage.getItem('futureToken');
   }
 
-  getUserByNameFromDude(name: string): Observable<RegisterAsDude> {
+  getUserByNameFromDude(name: string): Observable<Dude> {
     const params = new HttpParams().set('name', name);
     console.log('check user by name ' + name);
-    return this.httpClient.get<RegisterAsDude>(this.dudesBaseUri, { params: params});
+    return this.httpClient.get<Dude>(this.dudesBaseUri, { params: params});
   }
 
   getUserByNameFromFitnessProvider(name: string): Observable<RegisterAsFitnessProvider> {
@@ -68,6 +68,7 @@ export class AuthService {
     console.log('check user by name ' + name);
     return this.httpClient.get<RegisterAsFitnessProvider>(this.fitnessProviderBaseUri, { params: params});
   }
+  
   /**
    * Returns the user role based on the current token
    */

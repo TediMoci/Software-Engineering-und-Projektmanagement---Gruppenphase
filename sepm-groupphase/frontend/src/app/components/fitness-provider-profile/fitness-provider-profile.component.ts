@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {RegisterAsDudeService} from '../../services/register-as-dude.service';
 import {FitnessProviderProfileService} from '../../services/fitness-provider-profile.service';
+
 @Component({
   selector: 'app-fitness-provider-profile',
   templateUrl: './fitness-provider-profile.component.html',
   styleUrls: ['./fitness-provider-profile.component.scss']
 })
+
 export class FitnessProviderProfileComponent implements OnInit {
   error: any;
   imagePath: string = 'assets/img/kugelfisch2.jpg';

@@ -29,7 +29,7 @@ export class LoginAsFitnessProviderComponent implements OnInit {
    */
   loginUser() {
     this.submitted = true;
-    this.authService.getUserByNameFromFitnessProvider(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe((data) => {
+    this.authService.getUserByNameFromFitnessProvider(this.loginForm.controls.username.value).subscribe((data) => {
       console.log(data);
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
@@ -55,7 +55,7 @@ export class LoginAsFitnessProviderComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        this.router.navigate(['/fitnessProvider-profile']); // TODO: route to fitnessProvider or dude-profile according to who is logged in
+        this.router.navigate(['/fitnessProvider-profile']);
       },
       error => {
         console.log(authRequest);
