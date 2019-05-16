@@ -6,7 +6,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import * as jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
-import {RegisterAsFitnessProvider} from '../dtos/register-as-fitness-provider';
+import {FitnessProvider} from '../dtos/fitness-provider';
 import {Dude} from '../dtos/dude';
 
 @Injectable({
@@ -63,12 +63,11 @@ export class AuthService {
     return this.httpClient.get<Dude>(this.dudesBaseUri, { params: params});
   }
 
-  getUserByNameFromFitnessProvider(name: string): Observable<RegisterAsFitnessProvider> {
+  getUserByNameFromFitnessProvider(name: string): Observable<FitnessProvider> {
     const params = new HttpParams().set('name', name);
     console.log('check user by name ' + name);
-    return this.httpClient.get<RegisterAsFitnessProvider>(this.fitnessProviderBaseUri, { params: params});
+    return this.httpClient.get<FitnessProvider>(this.fitnessProviderBaseUri, { params: params});
   }
-  
   /**
    * Returns the user role based on the current token
    */
