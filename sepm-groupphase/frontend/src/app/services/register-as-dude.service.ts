@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {RegisterAsDude} from '../dtos/register-as-dude';
 import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 import {Globals} from '../global/globals';
+import {Dude} from '../dtos/dude';
 
 @Injectable({
   providedIn: 'root'

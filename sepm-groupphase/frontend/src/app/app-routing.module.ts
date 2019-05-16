@@ -15,6 +15,7 @@ import {FavouritesComponent} from './components/favourites/favourites.component'
 import {EditProfileComponent} from './components/edit-profile/edit-profile.component';
 import {FitnessProviderProfileComponent} from './components/fitness-provider-profile/fitness-provider-profile.component';
 import {LoginAsFitnessProviderComponent } from './components/login-as-fitness-provider/login-as-fitness-provider.component';
+import {RoleGuard} from './guards/role.guard';
 
 const routes: Routes = [
 
@@ -22,16 +23,16 @@ const routes: Routes = [
   {path: 'login-as-fitness-provider', component: LoginAsFitnessProviderComponent},
   {path: 'register-as-dude', component: RegisterAsDudeComponent},
   {path: 'register-as-fitness-provider', component: RegisterAsFitnessProviderComponent},
-  {path: 'dude-profile', component: DudeProfileComponent},
+  {path: 'dude-profile', canActivate: [AuthGuard, RoleGuard], component: DudeProfileComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'bros', component: BrosComponent},
-  {path: 'create', component: CreateComponent},
-  {path: 'find', component: FindComponent},
-  {path: 'history', component: HistoryComponent},
-  {path: 'myContent', component: MyContentComponent},
-  {path: 'favourites', component: FavouritesComponent},
-  {path: 'edit', component: EditProfileComponent},
-  {path: 'fitnessProvider-profile', component: FitnessProviderProfileComponent}
+  {path: 'bros', canActivate: [AuthGuard], component: BrosComponent},
+  {path: 'create', canActivate: [AuthGuard], component: CreateComponent},
+  {path: 'find', canActivate: [AuthGuard], component: FindComponent},
+  {path: 'history', canActivate: [AuthGuard], component: HistoryComponent},
+  {path: 'myContent', canActivate: [AuthGuard], component: MyContentComponent},
+  {path: 'favourites', canActivate: [AuthGuard], component: FavouritesComponent},
+  {path: 'edit', canActivate: [AuthGuard], component: EditProfileComponent},
+  {path: 'fitnessProvider-profile', canActivate: [AuthGuard], component: FitnessProviderProfileComponent}
 ];
 
 @NgModule({
