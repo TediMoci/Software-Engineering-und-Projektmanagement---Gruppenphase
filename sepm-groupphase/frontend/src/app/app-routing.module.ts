@@ -19,6 +19,7 @@ import {RoleGuard} from './guards/role.guard';
 import {FitnessProviderRoleGuard} from './guards/fitness-provider-role.guard';
 import {FollowerComponent} from './components/follower/follower.component';
 import {FitnessProvidersFollowedComponent} from './components/fitness-providers-followed/fitness-providers-followed.component';
+import {EditFitnessProviderProfileComponent} from './components/edit-fitness-provider-profile/edit-fitness-provider-profile.component';
 
 const routes: Routes = [
 
@@ -34,10 +35,11 @@ const routes: Routes = [
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
   {path: 'myContent', canActivate: [AuthGuard], component: MyContentComponent},
   {path: 'favourites', canActivate: [RoleGuard], component: FavouritesComponent},
-  {path: 'edit-dude', component: EditProfileComponent},
+  {path: 'edit-dude', canActivate: [RoleGuard], component: EditProfileComponent},
+  {path: 'edit-fitnessProvider', canActivate: [FitnessProviderRoleGuard], component: EditFitnessProviderProfileComponent},
   {path: 'fitnessProvider-profile', canActivate: [FitnessProviderRoleGuard], component: FitnessProviderProfileComponent},
   {path: 'follower', canActivate: [FitnessProviderRoleGuard], component: FollowerComponent},
-  {path: 'fitnessProviders', canActivate: [RoleGuard], component:FitnessProvidersFollowedComponent}
+  {path: 'fitnessProviders', canActivate: [RoleGuard], component: FitnessProvidersFollowedComponent}
 ];
 
 @NgModule({

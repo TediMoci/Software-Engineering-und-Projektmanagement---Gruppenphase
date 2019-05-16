@@ -9,7 +9,6 @@ import {Globals} from '../global/globals';
 })
 export class EditDudeService {
   private dudeBaseUri: string = this.globals.backendUri + '/dudes';
-  private getByNameUri: string = this.globals.backendUri + '/dudes/nameIs';
 
   constructor(private httpClient: HttpClient , private globals: Globals) { }
   editDude(editDude: Dude, oldDude: Dude): Observable<Dude> {
@@ -17,11 +16,6 @@ export class EditDudeService {
     localStorage.setItem('loggedInDude', JSON.stringify(editDude));
     const params = new HttpParams().set('dude', JSON.stringify(editDude));
     return this.httpClient.post<Dude>(this.dudeBaseUri + '/' + oldDude.name, {params: params});
-  }
-  checkNameOfDude(name: string): Observable <any> {
-    const params = new HttpParams().set('name', name);
-    console.log('check dude by name ' + name);
-    return this.httpClient.get(this.getByNameUri + name, { params: params});
   }
 
 }

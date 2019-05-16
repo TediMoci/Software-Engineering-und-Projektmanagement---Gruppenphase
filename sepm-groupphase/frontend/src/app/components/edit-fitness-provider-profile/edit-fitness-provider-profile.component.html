@@ -1,0 +1,100 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<h3 class="registerTitle">Edit Fitness-Provider-Profile</h3>
+
+<div class="pt-3">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="formRegister"></span>
+      <form [formGroup]="editForm" (ngSubmit)="editFitnessProvider()">
+
+        <div class="form-group">
+          <label for="editName">Name</label>
+          <input value = "{{userName}}" type="text" name="name" maxlength="50" class="form-control" id="editName"
+                 aria-describedby="editNameHelp">
+          <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editPassword">Password</label>
+          <input value="{{password}}" knifeNoSpaces type="password" name="password" class="form-control" id="editPassword">
+          <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.minlength">Your password
+              must be at least 8 characters long!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editPasswordConfirmed">Password Confirmed</label>
+          <input value="{{password}}" knifeNoSpaces type="password" name="passwordConfirmed" class="form-control" id="editPasswordConfirmed">
+          <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
+            <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editDescription">Description</label>
+          <input value = "{{description}}" type="text" name="description" maxlength="1000" class="form-control" id="editDescription"
+                 aria-describedby="editDescriptionHelp">
+        </div>
+
+        <div class="form-group">
+          <label for="editEmail">Email</label>
+          <input value="{{email}}" type="text" name="email" class="form-control" id="editEmail"
+                 aria-describedby="editEmailHelp">
+          <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.email">Your email is
+              invalid!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editAddress">Address</label>
+          <input value="{{address}}" type="text" name="address" class="form-control" id="editAddress"
+                 aria-describedby="editAddressHelp">
+          <div *ngIf="submitted && !!registerForm.controls.address.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.address.errors.required">Your address is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editPhoneNumber">Phone number</label>
+          <input value = "{{phoneNumber}}" type="text" name="phoneNumber" maxlength="50" class="form-control" id="editPhoneNumber"
+                 aria-describedby="editPhoneNumberHelp">
+        </div>
+
+        <div class="form-group">
+          <label for="editWebsite">Website</label>
+          <input value = "{{website}}" type="text" name="website" maxlength="50" class="form-control" id="editWebsite"
+                 aria-describedby="editWebsiteHelp">
+        </div>
+
+        <button type="button" (click)="editFitnessProvider()" class="btn btn-success float-right">Submit</button>
+        <a [routerLink]="['/login-as-fitness-provider']" class="btn btn-link">Cancel</a>
+      </form>
+
+    </div>
+  </div>
+</div>
