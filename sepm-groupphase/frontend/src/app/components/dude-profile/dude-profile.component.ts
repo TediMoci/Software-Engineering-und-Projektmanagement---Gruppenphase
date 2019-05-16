@@ -43,7 +43,7 @@ export class DudeProfileComponent implements OnInit {
     }
     if (this.dude.status === 1) {
       this.rank = 'New Dude';
-    } else if (this.dude.status == 2) {
+    } else if (this.dude.status === 2) {
       this.rank = 'Experienced Dude';
     } else {
       this.rank = 'Ancient Dude';

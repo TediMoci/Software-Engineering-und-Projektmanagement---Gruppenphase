@@ -33,9 +33,8 @@ export class EditProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.oldDude = this.editDudeService.getOldDude('Test'); // change to use name of currently logged in dude
 
-    console.log(this.oldDude);
+    this.oldDude = JSON.parse(localStorage.getItem('loggedInDude'));
 
     this.userName = this.oldDude.name;
     this.description = this.oldDude.description;
@@ -43,10 +42,11 @@ export class EditProfileComponent implements OnInit {
     this.birthday = this.oldDude.birthday;
     this.height = this.oldDude.height;
     this.weight = this.oldDude.weight;
+    this.password = this.oldDude.password;
 
-    if (this.oldDude.sex === 'male') {
+    if (this.oldDude.sex === 'Male') {
       this.male = true;
-    } else if (this.oldDude.sex === 'female') {
+    } else if (this.oldDude.sex === 'Female') {
       this.female = true;
     } else {
       this.other = true;
@@ -59,7 +59,6 @@ export class EditProfileComponent implements OnInit {
     } else {
       this.pro = true;
     }
-
     this.editForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
@@ -79,11 +78,13 @@ export class EditProfileComponent implements OnInit {
   editUser() {
     this.submitted = true;
 
-    const dude: Dude = new Dude(this.editForm.controls.name.value,
+    const dude: Dude = new Dude(
+      this.editForm.controls.name.value,
       this.editForm.controls.password.value,
       this.editForm.controls.sex.value,
       this.editForm.controls.description.value,
       this.editForm.controls.email.value,
+      this.oldDude.status,
       this.editForm.controls.selfAssessment.value,
       this.editForm.controls.birthday.value,
       this.editForm.controls.height.value,

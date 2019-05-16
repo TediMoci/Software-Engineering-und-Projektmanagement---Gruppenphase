@@ -74,17 +74,17 @@
           <span class="sex">Gender</span>
           <div class="gap_space">
             <div class= "custom-control custom-radio custom-control-inline">
-              <input id="maleEdit" type="radio" class="custom-control-input" value= "Male" name="sex" checked = "{{male}}">
+              <input id="maleEdit" type="radio" class="custom-control-input" value= "Male" name="sex" [checked]="male">
               <label class="custom-control-label" for="maleEdit">Male</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="femaleEdit" type="radio" class="custom-control-input" value= "Female" name="sex" checked = "{{female}}">
+              <input id="femaleEdit" type="radio" class="custom-control-input" value= "Female" name="sex" [checked]="female">
               <label class="custom-control-label" for="femaleEdit">Female</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="othersEdit" type="radio" class="custom-control-input" value= "Other" name="sex" checked = "{{other}}">
+              <input id="othersEdit" type="radio" class="custom-control-input" value= "Other" name="sex" [checked]="other">
               <label class="custom-control-label" for="othersEdit">Other</label>
             </div>
 
@@ -100,17 +100,17 @@
           <span class="selfAssessment">Self-assessment</span>
           <div class="gap_space">
             <div class= "custom-control custom-radio custom-control-inline">
-              <input id="beginnerEdit" type="radio" class="custom-control-input" value= 1 name="selfAssessment" checked = "{{beginner}}">
+              <input id="beginnerEdit" type="radio" class="custom-control-input" value= 1 name="selfAssessment" [checked]="beginner">
               <label class="custom-control-label" for="beginnerEdit">Beginner</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="advancedEdit" type="radio" class="custom-control-input" value= 2 name="selfAssessment" checked = "{{advanced}}">
+              <input id="advancedEdit" type="radio" class="custom-control-input" value= 2 name="selfAssessment" [checked]="advanced">
               <label class="custom-control-label" for="advancedEdit">Advanced</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="proEdit" type="radio" class="custom-control-input" value= 3 name="selfAssessment" checked = "{{pro}}">
+              <input id="proEdit" type="radio" class="custom-control-input" value= 3 name="selfAssessment" [checked]="pro">
               <label class="custom-control-label" for="proEdit">Pro</label>
             </div>
             <div *ngIf="submitted && !!registerForm.controls.selfAssessment.errors" class="error">

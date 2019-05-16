@@ -4,7 +4,7 @@ export class Dude {
     public password: string,
     public description: string,
     public email:  string,
-    public sex: number,
+    public sex: any,
     public status: number,
     public selfAssessment: number,
     public birthday: Date,
