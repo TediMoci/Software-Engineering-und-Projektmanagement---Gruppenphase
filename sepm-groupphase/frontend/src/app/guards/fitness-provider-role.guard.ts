@@ -1,20 +1,20 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RoleGuard implements CanActivate {
-
-  constructor(private authService: AuthService, private router: Router) {}
+export class FitnessProviderRoleGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   canActivate(): boolean {
-    if (this.authService.isLoggedIn()){
-      if (this.authService.getUserRole() === 'DUDE'){
+    if (this.authService.isLoggedIn()) {
+      if (this.authService.getUserRole() === 'FITNESS_PROVIDER') {
         return true;
-      } else if (this.authService.getUserRole() == 'FITNESS_PROVIDER'){
-        this.router.navigate(['/fitnessProvider-profile']);
+      } else if (this.authService.getUserRole() == 'DUDE') {
+        this.router.navigate(['/dude-profile']);
         return false;
       } else {
         this.router.navigate(['']);
@@ -24,6 +24,6 @@ export class RoleGuard implements CanActivate {
       this.router.navigate(['']);
       return false;
     }
-
   }
+
 }

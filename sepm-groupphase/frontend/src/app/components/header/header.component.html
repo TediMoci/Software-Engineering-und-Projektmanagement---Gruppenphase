@@ -9,13 +9,12 @@
       <li class="nav-item">
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/dude-profile']" class="btn btn-link">Profile</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/fitnessProvider-profile']" class="btn btn-link">Profile</a></a>
-        <!-- show different links according to who is logged in -->
-        <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/bros']" class="btn btn-link">Bros</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/bros']" class="btn btn-link">Bros</a></a>
         <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>
         <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/find']" class="btn btn-link">Find</a></a>
-        <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/history']" class="btn btn-link">History</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/history']" class="btn btn-link">History</a></a>
         <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/myContent']" class="btn btn-link">My Content</a></a>
-        <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/favourites']" class="btn btn-link">Favourites</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/favourites']" class="btn btn-link">Favourites</a></a>
       </li>
     </ul>
     <ul class="navbar-nav mr-5">

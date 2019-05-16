@@ -16,6 +16,9 @@ import {EditProfileComponent} from './components/edit-profile/edit-profile.compo
 import {FitnessProviderProfileComponent} from './components/fitness-provider-profile/fitness-provider-profile.component';
 import {LoginAsFitnessProviderComponent } from './components/login-as-fitness-provider/login-as-fitness-provider.component';
 import {RoleGuard} from './guards/role.guard';
+import {FitnessProviderRoleGuard} from './guards/fitness-provider-role.guard';
+import {FollowerComponent} from './components/follower/follower.component';
+import {FitnessProvidersFollowedComponent} from './components/fitness-providers-followed/fitness-providers-followed.component';
 
 const routes: Routes = [
 
@@ -23,16 +26,18 @@ const routes: Routes = [
   {path: 'login-as-fitness-provider', component: LoginAsFitnessProviderComponent},
   {path: 'register-as-dude', component: RegisterAsDudeComponent},
   {path: 'register-as-fitness-provider', component: RegisterAsFitnessProviderComponent},
-  {path: 'dude-profile', canActivate: [AuthGuard, RoleGuard], component: DudeProfileComponent},
+  {path: 'dude-profile', canActivate: [RoleGuard], component: DudeProfileComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'bros', canActivate: [AuthGuard], component: BrosComponent},
+  {path: 'bros', canActivate: [RoleGuard], component: BrosComponent},
   {path: 'create', canActivate: [AuthGuard], component: CreateComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
-  {path: 'history', canActivate: [AuthGuard], component: HistoryComponent},
+  {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
   {path: 'myContent', canActivate: [AuthGuard], component: MyContentComponent},
-  {path: 'favourites', canActivate: [AuthGuard], component: FavouritesComponent},
+  {path: 'favourites', canActivate: [RoleGuard], component: FavouritesComponent},
   {path: 'edit', canActivate: [AuthGuard], component: EditProfileComponent},
-  {path: 'fitnessProvider-profile', canActivate: [AuthGuard], component: FitnessProviderProfileComponent}
+  {path: 'fitnessProvider-profile', canActivate: [FitnessProviderRoleGuard], component: FitnessProviderProfileComponent},
+  {path: 'follower', canActivate: [FitnessProviderRoleGuard], component: FollowerComponent},
+  {path: 'fitnessProviders', canActivate: [RoleGuard], component:FitnessProvidersFollowedComponent}
 ];
 
 @NgModule({
