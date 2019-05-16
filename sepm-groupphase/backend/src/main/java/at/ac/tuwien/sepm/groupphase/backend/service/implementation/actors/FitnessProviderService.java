@@ -40,26 +40,6 @@ public class FitnessProviderService implements IFitnessProviderService {
     }
 
     @Override
-    public FitnessProvider findByNameAndPassword(String name, String password) throws ServiceException {
-        try {
-            fitnessProviderValidator.validateNameAndPassword(name, password);
-        } catch (ValidationException e){
-            throw new ServiceException(e.getMessage());
-        }
-        FitnessProvider fitnessProvider = iFitnessProviderRepository.findByNameAndPassword(name, password);
-        if (fitnessProvider==null) throw new ServiceException("Could not find your Fitness Provider Profile");
-        fitnessProvider.setPassword("XXXXXXXX");
-
-        return fitnessProvider;
-    }
-
-    @Override
-    public FitnessProvider registerNewUserAccount(FitnessProvider fitnessProvider) throws ServiceException {
-        return null;
-    }
-
-
-    @Override
     public Integer getNumberOfFollowers(String name) throws ServiceException {
         if (name.isBlank()) {
             throw new ServiceException("No name given.");

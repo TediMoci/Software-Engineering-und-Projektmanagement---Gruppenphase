@@ -49,13 +49,6 @@ public class SecurityConfiguration {
         this.dudeDetailsService = dudeDetailsService;
     }
 
-    /*
-    @Bean
-    public static PasswordEncoder configureDefaultPasswordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-     */
-
     @Bean
     public ErrorAttributes errorAttributes() {
         return new DefaultErrorAttributes() {

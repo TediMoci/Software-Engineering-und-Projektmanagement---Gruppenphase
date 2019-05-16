@@ -9,11 +9,7 @@ public interface IFitnessProviderService {
 
     FitnessProvider save(FitnessProvider fitnessProvider) throws ServiceException;
 
-    FitnessProvider findByNameAndPassword(String name, String password) throws ServiceException;
-
     Integer getNumberOfFollowers(String name) throws ServiceException;
-
-    FitnessProvider registerNewUserAccount(FitnessProvider fitnessProvider) throws  ServiceException;
 
     List<FitnessProvider> findAll() throws ServiceException;
 
