@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.DudeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,14 +22,14 @@ public class DudeService implements IDudeService {
 
     private final IDudeRepository iDudeRepository;
     private final DudeValidator dudeValidator;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DudeService(IDudeRepository iDudeRepository, DudeValidator dudeValidator) {
+    public DudeService(IDudeRepository iDudeRepository, DudeValidator dudeValidator, PasswordEncoder passwordEncoder) {
         this.iDudeRepository = iDudeRepository;
         this.dudeValidator = dudeValidator;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    // TODO: refresh age and bmi calculation upon login; apply age/bmi calculation automatically after registration
 
     /**
      *
@@ -38,7 +39,6 @@ public class DudeService implements IDudeService {
      */
     @Override
     public double calculateBMI(double height, double weight){
-
         double bmi = weight/Math.pow((height/100), 2);
         return new BigDecimal(String.valueOf(bmi)).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
@@ -62,14 +62,11 @@ public class DudeService implements IDudeService {
     @Override
     public Dude save(Dude dude) throws ServiceException {
         try {
+            dude.setPassword(passwordEncoder.encode(dude.getPassword()));
             dudeValidator.validateDude(dude);
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-
-        double bmi = calculateBMI(dude.getHeight(), dude.getWeight());
-        int age = calculateAge(dude.getBirthday());
-
         return iDudeRepository.save(dude);
     }
 
@@ -86,31 +83,9 @@ public class DudeService implements IDudeService {
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-
         return iDudeRepository.findByName(name);
     }
 
-    /**
-     *
-     * @param name
-     * @param password
-     * @return
-     * @throws ServiceException
-     */
-    @Override
-    public Dude findByNameAndPassword(String name, String password) throws ServiceException {
-        try {
-            dudeValidator.validateNameAndPassword(name, password);
-        } catch (ValidationException e){
-            throw new ServiceException(e.getMessage());
-        }
-
-        Dude dude = iDudeRepository.findByNameAndPassword(name, password);
-        if (dude==null) throw new ServiceException("Could not find your Dude Profile");
-        dude.setPassword("XXXXXXXX");
-
-        return dude;
-    }
     @Override
     public List<Dude> findAll(){
         List<Dude> dudes = new ArrayList<>();
@@ -136,7 +111,7 @@ public class DudeService implements IDudeService {
             Dude oldDude = findByName(name);
             if (oldDude==null) throw new ServiceException("There is no dude with that name in the database.");
             Dude dude = dudeValidator.validateUpdate(oldDude, newDude);
-
+            //dude.setPassword(passwordEncoder.encode(dude.getPassword()));
             return iDudeRepository.save(dude);
 
         } catch (ValidationException e) {

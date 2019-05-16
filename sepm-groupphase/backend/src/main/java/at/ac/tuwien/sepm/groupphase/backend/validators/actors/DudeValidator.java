@@ -27,8 +27,6 @@ public class DudeValidator {
     private String invalid_height = "Unnatural height. Check your entry!";
     private String weight_is_null = "Weight must not be null!";
     private String invalid_weight = "Unnatural weight. Check your entry!";
-    private String password_too_short = "Your password is too short. The minimum length is 8.";
-    private String password_is_null = "Passwort must be given!";
 
     private IUserService userService;
 
@@ -51,10 +49,6 @@ public class DudeValidator {
         }
 
         validateNameUnique(dude.getName());
-
-        if (dude.getPassword()==null || dude.getPassword().isBlank() ||dude.getPassword().length() < 8) {
-            throw new ValidationException(password_too_short);
-        }
 
         if (dude.getEmail() == null) {
             throw new ValidationException(email_is_null);
@@ -108,26 +102,6 @@ public class DudeValidator {
         }
         if (name.isBlank()) {
             throw new ValidationException(name_is_blank);
-        }
-    }
-
-    /**
-     * @param name
-     * @param password
-     * @throws ValidationException
-     */
-    public void validateNameAndPassword(String name, String password) throws ValidationException {
-        if (name == null) {
-            throw new ValidationException(name_is_null);
-        }
-        if (name.isBlank()) {
-            throw new ValidationException(name_is_blank);
-        }
-        if (password == null) {
-            throw new ValidationException(password_is_null);
-        }
-        if (password.isBlank() || password.length() < 8) {
-            throw new ValidationException(password_too_short);
         }
     }
 

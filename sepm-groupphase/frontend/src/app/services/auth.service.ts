@@ -6,8 +6,8 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import * as jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
-import {RegisterAsFitnessProvider} from '../dtos/register-as-fitness-provider';
-import {RegisterAsDude} from '../dtos/register-as-dude';
+import {FitnessProvider} from '../dtos/fitness-provider';
+import {Dude} from '../dtos/dude';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,6 @@ import {RegisterAsDude} from '../dtos/register-as-dude';
 export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
-  private userBaseUri: string = this.globals.backendUri + '/user';
   private dudesBaseUri: string = this.globals.backendUri + '/dudes';
   private fitnessProviderBaseUri: string = this.globals.backendUri + '/fitnessProvider';
 
@@ -58,16 +57,16 @@ export class AuthService {
     return localStorage.getItem('futureToken');
   }
 
-  getUserByNameAndPasswordFromDude(name: string, password: string): Observable<RegisterAsDude> {
-    const params = new HttpParams().set('name', name).set('password', password);
+  getUserByNameFromDude(name: string): Observable<Dude> {
+    const params = new HttpParams().set('name', name);
     console.log('check user by name ' + name);
-    return this.httpClient.get<RegisterAsDude>(this.dudesBaseUri, { params: params});
+    return this.httpClient.get<Dude>(this.dudesBaseUri, { params: params});
   }
 
-  getUserByNameAndPasswordFromFitnessProvider(name: string, password: string): Observable<RegisterAsFitnessProvider> {
-    const params = new HttpParams().set('name', name).set('password', password);
+  getUserByNameFromFitnessProvider(name: string): Observable<FitnessProvider> {
+    const params = new HttpParams().set('name', name);
     console.log('check user by name ' + name);
-    return this.httpClient.get<RegisterAsFitnessProvider>(this.fitnessProviderBaseUri, { params: params});
+    return this.httpClient.get<FitnessProvider>(this.fitnessProviderBaseUri, { params: params});
   }
   /**
    * Returns the user role based on the current token
@@ -77,9 +76,9 @@ export class AuthService {
       const decoded: any = jwt_decode(this.getToken());
       const authInfo = decoded.aut;
       if (authInfo.includes('FITNESS_PROVIDER')) {
-        return 'ADMIN';
-      } else if (authInfo.includes('USER')) {
-        return 'USER';
+        return 'FITNESS_PROVIDER';
+      } else if (authInfo.includes('DUDE')) {
+        return 'DUDE';
       }
     }
     return 'UNDEFINED';

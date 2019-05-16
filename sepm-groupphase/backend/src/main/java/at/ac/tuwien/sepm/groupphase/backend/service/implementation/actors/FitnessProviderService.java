@@ -6,6 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRe
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IFitnessProviderService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.FitnessProviderValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,43 +19,25 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     private final IFitnessProviderRepository iFitnessProviderRepository;
     private final FitnessProviderValidator fitnessProviderValidator;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public FitnessProviderService(IFitnessProviderRepository iFitnessProviderRepository, FitnessProviderValidator fitnessProviderValidator) {
+    public FitnessProviderService(IFitnessProviderRepository iFitnessProviderRepository, FitnessProviderValidator fitnessProviderValidator, PasswordEncoder passwordEncoder) {
         this.iFitnessProviderRepository = iFitnessProviderRepository;
         this.fitnessProviderValidator = fitnessProviderValidator;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public FitnessProvider save(FitnessProvider fitnessProvider) throws ServiceException {
         try{
+            fitnessProvider.setPassword(passwordEncoder.encode(fitnessProvider.getPassword()));
             fitnessProviderValidator.validateFitnessProvider(fitnessProvider);
         }catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-        fitnessProvider.setRoles(Arrays.asList("FITNESS_PROVIDER"));
         return iFitnessProviderRepository.save(fitnessProvider);
     }
-
-    @Override
-    public FitnessProvider findByNameAndPassword(String name, String password) throws ServiceException {
-        try {
-            fitnessProviderValidator.validateNameAndPassword(name, password);
-        } catch (ValidationException e){
-            throw new ServiceException(e.getMessage());
-        }
-        FitnessProvider fitnessProvider = iFitnessProviderRepository.findByNameAndPassword(name, password);
-        if (fitnessProvider==null) throw new ServiceException("Could not find your Fitness Provider Profile");
-        fitnessProvider.setPassword("XXXXXXXX");
-
-        return fitnessProvider;
-    }
-
-    @Override
-    public FitnessProvider registerNewUserAccount(FitnessProvider fitnessProvider) throws ServiceException {
-        return null;
-    }
-
 
     @Override
     public Integer getNumberOfFollowers(String name) throws ServiceException {
@@ -77,11 +61,6 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     @Override
     public FitnessProvider findByName(String name) throws ServiceException {
-        try {
-            fitnessProviderValidator.validateName(name);
-        } catch (ValidationException e){
-            throw new ServiceException(e.getMessage());
-        }
 
         return iFitnessProviderRepository.findByName(name);
     }

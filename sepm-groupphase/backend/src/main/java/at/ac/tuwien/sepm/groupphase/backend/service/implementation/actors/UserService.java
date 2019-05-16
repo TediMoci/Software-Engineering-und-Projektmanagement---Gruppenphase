@@ -32,28 +32,5 @@ public class UserService implements IUserService {
 
     }
 
-    /**
-     *
-     * @param name
-     * @param password
-     * @return
-     * @throws ServiceException
-     */
-    @Override
-    public Object findUserByNameAndPassword(String name, String password) throws ServiceException {
-
-        Dude dude = iDudeRepository.findByNameAndPassword(name, password);
-        FitnessProvider fitnessProvider = iFitnessProviderRepository.findByNameAndPassword(name, password);
-
-        if (dude != null){
-            dude.setPassword("XXXXXXXX");
-            return dude;
-        } else if (fitnessProvider != null){
-            fitnessProvider.setPassword("XXXXXXXX");
-            return fitnessProvider;
-        } else {
-            throw new ServiceException("Wrong name or password!");
-        }
-    }
 
 }

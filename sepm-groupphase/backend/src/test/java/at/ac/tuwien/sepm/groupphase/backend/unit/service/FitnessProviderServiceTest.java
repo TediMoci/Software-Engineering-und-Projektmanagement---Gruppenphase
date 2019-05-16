@@ -104,32 +104,6 @@ public class FitnessProviderServiceTest {
     }
 
     @Test
-    public void TestFindByNameAndPassword() throws ServiceException{
-        Mockito.when(fpRepository.findByNameAndPassword(anyString(),anyString())).thenReturn(fitnessProvider1);
-        assertEquals(fpService.findByNameAndPassword("FP1 Name","FP1 Password"),fitnessProvider1);
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestFindByNameAndPassword_fitnessProviderNotFound() throws ServiceException{
-        Mockito.when(fpRepository.findByNameAndPassword(anyString(),anyString())).thenReturn(null);
-        fpService.findByNameAndPassword("anyName","anyPassword");
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestFindByNameAndPassword_invalidName() throws ServiceException{
-        FitnessProvider fitnessProvider = fitnessProviderBuilder();
-        fitnessProvider.setName("");
-        fpService.findByNameAndPassword(fitnessProvider.getName(),fitnessProvider.getPassword());
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestFindByNameAndPassword_invalidPassword() throws ServiceException{
-        FitnessProvider fitnessProvider = fitnessProviderBuilder();
-        fitnessProvider.setPassword("");
-        fpService.findByNameAndPassword(fitnessProvider.getName(),fitnessProvider.getPassword());
-    }
-
-    @Test
     public void TestUpdate() throws ServiceException {
         Mockito.when(fpRepository.findByName("FitPro1")).thenReturn(fitnessProvider1);
         Mockito.when(fpRepository.findByName("FitPro2")).thenReturn(null);
