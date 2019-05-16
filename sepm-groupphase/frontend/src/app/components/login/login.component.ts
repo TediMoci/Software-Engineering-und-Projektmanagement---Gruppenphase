@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
 import {Dude} from '../../dtos/dude';
+import {ProfileService} from '../../services/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +18,9 @@ export class LoginComponent implements OnInit {
   submitted: boolean = false;
   // Error flag
   error: any;
-  dude: Dude;
+  loginDude: Dude;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private profile: ProfileService, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -36,7 +37,9 @@ export class LoginComponent implements OnInit {
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
           this.authenticateUser(authRequest);
-          //this.setDudeForProfile(data);
+          this.loginDude = data;
+          localStorage.setItem('loggedInDude', JSON.stringify(this.loginDude));
+          console.log('Dude logged in: ' + this.loginDude.name + ', ' + this.loginDude.weight)
         } else {
           console.log('Invalid input');
         }
@@ -78,11 +81,4 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  setDudeForProfile(dude: Dude) {
-    this.dude = dude;
-  }
-
-  getDudeForProfile() {
-    return this.dude;
-  }
 }

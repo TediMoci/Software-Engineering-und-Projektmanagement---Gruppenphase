@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
 import {LoginComponent} from '../login/login.component';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../../global/globals';
 import {Dude} from '../../dtos/dude';
-import {stringify} from 'querystring';
 import {ProfileService} from '../../services/profile.service';
 
 @Component({
@@ -25,15 +24,13 @@ export class DudeProfileComponent implements OnInit {
   bmi: number;
 
   dude: Dude;
-  private dudeBaseUri: string = this.globals.backendUri + '/dudes';
 
-  constructor(private globals: Globals, private profileService: ProfileService, private loginData: LoginComponent, private httpClient: HttpClient) {
+  constructor(private globals: Globals, private profileService: ProfileService, private httpClient: HttpClient) {
   }
 
   ngOnInit() {
 
-
-    this.dude = this.loginData.getDudeForProfile();
+    this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
 
     this.userName = this.dude.name;
 
@@ -55,7 +52,6 @@ export class DudeProfileComponent implements OnInit {
     this.height = this.dude.height;
     this.weight = this.dude.weight;
 
-    /*
     this.profileService.getAge(this.dude.birthday, this.dude.name).subscribe(
       (data) => {
         console.log('calculate age of dude with name ' + this.dude.name);
@@ -66,7 +62,7 @@ export class DudeProfileComponent implements OnInit {
       }
     );
 
-    this.profileService.getBmi(111, 111, 'mary').subscribe(
+    this.profileService.getBmi(this.dude.height, this.dude.weight, this.dude.name).subscribe(
       (data) => {
         console.log('calculate bmi of dude with name ' + this.dude.name);
         this.bmi = data;
@@ -75,8 +71,6 @@ export class DudeProfileComponent implements OnInit {
         this.error = error;
         }
     );
-     */
-
 
   }
 
