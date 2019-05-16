@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.configuration;
 
 import at.ac.tuwien.sepm.groupphase.backend.configuration.properties.H2ConsoleConfigurationProperties;
 import at.ac.tuwien.sepm.groupphase.backend.security.HeaderTokenAuthenticationFilter;
+import at.ac.tuwien.sepm.groupphase.backend.service.implementation.MyDudeDetailsService;
 import at.ac.tuwien.sepm.groupphase.backend.service.implementation.MyFitnessProviderDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -12,10 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,8 +28,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -44,17 +40,21 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
     private final MyFitnessProviderDetailsService fitnessProviderDetailsService;
+    private final MyDudeDetailsService dudeDetailsService;
 
-    public SecurityConfiguration(MyFitnessProviderDetailsService fitnessProviderDetailsService) {
+    @Autowired
+    public SecurityConfiguration(MyFitnessProviderDetailsService fitnessProviderDetailsService, MyDudeDetailsService dudeDetailsService) {
         this.fitnessProviderDetailsService = fitnessProviderDetailsService;
+        this.dudeDetailsService = dudeDetailsService;
     }
 
+    /*
     @Bean
     public static PasswordEncoder configureDefaultPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
+     */
 
     @Bean
     public ErrorAttributes errorAttributes() {
@@ -70,6 +70,7 @@ public class SecurityConfiguration {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(fitnessProviderDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(dudeDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Configuration

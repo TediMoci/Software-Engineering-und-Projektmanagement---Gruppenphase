@@ -5,7 +5,6 @@ import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
 import {RegisterAsDude} from '../../dtos/register-as-dude';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -32,7 +31,7 @@ export class LoginComponent implements OnInit {
    */
   loginUser() {
     this.submitted = true;
-    this.authService.getUserByNameAndPasswordFromDude(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe((data) => {
+    this.authService.getUserByNameFromDude(this.loginForm.controls.username.value).subscribe((data) => {
         console.log(data);
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);

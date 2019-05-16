@@ -8,7 +8,6 @@ import java.util.List;
 public interface IDudeService {
 
     /**
-     *
      * @param height
      * @param weight
      * @return
@@ -16,21 +15,24 @@ public interface IDudeService {
     double calculateBMI(double height, double weight);
 
     /**
-     *
      * @param birthday
      * @return
      */
     int calculateAge(LocalDate birthday);
 
     /**
-     *
      * @param dude
      * @return
      */
     Dude save(Dude dude) throws ServiceException;
 
     /**
-     *
+     * @return
+     * @throws ServiceException
+     */
+    List<Dude> findAll() throws ServiceException;
+
+    /**
      * @param name
      * @return
      * @throws ServiceException
@@ -38,22 +40,18 @@ public interface IDudeService {
     Dude findByName(String name) throws ServiceException;
 
     /**
-     *
-     * @param name
-     * @param password
+     * @param id
      * @return
      * @throws ServiceException
      */
-    Dude findByNameAndPassword(String name, String password) throws ServiceException;
-
-    //TODO
-    List<Dude> findAll() throws ServiceException;
-
-    //TODO
     Dude findDudeById(Long id) throws ServiceException;
 
-    //TODO
+    /**
+     * @param name
+     * @param newDude
+     * @return
+     * @throws ServiceException
+     */
     Dude update(String name, Dude newDude) throws ServiceException;
 
-
-    }
+}

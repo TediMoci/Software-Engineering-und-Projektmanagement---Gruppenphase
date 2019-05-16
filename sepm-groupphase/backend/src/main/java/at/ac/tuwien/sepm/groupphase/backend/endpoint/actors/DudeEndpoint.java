@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +41,6 @@ public class DudeEndpoint {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "Get a Dude by name and password", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto findByNameAndPassword(String name, String password) {
-        try {
-            return dudeMapper.dudeToDudeDto(iDudeService.findByNameAndPassword(name, password));
-        } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-    }
-
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ApiOperation(value = "Get all dudes", authorizations = {@Authorization(value = "apiKey")})
     public List<DudeDto> findAll() {
@@ -73,6 +63,28 @@ public class DudeEndpoint {
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(value = "/nameIs{name}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get a Dude by name", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto findDudeByName(@PathVariable("name") String name) {
+        try {
+            return dudeMapper.dudeToDudeDto(iDudeService.findByName(name));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bmi", method = RequestMethod.GET)
+    @ApiOperation(value = "Get BMI of dude", authorizations = {@Authorization(value = "apiKey")})
+    public Double getBmi(Double height, Double weight){
+        return iDudeService.calculateBMI(height, weight);
+    }
+
+    @RequestMapping(value = "/age", method = RequestMethod.GET)
+    @ApiOperation(value = "Get age of dude", authorizations = {@Authorization(value = "apiKey")})
+    public Integer getAge(LocalDate birthday){
+        return iDudeService.calculateAge(birthday);
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)

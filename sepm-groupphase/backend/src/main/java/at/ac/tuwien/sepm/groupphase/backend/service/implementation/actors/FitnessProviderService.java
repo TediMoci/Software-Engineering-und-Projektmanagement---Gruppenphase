@@ -19,14 +19,13 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     private final IFitnessProviderRepository iFitnessProviderRepository;
     private final FitnessProviderValidator fitnessProviderValidator;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public FitnessProviderService(IFitnessProviderRepository iFitnessProviderRepository, FitnessProviderValidator fitnessProviderValidator) {
+    public FitnessProviderService(IFitnessProviderRepository iFitnessProviderRepository, FitnessProviderValidator fitnessProviderValidator, PasswordEncoder passwordEncoder) {
         this.iFitnessProviderRepository = iFitnessProviderRepository;
         this.fitnessProviderValidator = fitnessProviderValidator;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

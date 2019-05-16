@@ -15,7 +15,6 @@ import {RegisterAsDude} from '../dtos/register-as-dude';
 export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
-  private userBaseUri: string = this.globals.backendUri + '/user';
   private dudesBaseUri: string = this.globals.backendUri + '/dudes';
   private fitnessProviderBaseUri: string = this.globals.backendUri + '/fitnessProvider';
 
@@ -58,13 +57,13 @@ export class AuthService {
     return localStorage.getItem('futureToken');
   }
 
-  getUserByNameAndPasswordFromDude(name: string, password: string): Observable<RegisterAsDude> {
-    const params = new HttpParams().set('name', name).set('password', password);
+  getUserByNameFromDude(name: string): Observable<RegisterAsDude> {
+    const params = new HttpParams().set('name', name);
     console.log('check user by name ' + name);
     return this.httpClient.get<RegisterAsDude>(this.dudesBaseUri, { params: params});
   }
 
-  getUserByNameFromFitnessProvider(name: string, password: string): Observable<RegisterAsFitnessProvider> {
+  getUserByNameFromFitnessProvider(name: string): Observable<RegisterAsFitnessProvider> {
     const params = new HttpParams().set('name', name);
     console.log('check user by name ' + name);
     return this.httpClient.get<RegisterAsFitnessProvider>(this.fitnessProviderBaseUri, { params: params});
@@ -78,8 +77,8 @@ export class AuthService {
       const authInfo = decoded.aut;
       if (authInfo.includes('FITNESS_PROVIDER')) {
         return 'FITNESS_PROVIDER';
-      } else if (authInfo.includes('USER')) {
-        return 'USER';
+      } else if (authInfo.includes('DUDE')) {
+        return 'DUDE';
       }
     }
     return 'UNDEFINED';

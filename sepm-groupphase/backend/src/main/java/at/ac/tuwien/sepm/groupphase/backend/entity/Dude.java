@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -56,6 +58,13 @@ public class Dude {
     @Min(1)
     private Double weight;
     // in kilograms
+
+    @ElementCollection
+    private List<String> roles = new ArrayList<String>() {
+        {
+            add("DUDE");
+        }
+    };
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
@@ -163,6 +172,14 @@ public class Dude {
         this.weight = weight;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     public Set<FitnessProvider> getFitnessProviders() {
         return fitnessProviders;
     }
@@ -213,6 +230,7 @@ public class Dude {
             ", birthday=" + birthday +
             ", height=" + height +
             ", weight=" + weight +
+            ", roles=" + roles +
             ", fitnessProviders=" + fitnessProviders +
             ", courses=" + courses +
             ", exercises=" + exercises +
@@ -232,19 +250,19 @@ public class Dude {
         if (password != null ? !password.equals(dude.password) : dude.password != null) return false;
         if (description != null ? !description.equals(dude.description) : dude.description != null) return false;
         if (email != null ? !email.equals(dude.email) : dude.email != null) return false;
-        if (sex != null ? !sex.equals(dude.sex) : dude.sex != null) return false;
+        if (sex != dude.sex) return false;
         if (status != null ? !status.equals(dude.status) : dude.status != null) return false;
         if (selfAssessment != null ? !selfAssessment.equals(dude.selfAssessment) : dude.selfAssessment != null)
             return false;
         if (birthday != null ? !birthday.equals(dude.birthday) : dude.birthday != null) return false;
         if (height != null ? !height.equals(dude.height) : dude.height != null) return false;
         if (weight != null ? !weight.equals(dude.weight) : dude.weight != null) return false;
+        if (roles != null ? !roles.equals(dude.roles) : dude.roles != null) return false;
         if (fitnessProviders != null ? !fitnessProviders.equals(dude.fitnessProviders) : dude.fitnessProviders != null)
             return false;
         if (courses != null ? !courses.equals(dude.courses) : dude.courses != null) return false;
         if (exercises != null ? !exercises.equals(dude.exercises) : dude.exercises != null) return false;
         return workouts != null ? workouts.equals(dude.workouts) : dude.workouts == null;
-
     }
 
     @Override
@@ -260,6 +278,7 @@ public class Dude {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
         result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
         result = 31 * result + (courses != null ? courses.hashCode() : 0);
         result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
@@ -279,6 +298,7 @@ public class Dude {
         private LocalDate birthday;
         private Double height;
         private Double weight;
+        private List<String> roles;
         private Set<FitnessProvider> fitnessProviders;
         private Set<Course> courses;
         private Set<Exercise> exercises;
@@ -342,6 +362,11 @@ public class Dude {
             return this;
         }
 
+        public DudeBuilder roles(List<String> roles){
+            this.roles = roles;
+            return this;
+        }
+
         public DudeBuilder fitnessProviders(Set<FitnessProvider> fitnessProviders) {
             this.fitnessProviders = fitnessProviders;
             return this;
@@ -375,6 +400,7 @@ public class Dude {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
+            dude.setRoles(roles);
             dude.setFitnessProviders(fitnessProviders);
             dude.setCourses(courses);
             dude.setExercises(exercises);
