@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {passwordCheck, checkName } from '../../validator/validator';
 import {RegisterAsDude} from '../../dtos/register-as-dude';
 import {RegisterAsDudeService} from '../../services/register-as-dude.service';
-import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-register-as-dude',

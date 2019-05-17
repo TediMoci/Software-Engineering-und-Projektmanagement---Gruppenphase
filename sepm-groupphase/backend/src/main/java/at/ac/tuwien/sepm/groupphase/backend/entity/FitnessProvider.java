@@ -1,17 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.service.implementation.SimpleHeaderTokenAuthenticationService;
-import org.slf4j.LoggerFactory;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 @Entity
 @Table(name = "fitness_provider")
@@ -54,7 +49,6 @@ public class FitnessProvider {
     private List<String> roles = new ArrayList<String>() {
         {
             add("FITNESS_PROVIDER");
-            add("ss");
         }
     };
 
