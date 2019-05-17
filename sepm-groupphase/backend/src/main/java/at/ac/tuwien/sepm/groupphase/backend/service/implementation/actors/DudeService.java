@@ -63,6 +63,7 @@ public class DudeService implements IDudeService {
     public Dude save(Dude dude) throws ServiceException {
         try {
             dude.setPassword(passwordEncoder.encode(dude.getPassword()));
+            dudeValidator.validateNameUnique(dude.getName());
             dudeValidator.validateDude(dude);
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
@@ -88,8 +89,7 @@ public class DudeService implements IDudeService {
 
     @Override
     public List<Dude> findAll(){
-        List<Dude> dudes = new ArrayList<>();
-        iDudeRepository.findAll().forEach(dudes::add);
+        List<Dude> dudes = new ArrayList<>(iDudeRepository.findAll());
         return dudes;
     }
 
@@ -103,16 +103,26 @@ public class DudeService implements IDudeService {
         }
     }
 
-    //TODO: Separate validator class to be written
-    //TODO: Description and status taking default values if null
     @Override
     public Dude update(String name, Dude newDude) throws ServiceException {
         try {
             Dude oldDude = findByName(name);
             if (oldDude==null) throw new ServiceException("There is no dude with that name in the database.");
-            Dude dude = dudeValidator.validateUpdate(oldDude, newDude);
-            //dude.setPassword(passwordEncoder.encode(dude.getPassword()));
-            return iDudeRepository.save(dude);
+            if (!(newDude.getName().equals(oldDude.getName()))) dudeValidator.validateNameUnique(newDude.getName());
+
+            // TODO: handle password editing
+
+            oldDude.setName(newDude.getName());
+            oldDude.setPassword(newDude.getPassword());
+            oldDude.setDescription(newDude.getDescription());
+            oldDude.setEmail(newDude.getEmail());
+            oldDude.setSex(newDude.getSex());
+            oldDude.setSelfAssessment(newDude.getSelfAssessment());
+            oldDude.setBirthday(newDude.getBirthday());
+            oldDude.setHeight(newDude.getHeight());
+            oldDude.setWeight(newDude.getWeight());
+            dudeValidator.validateDude(oldDude);
+            return iDudeRepository.save(oldDude);
 
         } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());

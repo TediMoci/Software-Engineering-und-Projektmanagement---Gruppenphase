@@ -119,16 +119,14 @@ public class FitnessProviderServiceTest {
         fpService.update("FitPro1",fitnessProvider1);
     }
 
-    @Test
-    public void TestUpdate_newFitnessProviderInvalidPassword_noChangeForFitnessProvider1() throws ServiceException {
-        FitnessProvider fitnessProvider = fitnessProviderBuilder();
-        fitnessProvider.setPassword("1");
-        Mockito.when(fpRepository.findByName("FitPro1")).thenReturn(fitnessProvider1);
-        Mockito.when(fpRepository.findByName(fitnessProvider.getName())).thenReturn(null);
-        Mockito.when(fpRepository.save(anyObject())).thenReturn(fitnessProvider);
-
-        FitnessProvider updatedFitnessProvider = fpService.update("FitPro1",fitnessProvider);
-        assertNotEquals(updatedFitnessProvider.getPassword(),fitnessProvider1.getPassword());
+    @Test(expected = ServiceException.class)
+    public void TestUpdate_newFitnessProviderInvalid() throws ServiceException {
+        FitnessProvider invalidFP = fitnessProviderBuilder();
+        FitnessProvider validFP = fitnessProviderBuilder();
+        invalidFP.setName("");
+        Mockito.when(fpRepository.findByName("Valid Name")).thenReturn(validFP);
+        Mockito.when(fpRepository.findByName(invalidFP.getName())).thenReturn(null);
+        fpService.update("Valid Name",invalidFP);
     }
 
     @Test
