@@ -65,6 +65,7 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
     public AuthenticationToken authenticate(String username, CharSequence password) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(username, password));
+
         Instant now = Instant.now();
         String authorities = "";
         try {

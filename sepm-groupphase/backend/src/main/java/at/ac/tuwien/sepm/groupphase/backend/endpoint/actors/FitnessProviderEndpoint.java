@@ -50,9 +50,9 @@ public class FitnessProviderEndpoint {
 
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get a fitness provider by name and password", authorizations ={ @Authorization(value = "apiKey")})
-    public FitnessProviderDto findByNameAndPassword(String name, String password){
+    public FitnessProviderDto findByName(String name){
         try{
-            return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findByNameAndPassword(name, password));
+            return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findByName(name));
         }catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
@@ -91,4 +91,5 @@ public class FitnessProviderEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
 }

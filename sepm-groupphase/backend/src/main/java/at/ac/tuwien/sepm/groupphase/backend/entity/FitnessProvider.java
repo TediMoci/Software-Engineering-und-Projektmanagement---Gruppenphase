@@ -1,16 +1,21 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.service.implementation.SimpleHeaderTokenAuthenticationService;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Entity
 @Table(name = "fitness_provider")
 public class FitnessProvider {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_fitness_provider_id")
     @SequenceGenerator(name = "seq_fitness_provider_id", sequenceName = "seq_fitness_provider_id")
@@ -45,10 +50,13 @@ public class FitnessProvider {
     @Size(max = 100)
     private String website = "No website given.";
 
-
     @ElementCollection
-    private List<String> roles;
-
+    private List<String> roles = new ArrayList<String>() {
+        {
+            add("FITNESS_PROVIDER");
+            add("ss");
+        }
+    };
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProviders")
     private Set<Dude> dudes;
@@ -159,6 +167,7 @@ public class FitnessProvider {
             ", email='" + email + '\'' +
             ", phoneNumber='" + phoneNumber + '\'' +
             ", website='" + website + '\'' +
+            ", roles='" + roles + '\'' +
             ", dudes=" + dudes +
             ", courses=" + courses +
             '}';

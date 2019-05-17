@@ -5,7 +5,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.persistence.ElementCollection;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @ApiModel(value = "DudeDto", description = "A dto for dude entries via rest")
@@ -43,6 +46,13 @@ public class DudeDto {
 
     @ApiModelProperty(required = true, name = "Weight of Dude")
     private Double weight;
+
+    @ElementCollection
+    private List<String> roles = new ArrayList<String>() {
+        {
+            add("DUDE");
+        }
+    };
 
     @ApiModelProperty(name = "FitnessProviders the Dude follows")
     private Set<FitnessProvider> fitnessProviders;
@@ -134,6 +144,14 @@ public class DudeDto {
         this.weight = weight;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     public Set<FitnessProvider> getFitnessProviders() {
         return fitnessProviders;
     }
@@ -156,7 +174,7 @@ public class DudeDto {
 
     @Override
     public String toString() {
-        return "Dude{" +
+        return "DudeDto{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", password='" + password + '\'' +
@@ -168,6 +186,7 @@ public class DudeDto {
             ", birthday=" + birthday +
             ", height=" + height +
             ", weight=" + weight +
+            ", roles=" + roles +
             ", fitnessProviders=" + fitnessProviders +
             ", courses=" + courses +
             '}';
@@ -185,13 +204,14 @@ public class DudeDto {
         if (password != null ? !password.equals(dudeDto.password) : dudeDto.password != null) return false;
         if (description != null ? !description.equals(dudeDto.description) : dudeDto.description != null) return false;
         if (email != null ? !email.equals(dudeDto.email) : dudeDto.email != null) return false;
-        if (sex != null ? !sex.equals(dudeDto.sex) : dudeDto.sex != null) return false;
+        if (sex != dudeDto.sex) return false;
         if (status != null ? !status.equals(dudeDto.status) : dudeDto.status != null) return false;
         if (selfAssessment != null ? !selfAssessment.equals(dudeDto.selfAssessment) : dudeDto.selfAssessment != null)
             return false;
         if (birthday != null ? !birthday.equals(dudeDto.birthday) : dudeDto.birthday != null) return false;
         if (height != null ? !height.equals(dudeDto.height) : dudeDto.height != null) return false;
         if (weight != null ? !weight.equals(dudeDto.weight) : dudeDto.weight != null) return false;
+        if (roles != null ? !roles.equals(dudeDto.roles) : dudeDto.roles != null) return false;
         if (fitnessProviders != null ? !fitnessProviders.equals(dudeDto.fitnessProviders) : dudeDto.fitnessProviders != null)
             return false;
         return courses != null ? courses.equals(dudeDto.courses) : dudeDto.courses == null;
@@ -210,6 +230,7 @@ public class DudeDto {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
         result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
         result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
@@ -227,6 +248,7 @@ public class DudeDto {
         private LocalDate birthday;
         private Double height;
         private Double weight;
+        private List<String> roles;
         private Set<FitnessProvider> fitnessProviders;
         private Set<Course> courses;
 
@@ -288,6 +310,11 @@ public class DudeDto {
             return this;
         }
 
+        public DudeDtoBuilder roles(List<String> roles){
+            this.roles = roles;
+            return this;
+        }
+
         public DudeDtoBuilder fitnessProviders(Set<FitnessProvider> fitnessProviders) {
             this.fitnessProviders = fitnessProviders;
             return this;
@@ -311,6 +338,7 @@ public class DudeDto {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
+            dude.setRoles(roles);
             dude.setFitnessProviders(fitnessProviders);
             dude.setCourses(courses);
             return dude;

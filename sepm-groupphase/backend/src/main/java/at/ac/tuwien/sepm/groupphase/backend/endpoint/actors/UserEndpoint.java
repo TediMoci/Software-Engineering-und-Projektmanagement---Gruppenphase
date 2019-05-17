@@ -39,20 +39,4 @@ public class UserEndpoint {
     public int nameTaken(String name) {
         return iUserService.nameTaken(name);
     }
-
-    @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "Get user data from database", authorizations = {@Authorization(value = "apiKey")})
-    public Object getUserByNameAndPassword(String name, String password) {
-        try {
-            Object o = iUserService.findUserByNameAndPassword(name, password);
-            if (o.getClass() == Dude.class){
-                return dudeMapper.dudeToDudeDto((Dude)o);
-            } if (o.getClass() == FitnessProvider.class){
-                return fitnessProviderMapper.fitnessProviderToFitnessProviderDto((FitnessProvider)o);
-            }
-        } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        } return null;
-    }
-
 }

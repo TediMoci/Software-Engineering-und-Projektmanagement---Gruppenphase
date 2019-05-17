@@ -3,13 +3,16 @@ import {Observable} from 'rxjs';
 import {RegisterAsDude} from '../dtos/register-as-dude';
 import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 import {Globals} from '../global/globals';
+import {Dude} from '../dtos/dude';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterAsDudeService {
+
   private dudeBaseUri: string = this.globals.backendUri + '/dudes';
   private userBaseUri: string = this.globals.backendUri + '/user';
+
   constructor(private httpClient: HttpClient , private globals: Globals) { }
 
   addDude(dude: RegisterAsDude): Observable<RegisterAsDude> {

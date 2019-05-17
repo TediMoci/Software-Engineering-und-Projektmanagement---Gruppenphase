@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {AuthRequest} from '../../dtos/auth-request';
+import {FitnessProvider} from '../../dtos/fitness-provider';
 
 @Component({
   selector: 'app-login-as-fitness-provider',
@@ -10,12 +11,12 @@ import {AuthRequest} from '../../dtos/auth-request';
   styleUrls: ['./login-as-fitness-provider.component.scss']
 })
 export class LoginAsFitnessProviderComponent implements OnInit {
-
   loginForm: FormGroup;
   // After first submission attempt, form validation will start
   submitted: boolean = false;
   // Error flag
   error: any;
+  fitnessProvider: FitnessProvider;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
@@ -29,11 +30,15 @@ export class LoginAsFitnessProviderComponent implements OnInit {
    */
   loginUser() {
     this.submitted = true;
-    this.authService.getUserByNameAndPasswordFromFitnessProvider(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe((data) => {
+    this.authService.getUserByNameFromFitnessProvider(this.loginForm.controls.username.value).subscribe((data) => {
       console.log(data);
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
           this.authenticateUser(authRequest);
+          // recieves the coúrrent user
+          this.fitnessProvider = data;
+          // save the currentUser in local storage to use it in other components
+          localStorage.setItem('currentUser', JSON.stringify(this.fitnessProvider));
         } else {
           console.log('Invalid input');
         }
@@ -42,8 +47,6 @@ export class LoginAsFitnessProviderComponent implements OnInit {
         this.error = error;
       }
     );
-
-
   }
 
   /**
@@ -55,9 +58,10 @@ export class LoginAsFitnessProviderComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        this.router.navigate(['/fitnessProvider-profile']); // TODO: route to fitnessProvider or dude-profile according to who is logged in
+        this.router.navigate(['/fitnessProvider-profile']);
       },
       error => {
+        console.log(authRequest);
         console.log('Could not log in due to: ' + error.message);
         this.error = error;
       }

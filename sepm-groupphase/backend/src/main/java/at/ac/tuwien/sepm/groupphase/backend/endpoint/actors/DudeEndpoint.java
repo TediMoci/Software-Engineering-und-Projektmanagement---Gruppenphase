@@ -8,11 +8,13 @@ import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class DudeEndpoint {
 
     private final IDudeService iDudeService;
     private final IDudeMapper dudeMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
     @Autowired
     public DudeEndpoint(IDudeService iDudeService, IDudeMapper dudeMapper) {
@@ -36,16 +39,6 @@ public class DudeEndpoint {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.save(dude));
-        } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "Get a Dude by name and password", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto findByNameAndPassword(String name, String password) {
-        try {
-            return dudeMapper.dudeToDudeDto(iDudeService.findByNameAndPassword(name, password));
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
@@ -74,6 +67,29 @@ public class DudeEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation(value = "Get a Dude by name", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto findDudeByName(String name) {
+        try {
+            return dudeMapper.dudeToDudeDto(iDudeService.findByName(name));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bmi", method = RequestMethod.GET)
+    @ApiOperation(value = "Get BMI of dude", authorizations = {@Authorization(value = "apiKey")})
+    public Double getBmi(Double height, Double weight){
+        return iDudeService.calculateBMI(height, weight);
+    }
+
+    @RequestMapping(value = "/age", method = RequestMethod.GET)
+    @ApiOperation(value = "Get age of dude", authorizations = {@Authorization(value = "apiKey")})
+    public Integer getAge(LocalDate birthday){
+        return iDudeService.calculateAge(birthday);
+    }
+
 
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})

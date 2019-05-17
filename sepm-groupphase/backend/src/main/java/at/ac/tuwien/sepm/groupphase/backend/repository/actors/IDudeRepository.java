@@ -27,15 +27,6 @@ public interface IDudeRepository extends JpaRepository<Dude, Long> {
 
     /**
      *
-     * @param name
-     * @param password
-     * @return
-     */
-    @Query("SELECT u FROM Dude u WHERE u.name = ?1 and u.password = ?2")
-    Dude findByNameAndPassword(String name, String password);
-
-    /**
-     *
      * @return
      */
     List<Dude> findAll();

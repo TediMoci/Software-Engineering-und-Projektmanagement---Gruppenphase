@@ -114,32 +114,6 @@ public class DudeServiceTest {
     }
 
     @Test
-    public void TestFindByNameAndPassword() throws ServiceException{
-        Mockito.when(dudeRepository.findByNameAndPassword(anyString(),anyString())).thenReturn(dude1);
-        assertEquals(dudeService.findByNameAndPassword("John","John's Password"),dude1);
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestFindByNameAndPassword_dudeNotFound() throws ServiceException{
-        Mockito.when(dudeRepository.findByNameAndPassword(anyString(),anyString())).thenReturn(null);
-        dudeService.findByNameAndPassword("anyName","anyPassword");
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestFindByNameAndPassword_invalidName() throws ServiceException{
-        Dude dude = dudeBuilder();
-        dude.setName("");
-        dudeService.findByNameAndPassword(dude.getName(),dude.getPassword());
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestFindByNameAndPassword_invalidPassword() throws ServiceException{
-        Dude dude = dudeBuilder();
-        dude.setPassword("");
-        dudeService.findByNameAndPassword(dude.getName(),dude.getPassword());
-    }
-
-    @Test
     public void TestUpdate() throws ServiceException {
         Mockito.when(dudeRepository.findByName("John")).thenReturn(dude1);
         Mockito.when(dudeRepository.findByName("Linda")).thenReturn(null);
