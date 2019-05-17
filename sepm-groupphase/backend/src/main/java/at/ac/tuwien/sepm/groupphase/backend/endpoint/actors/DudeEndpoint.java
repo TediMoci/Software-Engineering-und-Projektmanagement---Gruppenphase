@@ -11,6 +11,7 @@ import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -86,7 +87,7 @@ public class DudeEndpoint {
 
     @RequestMapping(value = "/age", method = RequestMethod.GET)
     @ApiOperation(value = "Get age of dude", authorizations = {@Authorization(value = "apiKey")})
-    public Integer getAge(LocalDate birthday){
+    public Integer getAge(@RequestParam("birthday")@DateTimeFormat(pattern = "\"yyyy-MM-dd\"") LocalDate birthday){
         return iDudeService.calculateAge(birthday);
     }
 
