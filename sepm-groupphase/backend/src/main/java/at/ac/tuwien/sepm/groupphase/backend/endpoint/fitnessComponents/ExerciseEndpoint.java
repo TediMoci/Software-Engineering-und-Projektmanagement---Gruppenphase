@@ -12,11 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/exercise")
@@ -35,7 +36,7 @@ public class ExerciseEndpoint {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Save a new Exercise", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto save(@RequestBody ExerciseDto exerciseDto) {
+    public ExerciseDto save(@Valid @RequestBody ExerciseDto exerciseDto) {
         LOGGER.info("Entering save for: " + exerciseDto);
         Exercise exercise = exerciseMapper.exerciseDtoToExercise(exerciseDto);
         try {
@@ -44,6 +45,42 @@ public class ExerciseEndpoint {
             LOGGER.error("Could not save: " + exerciseDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation(value = "Get Exercises by name", authorizations = {@Authorization(value = "apiKey")})
+    public List<ExerciseDto> findByName(@RequestParam String name) {
+        LOGGER.info("Entering findByName with name: " + name);
+        List<Exercise> exercises;
+        try {
+            exercises = iExerciseService.findByName(name);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not find exercise with name: " + name);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<ExerciseDto> exerciseDtos = new ArrayList<>();
+        for (Exercise exercise : exercises) {
+            exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+        }
+        return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all exercises", authorizations = {@Authorization(value = "apiKey")})
+    public List<ExerciseDto> findAll() {
+        LOGGER.info("Entering findAll");
+        List<Exercise> exercises;
+        try {
+            exercises = iExerciseService.findAll();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not find all exercises");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<ExerciseDto> exerciseDtos = new ArrayList<>();
+        for (Exercise exercise : exercises) {
+            exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+        }
+        return exerciseDtos;
     }
 
 }

@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.*;
 import java.util.Set;
 
 @ApiModel(value = "ExerciseDto", description = "A dto for exercise entries via rest")
@@ -15,21 +16,28 @@ public class ExerciseDto {
     private Long id;
 
     @ApiModelProperty(required = true, name = "Name of Exercise")
+    @NotBlank(message = "Name must not be empty")
+    @Size(min = 1, max = 50, message = "Name length must be between 1 and 50")
     private String name;
 
     @ApiModelProperty(name = "Description of Exercise")
+    @Size(max = 1000, message = "Max description length is 1000")
     private String description = "No description given.";
 
     @ApiModelProperty(name = "Equipment needed for Exercise")
+    @Size(max = 300, message = "Max equipment length is 300")
     private String equipment = "No needed equipment given.";
 
     @ApiModelProperty(name = "Muscle group trained by Exercise")
+    @Size(max = 100, message = "Max muscleGroup length is 100")
     private String muscleGroup = "No muscle group given";
 
     @ApiModelProperty(name = "Rating of Exercise")
+    @Min(1) @Max(5)
     private Double rating = 1.0;
 
     @ApiModelProperty(required = true, name = "Category of Exercise")
+    @NotNull(message = "Category must not be null")
     private Category category;
 
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")

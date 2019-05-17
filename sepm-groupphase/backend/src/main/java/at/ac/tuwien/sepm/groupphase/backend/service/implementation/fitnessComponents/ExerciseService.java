@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ExerciseService implements IExerciseService {
 
@@ -23,6 +25,26 @@ public class ExerciseService implements IExerciseService {
         LOGGER.info("Entering save for: " + exercise);
         try {
             return iExerciseRepository.save(exercise);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Exercise> findByName(String name) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name);
+        try {
+            return iExerciseRepository.findByName(name);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Exercise> findAll() throws ServiceException {
+        LOGGER.info("Entering findAll");
+        try {
+            return iExerciseRepository.findAll();
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
