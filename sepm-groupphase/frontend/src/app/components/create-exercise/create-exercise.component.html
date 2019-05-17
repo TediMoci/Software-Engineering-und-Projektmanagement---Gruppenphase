@@ -26,7 +26,7 @@
 
           <div class="form-group">
             <label for="nameForExercise">Name</label>
-            <input type="text" name="nameForExercise" maxlength="50" class="form-control" id="nameForExercise"
+            <input type="text" name="nameForExercise" maxlength="50" class="form-control" id="nameForExercise" formControlName="nameForExercise"
                    aria-describedby="nameForExerciseHelp" placeholder="Enter name">
             <div *ngIf="submitted && !!registerForm.controls.nameForExercise.errors" class="error">
               <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForExercise.errors.required">Name is
@@ -37,7 +37,7 @@
 
           <div class="form-group">
             <label for="equipmentExercise">Equipment</label>
-            <input type="text" name="equipmentExercise" class="form-control" id="equipmentExercise"
+            <input type="text" name="equipmentExercise" class="form-control" id="equipmentExercise" formControlName="equipmentExercise"
                    aria-describedby="equipmentExercise" value = "No equipment required">
           </div>
 
@@ -95,7 +95,7 @@
 
               <div class="form-group">
                 <label for="descriptionForExercise">Description</label>
-                <input type="text" name="descriptionForExercise" class="form-control" id="descriptionForExercise"
+                <input type="text" name="descriptionForExercise" class="form-control" id="descriptionForExercise" formControlName="descriptionForExercise"
                        aria-describedby="descriptionForExerciseHelp" placeholder="Enter description">
                 <div *ngIf="submitted && !!registerForm.controls.descriptionForExercise.errors" class="error">
                   <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForExercise.errors.required">Description is
@@ -106,7 +106,7 @@
 
               <div class="form-group">
                 <label for="muscleGroupExercise">Muscle Group</label>
-                <input type="text" name="muscleGroupExercise" class="form-control" id="muscleGroupExercise"
+                <input type="text" name="muscleGroupExercise" class="form-control" id="muscleGroupExercise" formControlName="muscleGroupExercise"
                        aria-describedby="muscleGroupExercise" placeholder="Enter muscle group">
               </div>
           </form>

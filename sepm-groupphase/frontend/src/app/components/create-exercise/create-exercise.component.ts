@@ -36,10 +36,12 @@ export class CreateExerciseComponent implements OnInit {
 
 
   addExercise() {
-    this.submitted = true;
-    console.log(this.registerForm.controls.nameForExercise.value);
 
-    const exercise: Exercise = new Exercise(this.registerForm.controls.nameForExercise.value,
+    this.submitted = true;
+    console.log(this.registerForm);
+
+    const exercise: Exercise = new Exercise(
+      this.registerForm.controls.nameForExercise.value,
       this.registerForm.controls.equipmentExercise.value,
       this.registerForm.controls.difficultyLevelExercise.value,
       this.registerForm.controls.categoryExercise.value,
