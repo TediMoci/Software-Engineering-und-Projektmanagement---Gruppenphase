@@ -36,6 +36,16 @@ public class Workout {
     @Min(1) @Max(5)
     private Double rating = 1.0;
 
+    @Column(nullable = false, name = "is_history")
+    private Boolean isHistory = false;
+
+    @Column(nullable = false, name = "is_used")
+    private Boolean isUsed = false;
+    // true if used by other users (not the creator)
+
+    @Column(nullable = false)
+    private Integer version = 1;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workout")
     private Set<WorkoutExercise> exercises;
 
@@ -107,6 +117,30 @@ public class Workout {
         this.creator = creator;
     }
 
+    public Boolean getHistory() {
+        return isHistory;
+    }
+
+    public void setHistory(Boolean history) {
+        isHistory = history;
+    }
+
+    public Boolean getUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(Boolean used) {
+        isUsed = used;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public static WorkoutBuilder builder() {
         return new WorkoutBuilder();
     }
@@ -120,6 +154,9 @@ public class Workout {
             ", difficulty=" + difficulty +
             ", calorieConsumption=" + calorieConsumption +
             ", rating=" + rating +
+            ", isHistory=" + isHistory +
+            ", isUsed=" + isUsed +
+            ", version=" + version +
             ", exercises=" + exercises +
             ", creator=" + creator +
             '}';
@@ -139,6 +176,9 @@ public class Workout {
         if (calorieConsumption != null ? !calorieConsumption.equals(workout.calorieConsumption) : workout.calorieConsumption != null)
             return false;
         if (rating != null ? !rating.equals(workout.rating) : workout.rating != null) return false;
+        if (isHistory != null ? !isHistory.equals(workout.isHistory) : workout.isHistory != null) return false;
+        if (isUsed != null ? !isUsed.equals(workout.isUsed) : workout.isUsed != null) return false;
+        if (version != null ? !version.equals(workout.version) : workout.version != null) return false;
         if (exercises != null ? !exercises.equals(workout.exercises) : workout.exercises != null) return false;
         return creator != null ? creator.equals(workout.creator) : workout.creator == null;
 
@@ -152,6 +192,9 @@ public class Workout {
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (calorieConsumption != null ? calorieConsumption.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
+        result = 31 * result + (isUsed != null ? isUsed.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
@@ -164,6 +207,9 @@ public class Workout {
         private Integer difficulty;
         private Double calorieConsumption;
         private Double rating;
+        private Boolean isHistory;
+        private Boolean isUsed;
+        private Integer version;
         private Set<WorkoutExercise> exercises;
         private Dude creator;
 
@@ -200,6 +246,21 @@ public class Workout {
             return this;
         }
 
+        public WorkoutBuilder isHistory(Boolean isHistory) {
+            this.isHistory = isHistory;
+            return this;
+        }
+
+        public WorkoutBuilder isUsed(Boolean isUsed) {
+            this.isUsed = isUsed;
+            return this;
+        }
+
+        public WorkoutBuilder version(Integer version) {
+            this.version = version;
+            return this;
+        }
+
         public WorkoutBuilder exercises(Set<WorkoutExercise> exercises) {
             this.exercises = exercises;
             return this;
@@ -218,6 +279,9 @@ public class Workout {
             workout.setDifficulty(difficulty);
             workout.setCalorieConsumption(calorieConsumption);
             workout.setRating(rating);
+            workout.setHistory(isHistory);
+            workout.setUsed(isUsed);
+            workout.setVersion(version);
             workout.setExercises(exercises);
             workout.setCreator(creator);
             return workout;
