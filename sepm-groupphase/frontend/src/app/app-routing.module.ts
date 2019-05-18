@@ -19,6 +19,7 @@ import {RoleGuard} from './guards/role.guard';
 import {FitnessProviderRoleGuard} from './guards/fitness-provider-role.guard';
 import {FollowerComponent} from './components/follower/follower.component';
 import {FitnessProvidersFollowedComponent} from './components/fitness-providers-followed/fitness-providers-followed.component';
+import {CreateExerciseComponent} from './components/create-exercise/create-exercise.component';
 import {EditFitnessProviderProfileComponent} from './components/edit-fitness-provider-profile/edit-fitness-provider-profile.component';
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'bros', canActivate: [RoleGuard], component: BrosComponent},
   {path: 'create', canActivate: [AuthGuard], component: CreateComponent},
+  {path: 'create-exercise', component: CreateExerciseComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
   {path: 'myContent', canActivate: [AuthGuard], component: MyContentComponent},

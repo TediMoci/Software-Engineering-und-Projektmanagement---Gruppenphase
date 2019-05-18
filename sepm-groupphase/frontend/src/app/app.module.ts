@@ -28,6 +28,7 @@ import { FitnessProviderProfileComponent } from './components/fitness-provider-p
 import { LoginAsFitnessProviderComponent } from './components/login-as-fitness-provider/login-as-fitness-provider.component';
 import { FollowerComponent } from './components/follower/follower.component';
 import { FitnessProvidersFollowedComponent } from './components/fitness-providers-followed/fitness-providers-followed.component';
+import { CreateExerciseComponent } from './components/create-exercise/create-exercise.component';
 import { EditFitnessProviderProfileComponent } from './components/edit-fitness-provider-profile/edit-fitness-provider-profile.component';
 
 @NgModule({
@@ -52,6 +53,8 @@ import { EditFitnessProviderProfileComponent } from './components/edit-fitness-p
     FollowerComponent,
     FitnessProvidersFollowedComponent,
     EditFitnessProviderProfileComponent
+    FitnessProvidersFollowedComponent,
+    CreateExerciseComponent
   ],
   imports: [
     BrowserModule,
