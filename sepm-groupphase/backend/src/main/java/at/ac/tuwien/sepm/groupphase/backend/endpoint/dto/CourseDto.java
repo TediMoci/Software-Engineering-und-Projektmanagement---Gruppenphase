@@ -16,12 +16,12 @@ public class CourseDto {
     private Long id;
 
     @ApiModelProperty(required = true, name = "Name of Course")
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @NotBlank(message = "Name must not be empty")
+    @Size(min = 1, max = 50, message = "Name length must be between 1 and 50")
     private String name;
 
     @ApiModelProperty(name = "Description of Course")
-    @Size(max = 1000)
+    @Size(max = 1000, message = "Max description length is 1000")
     private String description = "No description given.";
 
     @ApiModelProperty(name = "FitnessProvider offering the Course")
