@@ -29,6 +29,9 @@ public class WorkoutDto {
     @ApiModelProperty(name = "Rating of Workout")
     private Double rating = 1.0;
 
+    @ApiModelProperty(name = "Version of Workout")
+    private Integer version = 1;
+
     @ApiModelProperty(name = "Workout-Exercise relationships that the Workout is part of")
     private Set<WorkoutExercise> exercises;
 
@@ -99,6 +102,14 @@ public class WorkoutDto {
         this.creator = creator;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public static WorkoutDtoBuilder builder() {
         return new WorkoutDtoBuilder();
     }
@@ -112,6 +123,7 @@ public class WorkoutDto {
             ", difficulty=" + difficulty +
             ", calorieConsumption=" + calorieConsumption +
             ", rating=" + rating +
+            ", version=" + version +
             ", exercises=" + exercises +
             ", creator=" + creator +
             '}';
@@ -122,17 +134,18 @@ public class WorkoutDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        WorkoutDto workoutDto = (WorkoutDto) o;
+        WorkoutDto that = (WorkoutDto) o;
 
-        if (id != null ? !id.equals(workoutDto.id) : workoutDto.id != null) return false;
-        if (name != null ? !name.equals(workoutDto.name) : workoutDto.name != null) return false;
-        if (description != null ? !description.equals(workoutDto.description) : workoutDto.description != null) return false;
-        if (difficulty != null ? !difficulty.equals(workoutDto.difficulty) : workoutDto.difficulty != null) return false;
-        if (calorieConsumption != null ? !calorieConsumption.equals(workoutDto.calorieConsumption) : workoutDto.calorieConsumption != null)
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (difficulty != null ? !difficulty.equals(that.difficulty) : that.difficulty != null) return false;
+        if (calorieConsumption != null ? !calorieConsumption.equals(that.calorieConsumption) : that.calorieConsumption != null)
             return false;
-        if (rating != null ? !rating.equals(workoutDto.rating) : workoutDto.rating != null) return false;
-        if (exercises != null ? !exercises.equals(workoutDto.exercises) : workoutDto.exercises != null) return false;
-        return creator != null ? creator.equals(workoutDto.creator) : workoutDto.creator == null;
+        if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+        if (exercises != null ? !exercises.equals(that.exercises) : that.exercises != null) return false;
+        return creator != null ? creator.equals(that.creator) : that.creator == null;
 
     }
 
@@ -144,6 +157,7 @@ public class WorkoutDto {
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (calorieConsumption != null ? calorieConsumption.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
@@ -156,6 +170,7 @@ public class WorkoutDto {
         private Integer difficulty;
         private Double calorieConsumption;
         private Double rating;
+        private Integer version;
         private Set<WorkoutExercise> exercises;
         private Dude creator;
 
@@ -192,6 +207,11 @@ public class WorkoutDto {
             return this;
         }
 
+        public WorkoutDtoBuilder version(Integer version) {
+            this.version = version;
+            return this;
+        }
+
         public WorkoutDtoBuilder exercises(Set<WorkoutExercise> exercises) {
             this.exercises = exercises;
             return this;
@@ -210,6 +230,7 @@ public class WorkoutDto {
             workoutDto.setDifficulty(difficulty);
             workoutDto.setCalorieConsumption(calorieConsumption);
             workoutDto.setRating(rating);
+            workoutDto.setVersion(version);
             workoutDto.setExercises(exercises);
             workoutDto.setCreator(creator);
             return workoutDto;
