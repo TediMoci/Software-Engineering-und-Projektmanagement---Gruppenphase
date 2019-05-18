@@ -22,13 +22,14 @@ public interface IExerciseRepository extends JpaRepository<Exercise, Long> {
      * @return
      * @throws DataAccessException
      */
-    @Query("SELECT e FROM Exercise e WHERE e.name LIKE ?1%")
+    @Query("SELECT e FROM Exercise e WHERE e.name LIKE ?1% AND e.isHistory=false")
     List<Exercise> findByName(String name) throws DataAccessException;
 
     /**
      * @return
      * @throws DataAccessException
      */
+    @Query("SELECT e FROM Exercise e WHERE e.isHistory=false")
     List<Exercise> findAll() throws DataAccessException;
 
 }

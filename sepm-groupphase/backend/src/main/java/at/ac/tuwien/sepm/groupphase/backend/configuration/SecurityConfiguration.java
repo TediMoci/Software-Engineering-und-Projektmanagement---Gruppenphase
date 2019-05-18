@@ -105,6 +105,7 @@ public class SecurityConfiguration {
                     "/fitnessProvider/{name}/followers",
                     "/exercise",
                     "/exercise/all",
+                    "/exercise/{id}",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
