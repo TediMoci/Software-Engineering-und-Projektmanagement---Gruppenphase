@@ -47,6 +47,18 @@ public class ExerciseEndpoint {
         }
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get an Exercise by id", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto findById(@PathVariable Long id) {
+        LOGGER.info("Entering findById with id: " + id);
+        try {
+            return exerciseMapper.exerciseToExerciseDto(iExerciseService.findById(id));
+        } catch (ServiceException e) {
+            LOGGER.error("Could not find exercise with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get Exercises by name", authorizations = {@Authorization(value = "apiKey")})
     public List<ExerciseDto> findByName(@RequestParam String name) {
@@ -55,7 +67,7 @@ public class ExerciseEndpoint {
         try {
             exercises = iExerciseService.findByName(name);
         } catch (ServiceException e) {
-            LOGGER.error("Could not find exercise with name: " + name);
+            LOGGER.error("Could not find exercises with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         List<ExerciseDto> exerciseDtos = new ArrayList<>();

@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ExerciseService implements IExerciseService {
@@ -26,6 +27,16 @@ public class ExerciseService implements IExerciseService {
         try {
             return iExerciseRepository.save(exercise);
         } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Exercise findById(Long id) throws ServiceException {
+        LOGGER.info("Entering findById with id: " + id);
+        try {
+            return iExerciseRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
     }

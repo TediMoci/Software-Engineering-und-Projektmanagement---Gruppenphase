@@ -15,6 +15,13 @@ public interface IExerciseService {
     Exercise save(Exercise exercise) throws ServiceException;
 
     /**
+     * @param id
+     * @return
+     * @throws ServiceException
+     */
+    Exercise findById(Long id) throws ServiceException;
+
+    /**
      * @param name
      * @return
      * @throws ServiceException
