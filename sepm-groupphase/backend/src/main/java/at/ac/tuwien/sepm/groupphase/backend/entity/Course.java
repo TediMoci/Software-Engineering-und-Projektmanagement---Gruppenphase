@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -13,11 +12,9 @@ public class Course {
     private Long id;
 
     @Column(nullable = false, length = 40)
-    @Size(min = 8, max = 40)
     private String name;
 
     @Column(nullable = false, length = 1000)
-    @Size(max = 1000)
     private String description = "No description given.";
 
     @ManyToOne(fetch = FetchType.EAGER)

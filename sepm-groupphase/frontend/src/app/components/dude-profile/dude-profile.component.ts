@@ -16,12 +16,14 @@ export class DudeProfileComponent implements OnInit {
   error: any;
   imagePath: string = 'assets/img/kugelfisch.jpg';
   userName: string;
+  sex: any;
   skill: string;
   rank: string;
   age: number;
   height: number;
   weight: number;
   bmi: number;
+  description: string;
 
   dude: Dude;
 
@@ -51,6 +53,8 @@ export class DudeProfileComponent implements OnInit {
 
     this.height = this.dude.height;
     this.weight = this.dude.weight;
+    this.sex = this.dude.sex;
+    this.description = this.dude.description;
 
     this.profileService.getAge(this.dude.birthday, this.dude.name).subscribe(
       (data) => {
