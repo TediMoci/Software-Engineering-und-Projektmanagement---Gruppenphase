@@ -13,11 +13,11 @@
       <form [formGroup]="registerForm" (ngSubmit)="registerFitnessProvider()">
 
         <div class="form-group">
-          <label for="name">Name</label>
+          <label for="name">Username</label>
           <input type="text" name="name" maxlength="50" formControlName="name" class="form-control" id="name"
-                 aria-describedby="nameHelp" placeholder="Enter name">
+                 aria-describedby="nameHelp" placeholder="Enter username">
           <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
+            <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your username is
               required!
             </small>
           </div>
