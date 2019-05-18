@@ -30,7 +30,7 @@ export class FitnessProviderProfileComponent implements OnInit {
     this.phoneNumber = this.currentUser.phoneNumber;
     this.website = this.currentUser.website;
     this.description = this.currentUser.description;
-    this.fitnessProviderProfile.getFollower('fitinn').subscribe(
+    this.fitnessProviderProfile.getFollower(this.currentUser.name).subscribe(
       (data) => {
         console.log('number of followers of fitness provider : ' + data + 'and name of fitness provider' + name);
         this.numOfFollowers = data;

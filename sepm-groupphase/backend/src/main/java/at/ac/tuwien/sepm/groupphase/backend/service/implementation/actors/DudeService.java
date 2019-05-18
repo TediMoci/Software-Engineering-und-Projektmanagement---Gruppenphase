@@ -110,10 +110,10 @@ public class DudeService implements IDudeService {
             if (oldDude==null) throw new ServiceException("There is no dude with that name in the database.");
             if (!(newDude.getName().equals(oldDude.getName()))) dudeValidator.validateNameUnique(newDude.getName());
 
-            // TODO: handle password editing
-
             oldDude.setName(newDude.getName());
-            oldDude.setPassword(newDude.getPassword());
+            if (!newDude.getPassword().equals(oldDude.getPassword())){
+                oldDude.setPassword(passwordEncoder.encode(newDude.getPassword()));
+            }
             oldDude.setDescription(newDude.getDescription());
             oldDude.setEmail(newDude.getEmail());
             oldDude.setSex(newDude.getSex());

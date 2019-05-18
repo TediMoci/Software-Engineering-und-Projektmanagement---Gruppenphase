@@ -81,15 +81,17 @@ export class EditProfileComponent implements OnInit {
     const dude: Dude = new Dude(
       this.editForm.controls.name.value,
       this.editForm.controls.password.value,
-      this.editForm.controls.sex.value,
       this.editForm.controls.description.value,
       this.editForm.controls.email.value,
+      this.editForm.controls.sex.value,
       this.oldDude.status,
       this.editForm.controls.selfAssessment.value,
       this.editForm.controls.birthday.value,
       this.editForm.controls.height.value,
       this.editForm.controls.weight.value,
     );
+
+    console.log(dude);
 
     if (this.editForm.invalid) {
       console.log('input is invalid');

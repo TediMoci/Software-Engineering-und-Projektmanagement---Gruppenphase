@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Dude} from '../dtos/dude';
 import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
@@ -10,12 +10,13 @@ import {Globals} from '../global/globals';
 export class EditDudeService {
   private dudeBaseUri: string = this.globals.backendUri + '/dudes';
 
-  constructor(private httpClient: HttpClient , private globals: Globals) { }
+  constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
+
   editDude(editDude: Dude, oldDude: Dude): Observable<Dude> {
     console.log('edit dude with new name ' + editDude.name + ' and old name ' + oldDude.name);
     localStorage.setItem('loggedInDude', JSON.stringify(editDude));
     const params = new HttpParams().set('dude', JSON.stringify(editDude));
-    return this.httpClient.post<Dude>(this.dudeBaseUri + '/' + oldDude.name, {params: params});
+    return this.httpClient.put<Dude>(this.dudeBaseUri + '/' + oldDude.name, {params: params});
   }
-
 }
