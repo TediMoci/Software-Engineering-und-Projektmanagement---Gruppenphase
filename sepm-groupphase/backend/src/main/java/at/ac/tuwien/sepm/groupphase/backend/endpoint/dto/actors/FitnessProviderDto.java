@@ -160,7 +160,7 @@ public class FitnessProviderDto {
             this.name = name;
             return this;
         }
-        public FitnessProviderDtoBuilder password(String name){
+        public FitnessProviderDtoBuilder password(String password){
             this.password = password;
             return this;
         }
