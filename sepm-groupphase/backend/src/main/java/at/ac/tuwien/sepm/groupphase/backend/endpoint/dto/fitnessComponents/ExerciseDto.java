@@ -40,6 +40,9 @@ public class ExerciseDto {
     @NotNull(message = "Category must not be null")
     private Category category;
 
+    @ApiModelProperty(name = "Version of Exercise")
+    private Integer version = 1;
+
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
 
@@ -118,6 +121,14 @@ public class ExerciseDto {
         this.creator = creator;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public static ExerciseDtoBuilder builder() {
         return new ExerciseDtoBuilder();
     }
@@ -132,6 +143,7 @@ public class ExerciseDto {
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
+            ", version=" + version +
             ", workouts=" + workouts +
             ", creator=" + creator +
             '}';
@@ -142,19 +154,18 @@ public class ExerciseDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ExerciseDto exerciseDto = (ExerciseDto) o;
+        ExerciseDto that = (ExerciseDto) o;
 
-        if (id != null ? !id.equals(exerciseDto.id) : exerciseDto.id != null) return false;
-        if (name != null ? !name.equals(exerciseDto.name) : exerciseDto.name != null) return false;
-        if (description != null ? !description.equals(exerciseDto.description) : exerciseDto.description != null)
-            return false;
-        if (equipment != null ? !equipment.equals(exerciseDto.equipment) : exerciseDto.equipment != null) return false;
-        if (muscleGroup != null ? !muscleGroup.equals(exerciseDto.muscleGroup) : exerciseDto.muscleGroup != null)
-            return false;
-        if (rating != null ? !rating.equals(exerciseDto.rating) : exerciseDto.rating != null) return false;
-        if (category != exerciseDto.category) return false;
-        if (workouts != null ? !workouts.equals(exerciseDto.workouts) : exerciseDto.workouts != null) return false;
-        return creator != null ? creator.equals(exerciseDto.creator) : exerciseDto.creator == null;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (equipment != null ? !equipment.equals(that.equipment) : that.equipment != null) return false;
+        if (muscleGroup != null ? !muscleGroup.equals(that.muscleGroup) : that.muscleGroup != null) return false;
+        if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
+        if (category != that.category) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+        if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
+        return creator != null ? creator.equals(that.creator) : that.creator == null;
 
     }
 
@@ -167,6 +178,7 @@ public class ExerciseDto {
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
@@ -180,6 +192,7 @@ public class ExerciseDto {
         private String muscleGroup;
         private Double rating;
         private Category category;
+        private Integer version;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
 
@@ -221,6 +234,11 @@ public class ExerciseDto {
             return this;
         }
 
+        public ExerciseDtoBuilder version(Integer version) {
+            this.version = version;
+            return this;
+        }
+
         public ExerciseDtoBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -240,6 +258,7 @@ public class ExerciseDto {
             exerciseDto.setMuscleGroup(muscleGroup);
             exerciseDto.setRating(rating);
             exerciseDto.setCategory(category);
+            exerciseDto.setVersion(version);
             exerciseDto.setWorkouts(workouts);
             exerciseDto.setCreator(creator);
             return exerciseDto;

@@ -17,6 +17,9 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.difficulty(workoutDto.getDifficulty());
         builder.calorieConsumption(workoutDto.getCalorieConsumption());
         builder.rating(workoutDto.getRating());
+        builder.isHistory(false);
+        builder.isUsed(false);
+        builder.version(1);
         builder.exercises(workoutDto.getExercises());
         builder.creator(workoutDto.getCreator());
 
@@ -33,6 +36,7 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.difficulty(workout.getDifficulty());
         builder.calorieConsumption(workout.getCalorieConsumption());
         builder.rating(workout.getRating());
+        builder.version(workout.getVersion());
         builder.exercises(workout.getExercises());
         builder.creator(workout.getCreator());
 

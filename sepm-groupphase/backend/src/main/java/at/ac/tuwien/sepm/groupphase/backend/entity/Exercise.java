@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.Set;
 
 @Entity
@@ -32,6 +31,16 @@ public class Exercise {
 
     @Column(nullable = false)
     private Category category;
+
+    @Column(nullable = false, name = "is_history")
+    private Boolean isHistory = false;
+
+    @Column(nullable = false, name = "is_used")
+    private Boolean isUsed = false;
+    // true if used by other users (not the creator)
+
+    @Column(nullable = false)
+    private Integer version = 1;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
@@ -112,6 +121,30 @@ public class Exercise {
         this.creator = creator;
     }
 
+    public Boolean getHistory() {
+        return isHistory;
+    }
+
+    public void setHistory(Boolean history) {
+        isHistory = history;
+    }
+
+    public Boolean getUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(Boolean used) {
+        isUsed = used;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public static ExerciseBuilder builder() {
         return new ExerciseBuilder();
     }
@@ -126,6 +159,9 @@ public class Exercise {
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
+            ", isHistory=" + isHistory +
+            ", isUsed=" + isUsed +
+            ", version=" + version +
             ", workouts=" + workouts +
             ", creator=" + creator +
             '}';
@@ -147,6 +183,9 @@ public class Exercise {
             return false;
         if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
         if (category != exercise.category) return false;
+        if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
+        if (isUsed != null ? !isUsed.equals(exercise.isUsed) : exercise.isUsed != null) return false;
+        if (version != null ? !version.equals(exercise.version) : exercise.version != null) return false;
         if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
         return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
 
@@ -161,6 +200,9 @@ public class Exercise {
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
+        result = 31 * result + (isUsed != null ? isUsed.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
@@ -174,6 +216,9 @@ public class Exercise {
         private String muscleGroup;
         private Double rating;
         private Category category;
+        private Boolean isHistory;
+        private Boolean isUsed;
+        private Integer version;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
 
@@ -215,6 +260,21 @@ public class Exercise {
             return this;
         }
 
+        public ExerciseBuilder isHistory(Boolean isHistory) {
+            this.isHistory = isHistory;
+            return this;
+        }
+
+        public ExerciseBuilder isUsed(Boolean isUsed) {
+            this.isUsed = isUsed;
+            return this;
+        }
+
+        public ExerciseBuilder version(Integer version) {
+            this.version = version;
+            return this;
+        }
+
         public ExerciseBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -234,6 +294,9 @@ public class Exercise {
             exercise.setMuscleGroup(muscleGroup);
             exercise.setRating(rating);
             exercise.setCategory(category);
+            exercise.setHistory(isHistory);
+            exercise.setUsed(isUsed);
+            exercise.setVersion(version);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
             return exercise;
