@@ -13,8 +13,8 @@
       <form [formGroup]="editForm" (ngSubmit)="editUser()">
         <div class="form-group">
           <label for="nameEdit">Name</label>
-          <input value = "{{userName}}" type="text" name="name" maxlength="50" class="form-control" id="nameEdit"
-                 aria-describedby="nameEditHelp" autocomplete="off">
+          <input ngModel = "{{userName}}" type="text" name="name" maxlength="50" formControlName="name" class="form-control" id="nameEdit"
+                 aria-describedby="nameEditHelp">
           <div *ngIf="submitted && !!editForm.controls.name.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editForm.controls.name.errors.required">Your name is
               required!
@@ -27,7 +27,7 @@
 
         <div class="form-group">
           <label for="passwordEdit">Password</label>
-          <input value="{{password}}" knifeNoSpaces type="password" name="password" class="form-control" id="passwordEdit">
+          <input ngModel="{{password}}" knifeNoSpaces type="password" formControlName="password" name="password" class="form-control" id="passwordEdit">
           <div *ngIf="submitted && !!editForm.controls.password.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editForm.controls.password.errors.required">Your password is
               required!
@@ -40,7 +40,7 @@
 
         <div class="form-group">
           <label for="passwordConfirmedEdit">Password Confirmed</label>
-          <input value="{{password}}" knifeNoSpaces  type="password" name="passwordConfirmed" class="form-control" id="passwordConfirmedEdit">
+          <input ngModel="{{password}}" knifeNoSpaces  type="password" formControlName="passwordConfirmed" name="passwordConfirmed" class="form-control" id="passwordConfirmedEdit">
           <div *ngIf="submitted && !!editForm.controls.passwordConfirmed.errors" class="error">
             <small class="form-text text-warning" *ngIf=" !!editForm.controls.passwordConfirmed.errors.required">Your password is
               required!
@@ -53,12 +53,12 @@
         <div class="form-group">
           <label for="description">Description</label>
             <input type="text" name="description" formControlName="description" class="form-control" id="description"
-                   placeholder="{{description}}">
+                   ngModel="{{description}}">
         </div>
 
         <div class="form-group">
           <label for="emailEdit">Email</label>
-          <input value="{{email}}" type="text" name="email" class="form-control" id="emailEdit"
+          <input ngModel="{{email}}" type="text" name="email" class="form-control" id="emailEdit" formControlName="email"
                  aria-describedby="emailHelp">
           <div *ngIf="submitted && !!editForm.controls.email.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editForm.controls.email.errors.required">Your email is
@@ -74,17 +74,17 @@
           <span class="sex">Gender</span>
           <div class="gap_space">
             <div class= "custom-control custom-radio custom-control-inline">
-              <input id="maleEdit" type="radio" class="custom-control-input" value= "Male" name="sex" [checked]="male">
+              <input id="maleEdit" type="radio" class="custom-control-input" value= "Male" name="sex" formControlName="sex" [checked]="male">
               <label class="custom-control-label" for="maleEdit">Male</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="femaleEdit" type="radio" class="custom-control-input" value= "Female" name="sex" [checked]="female">
+              <input id="femaleEdit" type="radio" class="custom-control-input" value= "Female" formControlName="sex" name="sex" [checked]="female">
               <label class="custom-control-label" for="femaleEdit">Female</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="othersEdit" type="radio" class="custom-control-input" value= "Other" name="sex" [checked]="other">
+              <input id="othersEdit" type="radio" class="custom-control-input" value= "Other" formControlName="sex" name="sex" [checked]="other">
               <label class="custom-control-label" for="othersEdit">Other</label>
             </div>
 
@@ -100,17 +100,17 @@
           <span class="selfAssessment">Self-assessment</span>
           <div class="gap_space">
             <div class= "custom-control custom-radio custom-control-inline">
-              <input id="beginnerEdit" type="radio" class="custom-control-input" value= 1 name="selfAssessment" [checked]="beginner">
+              <input id="beginnerEdit" type="radio" class="custom-control-input" value= 1 name="selfAssessment" formControlName="selfAssessment" [checked]="beginner">
               <label class="custom-control-label" for="beginnerEdit">Beginner</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="advancedEdit" type="radio" class="custom-control-input" value= 2 name="selfAssessment" [checked]="advanced">
+              <input id="advancedEdit" type="radio" class="custom-control-input" value = 2 name="selfAssessment" formControlName="selfAssessment" [checked]="advanced">
               <label class="custom-control-label" for="advancedEdit">Advanced</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline">
-              <input id="proEdit" type="radio" class="custom-control-input" value= 3 name="selfAssessment" [checked]="pro">
+              <input id="proEdit" type="radio" class="custom-control-input" value=3 name="selfAssessment" formControlName="selfAssessment" [checked]="pro">
               <label class="custom-control-label" for="proEdit">Pro</label>
             </div>
             <div *ngIf="submitted && !!editForm.controls.selfAssessment.errors" class="error">
@@ -123,7 +123,7 @@
 
         <div class="form-group">
           <label for="birthdayEdit">Birthday</label>
-          <input value="{{birthday}}" type="date" name="birthday" class="form-control" id="birthdayEdit"
+          <input ngModel="{{birthday}}" type="date" name="birthday" class="form-control" formControlName="birthday" id="birthdayEdit"
                  aria-describedby="birthdayHelp">
           <div *ngIf="submitted && !!editForm.controls.birthday.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editForm.controls.birthday.errors.required">Your birthday is
@@ -134,7 +134,7 @@
 
         <div class="form-group">
           <label for="heightEdit">Height in cm</label>
-          <input value="{{height}}" knifeOnlyNumbers type="text" maxlength="3" class="form-control" id="heightEdit"
+          <input ngModel="{{height}}" knifeOnlyNumbers type="text" maxlength="3" class="form-control" formControlName="height" id="heightEdit"
                  aria-describedby="heightHelp">
           <div *ngIf="submitted && !!editForm.controls.height.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editForm.controls.height.errors.required">Your height is
@@ -145,7 +145,7 @@
 
         <div class="form-group">
           <label for="weightEdit">Weight in kg</label>
-          <input value="{{weight}}" knifeOnlyNumbers type="text" maxlength="3" name="weight" formControlName="weight" class="form-control" id="weightEdit"
+          <input ngModel="{{weight}}" knifeOnlyNumbers type="text" maxlength="3" name="weight" formControlName="weight" class="form-control" id="weightEdit"
                  aria-describedby="weightHelp">
           <div *ngIf="submitted && !!editForm.controls.weight.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editForm.controls.weight.errors.required">Your weight is

@@ -99,7 +99,10 @@ export class EditProfileComponent implements OnInit {
     }
 
     this.editDudeService.editDude(dude, this.oldDude).subscribe(
-      () => {
+      (data) => {
+        console.log(data);
+        console.log(this.oldDude);
+        console.log(dude);
         this.router.navigate(['/dude-profile']);
       },
       error => {
