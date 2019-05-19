@@ -30,6 +30,10 @@ import { FollowerComponent } from './components/follower/follower.component';
 import { FitnessProvidersFollowedComponent } from './components/fitness-providers-followed/fitness-providers-followed.component';
 import { CreateExerciseComponent } from './components/create-exercise/create-exercise.component';
 import { EditFitnessProviderProfileComponent } from './components/edit-fitness-provider-profile/edit-fitness-provider-profile.component';
+import { OwnExercisesComponent } from './components/own-exercises/own-exercises.component';
+import { OwnWorkoutsComponent } from './components/own-workouts/own-workouts.component';
+import { OwnTrainingScheduleComponent } from './components/own-training-schedule/own-training-schedule.component';
+import { ExerciseComponent } from './components/exercise/exercise.component';
 
 @NgModule({
   declarations: [
@@ -52,9 +56,14 @@ import { EditFitnessProviderProfileComponent } from './components/edit-fitness-p
     LoginAsFitnessProviderComponent,
     FollowerComponent,
     FitnessProvidersFollowedComponent,
-    EditFitnessProviderProfileComponent
+    EditFitnessProviderProfileComponent,
+    OwnExercisesComponent,
+    OwnWorkoutsComponent,
+    OwnTrainingScheduleComponent,
+    EditFitnessProviderProfileComponent,
     FitnessProvidersFollowedComponent,
-    CreateExerciseComponent
+    CreateExerciseComponent,
+    ExerciseComponent
   ],
   imports: [
     BrowserModule,

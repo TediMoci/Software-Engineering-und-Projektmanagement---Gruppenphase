@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
@@ -26,12 +28,14 @@ public class ExerciseEndpoint {
 
     private final IExerciseService iExerciseService;
     private final IExerciseMapper exerciseMapper;
+    private final IDudeMapper dudeMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(ExerciseEndpoint.class);
 
     @Autowired
-    public ExerciseEndpoint(IExerciseService iExerciseService, IExerciseMapper exerciseMapper) {
+    public ExerciseEndpoint(IExerciseService iExerciseService, IExerciseMapper exerciseMapper, IDudeMapper dudeMapper) {
         this.iExerciseService = iExerciseService;
         this.exerciseMapper = exerciseMapper;
+        this.dudeMapper = dudeMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -93,6 +97,23 @@ public class ExerciseEndpoint {
             exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
         }
         return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/own", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all exercises of dude")
+    public List<ExerciseDto> findAllByCreator(@RequestParam DudeDto creator){
+        LOGGER.info("Entering findAllByCreator");
+        List<Exercise> ownExercises;
+        try {
+            ownExercises = iExerciseService.findAllByCreator(dudeMapper.dudeDtoToDude(creator));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<ExerciseDto> ownExerciseDtos = new ArrayList<>();
+        for (Exercise exercise : ownExercises) {
+            ownExerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+        }
+        return ownExerciseDtos;
     }
 
 }

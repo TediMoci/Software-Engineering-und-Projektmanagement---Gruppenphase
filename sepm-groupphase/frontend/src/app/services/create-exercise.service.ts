@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
-import {RegisterAsDude} from '../dtos/register-as-dude';
 import {Observable} from 'rxjs';
 import {Exercise} from '../dtos/Exercise';
 
