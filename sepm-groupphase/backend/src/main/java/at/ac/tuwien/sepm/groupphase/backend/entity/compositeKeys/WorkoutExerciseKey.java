@@ -13,13 +13,13 @@ public class WorkoutExerciseKey implements Serializable {
     @Column(name = "workout_id")
     private Long workoutId;
 
-    public Long getExerciseId() {
-        return exerciseId;
-    }
-
     public WorkoutExerciseKey(Long exerciseId, Long workoutId) {
         this.exerciseId = exerciseId;
         this.workoutId = workoutId;
+    }
+
+    public Long getExerciseId() {
+        return exerciseId;
     }
 
     public void setExerciseId(Long exerciseId) {

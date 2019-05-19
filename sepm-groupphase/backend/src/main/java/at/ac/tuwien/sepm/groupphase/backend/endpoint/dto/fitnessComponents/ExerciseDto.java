@@ -1,52 +1,52 @@
-package at.ac.tuwien.sepm.groupphase.backend.entity;
+package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Set;
 
-@Entity
-public class Exercise {
+@ApiModel(value = "ExerciseDto", description = "A dto for exercise entries via rest")
+public class ExerciseDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_exercise_id")
-    @SequenceGenerator(name = "seq_exercise_id", sequenceName = "seq_exercise_id")
+    @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @ApiModelProperty(required = true, name = "Name of Exercise")
+    @NotBlank(message = "Name must not be empty")
+    @Size(min = 1, max = 50, message = "Name length must be between 1 and 50")
     private String name;
 
-    @Column(nullable = false, length = 1000)
+    @ApiModelProperty(name = "Description of Exercise")
+    @Size(max = 1000, message = "Max description length is 1000")
     private String description = "No description given.";
 
-    @Column(nullable = false, length = 300)
+    @ApiModelProperty(name = "Equipment needed for Exercise")
+    @Size(max = 300, message = "Max equipment length is 300")
     private String equipment = "No needed equipment given.";
 
-    @Column(nullable = false, length = 100, name = "muscle_group")
+    @ApiModelProperty(name = "Muscle group trained by Exercise")
+    @Size(max = 100, message = "Max muscleGroup length is 100")
     private String muscleGroup = "No muscle group given";
 
-    @Column(nullable = false)
+    @ApiModelProperty(name = "Rating of Exercise")
+    @Min(1) @Max(5)
     private Double rating = 1.0;
 
-    @Column(nullable = false)
+    @ApiModelProperty(required = true, name = "Category of Exercise")
+    @NotNull(message = "Category must not be null")
     private Category category;
 
-    @Column(nullable = false, name = "is_history")
-    private Boolean isHistory = false;
-
-    @Column(nullable = false, name = "is_used")
-    private Boolean isUsed = false;
-    // true if used by other users (not the creator)
-
-    @Column(nullable = false)
+    @ApiModelProperty(name = "Version of Exercise")
     private Integer version = 1;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "exercise")
+    @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "dude_id")
+    @ApiModelProperty(required = true, name = "Creator of Exercise")
     private Dude creator;
 
     public Long getId() {
@@ -121,22 +121,6 @@ public class Exercise {
         this.creator = creator;
     }
 
-    public Boolean getHistory() {
-        return isHistory;
-    }
-
-    public void setHistory(Boolean history) {
-        isHistory = history;
-    }
-
-    public Boolean getUsed() {
-        return isUsed;
-    }
-
-    public void setUsed(Boolean used) {
-        isUsed = used;
-    }
-
     public Integer getVersion() {
         return version;
     }
@@ -145,13 +129,13 @@ public class Exercise {
         this.version = version;
     }
 
-    public static ExerciseBuilder builder() {
-        return new ExerciseBuilder();
+    public static ExerciseDtoBuilder builder() {
+        return new ExerciseDtoBuilder();
     }
 
     @Override
     public String toString() {
-        return "Exercise{" +
+        return "ExerciseDto{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
@@ -159,8 +143,6 @@ public class Exercise {
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
-            ", isHistory=" + isHistory +
-            ", isUsed=" + isUsed +
             ", version=" + version +
             ", workouts=" + workouts +
             ", creator=" + creator +
@@ -172,22 +154,18 @@ public class Exercise {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Exercise exercise = (Exercise) o;
+        ExerciseDto that = (ExerciseDto) o;
 
-        if (id != null ? !id.equals(exercise.id) : exercise.id != null) return false;
-        if (name != null ? !name.equals(exercise.name) : exercise.name != null) return false;
-        if (description != null ? !description.equals(exercise.description) : exercise.description != null)
-            return false;
-        if (equipment != null ? !equipment.equals(exercise.equipment) : exercise.equipment != null) return false;
-        if (muscleGroup != null ? !muscleGroup.equals(exercise.muscleGroup) : exercise.muscleGroup != null)
-            return false;
-        if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
-        if (category != exercise.category) return false;
-        if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
-        if (isUsed != null ? !isUsed.equals(exercise.isUsed) : exercise.isUsed != null) return false;
-        if (version != null ? !version.equals(exercise.version) : exercise.version != null) return false;
-        if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
-        return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (equipment != null ? !equipment.equals(that.equipment) : that.equipment != null) return false;
+        if (muscleGroup != null ? !muscleGroup.equals(that.muscleGroup) : that.muscleGroup != null) return false;
+        if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
+        if (category != that.category) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+        if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
+        return creator != null ? creator.equals(that.creator) : that.creator == null;
 
     }
 
@@ -200,15 +178,13 @@ public class Exercise {
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
-        result = 31 * result + (isUsed != null ? isUsed.hashCode() : 0);
         result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
     }
 
-    public static final class ExerciseBuilder {
+    public static final class ExerciseDtoBuilder {
         private Long id;
         private String name;
         private String description;
@@ -216,91 +192,76 @@ public class Exercise {
         private String muscleGroup;
         private Double rating;
         private Category category;
-        private Boolean isHistory;
-        private Boolean isUsed;
         private Integer version;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
 
-        public ExerciseBuilder() {
+        public ExerciseDtoBuilder() {
         }
 
-        public ExerciseBuilder id(Long id) {
+        public ExerciseDtoBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public ExerciseBuilder name(String name) {
+        public ExerciseDtoBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public ExerciseBuilder description(String description) {
+        public ExerciseDtoBuilder description(String description) {
             this.description = description;
             return this;
         }
 
-        public ExerciseBuilder equipment(String equipment) {
+        public ExerciseDtoBuilder equipment(String equipment) {
             this.equipment = equipment;
             return this;
         }
 
-        public ExerciseBuilder muscleGroup(String muscleGroup) {
+        public ExerciseDtoBuilder muscleGroup(String muscleGroup) {
             this.muscleGroup = muscleGroup;
             return this;
         }
 
-        public ExerciseBuilder rating(Double rating) {
+        public ExerciseDtoBuilder rating(Double rating) {
             this.rating = rating;
             return this;
         }
 
-        public ExerciseBuilder category(Category category) {
+        public ExerciseDtoBuilder category(Category category) {
             this.category = category;
             return this;
         }
 
-        public ExerciseBuilder isHistory(Boolean isHistory) {
-            this.isHistory = isHistory;
-            return this;
-        }
-
-        public ExerciseBuilder isUsed(Boolean isUsed) {
-            this.isUsed = isUsed;
-            return this;
-        }
-
-        public ExerciseBuilder version(Integer version) {
+        public ExerciseDtoBuilder version(Integer version) {
             this.version = version;
             return this;
         }
 
-        public ExerciseBuilder workouts(Set<WorkoutExercise> workouts) {
+        public ExerciseDtoBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
         }
 
-        public ExerciseBuilder creator(Dude creator) {
+        public ExerciseDtoBuilder creator(Dude creator) {
             this.creator = creator;
             return this;
         }
 
-        public Exercise build() {
-            Exercise exercise = new Exercise();
-            exercise.setId(id);
-            exercise.setName(name);
-            exercise.setDescription(description);
-            exercise.setEquipment(equipment);
-            exercise.setMuscleGroup(muscleGroup);
-            exercise.setRating(rating);
-            exercise.setCategory(category);
-            exercise.setHistory(isHistory);
-            exercise.setUsed(isUsed);
-            exercise.setVersion(version);
-            exercise.setWorkouts(workouts);
-            exercise.setCreator(creator);
-            return exercise;
+        public ExerciseDto build() {
+            ExerciseDto exerciseDto = new ExerciseDto();
+            exerciseDto.setId(id);
+            exerciseDto.setName(name);
+            exerciseDto.setDescription(description);
+            exerciseDto.setEquipment(equipment);
+            exerciseDto.setMuscleGroup(muscleGroup);
+            exerciseDto.setRating(rating);
+            exerciseDto.setCategory(category);
+            exerciseDto.setVersion(version);
+            exerciseDto.setWorkouts(workouts);
+            exerciseDto.setCreator(creator);
+            return exerciseDto;
         }
     }
-
 }
