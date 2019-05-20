@@ -115,7 +115,8 @@ public class SecurityConfiguration {
                     "/swagger-ui.html")
                 .permitAll()
                 .antMatchers(HttpMethod.DELETE).permitAll()
-                .antMatchers(HttpMethod.PUT).permitAll()
+                .antMatchers(HttpMethod.PUT,
+            "/dudes/{name}").permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {
                 http
@@ -145,7 +146,7 @@ public class SecurityConfiguration {
                 registry
                     .addMapping("/**")
                     .allowedOrigins("*")
-                    .allowedMethods("PUT","POST","OPTION","GET", "PUT", "DELETE");
+                    .allowedMethods("PUT","POST","OPTION","GET", "DELETE");
             }
         };
     }
