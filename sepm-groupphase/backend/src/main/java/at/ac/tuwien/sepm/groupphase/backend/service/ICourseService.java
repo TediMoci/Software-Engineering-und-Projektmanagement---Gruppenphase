@@ -8,29 +8,29 @@ import java.util.List;
 public interface ICourseService {
 
     /**
-     * @param course
-     * @return
-     * @throws ServiceException
+     * @param course to be saved in the system
+     * @return the saved Course
+     * @throws ServiceException if an error occurred while trying to save the Course in the system
      */
     Course save(Course course) throws ServiceException;
 
     /**
-     * @param id
-     * @return
-     * @throws ServiceException
+     * @param id of the Course to find
+     * @return the Course with the given id
+     * @throws ServiceException if an error occurred while trying to find the Course in the system
      */
     Course findById(Long id) throws ServiceException;
 
     /**
-     * @param name
-     * @return
-     * @throws ServiceException
+     * @param name of the Courses to find
+     * @return Courses with name beginning with the given name-string
+     * @throws ServiceException if an error occurred while trying to find the Courses in the system
      */
     List<Course> findByName(String name) throws ServiceException;
 
     /**
-     * @return
-     * @throws ServiceException
+     * @return all Courses in the system
+     * @throws ServiceException if an error occurred while trying to find the Courses in the system
      */
     List<Course> findAll() throws ServiceException;
 
