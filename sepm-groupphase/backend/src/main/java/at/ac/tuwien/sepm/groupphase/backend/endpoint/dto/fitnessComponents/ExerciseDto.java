@@ -46,8 +46,8 @@ public class ExerciseDto {
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
 
-    @ApiModelProperty(required = true, name = "Creator of Exercise")
-    private Dude creator;
+    @ApiModelProperty(required = true, name = "ID of creator of Exercise")
+    private Long creatorId;
 
     public Long getId() {
         return id;
@@ -113,12 +113,12 @@ public class ExerciseDto {
         this.workouts = workouts;
     }
 
-    public Dude getCreator() {
-        return creator;
+    public Long getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreator(Dude creator) {
-        this.creator = creator;
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
     }
 
     public Integer getVersion() {
@@ -145,7 +145,7 @@ public class ExerciseDto {
             ", category=" + category +
             ", version=" + version +
             ", workouts=" + workouts +
-            ", creator=" + creator +
+            ", creatorId=" + creatorId +
             '}';
     }
 
@@ -165,7 +165,7 @@ public class ExerciseDto {
         if (category != that.category) return false;
         if (version != null ? !version.equals(that.version) : that.version != null) return false;
         if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
-        return creator != null ? creator.equals(that.creator) : that.creator == null;
+        return creatorId != null ? creatorId.equals(that.creatorId) : that.creatorId == null;
 
     }
 
@@ -180,7 +180,7 @@ public class ExerciseDto {
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
+        result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
         return result;
     }
 
@@ -194,7 +194,7 @@ public class ExerciseDto {
         private Category category;
         private Integer version;
         private Set<WorkoutExercise> workouts;
-        private Dude creator;
+        private Long creatorId;
 
         public ExerciseDtoBuilder() {
         }
@@ -244,8 +244,8 @@ public class ExerciseDto {
             return this;
         }
 
-        public ExerciseDtoBuilder creator(Dude creator) {
-            this.creator = creator;
+        public ExerciseDtoBuilder creatorId(Long creatorId) {
+            this.creatorId = creatorId;
             return this;
         }
 
@@ -260,7 +260,7 @@ public class ExerciseDto {
             exerciseDto.setCategory(category);
             exerciseDto.setVersion(version);
             exerciseDto.setWorkouts(workouts);
-            exerciseDto.setCreator(creator);
+            exerciseDto.setCreatorId(creatorId);
             return exerciseDto;
         }
     }

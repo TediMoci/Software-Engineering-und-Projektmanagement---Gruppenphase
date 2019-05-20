@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,13 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.rating(exerciseDto.getRating());
         builder.category(exerciseDto.getCategory());
         builder.isHistory(false);
-        builder.isUsed(false);
         builder.version(1);
         builder.workouts(exerciseDto.getWorkouts());
-        builder.creator(exerciseDto.getCreator());
+
+        Dude.DudeBuilder dudeBuilder = new Dude.DudeBuilder();
+        dudeBuilder.id(exerciseDto.getCreatorId());
+        Dude dude = dudeBuilder.build();
+        builder.creator(dude);
 
         return builder.build();
     }
@@ -41,7 +45,7 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.category(exercise.getCategory());
         builder.version(exercise.getVersion());
         builder.workouts(exercise.getWorkouts());
-        builder.creator(exercise.getCreator());
+        builder.creatorId(exercise.getCreator().getId());
 
         return builder.build();
     }
