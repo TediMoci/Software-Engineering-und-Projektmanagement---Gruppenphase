@@ -13,22 +13,23 @@ import java.util.List;
 public interface IExerciseRepository extends JpaRepository<Exercise, Long> {
 
     /**
-     * @param exercise
-     * @return
+     * @param exercise to be saved in the database
+     * @return the saved Exercise
+     * @throws DataAccessException if an error occured while trying to save the Exercise in the databse
      */
     Exercise save(Exercise exercise) throws DataAccessException;
 
     /**
-     * @param name
-     * @return
-     * @throws DataAccessException
+     * @param name of the Exercises to find
+     * @return Exercises with name beginning with the given name-string
+     * @throws DataAccessException if an error occured while trying to find the Exercises in the database
      */
     @Query("SELECT e FROM Exercise e WHERE e.name LIKE ?1% AND e.isHistory=false")
     List<Exercise> findByName(String name) throws DataAccessException;
 
     /**
-     * @return
-     * @throws DataAccessException
+     * @return all Exercises in the database
+     * @throws DataAccessException if an error occured while trying to find the Exercises in the database
      */
     @Query("SELECT e FROM Exercise e WHERE e.isHistory=false")
     List<Exercise> findAll() throws DataAccessException;
