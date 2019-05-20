@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
-import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
@@ -12,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,14 +25,11 @@ public class ExerciseEndpoint {
 
     private final IExerciseService iExerciseService;
     private final IExerciseMapper exerciseMapper;
-    private final IDudeMapper dudeMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(ExerciseEndpoint.class);
 
-    @Autowired
-    public ExerciseEndpoint(IExerciseService iExerciseService, IExerciseMapper exerciseMapper, IDudeMapper dudeMapper) {
+    public ExerciseEndpoint(IExerciseService iExerciseService, IExerciseMapper exerciseMapper) {
         this.iExerciseService = iExerciseService;
         this.exerciseMapper = exerciseMapper;
-        this.dudeMapper = dudeMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
