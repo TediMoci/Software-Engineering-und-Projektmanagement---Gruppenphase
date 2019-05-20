@@ -15,6 +15,9 @@ public class ExerciseDto {
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
+    @ApiModelProperty(name = "Version of Exercise")
+    private Integer version = 1;
+
     @ApiModelProperty(required = true, name = "Name of Exercise")
     @NotBlank(message = "Name must not be empty")
     @Size(min = 1, max = 50, message = "Name length must be between 1 and 50")
@@ -40,9 +43,6 @@ public class ExerciseDto {
     @NotNull(message = "Category must not be null")
     private Category category;
 
-    @ApiModelProperty(name = "Version of Exercise")
-    private Integer version = 1;
-
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
 
@@ -55,6 +55,14 @@ public class ExerciseDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getName() {
@@ -121,14 +129,6 @@ public class ExerciseDto {
         this.creatorId = creatorId;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
     public static ExerciseDtoBuilder builder() {
         return new ExerciseDtoBuilder();
     }
@@ -137,13 +137,13 @@ public class ExerciseDto {
     public String toString() {
         return "ExerciseDto{" +
             "id=" + id +
+            ", version=" + version +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", equipment='" + equipment + '\'' +
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
-            ", version=" + version +
             ", workouts=" + workouts +
             ", creatorId=" + creatorId +
             '}';
@@ -157,13 +157,13 @@ public class ExerciseDto {
         ExerciseDto that = (ExerciseDto) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (equipment != null ? !equipment.equals(that.equipment) : that.equipment != null) return false;
         if (muscleGroup != null ? !muscleGroup.equals(that.muscleGroup) : that.muscleGroup != null) return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
         if (category != that.category) return false;
-        if (version != null ? !version.equals(that.version) : that.version != null) return false;
         if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
         return creatorId != null ? creatorId.equals(that.creatorId) : that.creatorId == null;
 
@@ -172,13 +172,13 @@ public class ExerciseDto {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
         return result;
@@ -186,13 +186,13 @@ public class ExerciseDto {
 
     public static final class ExerciseDtoBuilder {
         private Long id;
+        private Integer version;
         private String name;
         private String description;
         private String equipment;
         private String muscleGroup;
         private Double rating;
         private Category category;
-        private Integer version;
         private Set<WorkoutExercise> workouts;
         private Long creatorId;
 
@@ -201,6 +201,11 @@ public class ExerciseDto {
 
         public ExerciseDtoBuilder id(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public ExerciseDtoBuilder version(Integer version) {
+            this.version = version;
             return this;
         }
 
@@ -234,11 +239,6 @@ public class ExerciseDto {
             return this;
         }
 
-        public ExerciseDtoBuilder version(Integer version) {
-            this.version = version;
-            return this;
-        }
-
         public ExerciseDtoBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -252,13 +252,13 @@ public class ExerciseDto {
         public ExerciseDto build() {
             ExerciseDto exerciseDto = new ExerciseDto();
             exerciseDto.setId(id);
+            exerciseDto.setVersion(version);
             exerciseDto.setName(name);
             exerciseDto.setDescription(description);
             exerciseDto.setEquipment(equipment);
             exerciseDto.setMuscleGroup(muscleGroup);
             exerciseDto.setRating(rating);
             exerciseDto.setCategory(category);
-            exerciseDto.setVersion(version);
             exerciseDto.setWorkouts(workouts);
             exerciseDto.setCreatorId(creatorId);
             return exerciseDto;

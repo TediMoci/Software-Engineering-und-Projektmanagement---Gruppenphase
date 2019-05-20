@@ -21,7 +21,7 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.rating(exerciseDto.getRating());
         builder.category(exerciseDto.getCategory());
         builder.isHistory(false);
-        builder.version(1);
+        builder.version(exerciseDto.getVersion());
         builder.workouts(exerciseDto.getWorkouts());
 
         Dude.DudeBuilder dudeBuilder = new Dude.DudeBuilder();
