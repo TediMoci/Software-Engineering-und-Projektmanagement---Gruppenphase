@@ -7,6 +7,9 @@ public class ExerciseKey implements Serializable {
     private Long id;
     private Integer version;
 
+    public ExerciseKey() {
+    }
+
     public ExerciseKey(Long id, Integer version) {
         this.id = id;
         this.version = version;

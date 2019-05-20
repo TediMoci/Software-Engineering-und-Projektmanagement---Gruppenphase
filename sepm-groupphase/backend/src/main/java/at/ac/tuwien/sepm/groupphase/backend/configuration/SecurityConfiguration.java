@@ -109,7 +109,7 @@ public class SecurityConfiguration {
                     "/course/{id}",
                     "/exercise",
                     "/exercise/all",
-                    "/exercise/{id}",
+                    "/exercise/{id}/{version}",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",

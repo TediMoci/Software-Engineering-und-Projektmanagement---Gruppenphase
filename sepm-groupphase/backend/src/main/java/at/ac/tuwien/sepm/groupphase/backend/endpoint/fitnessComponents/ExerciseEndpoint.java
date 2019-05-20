@@ -45,14 +45,14 @@ public class ExerciseEndpoint {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get an Exercise by id", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto findById(@PathVariable Long id) {
-        LOGGER.info("Entering findById with id: " + id);
+    @RequestMapping(value = "/{id}/{version}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get an Exercise by id and version", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto findByIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
         try {
-            return exerciseMapper.exerciseToExerciseDto(iExerciseService.findById(id));
+            return exerciseMapper.exerciseToExerciseDto(iExerciseService.findByIdAndVersion(id, version));
         } catch (ServiceException e) {
-            LOGGER.error("Could not find exercise with id: " + id);
+            LOGGER.error("Could not find exercise with id: " + id + "; and version: " + version);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }

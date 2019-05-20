@@ -32,10 +32,10 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
-    public Exercise findById(Long id) throws ServiceException {
-        LOGGER.info("Entering findById with id: " + id);
+    public Exercise findByIdAndVersion(Long id, Integer version) throws ServiceException {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
         try {
-            return iExerciseRepository.findById(id).get();
+            return iExerciseRepository.findByIdAndVersion(id, version);
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
