@@ -63,14 +63,4 @@ public class ExerciseService implements IExerciseService {
         }
     }
 
-    @Override
-    public List<Exercise> findAllByCreator(Dude creator) throws ServiceException {
-        LOGGER.info("Entering findAllByCreator");
-        try {
-            return new ArrayList<>(creator.getExercises());
-        } catch (DataAccessException e){
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
 }

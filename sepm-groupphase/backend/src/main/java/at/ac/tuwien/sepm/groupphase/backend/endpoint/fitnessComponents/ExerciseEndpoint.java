@@ -99,21 +99,4 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
-    @RequestMapping(value = "/own", method = RequestMethod.GET)
-    @ApiOperation(value = "Get all exercises of dude")
-    public List<ExerciseDto> findAllByCreator(@RequestParam DudeDto creator){
-        LOGGER.info("Entering findAllByCreator");
-        List<Exercise> ownExercises;
-        try {
-            ownExercises = iExerciseService.findAllByCreator(dudeMapper.dudeDtoToDude(creator));
-        } catch (ServiceException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-        List<ExerciseDto> ownExerciseDtos = new ArrayList<>();
-        for (Exercise exercise : ownExercises) {
-            ownExerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
-        }
-        return ownExerciseDtos;
-    }
-
 }

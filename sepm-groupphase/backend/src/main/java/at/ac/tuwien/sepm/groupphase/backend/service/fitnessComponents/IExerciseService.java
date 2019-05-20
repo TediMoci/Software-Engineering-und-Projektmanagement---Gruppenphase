@@ -35,12 +35,4 @@ public interface IExerciseService {
      */
     List<Exercise> findAll() throws ServiceException;
 
-    /**
-     *
-     * @param creator
-     * @return
-     * @throws ServiceException
-     */
-    List<Exercise> findAllByCreator(Dude creator) throws ServiceException;
-
 }
