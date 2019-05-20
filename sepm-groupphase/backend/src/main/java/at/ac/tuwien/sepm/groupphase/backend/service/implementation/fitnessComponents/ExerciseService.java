@@ -35,7 +35,7 @@ public class ExerciseService implements IExerciseService {
     public Exercise findByIdAndVersion(Long id, Integer version) throws ServiceException {
         LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
         try {
-            return iExerciseRepository.findByIdAndVersion(id, version);
+            return iExerciseRepository.findByIdAndVersion(id, version).get();
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }

@@ -53,7 +53,7 @@ public class ExerciseEndpoint {
             return exerciseMapper.exerciseToExerciseDto(iExerciseService.findByIdAndVersion(id, version));
         } catch (ServiceException e) {
             LOGGER.error("Could not find exercise with id: " + id + "; and version: " + version);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 

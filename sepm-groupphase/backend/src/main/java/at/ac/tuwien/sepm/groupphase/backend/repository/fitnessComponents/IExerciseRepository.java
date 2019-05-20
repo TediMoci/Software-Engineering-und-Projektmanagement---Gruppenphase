@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Repository
 public interface IExerciseRepository extends JpaRepository<Exercise, Long> {
@@ -25,7 +26,7 @@ public interface IExerciseRepository extends JpaRepository<Exercise, Long> {
      * @return the Exercise with the given id and version
      * @throws NoSuchElementException if the Exercise could not be found in the database
      */
-    Exercise findByIdAndVersion(Long id, Integer version) throws NoSuchElementException;
+    Optional<Exercise> findByIdAndVersion(Long id, Integer version) throws NoSuchElementException;
 
     /**
      * @param name of the Exercises to find
