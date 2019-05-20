@@ -119,7 +119,9 @@ public class DudeEndpoint {
         }
         List<ExerciseDto> exerciseDtos = new ArrayList<>();
         for (Exercise exercise : exercises) {
-            exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+            if (!exercise.getHistory()) {
+                exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+            }
         }
         return exerciseDtos;
     }
