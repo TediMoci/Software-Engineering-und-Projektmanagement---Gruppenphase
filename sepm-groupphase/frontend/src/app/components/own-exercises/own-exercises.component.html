@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="container-fluid">
 
   <div class="container">
@@ -14,9 +16,9 @@
         <p>Click on a name to see your exercise. Scroll to see more exercises!</p>
         <ul>
           <li *ngFor='let element of exercises'>
-            <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn btn-link">{{element.name}}</a>
-            <button type="button" (click)="goToEditExercise(element)" class="btn btn-primary">Edit</button>
-            <button type="button" (click)="setToDeleteExercise(element)" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal">Delete</button>
+            <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn2 btn-link">{{element.name}}</a>
+            <button type="button" (click)="goToEditExercise(element)" class="btn btn-secondary"><i class="fa fa-pencil"></i></button>
+            <button type="button" (click)="setToDeleteExercise(element)" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash"></i></button>
           </li>
         </ul>
       </div>
@@ -33,7 +35,6 @@
 
       <div class="modal-header">
         <h4 class="modal-title">Are you sure you want to delete your exercise "{{exerciseToDelete}}"?</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
       <div class="modal-footer">
