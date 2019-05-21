@@ -4,10 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Set;
 
 @ApiModel(value = "WorkoutDto", description = "A dto for workout entries via rest")
@@ -30,6 +27,7 @@ public class WorkoutDto {
     private String description = "No description given.";
 
     @ApiModelProperty(required = true, name = "Difficulty of Workout")
+    @NotNull(message = "Difficulty must be given")
     @Min(value = 1, message = "Min difficulty value is 1") @Max(value = 3, message = "Max difficulty value is 3")
     private Integer difficulty;
     // TODO: selfAssessment enum
