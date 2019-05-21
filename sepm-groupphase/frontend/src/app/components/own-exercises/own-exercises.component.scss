@@ -30,4 +30,17 @@
 
 .col-sm-9 {
   padding: 40px;
+   ul{
+     height: 700px;
+     line-height: 80px;
+     overflow: scroll;
+     -webkit-overflow-scrolling: touch;
+   }
+  .btn {
+    margin: 5px;
+  }
+}
+
+.modal-header {
+  text-align: center;
 }
