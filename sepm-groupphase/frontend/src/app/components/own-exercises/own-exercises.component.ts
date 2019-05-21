@@ -14,33 +14,30 @@ export class OwnExercisesComponent implements OnInit {
   userName: string;
   dude: Dude;
   exercises: any;
+  error: any;
   constructor(private ownExercisesService: OwnExercisesService) { }
 
   ngOnInit() {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-    // this.exercises = this.ownExercisesService.getAllExercisesOfLoggedInDude();
-    this.exercises = [{ name: 'Sit up',
-      description: 'do something for your abs',
-      difficulty_level: 'easy',
-      category: 'other',
-      equipment: 'your body',
-      muscleGroup: 'abs'},
-      { name: 'Curls',
-        description: 'do something for your bizeps',
-        difficulty_level: 'advanced',
-        category: 'strength',
-        equipment: 'weights',
-        muscleGroup: 'bizeps'},
-      { name: 'Handless Handstand',
-        description: 'learn to fly',
-        difficulty_level: 'baby',
-        category: 'lightness',
-        equipment: 'your body, air',
-        muscleGroup: 'mind'}];
+
+    this.ownExercisesService.getAllExercisesOfLoggedInDude().subscribe(
+      (data) => {
+        console.log('get all exercises created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
+        this.exercises = data.sort(function (a, b) { // sort data alphabetically
+          if (a.name < b.name) {return -1;}
+          if (a.name > b.name) {return 1;}
+          return 0;
+        });
+        console.log(this.exercises);
+      },
+      error => {
+        this.error = error;
+      }
+    );
+
   }
-  // TODO: sort entrys alphabetically?
 
   setSelectedExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
