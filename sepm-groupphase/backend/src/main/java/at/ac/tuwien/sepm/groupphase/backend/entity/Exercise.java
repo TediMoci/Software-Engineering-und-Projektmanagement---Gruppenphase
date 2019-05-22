@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 
@@ -7,12 +8,16 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@IdClass(ExerciseKey.class)
 public class Exercise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_exercise_id")
     @SequenceGenerator(name = "seq_exercise_id", sequenceName = "seq_exercise_id")
     private Long id;
+
+    @Id
+    private Integer version = 1;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -32,15 +37,11 @@ public class Exercise {
     @Column(nullable = false)
     private Category category;
 
+    @Column(nullable = false)
+    private String difficulty_level;
+
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
-
-    @Column(nullable = false, name = "is_used")
-    private Boolean isUsed = false;
-    // true if used by other users (not the creator)
-
-    @Column(nullable = false)
-    private Integer version = 1;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
@@ -55,6 +56,14 @@ public class Exercise {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getName() {
@@ -105,6 +114,14 @@ public class Exercise {
         this.category = category;
     }
 
+    public String getDifficulty_level() {
+        return difficulty_level;
+    }
+
+    public void setDifficulty_level(String difficulty_level) {
+        this.difficulty_level = difficulty_level;
+    }
+
     public Set<WorkoutExercise> getWorkouts() {
         return workouts;
     }
@@ -129,22 +146,6 @@ public class Exercise {
         isHistory = history;
     }
 
-    public Boolean getUsed() {
-        return isUsed;
-    }
-
-    public void setUsed(Boolean used) {
-        isUsed = used;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
     public static ExerciseBuilder builder() {
         return new ExerciseBuilder();
     }
@@ -153,15 +154,15 @@ public class Exercise {
     public String toString() {
         return "Exercise{" +
             "id=" + id +
+            ", version=" + version +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", equipment='" + equipment + '\'' +
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
+            ", difficulty_level='" + difficulty_level + '\'' +
             ", isHistory=" + isHistory +
-            ", isUsed=" + isUsed +
-            ", version=" + version +
             ", workouts=" + workouts +
             ", creator=" + creator +
             '}';
@@ -175,6 +176,7 @@ public class Exercise {
         Exercise exercise = (Exercise) o;
 
         if (id != null ? !id.equals(exercise.id) : exercise.id != null) return false;
+        if (version != null ? !version.equals(exercise.version) : exercise.version != null) return false;
         if (name != null ? !name.equals(exercise.name) : exercise.name != null) return false;
         if (description != null ? !description.equals(exercise.description) : exercise.description != null)
             return false;
@@ -183,26 +185,25 @@ public class Exercise {
             return false;
         if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
         if (category != exercise.category) return false;
+        if (difficulty_level != null ? !difficulty_level.equals(exercise.difficulty_level) : exercise.difficulty_level != null)
+            return false;
         if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
-        if (isUsed != null ? !isUsed.equals(exercise.isUsed) : exercise.isUsed != null) return false;
-        if (version != null ? !version.equals(exercise.version) : exercise.version != null) return false;
         if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
         return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
-
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (difficulty_level != null ? difficulty_level.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
-        result = 31 * result + (isUsed != null ? isUsed.hashCode() : 0);
-        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
@@ -210,15 +211,15 @@ public class Exercise {
 
     public static final class ExerciseBuilder {
         private Long id;
+        private Integer version;
         private String name;
         private String description;
         private String equipment;
         private String muscleGroup;
         private Double rating;
         private Category category;
+        private String difficulty_level;
         private Boolean isHistory;
-        private Boolean isUsed;
-        private Integer version;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
 
@@ -227,6 +228,11 @@ public class Exercise {
 
         public ExerciseBuilder id(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public ExerciseBuilder version(Integer version) {
+            this.version = version;
             return this;
         }
 
@@ -260,18 +266,13 @@ public class Exercise {
             return this;
         }
 
+        public ExerciseBuilder difficulty_level(String difficulty_level){
+            this.difficulty_level = difficulty_level;
+            return this;
+        }
+
         public ExerciseBuilder isHistory(Boolean isHistory) {
             this.isHistory = isHistory;
-            return this;
-        }
-
-        public ExerciseBuilder isUsed(Boolean isUsed) {
-            this.isUsed = isUsed;
-            return this;
-        }
-
-        public ExerciseBuilder version(Integer version) {
-            this.version = version;
             return this;
         }
 
@@ -288,15 +289,15 @@ public class Exercise {
         public Exercise build() {
             Exercise exercise = new Exercise();
             exercise.setId(id);
+            exercise.setVersion(version);
             exercise.setName(name);
             exercise.setDescription(description);
             exercise.setEquipment(equipment);
             exercise.setMuscleGroup(muscleGroup);
             exercise.setRating(rating);
             exercise.setCategory(category);
+            exercise.setDifficulty_level(difficulty_level);
             exercise.setHistory(isHistory);
-            exercise.setUsed(isUsed);
-            exercise.setVersion(version);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
             return exercise;

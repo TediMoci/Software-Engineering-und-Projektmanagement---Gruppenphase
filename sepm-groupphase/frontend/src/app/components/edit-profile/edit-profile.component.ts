@@ -79,6 +79,7 @@ export class EditProfileComponent implements OnInit {
     this.submitted = true;
 
     const dude: Dude = new Dude(
+      this.oldDude.id,
       this.editForm.controls.name.value,
       this.editForm.controls.password.value,
       this.editForm.controls.description.value,

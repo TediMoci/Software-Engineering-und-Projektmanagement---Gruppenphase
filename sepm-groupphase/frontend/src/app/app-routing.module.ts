@@ -19,7 +19,15 @@ import {RoleGuard} from './guards/role.guard';
 import {FitnessProviderRoleGuard} from './guards/fitness-provider-role.guard';
 import {FollowerComponent} from './components/follower/follower.component';
 import {FitnessProvidersFollowedComponent} from './components/fitness-providers-followed/fitness-providers-followed.component';
+import {CreateExerciseComponent} from './components/create-exercise/create-exercise.component';
 import {EditFitnessProviderProfileComponent} from './components/edit-fitness-provider-profile/edit-fitness-provider-profile.component';
+import {OwnExercisesComponent} from './components/own-exercises/own-exercises.component';
+import {OwnWorkoutsComponent} from './components/own-workouts/own-workouts.component';
+import {OwnTrainingScheduleComponent} from './components/own-training-schedule/own-training-schedule.component';
+import {ExerciseComponent} from './components/exercise/exercise.component';
+import {EditExerciseComponent} from './components/edit-exercise/edit-exercise.component';
+import {WorkoutComponent} from './components/workout/workout.component';
+import {EditWorkoutComponent} from './components/edit-workout/edit-workout.component';
 
 const routes: Routes = [
 
@@ -31,6 +39,7 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'bros', canActivate: [RoleGuard], component: BrosComponent},
   {path: 'create', canActivate: [AuthGuard], component: CreateComponent},
+  {path: 'create-exercise', component: CreateExerciseComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
   {path: 'myContent', canActivate: [AuthGuard], component: MyContentComponent},
@@ -39,7 +48,14 @@ const routes: Routes = [
   {path: 'edit-fitnessProvider', canActivate: [FitnessProviderRoleGuard], component: EditFitnessProviderProfileComponent},
   {path: 'fitnessProvider-profile', canActivate: [FitnessProviderRoleGuard], component: FitnessProviderProfileComponent},
   {path: 'follower', canActivate: [FitnessProviderRoleGuard], component: FollowerComponent},
-  {path: 'fitnessProviders', canActivate: [RoleGuard], component: FitnessProvidersFollowedComponent}
+  {path: 'fitnessProviders', canActivate: [RoleGuard], component: FitnessProvidersFollowedComponent},
+  {path: 'myExercises', canActivate: [RoleGuard], component: OwnExercisesComponent},
+  {path: 'myWorkouts', canActivate: [RoleGuard], component: OwnWorkoutsComponent},
+  {path: 'myTrainingSchedules', canActivate: [RoleGuard], component: OwnTrainingScheduleComponent},
+  {path: 'exercise', canActivate: [AuthGuard], component: ExerciseComponent},
+  {path: 'edit-exercise', canActivate: [RoleGuard], component: EditExerciseComponent},
+  {path: 'workout', canActivate: [RoleGuard], component: WorkoutComponent},
+  {path: 'edit-workout', canActivate: [RoleGuard], component: EditWorkoutComponent}
 ];
 
 @NgModule({

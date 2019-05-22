@@ -8,29 +8,32 @@ import java.io.Serializable;
 public class WorkoutExerciseKey implements Serializable {
 
     @Column(name = "exercise_id")
-    private Long exerciseId;
+    private ExerciseKey exerciseId;
 
     @Column(name = "workout_id")
-    private Long workoutId;
+    private WorkoutKey workoutId;
 
-    public WorkoutExerciseKey(Long exerciseId, Long workoutId) {
+    public WorkoutExerciseKey() {
+    }
+
+    public WorkoutExerciseKey(ExerciseKey exerciseId, WorkoutKey workoutId) {
         this.exerciseId = exerciseId;
         this.workoutId = workoutId;
     }
 
-    public Long getExerciseId() {
+    public ExerciseKey getExerciseId() {
         return exerciseId;
     }
 
-    public void setExerciseId(Long exerciseId) {
+    public void setExerciseId(ExerciseKey exerciseId) {
         this.exerciseId = exerciseId;
     }
 
-    public Long getWorkoutId() {
+    public WorkoutKey getWorkoutId() {
         return workoutId;
     }
 
-    public void setWorkoutId(Long workoutId) {
+    public void setWorkoutId(WorkoutKey workoutId) {
         this.workoutId = workoutId;
     }
 

@@ -1,0 +1,41 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <div class="row-sm-1">
+          <h4 style="text-decoration: underline;">{{userName}}</h4>
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="row">
+          <div class="col">
+            <h1>Workout {{workoutName}}</h1>
+            <p> Difficulty level: {{difficulty}} </p>
+            <p> Calorie Consumption: {{calories}} </p>
+            <p> Description: {{description}} </p>
+            <h3>Exercises</h3>
+            <ul>
+              <li *ngFor='let element of exercises'>
+                <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn2 btn-link">{{element.name}}</a>
+                <ul>
+                  <li>{{element.repetitions}}</li>
+                  <li>{{element.sets}}</li>
+                  <li>{{element.exDuration}}}</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

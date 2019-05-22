@@ -1,16 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CourseDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class CourseMapper implements ICourseMapper {
@@ -31,17 +27,11 @@ public class CourseMapper implements ICourseMapper {
         builder.id(courseDto.getId());
         builder.name(courseDto.getName());
         builder.description(courseDto.getDescription());
-        // TODO: fix mapping
-        builder.fitnessProvider(null);
-        builder.dudes(null);
-        /*
-        builder.fitnessProvider(fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(courseDto.getFitnessProviderDto()));
-        Set<Dude> dudes = new HashSet<>();
-        for (DudeDto dudeDto : courseDto.getDudeDtos()) {
-            dudes.add(dudeMapper.dudeDtoToDude(dudeDto));
-        }
-        builder.dudes(dudes);
-         */
+
+        FitnessProvider.FitnessProviderBuilder fitnessProviderBuilder = new FitnessProvider.FitnessProviderBuilder();
+        fitnessProviderBuilder.id(courseDto.getCreatorId());
+        FitnessProvider fitnessProvider = fitnessProviderBuilder.build();
+        builder.creator(fitnessProvider);
 
         return builder.build();
     }
@@ -53,17 +43,7 @@ public class CourseMapper implements ICourseMapper {
         builder.id(course.getId());
         builder.name(course.getName());
         builder.description(course.getDescription());
-        // TODO: fix mapping
-        builder.fitnessProviderDto(null);
-        builder.dudeDtos(null);
-        /*
-        builder.fitnessProviderDto(fitnessProviderMapper.fitnessProviderToFitnessProviderDto(course.getFitnessProvider()));
-        Set<DudeDto> dudeDtos = new HashSet<>();
-        for (Dude dude : course.getDudes()) {
-            dudeDtos.add(dudeMapper.dudeToDudeDto(dude));
-        }
-        builder.dudeDtos(dudeDtos);
-         */
+        builder.creatorId(course.getCreator().getId());
 
         return builder.build();
     }

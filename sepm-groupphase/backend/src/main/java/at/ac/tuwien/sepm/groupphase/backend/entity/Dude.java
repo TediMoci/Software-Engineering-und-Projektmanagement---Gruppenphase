@@ -6,7 +6,6 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Dude {
@@ -72,7 +71,7 @@ public class Dude {
         joinColumns = @JoinColumn(name = "dude_id"),
         inverseJoinColumns = @JoinColumn(name = "fitness_provider_id")
     )
-    private Set<FitnessProvider> fitnessProviders;
+    private List<FitnessProvider> fitnessProviders;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
@@ -80,13 +79,13 @@ public class Dude {
         joinColumns = @JoinColumn(name = "dude_id"),
         inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private Set<Course> courses;
+    private List<Course> courses;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
-    private Set<Exercise> exercises;
+    private List<Exercise> exercises;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
-    private Set<Workout> workouts;
+    private List<Workout> workouts;
 
     public Long getId() {
         return id;
@@ -180,35 +179,35 @@ public class Dude {
         this.roles = roles;
     }
 
-    public Set<FitnessProvider> getFitnessProviders() {
+    public List<FitnessProvider> getFitnessProviders() {
         return fitnessProviders;
     }
 
-    public void setFitnessProviders(Set<FitnessProvider> fitnessProviders) {
+    public void setFitnessProviders(List<FitnessProvider> fitnessProviders) {
         this.fitnessProviders = fitnessProviders;
     }
 
-    public Set<Course> getCourses() {
+    public List<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(Set<Course> courses) {
+    public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
 
-    public Set<Exercise> getExercises() {
+    public List<Exercise> getExercises() {
         return exercises;
     }
 
-    public void setExercises(Set<Exercise> exercises) {
+    public void setExercises(List<Exercise> exercises) {
         this.exercises = exercises;
     }
 
-    public Set<Workout> getWorkouts() {
+    public List<Workout> getWorkouts() {
         return workouts;
     }
 
-    public void setWorkouts(Set<Workout> workouts) {
+    public void setWorkouts(List<Workout> workouts) {
         this.workouts = workouts;
     }
 
@@ -299,10 +298,10 @@ public class Dude {
         private Double height;
         private Double weight;
         private List<String> roles;
-        private Set<FitnessProvider> fitnessProviders;
-        private Set<Course> courses;
-        private Set<Exercise> exercises;
-        private Set<Workout> workouts;
+        private List<FitnessProvider> fitnessProviders;
+        private List<Course> courses;
+        private List<Exercise> exercises;
+        private List<Workout> workouts;
 
         public DudeBuilder() {
         }
@@ -367,22 +366,22 @@ public class Dude {
             return this;
         }
 
-        public DudeBuilder fitnessProviders(Set<FitnessProvider> fitnessProviders) {
+        public DudeBuilder fitnessProviders(List<FitnessProvider> fitnessProviders) {
             this.fitnessProviders = fitnessProviders;
             return this;
         }
 
-        public DudeBuilder courses(Set<Course> courses) {
+        public DudeBuilder courses(List<Course> courses) {
             this.courses = courses;
             return this;
         }
 
-        public DudeBuilder exercises(Set<Exercise> exercises) {
+        public DudeBuilder exercises(List<Exercise> exercises) {
             this.exercises = exercises;
             return this;
         }
 
-        public DudeBuilder workouts(Set<Workout> workouts) {
+        public DudeBuilder workouts(List<Workout> workouts) {
             this.workouts = workouts;
             return this;
         }

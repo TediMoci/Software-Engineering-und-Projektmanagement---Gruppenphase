@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import io.swagger.annotations.ApiModel;
@@ -14,6 +13,10 @@ public class ExerciseDto {
 
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
+
+    @ApiModelProperty(name = "Version of Exercise")
+    @Min(value = 1, message = "Min version value is 1")
+    private Integer version = 1;
 
     @ApiModelProperty(required = true, name = "Name of Exercise")
     @NotBlank(message = "Name must not be empty")
@@ -40,14 +43,15 @@ public class ExerciseDto {
     @NotNull(message = "Category must not be null")
     private Category category;
 
-    @ApiModelProperty(name = "Version of Exercise")
-    private Integer version = 1;
+    @ApiModelProperty(required = true, name = "Difficulty_level of Exercise")
+    @NotNull(message = "Difficulty_level must not be null")
+    private String difficulty_level;
 
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
 
-    @ApiModelProperty(required = true, name = "Creator of Exercise")
-    private Dude creator;
+    @ApiModelProperty(required = true, name = "ID of creator of Exercise")
+    private Long creatorId;
 
     public Long getId() {
         return id;
@@ -55,6 +59,14 @@ public class ExerciseDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getName() {
@@ -105,6 +117,14 @@ public class ExerciseDto {
         this.category = category;
     }
 
+    public String getDifficulty_level() {
+        return difficulty_level;
+    }
+
+    public void setDifficulty_level(String difficulty_level) {
+        this.difficulty_level = difficulty_level;
+    }
+
     public Set<WorkoutExercise> getWorkouts() {
         return workouts;
     }
@@ -113,20 +133,12 @@ public class ExerciseDto {
         this.workouts = workouts;
     }
 
-    public Dude getCreator() {
-        return creator;
+    public Long getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreator(Dude creator) {
-        this.creator = creator;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
     }
 
     public static ExerciseDtoBuilder builder() {
@@ -137,15 +149,16 @@ public class ExerciseDto {
     public String toString() {
         return "ExerciseDto{" +
             "id=" + id +
+            ", version=" + version +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", equipment='" + equipment + '\'' +
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
-            ", version=" + version +
+            ", difficulty_level='" + difficulty_level + '\'' +
             ", workouts=" + workouts +
-            ", creator=" + creator +
+            ", creatorId=" + creatorId +
             '}';
     }
 
@@ -157,50 +170,58 @@ public class ExerciseDto {
         ExerciseDto that = (ExerciseDto) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (equipment != null ? !equipment.equals(that.equipment) : that.equipment != null) return false;
         if (muscleGroup != null ? !muscleGroup.equals(that.muscleGroup) : that.muscleGroup != null) return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
         if (category != that.category) return false;
-        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+        if (difficulty_level != null ? !difficulty_level.equals(that.difficulty_level) : that.difficulty_level != null)
+            return false;
         if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
-        return creator != null ? creator.equals(that.creator) : that.creator == null;
-
+        return creatorId != null ? creatorId.equals(that.creatorId) : that.creatorId == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (difficulty_level != null ? difficulty_level.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
+        result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
         return result;
     }
 
     public static final class ExerciseDtoBuilder {
         private Long id;
+        private Integer version;
         private String name;
         private String description;
         private String equipment;
         private String muscleGroup;
         private Double rating;
         private Category category;
-        private Integer version;
+        private String difficulty_level;
         private Set<WorkoutExercise> workouts;
-        private Dude creator;
+        private Long creatorId;
 
         public ExerciseDtoBuilder() {
         }
 
         public ExerciseDtoBuilder id(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public ExerciseDtoBuilder version(Integer version) {
+            this.version = version;
             return this;
         }
 
@@ -234,8 +255,8 @@ public class ExerciseDto {
             return this;
         }
 
-        public ExerciseDtoBuilder version(Integer version) {
-            this.version = version;
+        public ExerciseDtoBuilder difficulty_level(String difficulty_level){
+            this.difficulty_level = difficulty_level;
             return this;
         }
 
@@ -244,23 +265,24 @@ public class ExerciseDto {
             return this;
         }
 
-        public ExerciseDtoBuilder creator(Dude creator) {
-            this.creator = creator;
+        public ExerciseDtoBuilder creatorId(Long creatorId) {
+            this.creatorId = creatorId;
             return this;
         }
 
         public ExerciseDto build() {
             ExerciseDto exerciseDto = new ExerciseDto();
             exerciseDto.setId(id);
+            exerciseDto.setVersion(version);
             exerciseDto.setName(name);
             exerciseDto.setDescription(description);
             exerciseDto.setEquipment(equipment);
             exerciseDto.setMuscleGroup(muscleGroup);
             exerciseDto.setRating(rating);
             exerciseDto.setCategory(category);
-            exerciseDto.setVersion(version);
+            exerciseDto.setDifficulty_level(difficulty_level);
             exerciseDto.setWorkouts(workouts);
-            exerciseDto.setCreator(creator);
+            exerciseDto.setCreatorId(creatorId);
             return exerciseDto;
         }
     }

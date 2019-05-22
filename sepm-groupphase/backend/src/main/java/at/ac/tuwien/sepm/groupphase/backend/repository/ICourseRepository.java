@@ -12,23 +12,23 @@ import java.util.List;
 public interface ICourseRepository extends JpaRepository<Course, Long> {
 
     /**
-     * @param course
-     * @return
-     * @throws DataAccessException
+     * @param course to be saved in the database
+     * @return the saved Course
+     * @throws DataAccessException if an error occurred while trying to save the Course in the database
      */
     Course save(Course course) throws DataAccessException;
 
     /**
-     * @param name
-     * @return
-     * @throws DataAccessException
+     * @param name of the Courses to find
+     * @return Courses with name beginning with the given name-string
+     * @throws DataAccessException if an error occurred while trying to find the Courses in the database
      */
     @Query("SELECT c FROM Course c WHERE c.name LIKE ?1%")
     List<Course> findByName(String name) throws DataAccessException;
 
     /**
-     * @return
-     * @throws DataAccessException
+     * @return all Courses in the database
+     * @throws DataAccessException if an error occurred while trying to find the Courses in the database
      */
     List<Course> findAll() throws DataAccessException;
 

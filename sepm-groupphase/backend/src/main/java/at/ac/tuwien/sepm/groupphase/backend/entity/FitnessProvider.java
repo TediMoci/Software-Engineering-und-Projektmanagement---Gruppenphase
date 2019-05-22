@@ -1,17 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.service.implementation.SimpleHeaderTokenAuthenticationService;
-import org.slf4j.LoggerFactory;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
 
 @Entity
 @Table(name = "fitness_provider")
@@ -54,15 +48,14 @@ public class FitnessProvider {
     private List<String> roles = new ArrayList<String>() {
         {
             add("FITNESS_PROVIDER");
-            add("ss");
         }
     };
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProviders")
-    private Set<Dude> dudes;
+    private List<Dude> dudes;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "fitnessProvider")
-    private Set<Course> courses;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
+    private List<Course> courses;
 
     public Long getId() {
         return id;
@@ -136,19 +129,19 @@ public class FitnessProvider {
         this.roles = roles;
     }
 
-    public Set<Dude> getDudes() {
+    public List<Dude> getDudes() {
         return dudes;
     }
 
-    public void setDudes(Set<Dude> dudes) {
+    public void setDudes(List<Dude> dudes) {
         this.dudes = dudes;
     }
 
-    public Set<Course> getCourses() {
+    public List<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(Set<Course> courses) {
+    public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
 
@@ -216,8 +209,8 @@ public class FitnessProvider {
         private String email;
         private String phoneNumber;
         private String website;
-        private Set<Dude> dudes;
-        private Set<Course> courses;
+        private List<Dude> dudes;
+        private List<Course> courses;
 
         public FitnessProviderBuilder() {
         }
@@ -262,12 +255,12 @@ public class FitnessProvider {
             return this;
         }
 
-        public FitnessProviderBuilder dudes(Set<Dude> dudes) {
+        public FitnessProviderBuilder dudes(List<Dude> dudes) {
             this.dudes = dudes;
             return this;
         }
 
-        public FitnessProviderBuilder courses(Set<Course> courses) {
+        public FitnessProviderBuilder courses(List<Course> courses) {
             this.courses = courses;
             return this;
         }

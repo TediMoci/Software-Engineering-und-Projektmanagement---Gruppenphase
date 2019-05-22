@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import io.swagger.annotations.Api;
@@ -26,12 +29,13 @@ public class DudeEndpoint {
 
     private final IDudeService iDudeService;
     private final IDudeMapper dudeMapper;
+    private final IExerciseMapper exerciseMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    @Autowired
-    public DudeEndpoint(IDudeService iDudeService, IDudeMapper dudeMapper) {
+    public DudeEndpoint(IDudeService iDudeService, IDudeMapper dudeMapper, IExerciseMapper exerciseMapper) {
         this.iDudeService = iDudeService;
         this.dudeMapper = dudeMapper;
+        this.exerciseMapper = exerciseMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -100,6 +104,26 @@ public class DudeEndpoint {
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(value = "/{id}/exercises", method = RequestMethod.GET)
+    @ApiOperation(value = "Get exercises created by dude", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto[] getExercisesCreatedByDudeId(@PathVariable Long id) {
+        LOGGER.info("Entering getExercisesCreatedByDudeId with id: " + id);
+        List<Exercise> exercises;
+        try {
+            exercises = iDudeService.findDudeById(id).getExercises();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getExercisesCreatedByDudeId with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            if (!exercises.get(i).getHistory()) {
+                exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
+            }
+        }
+        return exerciseDtos;
     }
 }
 

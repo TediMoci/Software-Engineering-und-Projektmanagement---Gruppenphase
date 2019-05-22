@@ -5,6 +5,7 @@ import {passwordCheck, checkName } from '../../validator/validator';
 import {RegisterAsDude} from '../../dtos/register-as-dude';
 import {RegisterAsDudeService} from '../../services/register-as-dude.service';
 
+
 @Component({
   selector: 'app-register-as-dude',
   templateUrl: './register-as-dude.component.html',

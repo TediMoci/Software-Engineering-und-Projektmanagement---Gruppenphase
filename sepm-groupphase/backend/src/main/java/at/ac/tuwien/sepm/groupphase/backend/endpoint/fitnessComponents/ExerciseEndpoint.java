@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,7 +27,6 @@ public class ExerciseEndpoint {
     private final IExerciseMapper exerciseMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(ExerciseEndpoint.class);
 
-    @Autowired
     public ExerciseEndpoint(IExerciseService iExerciseService, IExerciseMapper exerciseMapper) {
         this.iExerciseService = iExerciseService;
         this.exerciseMapper = exerciseMapper;
@@ -47,15 +45,15 @@ public class ExerciseEndpoint {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get an Exercise by id", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto findById(@PathVariable Long id) {
-        LOGGER.info("Entering findById with id: " + id);
+    @RequestMapping(value = "/{id}/{version}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get an Exercise by id and version", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto findByIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
         try {
-            return exerciseMapper.exerciseToExerciseDto(iExerciseService.findById(id));
+            return exerciseMapper.exerciseToExerciseDto(iExerciseService.findByIdAndVersion(id, version));
         } catch (ServiceException e) {
-            LOGGER.error("Could not find exercise with id: " + id);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            LOGGER.error("Could not find exercise with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 

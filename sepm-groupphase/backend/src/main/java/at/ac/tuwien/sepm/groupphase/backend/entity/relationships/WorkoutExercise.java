@@ -16,12 +16,18 @@ public class WorkoutExercise {
 
     @ManyToOne
     @MapsId("workout_id")
-    @JoinColumn(name = "workout_id")
+    @JoinColumns({
+        @JoinColumn(name = "workout_id", referencedColumnName = "id"),
+        @JoinColumn(name = "workout_version", referencedColumnName = "version")
+    })
     private Workout workout;
 
     @ManyToOne
     @MapsId("exercise_id")
-    @JoinColumn(name = "exercise_id")
+    @JoinColumns({
+        @JoinColumn(name = "exercise_id", referencedColumnName = "id"),
+        @JoinColumn(name = "exercise_version", referencedColumnName = "version")
+    })
     private Exercise exercise;
 
     @Column(nullable = false)

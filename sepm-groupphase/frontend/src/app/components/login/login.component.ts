@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
           this.authenticateUser(authRequest);
           this.loginDude = data;
           localStorage.setItem('loggedInDude', JSON.stringify(this.loginDude));
-          console.log('Dude logged in: ' + this.loginDude.name + ', ' + this.loginDude.weight);
+          console.log('Dude logged in: ' + this.loginDude.name + ', ' + this.loginDude.id);
         } else {
           console.log('Invalid input');
         }

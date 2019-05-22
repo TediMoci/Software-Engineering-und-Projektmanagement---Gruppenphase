@@ -1,0 +1,124 @@
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<body>
+<div class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <div class="row-sm-1"></div>
+        <div class="row-sm-10">
+          <h4 style="text-decoration: underline;">{{userName}}</h4>
+          <img class="img-exercise" src="{{imagePathExercise}}" alt="exercise image">
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="form">
+          <form [formGroup]="registerForm" (ngSubmit)="addExercise()">
+          <span class="anchor" id="formRegister"></span>
+            <h1>Create CreateExercise</h1>
+
+          <div class="form-group">
+            <label for="nameForExercise">Name</label>
+            <input type="text" name="nameForExercise" maxlength="50" class="form-control" id="nameForExercise" formControlName="nameForExercise"
+                   aria-describedby="nameForExerciseHelp" placeholder="Enter name">
+            <div *ngIf="submitted && !!registerForm.controls.nameForExercise.errors" class="error">
+              <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForExercise.errors.required">Name is
+                required!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="equipmentExercise">Equipment</label>
+            <input type="text" name="equipmentExercise" class="form-control" id="equipmentExercise" formControlName="equipmentExercise"
+                   aria-describedby="equipmentExercise" value = "No equipment required">
+          </div>
+
+          <div class="form-group">
+            <span class="difficultyLevelExercise">Difficulty Level</span>
+            <div class="gap_space">
+              <div class= "custom-control custom-radio custom-control-inline">
+                <input id="beginner" type="radio" class="custom-control-input" value= "Beginner" name="difficultyLevelExercise" formControlName="difficultyLevelExercise">
+                <label class="custom-control-label" for="beginner">Beginner</label>
+              </div>
+
+              <div class="custom-control custom-radio custom-control-inline">
+                <input id="advanced" type="radio" class="custom-control-input" value= "Advanced" name="difficultyLevelExercise" formControlName="difficultyLevelExercise">
+                <label class="custom-control-label" for="advanced">Advanced</label>
+              </div>
+
+              <div class="custom-control custom-radio custom-control-inline">
+                <input id="pro" type="radio" class="custom-control-input" value= "Pro" name="difficultyLevelExercise" formControlName="difficultyLevelExercise">
+                <label class="custom-control-label" for="pro">Pro</label>
+              </div>
+
+              <div *ngIf="submitted && !!registerForm.controls.difficultyLevelExercise.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!registerForm.controls.difficultyLevelExercise.errors.required">Difficulty level is
+                  required!
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <span class="categoryExercise">Category</span>
+            <div class="gap_space">
+              <div class= "custom-control custom-radio custom-control-inline">
+                <input id="endurance" type="radio" class="custom-control-input" value= "Endurance" name="categoryExercise" formControlName="categoryExercise">
+                <label class="custom-control-label" for="endurance">Endurance</label>
+              </div>
+
+              <div class="custom-control custom-radio custom-control-inline">
+                <input id="strength" type="radio" class="custom-control-input" value= "Strength" name="categoryExercise" formControlName="categoryExercise">
+                <label class="custom-control-label" for="strength">Strength</label>
+              </div>
+
+              <div class="custom-control custom-radio custom-control-inline">
+                <input id="other" type="radio" class="custom-control-input" value= "Other" name="categoryExercise" formControlName="categoryExercise">
+                <label class="custom-control-label" for="other">Other</label>
+              </div>
+
+              <div *ngIf="submitted && !!registerForm.controls.categoryExercise.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!registerForm.controls.categoryExercise.errors.required">Category is
+                  required!
+                </small>
+              </div>
+            </div>
+          </div>
+
+              <div class="form-group">
+                <label for="descriptionForExercise">Description</label>
+                <input type="text" name="descriptionForExercise" class="form-control" id="descriptionForExercise" formControlName="descriptionForExercise"
+                       aria-describedby="descriptionForExerciseHelp" placeholder="Enter description">
+                <div *ngIf="submitted && !!registerForm.controls.descriptionForExercise.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForExercise.errors.required">Description is
+                    required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="muscleGroupExercise">Muscle Group</label>
+                <input type="text" name="muscleGroupExercise" class="form-control" id="muscleGroupExercise" formControlName="muscleGroupExercise"
+                       aria-describedby="muscleGroupExercise" placeholder="Enter muscle group">
+              </div>
+          </form>
+
+            <button type="button" (click)="addExercise()" class="btn btn-success float-right">Add</button>
+            <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+

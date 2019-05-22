@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +19,15 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.equipment(exerciseDto.getEquipment());
         builder.muscleGroup(exerciseDto.getMuscleGroup());
         builder.rating(exerciseDto.getRating());
+        builder.difficulty_level(exerciseDto.getDifficulty_level());
         builder.category(exerciseDto.getCategory());
         builder.isHistory(false);
-        builder.isUsed(false);
-        builder.version(1);
-        builder.workouts(exerciseDto.getWorkouts());
-        builder.creator(exerciseDto.getCreator());
+        builder.version(exerciseDto.getVersion());
+
+        Dude.DudeBuilder dudeBuilder = new Dude.DudeBuilder();
+        dudeBuilder.id(exerciseDto.getCreatorId());
+        Dude dude = dudeBuilder.build();
+        builder.creator(dude);
 
         return builder.build();
     }
@@ -39,9 +43,9 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.muscleGroup(exercise.getMuscleGroup());
         builder.rating(exercise.getRating());
         builder.category(exercise.getCategory());
+        builder.difficulty_level(exercise.getDifficulty_level());
         builder.version(exercise.getVersion());
-        builder.workouts(exercise.getWorkouts());
-        builder.creator(exercise.getCreator());
+        builder.creatorId(exercise.getCreator().getId());
 
         return builder.build();
     }
