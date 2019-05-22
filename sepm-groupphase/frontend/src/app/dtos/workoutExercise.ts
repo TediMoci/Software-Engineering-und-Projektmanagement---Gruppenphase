@@ -1,7 +1,7 @@
 export class WorkoutExercise {
   constructor(
-    public id, number,
-    public version, number,
+    public id: number,
+    public version: number,
     public name: string,
     public description: string,
     public equipment:  string,

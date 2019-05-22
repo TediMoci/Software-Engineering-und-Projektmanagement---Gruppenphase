@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import {Dude} from '../../dtos/dude';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EditExerciseService} from '../../services/edit-exercise.service';
+import {Exercise} from '../../dtos/exercise';
 
 @Component({
   selector: 'app-edit-exercise',
@@ -8,13 +12,99 @@ import {Router} from '@angular/router';
 })
 export class EditExerciseComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath2: string = '/assets/img/exercise.png';
+  userName: string;
+  editExForm: FormGroup;
+  error: any;
+  dude: Dude;
+  oldExercise: Exercise;
+  submitted: boolean = false;
+
+  beginner: boolean;
+  advanced: boolean;
+  pro: boolean;
+  endurance: boolean;
+  strength: boolean;
+  other:boolean;
+  name: string;
+  equipment: string;
+  description: string;
+  muscleGroup: string;
+
+  constructor(private editExerciseService: EditExerciseService , private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {
+
+    this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
+    this.oldExercise = JSON.parse(localStorage.getItem('selectedExercise'));
+    this.userName = this.dude.name;
+
+    this.editExForm = this.formBuilder.group({
+      name: ['', [Validators.required]],
+      equipment: ['', [Validators.required]],
+      difficultyLevel: [this.oldExercise.difficulty_level, [Validators.required]],
+      category: [this.oldExercise.category, [Validators.required]],
+      description: [''],
+      muscleGroup: ['']
+    });
+
+    this.name = this.oldExercise.name;
+    this.equipment = this.oldExercise.equipment;
+    this.description = this.oldExercise.description;
+    this.muscleGroup = this.oldExercise.muscleGroup;
+
+    if (this.oldExercise.difficulty_level === 'Beginner') {
+      this.beginner = true;
+    } else if (this.oldExercise.difficulty_level === 'Advanced') {
+      this.advanced = true;
+    } else {
+      this.pro = true;
+    }
+
+    if (this.oldExercise.category === 'Endurance') {
+      this.endurance = true;
+    } else if (this.oldExercise.category === 'Strength') {
+      this.strength = true;
+    } else {
+      this.other = true;
+    }
+
   }
 
   editExercise(){
-    this.router.navigate(['/myExercises']);
+    this.submitted = true;
+
+    const exercise: Exercise = new Exercise(
+      this.oldExercise.id,
+      this.oldExercise.version,
+      this.oldExercise.name,
+      this.oldExercise.description,
+      this.oldExercise.equipment,
+      this.oldExercise.muscleGroup,
+      this.oldExercise.category,
+      this.oldExercise.difficulty_level,
+      this.oldExercise.creatorId
+    );
+
+    if (this.editExForm.invalid) {
+      console.log('input is invalid');
+      return;
+    }
+
+    this.editExerciseService.editExercise(exercise, this.oldExercise).subscribe(
+      (data) => {
+        localStorage.setItem('selectedExercise', JSON.stringify(data));
+        this.router.navigate(['/myExercises']);
+      },
+      error => {
+        this.error = error;
+      }
+    );
+  }
+
+  vanishError() {
+    this.error = false;
   }
 
 }

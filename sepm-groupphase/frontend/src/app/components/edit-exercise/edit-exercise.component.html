@@ -1,6 +1,124 @@
-<p>
-  edit-exercise works!
-</p>
 
-<button type="button" (click)="editExercise()" class="btn btn-success float-right">Submit</button>
-<a [routerLink]="['/myExercises']" class="btn btn-link">Cancel</a>
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<body>
+<div class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <div class="row-sm-1"></div>
+        <div class="row-sm-10">
+          <h4 style="text-decoration: underline;" align="center">{{userName}}</h4>
+          <img class="img-exercise" src="{{imagePath2}}" alt="exercise image">
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="form">
+          <form [formGroup]="editExForm" (ngSubmit)="editExercise()">
+            <span class="anchor" id="editExForm"></span>
+            <h1>Edit Exercise</h1>
+
+            <div class="form-group">
+              <label for="editExName">Name</label>
+              <input ngModel="{{name}}" type="text" name="name" maxlength="50" class="form-control" id="editExName" formControlName="name"
+                     aria-describedby="editExNameHelp">
+              <div *ngIf="submitted && !!editExForm.controls.name.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editExForm.controls.name.errors.required">Name is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="editExEquipment">Equipment</label>
+              <input ngModel="{{equipment}}" type="text" name="equipment" class="form-control" id="editExEquipment" formControlName="equipment"
+                     aria-describedby="editExEquipmentHelp">
+            </div>
+
+            <div class="form-group">
+              <span class="editExDifficultyLevel">Difficulty Level</span>
+              <div class="gap_space">
+                <div class= "custom-control custom-radio custom-control-inline">
+                  <input id="beginner" type="radio" class="custom-control-input" value= "Beginner" name="difficultyLevel" formControlName="difficultyLevel" [checked]="beginner">
+                  <label class="custom-control-label" for="beginner">Beginner</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="advanced" type="radio" class="custom-control-input" value= "Advanced" name="difficultyLevel" formControlName="difficultyLevel" [checked]="advanced">
+                  <label class="custom-control-label" for="advanced">Advanced</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="pro" type="radio" class="custom-control-input" value= "Pro" name="difficultyLevel" formControlName="difficultyLevel" [checked]="pro">
+                  <label class="custom-control-label" for="pro">Pro</label>
+                </div>
+
+                <div *ngIf="submitted && !!editExForm.controls.difficultyLevel.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!editExForm.controls.difficultyLevel.errors.required">Difficulty level is
+                    required!
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <span class="editExcategory">Category</span>
+              <div class="gap_space">
+                <div class= "custom-control custom-radio custom-control-inline">
+                  <input id="endurance" type="radio" class="custom-control-input" value= "Endurance" name="category" formControlName="category" [checked]="endurance">
+                  <label class="custom-control-label" for="endurance">Endurance</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="strength" type="radio" class="custom-control-input" value= "Strength" name="category" formControlName="category" [checked]="strength">
+                  <label class="custom-control-label" for="strength">Strength</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="other" type="radio" class="custom-control-input" value= "Other" name="category" formControlName="category" [checked]="other">
+                  <label class="custom-control-label" for="other">Other</label>
+                </div>
+
+                <div *ngIf="submitted && !!editExForm.controls.category.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!editExForm.controls.category.errors.required">Category is
+                    required!
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="editExDescription">Description</label>
+              <input ngModel="{{description}}" type="text" name="description" class="form-control" id="editExDescription" formControlName="description"
+                     aria-describedby="editExDescriptionHelp">
+              <div *ngIf="submitted && !!editExForm.controls.description.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editExForm.controls.description.errors.required">Description is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="editExMuscleGroup">Muscle Group</label>
+              <input ngModel="{{muscleGroup}}" type="text" name="muscleGroup" class="form-control" id="editExMuscleGroup" formControlName="muscleGroup"
+                     aria-describedby="editExMuscleGroup">
+            </div>
+          </form>
+
+          <button type="button" (click)="editExercise()" class="btn btn-success float-right">Edit</button>
+          <a [routerLink]="['/myExercises']" class="btn btn-link">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+
