@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {Router} from '@angular/router';
-import {Workout} from '../../dtos/workout';
 import {OwnWorkoutsService} from '../../services/own-workouts.service';
+import {Workout} from '../../dtos/workout';
 
 @Component({
   selector: 'app-own-workouts',
@@ -14,7 +14,7 @@ export class OwnWorkoutsComponent implements OnInit {
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   dude: Dude;
-  workouts: any;
+  workouts: Workout[];
   workoutToDelete: string;
   error: any;
   constructor(private ownWorkoutsService: OwnWorkoutsService, private router: Router) { }

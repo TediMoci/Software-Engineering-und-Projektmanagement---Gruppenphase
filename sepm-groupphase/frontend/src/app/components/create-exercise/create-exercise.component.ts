@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Exercise} from '../../dtos/Exercise';
+import {CreateExercise} from '../../dtos/create-exercise';
 import {Router} from '@angular/router';
 import {CreateExerciseService} from '../../services/create-exercise.service';
 @Component({
@@ -40,7 +40,7 @@ export class CreateExerciseComponent implements OnInit {
     this.submitted = true;
     console.log(this.registerForm);
 
-    const exercise: Exercise = new Exercise(
+    const exercise: CreateExercise = new CreateExercise(
       this.registerForm.controls.nameForExercise.value,
       this.registerForm.controls.descriptionForExercise.value,
       this.registerForm.controls.equipmentExercise.value,

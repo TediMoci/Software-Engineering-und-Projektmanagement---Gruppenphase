@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
-import {Exercise} from '../dtos/Exercise';
 import {Dude} from '../dtos/dude';
 import {Workout} from '../dtos/workout';
 
@@ -17,7 +16,6 @@ export class OwnWorkoutsService {
 
   getAllWorkoutsOfLoggedInDude(): Observable<Workout[]>{
     console.log('get all workouts created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
-    const params = new HttpParams().set('id', JSON.stringify(this.dude.id));
-    return this.httpClient.get<Workout[]>(this.workoutsBaseUri + '/' + this.dude.id + '/workouts', {params: params});
+    return this.httpClient.get<Workout[]>(this.workoutsBaseUri + '/' + this.dude.id + '/workouts');
   }
 }

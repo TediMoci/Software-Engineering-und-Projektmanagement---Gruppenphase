@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Exercise} from '../../dtos/Exercise';
+import {CreateExercise} from '../../dtos/create-exercise';
 import {Dude} from '../../dtos/dude';
 
 @Component({
@@ -18,7 +18,7 @@ export class ExerciseComponent implements OnInit {
   category: string;
   muscleGroup: string;
   description: string;
-  exercise: Exercise;
+  exercise: CreateExercise;
   dude: Dude;
   constructor() { }
 

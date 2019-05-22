@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {OwnExercisesService} from '../../services/own-exercises.service';
-import {Exercise} from '../../dtos/Exercise';
+import {CreateExercise} from '../../dtos/create-exercise';
 import {Router} from '@angular/router';
 
 @Component({
@@ -41,16 +41,16 @@ export class OwnExercisesComponent implements OnInit {
 
   }
 
-  setSelectedExercise(element: Exercise) {
+  setSelectedExercise(element: CreateExercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
   }
 
-  goToEditExercise(element: Exercise) {
+  goToEditExercise(element: CreateExercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
     this.router.navigate(['/edit-exercise']);
   }
 
-  setToDeleteExercise(element: Exercise) {
+  setToDeleteExercise(element: CreateExercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
     this.exerciseToDelete = element.name;
   }

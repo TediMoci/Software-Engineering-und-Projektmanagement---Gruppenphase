@@ -1,4 +1,4 @@
-export class Exercise {
+export class CreateExercise {
   constructor(
     public name: string,
     public description: string,
