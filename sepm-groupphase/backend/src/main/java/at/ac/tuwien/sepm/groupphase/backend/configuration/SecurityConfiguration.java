@@ -116,7 +116,8 @@ public class SecurityConfiguration {
                 .permitAll()
                 .antMatchers(HttpMethod.DELETE).permitAll()
                 .antMatchers(HttpMethod.PUT,
-            "/dudes/{name}").permitAll()
+            "/dudes/{name}",
+                    "/fitnessProvider/{name}").permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {
                 http

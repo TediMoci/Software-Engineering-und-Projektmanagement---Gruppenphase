@@ -65,8 +65,6 @@ export class EditFitnessProviderProfileComponent implements OnInit {
       this.editFPForm.controls.website.value
     );
 
-    console.log(fitnessProvider);
-
     if (this.editFPForm.invalid) {
       console.log('input is invalid');
       return;
@@ -74,12 +72,17 @@ export class EditFitnessProviderProfileComponent implements OnInit {
 
     this.editFitnessProviderService.editFitnessProvider(fitnessProvider, this.oldFitnessProvider).subscribe(
       (data) => {
+        localStorage.setItem('currentUser', JSON.stringify(data));
         this.router.navigate(['/fitnessProvider-profile']);
       },
       error => {
         this.error = error;
       }
     );
-
   }
+
+  vanishError() {
+    this.error = false;
+  }
+
 }

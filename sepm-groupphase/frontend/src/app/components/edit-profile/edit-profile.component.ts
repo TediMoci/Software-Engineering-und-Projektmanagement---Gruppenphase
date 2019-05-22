@@ -91,6 +91,9 @@ export class EditProfileComponent implements OnInit {
       this.editForm.controls.weight.value,
     );
 
+    console.log(this.editForm.controls.height.value);
+    console.log(this.editForm.controls.weight.value);
+
     if (this.editForm.invalid) {
       console.log('input is invalid');
       return;
@@ -98,6 +101,7 @@ export class EditProfileComponent implements OnInit {
 
     this.editDudeService.editDude(dude, this.oldDude).subscribe(
       (data) => {
+        localStorage.setItem('loggedInDude', JSON.stringify(data));
         this.router.navigate(['/dude-profile']);
       },
       error => {

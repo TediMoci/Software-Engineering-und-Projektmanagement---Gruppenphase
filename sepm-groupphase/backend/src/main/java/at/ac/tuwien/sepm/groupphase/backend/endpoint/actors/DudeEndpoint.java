@@ -94,9 +94,8 @@ public class DudeEndpoint {
 
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto updateDude(@PathVariable("name") String name, @RequestParam DudeDto dude) {
+    public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {
         try {
-            LOGGER.debug(dude.getName() + ", " + dude.getEmail());
             return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
