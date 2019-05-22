@@ -19,7 +19,6 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.equipment(exerciseDto.getEquipment());
         builder.muscleGroup(exerciseDto.getMuscleGroup());
         builder.rating(exerciseDto.getRating());
-        builder.difficulty_level(exerciseDto.getDifficulty_level());
         builder.category(exerciseDto.getCategory());
         builder.isHistory(false);
         builder.version(exerciseDto.getVersion());
@@ -43,7 +42,6 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.muscleGroup(exercise.getMuscleGroup());
         builder.rating(exercise.getRating());
         builder.category(exercise.getCategory());
-        builder.difficulty_level(exercise.getDifficulty_level());
         builder.version(exercise.getVersion());
         builder.creatorId(exercise.getCreator().getId());
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Exercise} from '../../dtos/Exercise';
+import {Exercise} from '../../dtos/exercise';
 import {Dude} from '../../dtos/dude';
 
 @Component({
@@ -29,7 +29,6 @@ export class ExerciseComponent implements OnInit {
     this.userName = this.dude.name;
     this.exerciseName = this.exercise.name;
     this.equipment = this.exercise.equipment;
-    this.difficulty = this.exercise.difficulty_level;
     this.muscleGroup = this.exercise.muscleGroup;
     this.category = this.exercise.category;
     this.description = this.exercise.description;

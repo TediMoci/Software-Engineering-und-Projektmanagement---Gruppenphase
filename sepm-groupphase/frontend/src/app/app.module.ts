@@ -28,6 +28,7 @@ import { FitnessProviderProfileComponent } from './components/fitness-provider-p
 import { LoginAsFitnessProviderComponent } from './components/login-as-fitness-provider/login-as-fitness-provider.component';
 import { FollowerComponent } from './components/follower/follower.component';
 import { FitnessProvidersFollowedComponent } from './components/fitness-providers-followed/fitness-providers-followed.component';
+import { CreateCourseComponent } from './components/create-course/create-course.component';
 import { CreateExerciseComponent } from './components/create-exercise/create-exercise.component';
 import { EditFitnessProviderProfileComponent } from './components/edit-fitness-provider-profile/edit-fitness-provider-profile.component';
 import { OwnExercisesComponent } from './components/own-exercises/own-exercises.component';
@@ -57,12 +58,11 @@ import { EditExerciseComponent } from './components/edit-exercise/edit-exercise.
     LoginAsFitnessProviderComponent,
     FollowerComponent,
     FitnessProvidersFollowedComponent,
-    EditFitnessProviderProfileComponent,
+    CreateCourseComponent,
     OwnExercisesComponent,
     OwnWorkoutsComponent,
     OwnTrainingScheduleComponent,
     EditFitnessProviderProfileComponent,
-    FitnessProvidersFollowedComponent,
     CreateExerciseComponent,
     ExerciseComponent,
     EditExerciseComponent

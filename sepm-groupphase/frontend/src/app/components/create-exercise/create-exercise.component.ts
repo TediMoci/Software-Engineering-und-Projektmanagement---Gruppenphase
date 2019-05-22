@@ -26,10 +26,9 @@ export class CreateExerciseComponent implements OnInit {
     this.userName = this.dude.name;
     this.registerForm = this.formBuilder.group({
       nameForExercise: ['', [Validators.required]],
-      equipmentExercise: ['', [Validators.required]],
-      difficultyLevelExercise: ['', [Validators.required]],
+      equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
-      descriptionForExercise: [''],
+      descriptionForExercise: ['', [Validators.required]],
       muscleGroupExercise: ['']
     });
   }
@@ -42,11 +41,10 @@ export class CreateExerciseComponent implements OnInit {
 
     const exercise: Exercise = new Exercise(
       this.registerForm.controls.nameForExercise.value,
-      this.registerForm.controls.descriptionForExercise.value,
       this.registerForm.controls.equipmentExercise.value,
-      this.registerForm.controls.muscleGroupExercise.value,
       this.registerForm.controls.categoryExercise.value,
-      this.registerForm.controls.difficultyLevelExercise.value,
+      this.registerForm.controls.descriptionForExercise.value,
+      this.registerForm.controls.muscleGroupExercise.value,
       this.dude.id
     );
 
