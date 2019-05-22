@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import io.swagger.annotations.ApiModel;
@@ -16,6 +15,7 @@ public class ExerciseDto {
     private Long id;
 
     @ApiModelProperty(name = "Version of Exercise")
+    @Min(value = 1, message = "Min version value is 1")
     private Integer version = 1;
 
     @ApiModelProperty(required = true, name = "Name of Exercise")

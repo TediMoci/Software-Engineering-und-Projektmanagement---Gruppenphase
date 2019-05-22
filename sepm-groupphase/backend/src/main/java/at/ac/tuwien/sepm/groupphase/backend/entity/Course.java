@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Course {
@@ -19,10 +19,10 @@ public class Course {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fitness_provider_id")
-    private FitnessProvider fitnessProvider;
+    private FitnessProvider creator;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "courses")
-    private Set<Dude> dudes;
+    private List<Dude> dudes;
 
     public Long getId() {
         return id;
@@ -48,19 +48,19 @@ public class Course {
         this.description = description;
     }
 
-    public FitnessProvider getFitnessProvider() {
-        return fitnessProvider;
+    public FitnessProvider getCreator() {
+        return creator;
     }
 
-    public void setFitnessProvider(FitnessProvider fitnessProvider) {
-        this.fitnessProvider = fitnessProvider;
+    public void setCreator(FitnessProvider creator) {
+        this.creator = creator;
     }
 
-    public Set<Dude> getDudes() {
+    public List<Dude> getDudes() {
         return dudes;
     }
 
-    public void setDudes(Set<Dude> dudes) {
+    public void setDudes(List<Dude> dudes) {
         this.dudes = dudes;
     }
 
@@ -74,7 +74,7 @@ public class Course {
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
-            ", fitnessProvider=" + fitnessProvider +
+            ", creator=" + creator +
             ", dudes=" + dudes +
             '}';
     }
@@ -89,8 +89,7 @@ public class Course {
         if (id != null ? !id.equals(course.id) : course.id != null) return false;
         if (name != null ? !name.equals(course.name) : course.name != null) return false;
         if (description != null ? !description.equals(course.description) : course.description != null) return false;
-        if (fitnessProvider != null ? !fitnessProvider.equals(course.fitnessProvider) : course.fitnessProvider != null)
-            return false;
+        if (creator != null ? !creator.equals(course.creator) : course.creator != null) return false;
         return dudes != null ? dudes.equals(course.dudes) : course.dudes == null;
 
     }
@@ -100,7 +99,7 @@ public class Course {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (fitnessProvider != null ? fitnessProvider.hashCode() : 0);
+        result = 31 * result + (creator != null ? creator.hashCode() : 0);
         result = 31 * result + (dudes != null ? dudes.hashCode() : 0);
         return result;
     }
@@ -109,8 +108,8 @@ public class Course {
         private Long id;
         private String name;
         private String description;
-        private FitnessProvider fitnessProvider;
-        private Set<Dude> dudes;
+        private FitnessProvider creator;
+        private List<Dude> dudes;
 
         public CourseBuilder() {
         }
@@ -130,12 +129,12 @@ public class Course {
             return this;
         }
 
-        public CourseBuilder fitnessProvider(FitnessProvider fitnessProvider) {
-            this.fitnessProvider = fitnessProvider;
+        public CourseBuilder creator(FitnessProvider creator) {
+            this.creator = creator;
             return this;
         }
 
-        public CourseBuilder dudes(Set<Dude> dudes) {
+        public CourseBuilder dudes(List<Dude> dudes) {
             this.dudes = dudes;
             return this;
         }
@@ -145,7 +144,7 @@ public class Course {
             course.setId(id);
             course.setName(name);
             course.setDescription(description);
-            course.setFitnessProvider(fitnessProvider);
+            course.setCreator(creator);
             course.setDudes(dudes);
             return course;
         }
