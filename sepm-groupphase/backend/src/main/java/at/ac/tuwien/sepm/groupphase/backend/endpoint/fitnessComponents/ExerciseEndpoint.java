@@ -93,4 +93,24 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update an Exercise", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto updateExercise(@PathVariable("id") long id, @RequestBody ExerciseDto newExercise) {
+        try {
+            return exerciseMapper.exerciseToExerciseDto(iExerciseService.update(id, exerciseMapper.exerciseDtoToExercise(newExercise)));
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete an Exercise", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteExercise(@PathVariable("id") long id) {
+        try {
+            iExerciseService.delete(id);
+        } catch (ServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
 }

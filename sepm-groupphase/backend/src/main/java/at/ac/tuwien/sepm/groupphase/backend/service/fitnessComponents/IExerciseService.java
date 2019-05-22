@@ -35,4 +35,12 @@ public interface IExerciseService {
      */
     List<Exercise> findAll() throws ServiceException;
 
+    // TODO : write log
+    Exercise update(long id, Exercise newExercise) throws ServiceException;
+
+    //TODO: write log
+    Exercise findById(long id) throws ServiceException;
+
+    //TODO: write log
+    void delete(long id) throws ServiceException;
 }
