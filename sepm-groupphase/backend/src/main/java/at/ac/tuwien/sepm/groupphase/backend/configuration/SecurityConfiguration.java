@@ -120,9 +120,11 @@ public class SecurityConfiguration {
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html")
                 .permitAll()
-                .antMatchers(HttpMethod.DELETE).permitAll()
+                .antMatchers(HttpMethod.DELETE,
+                    "/exercise/{id}").permitAll()
                 .antMatchers(HttpMethod.PUT,
             "/dudes/{name}",
+                    "/exercise/{id}",
                     "/fitnessProvider/{name}").permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {

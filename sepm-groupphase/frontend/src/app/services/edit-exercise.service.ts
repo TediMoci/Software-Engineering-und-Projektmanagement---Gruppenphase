@@ -13,8 +13,8 @@ export class EditExerciseService {
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
   editExercise(exercise: Exercise, oldExercise: Exercise): Observable<Exercise> {
-    console.log('edit exercise with new name ' + exercise.name + ' and old name ' + oldExercise.name);
-    return this.httpClient.put<Exercise>(this.exerciseBaseUri + '/' + oldExercise.name, exercise);
+    console.log('edit exercise with id ' + exercise.id);
+    return this.httpClient.put<Exercise>(this.exerciseBaseUri + '/' + oldExercise.id, exercise);
   }
 }
 

@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit {
   loginUser() {
     this.submitted = true;
     this.authService.getUserByNameFromDude(this.loginForm.controls.username.value).subscribe((data) => {
-        console.log(data);
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
           this.authenticateUser(authRequest);

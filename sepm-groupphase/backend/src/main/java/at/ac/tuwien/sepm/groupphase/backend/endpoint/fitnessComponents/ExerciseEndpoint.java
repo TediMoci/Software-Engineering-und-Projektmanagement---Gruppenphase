@@ -107,6 +107,7 @@ public class ExerciseEndpoint {
     @ApiOperation(value = "Delete an Exercise", authorizations = {@Authorization(value = "apiKey")})
     public void deleteExercise(@PathVariable("id") long id) {
         try {
+            LOGGER.debug("Delete exercise with id " + id);
             iExerciseService.delete(id);
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
