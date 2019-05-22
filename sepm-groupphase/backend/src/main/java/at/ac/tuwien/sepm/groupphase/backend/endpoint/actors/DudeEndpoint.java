@@ -108,7 +108,7 @@ public class DudeEndpoint {
 
     @RequestMapping(value = "/{id}/exercises", method = RequestMethod.GET)
     @ApiOperation(value = "Get exercises created by dude", authorizations = {@Authorization(value = "apiKey")})
-    public List<ExerciseDto> getExercisesCreatedByDudeId(@PathVariable Long id) {
+    public ExerciseDto[] getExercisesCreatedByDudeId(@PathVariable Long id) {
         LOGGER.info("Entering getExercisesCreatedByDudeId with id: " + id);
         List<Exercise> exercises;
         try {
@@ -117,10 +117,10 @@ public class DudeEndpoint {
             LOGGER.error("Could not getExercisesCreatedByDudeId with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        List<ExerciseDto> exerciseDtos = new ArrayList<>();
-        for (Exercise exercise : exercises) {
-            if (!exercise.getHistory()) {
-                exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            if (!exercises.get(i).getHistory()) {
+                exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
             }
         }
         return exerciseDtos;

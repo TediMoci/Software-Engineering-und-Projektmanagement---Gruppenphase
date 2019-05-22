@@ -9,6 +9,13 @@ public interface IFitnessProviderService {
 
     FitnessProvider save(FitnessProvider fitnessProvider) throws ServiceException;
 
+    /**
+     * @param id of the FitnessProvider to find in the system
+     * @return the FitnessProvider with the given id
+     * @throws ServiceException if something went wrong while finding the FitnessProvider in the system
+     */
+    FitnessProvider findById(Long id) throws ServiceException;
+
     Integer getNumberOfFollowers(String name) throws ServiceException;
 
     List<FitnessProvider> findAll() throws ServiceException;
