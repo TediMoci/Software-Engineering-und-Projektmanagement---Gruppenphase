@@ -54,8 +54,9 @@ public class DudeEndpoint {
     public List<DudeDto> findAll() {
         List<DudeDto> dudeListDTO = new ArrayList<>();
         try {
-            for (int i=0; i< iDudeService.findAll().size(); i++){
-                dudeListDTO.add(dudeMapper.dudeToDudeDto(iDudeService.findAll().get(i)));
+            List<Dude> dudeList = iDudeService.findAll();
+            for (int i=0; i< dudeList.size(); i++){
+                dudeListDTO.add(dudeMapper.dudeToDudeDto(dudeList.get(i)));
             }
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
