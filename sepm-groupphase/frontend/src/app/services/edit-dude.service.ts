@@ -15,8 +15,6 @@ export class EditDudeService {
 
   editDude(editDude: Dude, oldDude: Dude): Observable<Dude> {
     console.log('edit dude with new name ' + editDude.name + ' and old name ' + oldDude.name);
-    localStorage.setItem('loggedInDude', JSON.stringify(editDude));
-    const params = new HttpParams().set('dude', JSON.stringify(editDude));
-    return this.httpClient.put<Dude>(this.dudeBaseUri + '/' + oldDude.name, {params: params});
+    return this.httpClient.put<Dude>(this.dudeBaseUri + '/' + oldDude.name, editDude);
   }
 }

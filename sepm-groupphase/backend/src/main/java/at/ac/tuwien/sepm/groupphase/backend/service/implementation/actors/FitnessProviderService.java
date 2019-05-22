@@ -73,7 +73,9 @@ public class FitnessProviderService implements IFitnessProviderService {
             if (oldFitnessProvider==null) throw new ServiceException("There is no fitness provider with that name in the database.");
             if (!(oldFitnessProvider.getName().equals(newFitnessProvider.getName()))) fitnessProviderValidator.validateNameUnique(newFitnessProvider.getName());
             oldFitnessProvider.setName(newFitnessProvider.getName());
-            oldFitnessProvider.setPassword(newFitnessProvider.getPassword());
+            if (!newFitnessProvider.getPassword().equals(oldFitnessProvider.getPassword())){
+                oldFitnessProvider.setPassword(passwordEncoder.encode(newFitnessProvider.getPassword()));
+            }
             oldFitnessProvider.setDescription(newFitnessProvider.getDescription());
             oldFitnessProvider.setAddress(newFitnessProvider.getAddress());
             oldFitnessProvider.setEmail(newFitnessProvider.getEmail());

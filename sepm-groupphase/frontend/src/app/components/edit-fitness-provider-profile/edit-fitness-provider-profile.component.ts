@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {EditDudeService} from '../../services/edit-dude.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {EditFitnessProviderService} from '../../services/edit-fitness-provider.service';
-import {Dude} from '../../dtos/dude';
 import {FitnessProvider} from '../../dtos/fitness-provider';
 import {passwordCheck} from '../../validator/validator';
 
@@ -15,7 +13,7 @@ import {passwordCheck} from '../../validator/validator';
 export class EditFitnessProviderProfileComponent implements OnInit {
 
   error: any;
-  editForm: FormGroup;
+  editFPForm: FormGroup;
   submitted: boolean = false;
   oldFitnessProvider: FitnessProvider;
   userName: string;
@@ -40,7 +38,7 @@ export class EditFitnessProviderProfileComponent implements OnInit {
     this.phoneNumber = this.oldFitnessProvider.phoneNumber;
     this.website = this.oldFitnessProvider.website;
 
-    this.editForm = this.formBuilder.group({
+    this.editFPForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
       address: ['', [Validators.required]],
@@ -58,28 +56,33 @@ export class EditFitnessProviderProfileComponent implements OnInit {
     this.submitted = true;
 
     const fitnessProvider: FitnessProvider = new FitnessProvider(
-      this.editForm.controls.name.value,
-      this.editForm.controls.password.value,
-      this.editForm.controls.address.value,
-      this.editForm.controls.description.value,
-      this.editForm.controls.email.value,
-      this.editForm.controls.phoneNumber.value,
-      this.editForm.controls.website.value
+      this.editFPForm.controls.name.value,
+      this.editFPForm.controls.password.value,
+      this.editFPForm.controls.address.value,
+      this.editFPForm.controls.description.value,
+      this.editFPForm.controls.email.value,
+      this.editFPForm.controls.phoneNumber.value,
+      this.editFPForm.controls.website.value
     );
 
-    if (this.editForm.invalid) {
+    if (this.editFPForm.invalid) {
       console.log('input is invalid');
       return;
     }
 
     this.editFitnessProviderService.editFitnessProvider(fitnessProvider, this.oldFitnessProvider).subscribe(
-      () => {
+      (data) => {
+        localStorage.setItem('currentUser', JSON.stringify(data));
         this.router.navigate(['/fitnessProvider-profile']);
       },
       error => {
         this.error = error;
       }
     );
-
   }
+
+  vanishError() {
+    this.error = false;
+  }
+
 }
