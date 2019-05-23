@@ -20,10 +20,6 @@ export class EditExerciseComponent implements OnInit {
   dude: Dude;
   oldExercise: Exercise;
   submitted: boolean = false;
-
-  beginner: boolean;
-  advanced: boolean;
-  pro: boolean;
   endurance: boolean;
   strength: boolean;
   other:boolean;

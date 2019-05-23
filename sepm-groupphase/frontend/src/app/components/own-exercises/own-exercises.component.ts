@@ -30,7 +30,6 @@ export class OwnExercisesComponent implements OnInit {
     this.ownExercisesService.getAllExercisesOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all exercises created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
-        console.log(this.exercises);
         this.exercises = data.sort(function (a, b) { // sort data alphabetically
           if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
             return -1;

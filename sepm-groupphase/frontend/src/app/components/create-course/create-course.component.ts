@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FitnessProvider} from '../../dtos/fitness-provider';
 import {CreateCourseService} from '../../services/create-course.service';
 import {Router} from '@angular/router';
-import {Course} from '../../dtos/course';
+import {CreateCourse} from '../../dtos/create-course';
 
 @Component({
   selector: 'app-create-course',
@@ -37,7 +37,7 @@ export class CreateCourseComponent implements OnInit {
     this.submitted = true;
     console.log(this.registerForm);
 
-    const course: Course = new Course(
+    const course: CreateCourse = new CreateCourse(
       this.registerForm.controls.nameForCourse.value,
       this.registerForm.controls.descriptionForCourse.value,
       this.fitnessProvider.id,

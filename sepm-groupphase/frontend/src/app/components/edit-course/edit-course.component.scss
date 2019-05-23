@@ -1,0 +1,73 @@
+.container {
+  padding: 0px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  background: white;
+  min-height: 700px;
+}
+
+.img-fluid {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  margin-top: 50px;
+  width: 200px;
+  height: 200px;
+}
+
+.img-exercise {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  margin-top: 50px;
+  width: 200px;
+  height: 200px;
+  position: relative;
+  left: 800px;
+  top: -300px;
+}
+
+.row-sm-10 {
+  margin-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: black;
+  line-height: 15px;
+}
+
+.col-sm-3 {
+  background: lightskyblue;
+  min-height: 700px;
+}
+
+.row-sm-1 {
+  padding-left: 10px;
+  padding-right: 20px;
+}
+
+
+.col-sm-9 {
+  padding: 40px;
+}
+
+.h1 {
+  position: relative;
+  left: 31px;
+  top: -20px;
+  text-align: left;
+  font-size: 34px;
+}
+
+.btn-link{
+  margin-left: -10px;
+  color: dodgerblue;
+}
+
+#nameForCourse.form-control{
+  width: 60%;
+}
+#descriptionForCourse.form-control{
+  width: 60%;
+}

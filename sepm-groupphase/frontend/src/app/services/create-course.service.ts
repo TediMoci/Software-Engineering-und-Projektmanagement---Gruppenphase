@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
-import {Course} from '../dtos/course';
+import {CreateCourse} from '../dtos/create-course';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class CreateCourseService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) {}
 
-  addCourse(course: Course): Observable<Course> {
+  addCourse(course: CreateCourse): Observable<CreateCourse> {
     console.log('add course with name ' + course.name);
-    return this.httpClient.post<Course>(this.courseBaseUri, course);
+    return this.httpClient.post<CreateCourse>(this.courseBaseUri, course);
   }
 }
