@@ -13,7 +13,7 @@ import {CreateCourse} from '../../dtos/create-course';
 export class CreateCourseComponent implements OnInit {
 
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
+  imagePath: string = 'assets/img/kugelfisch2.jpg';
   imagePathCourse: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
