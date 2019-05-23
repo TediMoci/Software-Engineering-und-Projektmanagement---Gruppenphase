@@ -1,47 +1,63 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Embeddable
 public class WorkoutExerciseKey implements Serializable {
 
-    @Column(name = "exercise_id")
-    private ExerciseKey exerciseId;
-
-    @Column(name = "workout_id")
-    private WorkoutKey workoutId;
+    private Long exerciseId;
+    private Integer exerciseVersion;
+    private Long workoutId;
+    private Integer workoutVersion;
 
     public WorkoutExerciseKey() {
     }
 
-    public WorkoutExerciseKey(ExerciseKey exerciseId, WorkoutKey workoutId) {
+    public WorkoutExerciseKey(Long exerciseId, Integer exerciseVersion, Long workoutId, Integer workoutVersion) {
         this.exerciseId = exerciseId;
+        this.exerciseVersion = exerciseVersion;
         this.workoutId = workoutId;
+        this.workoutVersion = workoutVersion;
     }
 
-    public ExerciseKey getExerciseId() {
+    public Long getExerciseId() {
         return exerciseId;
     }
 
-    public void setExerciseId(ExerciseKey exerciseId) {
+    public void setExerciseId(Long exerciseId) {
         this.exerciseId = exerciseId;
     }
 
-    public WorkoutKey getWorkoutId() {
+    public Integer getExerciseVersion() {
+        return exerciseVersion;
+    }
+
+    public void setExerciseVersion(Integer exerciseVersion) {
+        this.exerciseVersion = exerciseVersion;
+    }
+
+    public Long getWorkoutId() {
         return workoutId;
     }
 
-    public void setWorkoutId(WorkoutKey workoutId) {
+    public void setWorkoutId(Long workoutId) {
         this.workoutId = workoutId;
+    }
+
+    public Integer getWorkoutVersion() {
+        return workoutVersion;
+    }
+
+    public void setWorkoutVersion(Integer workoutVersion) {
+        this.workoutVersion = workoutVersion;
     }
 
     @Override
     public String toString() {
         return "WorkoutExerciseKey{" +
             "exerciseId=" + exerciseId +
+            ", exerciseVersion=" + exerciseVersion +
             ", workoutId=" + workoutId +
+            ", workoutVersion=" + workoutVersion +
             '}';
     }
 
@@ -53,14 +69,19 @@ public class WorkoutExerciseKey implements Serializable {
         WorkoutExerciseKey that = (WorkoutExerciseKey) o;
 
         if (exerciseId != null ? !exerciseId.equals(that.exerciseId) : that.exerciseId != null) return false;
-        return workoutId != null ? workoutId.equals(that.workoutId) : that.workoutId == null;
+        if (exerciseVersion != null ? !exerciseVersion.equals(that.exerciseVersion) : that.exerciseVersion != null)
+            return false;
+        if (workoutId != null ? !workoutId.equals(that.workoutId) : that.workoutId != null) return false;
+        return workoutVersion != null ? workoutVersion.equals(that.workoutVersion) : that.workoutVersion == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = exerciseId != null ? exerciseId.hashCode() : 0;
+        result = 31 * result + (exerciseVersion != null ? exerciseVersion.hashCode() : 0);
         result = 31 * result + (workoutId != null ? workoutId.hashCode() : 0);
+        result = 31 * result + (workoutVersion != null ? workoutVersion.hashCode() : 0);
         return result;
     }
 }

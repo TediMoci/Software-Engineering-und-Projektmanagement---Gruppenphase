@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutExerciseDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutExerciseDtoIn;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,26 +18,23 @@ public class WorkoutExerciseMapper implements IWorkoutExerciseMapper {
     }
 
     @Override
-    public WorkoutExercise workoutExerciseDtoToWorkoutExercise(WorkoutExerciseDto workoutExerciseDto) {
+    public WorkoutExercise workoutExerciseDtoToWorkoutExercise(WorkoutExerciseDtoIn workoutExerciseDtoIn) {
         WorkoutExercise.WorkoutExerciseBuilder builder = new WorkoutExercise.WorkoutExerciseBuilder();
 
-        builder.id(null);
-        builder.workout(workoutMapper.workoutDtoToWorkout(workoutExerciseDto.getWorkoutDto()));
-        builder.exercise(exerciseMapper.exerciseDtoToExercise(workoutExerciseDto.getExerciseDto()));
-        builder.duration(workoutExerciseDto.getDuration());
-        builder.repetitions(workoutExerciseDto.getRepetitions());
-        builder.sets(workoutExerciseDto.getSets());
+        //TODO: exercise
+        builder.exDuration(workoutExerciseDtoIn.getExDuration());
+        builder.repetitions(workoutExerciseDtoIn.getRepetitions());
+        builder.sets(workoutExerciseDtoIn.getSets());
 
         return builder.build();
     }
 
     @Override
-    public WorkoutExerciseDto workoutExerciseToWorkoutExerciseDto(WorkoutExercise workoutExercise) {
-        WorkoutExerciseDto.WorkoutExerciseDtoBuilder builder = new WorkoutExerciseDto.WorkoutExerciseDtoBuilder();
+    public WorkoutExerciseDtoIn workoutExerciseToWorkoutExerciseDto(WorkoutExercise workoutExercise) {
+        WorkoutExerciseDtoIn.WorkoutExerciseDtoInBuilder builder = new WorkoutExerciseDtoIn.WorkoutExerciseDtoInBuilder();
 
-        builder.workoutDto(workoutMapper.workoutToWorkoutDto(workoutExercise.getWorkout()));
-        builder.exerciseDto(exerciseMapper.exerciseToExerciseDto(workoutExercise.getExercise()));
-        builder.duration(workoutExercise.getDuration());
+        //TODO: exercise
+        builder.exDuration(workoutExercise.getExDuration());
         builder.repetitions(workoutExercise.getRepetitions());
         builder.sets(workoutExercise.getSets());
 

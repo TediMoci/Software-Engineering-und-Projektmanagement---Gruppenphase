@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutKey;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
-public interface IWorkoutRepository extends JpaRepository<Workout, Long> {
+public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
 
     /**
      * @param workout to be saved in the database
