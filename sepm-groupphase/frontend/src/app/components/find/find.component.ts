@@ -9,14 +9,16 @@ import {Exercise} from "../../dtos/Exercise";
   templateUrl: './find.component.html',
   styleUrls: ['./find.component.scss']
 })
+//todo: add filter to different categories
+//todo: display entities form backend
 export class FindComponent implements OnInit {
   category: string = "Exercise";
   public inputText: any;
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   dude: Dude;
+  exercise: Exercise;
 
-  exercise:Exercise;
 
 
   constructor(private findService:FindService) {}
@@ -24,12 +26,24 @@ export class FindComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-    console.log("searchvalue: " + this.inputText)
+
   }
 
   startSearch(category: string){
+    console.log("searchvalue: " + this.inputText)
     switch (category) {
-      case "Exercise": console.log("Exercise not implemented yet");//this.findService.getAllExercisesFilterd(this.exercise);
+      case "Exercise":
+        console.log("Exercise not implemented yet");
+        this.exercise = new Exercise(
+          this.inputText,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null);
+        console.log("name: "+this.exercise.name);
+        this.findService.getAllExercisesFilterd(this.exercise);
             break;
       case "Course": console.log("Course not implemented yet");
             break;

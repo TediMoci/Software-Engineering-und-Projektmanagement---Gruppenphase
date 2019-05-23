@@ -14,15 +14,16 @@ export class FindService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) { }
   getAllExercisesFilterd(exercise: Exercise): Observable<Exercise[]> {
+    //todo: handle NULL values
     console.log('get all exercises');
-
-    const params = new HttpParams();
-    params.set('name', JSON.stringify(exercise.name));
-    params.set('description', JSON.stringify(exercise.description));
-    params.set('equipment', JSON.stringify(exercise.equipment));
-    params.set('muscleGroup', JSON.stringify(exercise.muscleGroup));
-    params.set('category', JSON.stringify(exercise.category));
-    params.set('difficulty_level', JSON.stringify(exercise.difficulty_level));
+    const params = new HttpParams()
+    .set('name', JSON.stringify(exercise.name))
+    .set('description', JSON.stringify(exercise.description))
+    .set('equipment', JSON.stringify(exercise.equipment))
+    .set('muscleGroup', JSON.stringify(exercise.muscleGroup))
+    .set('category', JSON.stringify(exercise.category))
+    .set('difficulty_level', JSON.stringify(exercise.difficulty_level))
+    console.log('get all exercises with params: ' + params.toString());
 
     return this.httpClient.get<Exercise[]>(this.exerciseBaseUri, {params: params});
   }
