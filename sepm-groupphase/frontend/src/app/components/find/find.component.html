@@ -28,9 +28,16 @@
               <input ngbButton type="radio" value="Fitness Provider"> Fitness Provider
             </label>
           </div>
+        <div class="card-body row no-gutters align-items-center">
           <!-- Search form -->
-          <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find '+ category" [(ngModel)]="inputText" />
-        <!-- Debug field -->
+          <div class="col-lg">
+            <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find '+ category" [(ngModel)]="inputText" />
+          </div>
+          <!--end of col-->
+          <div class="col-auto">
+            <button class="btn btn-md btn-success" (click)="startSearch(category)" type="submit">Find</button>
+          </div>
+        </div>
         <pre>Find {{category}} where name is like: {{inputText| json}}</pre>
       </div>
 
