@@ -61,4 +61,29 @@ public class CourseService implements ICourseService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public Course update(long id, Course newCourse) throws ServiceException {
+        LOGGER.info("Updating course with id: " + id);
+        try {
+            Course oldCourse = findById(id);
+            if (oldCourse==null) throw new ServiceException("Could not find cours with id: " + id);
+            newCourse.setId(oldCourse.getId());
+            return iCourseRepository.save(newCourse);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void delete(long id) throws ServiceException{
+        LOGGER.info("Deleting course with id: " + id);
+        try {
+            Course course = findById(id);
+            if (course==null) throw new ServiceException("Could not find cours with id: " + id);
+            iCourseRepository.deleteById(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

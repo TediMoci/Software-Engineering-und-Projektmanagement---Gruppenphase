@@ -35,4 +35,13 @@ public interface IWorkoutService {
      */
     List<Workout> findAll() throws ServiceException;
 
+    // TODO : write log
+    Workout update(long id, Workout newWorkout) throws ServiceException;
+
+    //TODO: write log
+    Workout findById(long id) throws ServiceException;
+
+    //TODO: write log
+    void delete(long id) throws ServiceException;
+
 }
