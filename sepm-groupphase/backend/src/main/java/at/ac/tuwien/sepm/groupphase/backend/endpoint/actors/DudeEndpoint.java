@@ -13,11 +13,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class DudeEndpoint {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Save a new Dude", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto saveDude(@RequestBody DudeDto dudeDto) {
+    public DudeDto saveDude(@Valid @RequestBody DudeDto dudeDto) {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.save(dude));

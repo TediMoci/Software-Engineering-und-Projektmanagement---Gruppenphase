@@ -64,7 +64,6 @@ public class DudeService implements IDudeService {
         try {
             dude.setPassword(passwordEncoder.encode(dude.getPassword()));
             dudeValidator.validateNameUnique(dude.getName());
-            dudeValidator.validateDude(dude);
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
@@ -95,9 +94,8 @@ public class DudeService implements IDudeService {
 
     @Override
     public Dude findDudeById(Long id) throws ServiceException{
-        try{
-            Dude dude = iDudeRepository.findById(id).get();
-            return dude;
+        try {
+            return iDudeRepository.findById(id).get();
         } catch (NoSuchElementException e){
             throw new ServiceException(e.getMessage());
         }
