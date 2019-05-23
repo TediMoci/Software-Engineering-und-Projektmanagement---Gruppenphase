@@ -43,9 +43,6 @@ public class ExerciseDto {
     @NotNull(message = "Category must not be null")
     private Category category;
 
-    @ApiModelProperty(required = true, name = "Difficulty_level of Exercise")
-    @NotNull(message = "Difficulty_level must not be null")
-    private String difficulty_level;
 
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
@@ -117,14 +114,6 @@ public class ExerciseDto {
         this.category = category;
     }
 
-    public String getDifficulty_level() {
-        return difficulty_level;
-    }
-
-    public void setDifficulty_level(String difficulty_level) {
-        this.difficulty_level = difficulty_level;
-    }
-
     public Set<WorkoutExercise> getWorkouts() {
         return workouts;
     }
@@ -156,7 +145,6 @@ public class ExerciseDto {
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
-            ", difficulty_level='" + difficulty_level + '\'' +
             ", workouts=" + workouts +
             ", creatorId=" + creatorId +
             '}';
@@ -177,8 +165,6 @@ public class ExerciseDto {
         if (muscleGroup != null ? !muscleGroup.equals(that.muscleGroup) : that.muscleGroup != null) return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
         if (category != that.category) return false;
-        if (difficulty_level != null ? !difficulty_level.equals(that.difficulty_level) : that.difficulty_level != null)
-            return false;
         if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
         return creatorId != null ? creatorId.equals(that.creatorId) : that.creatorId == null;
     }
@@ -193,7 +179,6 @@ public class ExerciseDto {
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (difficulty_level != null ? difficulty_level.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
         return result;
@@ -208,7 +193,6 @@ public class ExerciseDto {
         private String muscleGroup;
         private Double rating;
         private Category category;
-        private String difficulty_level;
         private Set<WorkoutExercise> workouts;
         private Long creatorId;
 
@@ -255,10 +239,6 @@ public class ExerciseDto {
             return this;
         }
 
-        public ExerciseDtoBuilder difficulty_level(String difficulty_level){
-            this.difficulty_level = difficulty_level;
-            return this;
-        }
 
         public ExerciseDtoBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
@@ -280,7 +260,6 @@ public class ExerciseDto {
             exerciseDto.setMuscleGroup(muscleGroup);
             exerciseDto.setRating(rating);
             exerciseDto.setCategory(category);
-            exerciseDto.setDifficulty_level(difficulty_level);
             exerciseDto.setWorkouts(workouts);
             exerciseDto.setCreatorId(creatorId);
             return exerciseDto;

@@ -56,6 +56,7 @@ export class EditFitnessProviderProfileComponent implements OnInit {
     this.submitted = true;
 
     const fitnessProvider: FitnessProvider = new FitnessProvider(
+      this.editFPForm.controls.id.value,
       this.editFPForm.controls.name.value,
       this.editFPForm.controls.password.value,
       this.editFPForm.controls.address.value,
