@@ -3,9 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessCompo
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
+import at.ac.tuwien.sepm.groupphase.backend.validators.actors.WorkoutExerciseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -18,12 +21,16 @@ import java.util.NoSuchElementException;
 public class WorkoutService implements IWorkoutService {
 
     private final IWorkoutRepository iWorkoutRepository;
+    private final IExerciseRepository iExerciseRepository;
     private final IWorkoutExerciseRepository iWorkoutExerciseRepository;
+    private final WorkoutExerciseValidator workoutExerciseValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkoutService.class);
 
-    public WorkoutService(IWorkoutRepository iWorkoutRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository) {
+    public WorkoutService(IWorkoutRepository iWorkoutRepository, IExerciseRepository iExerciseRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, WorkoutExerciseValidator workoutExerciseValidator) {
         this.iWorkoutRepository = iWorkoutRepository;
+        this.iExerciseRepository = iExerciseRepository;
         this.iWorkoutExerciseRepository = iWorkoutExerciseRepository;
+        this.workoutExerciseValidator = workoutExerciseValidator;
     }
 
     @Override
@@ -31,6 +38,20 @@ public class WorkoutService implements IWorkoutService {
         LOGGER.info("Entering save for: " + workout);
         List<WorkoutExercise> workoutExercises = workout.getExercises();
         workout.setExercises(null);
+
+        for (WorkoutExercise workoutExercise : workoutExercises) {
+            try {
+                workoutExerciseValidator.validateWorkoutExercise(workoutExercise);
+                if (iExerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion()).isEmpty()) {
+                    throw new NoSuchElementException();
+                }
+            } catch (NoSuchElementException e) {
+                throw new ServiceException("Exercise with id: " + workoutExercise.getExerciseId() + " and version: " + workoutExercise.getExerciseVersion() + " does not exist");
+            } catch (ValidationException e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
+
         Workout savedWorkout;
         try {
             savedWorkout = iWorkoutRepository.save(workout);

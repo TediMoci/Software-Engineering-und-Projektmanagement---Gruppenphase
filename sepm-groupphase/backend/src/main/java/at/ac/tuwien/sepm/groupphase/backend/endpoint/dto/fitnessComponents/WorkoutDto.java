@@ -32,6 +32,7 @@ public class WorkoutDto {
     // TODO: selfAssessment enum
 
     @ApiModelProperty(name = "Calorie consumption of Workout")
+    @Min(value = 0, message = "Min for calorieConsumption is 0")
     private Double calorieConsumption = 0.0;
 
     @ApiModelProperty(name = "Rating of Workout")
