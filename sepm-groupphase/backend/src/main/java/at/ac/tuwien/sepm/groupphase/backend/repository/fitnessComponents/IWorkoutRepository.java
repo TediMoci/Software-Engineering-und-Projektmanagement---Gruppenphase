@@ -3,8 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -42,5 +45,18 @@ public interface IWorkoutRepository extends JpaRepository<Workout, Long> {
      */
     @Query("SELECT w FROM Workout w WHERE w.isHistory=false")
     List<Workout> findAll() throws DataAccessException;
+
+    @Query("SELECT u FROM Workout u WHERE u.id=?1 AND u.isHistory=false")
+    Workout findById(long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Workout u SET u.id=:myID WHERE u.id=:dbID AND u.isHistory=false")
+    void updateNew(@Param("myID")long myId, @Param("dbID")long dbId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Exercise u SET u.isHistory=true WHERE u.id=:id AND u.isHistory=false")
+    void delete(@Param("id")long id);
 
 }
