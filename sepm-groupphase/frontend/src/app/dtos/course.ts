@@ -1,5 +1,3 @@
-import {FitnessProvider} from './fitness-provider';
-
 export class Course {
   constructor(
     public name: string,

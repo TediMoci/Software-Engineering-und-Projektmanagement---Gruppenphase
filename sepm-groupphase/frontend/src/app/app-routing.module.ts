@@ -44,7 +44,7 @@ const routes: Routes = [
   {path: 'create', canActivate: [RoleGuard], component: CreateComponent},
   {path: 'create-for-FP', canActivate: [FitnessProviderRoleGuard], component: CreateForFitnessProviderComponent},
   {path: 'create-exercise', canActivate: [RoleGuard], component: CreateExerciseComponent},
-  {path: 'create-course', canActivate: [RoleGuard], component: CreateCourseComponent},
+  {path: 'create-course', canActivate: [FitnessProviderRoleGuard], component: CreateCourseComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
   {path: 'myContent', canActivate: [RoleGuard], component: MyContentComponent},

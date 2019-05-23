@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FitnessProvider} from '../../dtos/fitness-provider';
 import {CreateCourseService} from '../../services/create-course.service';
 import {Router} from '@angular/router';
-import {Exercise} from '../../dtos/exercise';
 import {Course} from '../../dtos/course';
 
 @Component({
@@ -52,7 +51,7 @@ export class CreateCourseComponent implements OnInit {
     this.createCourseService.addCourse(course).subscribe(
       () => {
         console.log(course);
-        this.router.navigate(['create']);
+        this.router.navigate(['create-for-FP']);
       },
       error => {
         this.error = error;

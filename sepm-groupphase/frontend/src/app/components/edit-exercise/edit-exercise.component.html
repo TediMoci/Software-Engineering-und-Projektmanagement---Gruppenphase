@@ -42,32 +42,6 @@
             </div>
 
             <div class="form-group">
-              <span class="editExDifficultyLevel">Difficulty Level</span>
-              <div class="gap_space">
-                <div class= "custom-control custom-radio custom-control-inline">
-                  <input id="beginner" type="radio" class="custom-control-input" value= "Beginner" name="difficultyLevel" formControlName="difficultyLevel" [checked]="beginner">
-                  <label class="custom-control-label" for="beginner">Beginner</label>
-                </div>
-
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input id="advanced" type="radio" class="custom-control-input" value= "Advanced" name="difficultyLevel" formControlName="difficultyLevel" [checked]="advanced">
-                  <label class="custom-control-label" for="advanced">Advanced</label>
-                </div>
-
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input id="pro" type="radio" class="custom-control-input" value= "Pro" name="difficultyLevel" formControlName="difficultyLevel" [checked]="pro">
-                  <label class="custom-control-label" for="pro">Pro</label>
-                </div>
-
-                <div *ngIf="submitted && !!editExForm.controls.difficultyLevel.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!editExForm.controls.difficultyLevel.errors.required">Difficulty level is
-                    required!
-                  </small>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
               <span class="editExcategory">Category</span>
               <div class="gap_space">
                 <div class= "custom-control custom-radio custom-control-inline">

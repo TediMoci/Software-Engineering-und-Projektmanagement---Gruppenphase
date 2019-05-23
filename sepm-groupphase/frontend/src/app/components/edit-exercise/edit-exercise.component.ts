@@ -43,7 +43,6 @@ export class EditExerciseComponent implements OnInit {
     this.editExForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       equipment: ['', [Validators.required]],
-      difficultyLevel: [this.oldExercise.difficulty_level, [Validators.required]],
       category: [this.oldExercise.category, [Validators.required]],
       description: [''],
       muscleGroup: ['']
@@ -53,14 +52,6 @@ export class EditExerciseComponent implements OnInit {
     this.equipment = this.oldExercise.equipment;
     this.description = this.oldExercise.description;
     this.muscleGroup = this.oldExercise.muscleGroup;
-
-    if (this.oldExercise.difficulty_level === 'Beginner') {
-      this.beginner = true;
-    } else if (this.oldExercise.difficulty_level === 'Advanced') {
-      this.advanced = true;
-    } else {
-      this.pro = true;
-    }
 
     if (this.oldExercise.category === 'Endurance') {
       this.endurance = true;
@@ -83,7 +74,6 @@ export class EditExerciseComponent implements OnInit {
       this.editExForm.controls.equipment.value,
       this.editExForm.controls.muscleGroup.value,
       this.editExForm.controls.category.value,
-      this.editExForm.controls.difficultyLevel.value,
       this.oldExercise.creatorId
     );
 

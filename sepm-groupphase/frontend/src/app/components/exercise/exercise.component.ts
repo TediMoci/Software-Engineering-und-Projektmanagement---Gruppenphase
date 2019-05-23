@@ -14,7 +14,6 @@ export class ExerciseComponent implements OnInit {
   userName: string;
   exerciseName: string;
   equipment: string;
-  difficulty: string;
   category: string;
   muscleGroup: string;
   description: string;
