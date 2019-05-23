@@ -80,7 +80,7 @@ import { OwnCoursesComponent } from './components/own-courses/own-courses.compon
     MyContentFitnessProviderComponent,
     CreateForFitnessProviderComponent,
     CreateWorkoutComponent,
-    WorkoutExercisesComponent
+    WorkoutExercisesComponent,
     CreateForFitnessProviderComponent,
     CourseComponent,
     EditCourseComponent,
