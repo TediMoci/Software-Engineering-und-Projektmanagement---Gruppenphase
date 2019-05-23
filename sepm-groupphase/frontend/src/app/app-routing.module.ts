@@ -31,6 +31,8 @@ import {WorkoutComponent} from './components/workout/workout.component';
 import {EditWorkoutComponent} from './components/edit-workout/edit-workout.component';
 import {CreateForFitnessProviderComponent} from './components/create-for-fitness-provider/create-for-fitness-provider.component';
 import {MyContentFitnessProviderComponent} from './components/my-content-fitness-provider/my-content-fitness-provider.component';
+import {CreateWorkoutComponent} from './components/create-workout/create-workout.component';
+import {WorkoutExercisesComponent} from './components/workout-exercises/workout-exercises.component';
 
 const routes: Routes = [
 
@@ -45,6 +47,8 @@ const routes: Routes = [
   {path: 'create-for-FP', canActivate: [FitnessProviderRoleGuard], component: CreateForFitnessProviderComponent},
   {path: 'create-exercise', canActivate: [RoleGuard], component: CreateExerciseComponent},
   {path: 'create-course', canActivate: [FitnessProviderRoleGuard], component: CreateCourseComponent},
+  {path: 'create-workout', canActivate: [RoleGuard], component: CreateWorkoutComponent},
+  {path: 'workout-exercises', canActivate: [RoleGuard], component: WorkoutExercisesComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
   {path: 'myContent', canActivate: [RoleGuard], component: MyContentComponent},
