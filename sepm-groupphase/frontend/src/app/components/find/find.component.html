@@ -11,13 +11,12 @@
       </div>
       <div class="col-sm-9">
         <h1>Find</h1>
-        <form [formGroup]="radioGroupForm">
-          <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
+          <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="category">
             <label ngbButtonLabel class="btn-secondary">
               <input ngbButton type="radio" value="Exercise"> Exercise
             </label>
             <label ngbButtonLabel class="btn-secondary">
-              <input ngbButton type="radio" value="Course"> Course
+              <input ngbButton type="radio"  value="Course"> Course
             </label>
             <label ngbButtonLabel class="btn-secondary">
               <input ngbButton type="radio" value="Workout"> Workout
@@ -26,13 +25,13 @@
               <input ngbButton type="radio" value="Dudes"> Dudes
             </label>
             <label ngbButtonLabel class="btn-secondary">
-              <input ngbButton type="radio" value="FitnessProvider"> Fitness Provider
+              <input ngbButton type="radio" value="Fitness Provider"> Fitness Provider
             </label>
           </div>
-        </form>
           <!-- Search form -->
-          <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search"/>
-
+          <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find '+ category" [(ngModel)]="inputText" />
+        <!-- Debug field -->
+        <pre>Find {{category}} where name is like: {{inputText| json}}</pre>
       </div>
 
     </div>
