@@ -43,20 +43,20 @@ public interface IWorkoutRepository extends JpaRepository<Workout, Long> {
      * @return all Workouts in the database
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE w.isHistory=false ORDER BY w.id")
     List<Workout> findAll() throws DataAccessException;
 
-    @Query("SELECT u FROM Workout u WHERE u.id=?1 AND u.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE w.id=?1 AND w.isHistory=false")
     Workout findById(long id);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Workout u SET u.id=:myID WHERE u.id=:dbID AND u.isHistory=false")
+    @Query("UPDATE Workout w SET w.id=:myID WHERE w.id=:dbID AND w.isHistory=false")
     void updateNew(@Param("myID")long myId, @Param("dbID")long dbId);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Exercise u SET u.isHistory=true WHERE u.id=:id AND u.isHistory=false")
+    @Query("UPDATE Workout w SET w.isHistory=true WHERE w.id=:id AND w.isHistory=false")
     void delete(@Param("id")long id);
 
 }

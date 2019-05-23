@@ -77,9 +77,10 @@ public class WorkoutService implements IWorkoutService {
         try {
             Workout oldWorkout = iWorkoutRepository.findById(id);
             if (oldWorkout == null) throw new ServiceException("Could not find workout with id: " + id);
+
             oldWorkout.setHistory(true);
             newWorkout.setId(id);
-            newWorkout.setVersion(newWorkout.getVersion()+1);
+            newWorkout.setVersion(oldWorkout.getVersion()+1);
             iWorkoutRepository.save(oldWorkout);
             Long dbID = iWorkoutRepository.save(newWorkout).getId();
             iWorkoutRepository.updateNew(newWorkout.getId(), dbID);
