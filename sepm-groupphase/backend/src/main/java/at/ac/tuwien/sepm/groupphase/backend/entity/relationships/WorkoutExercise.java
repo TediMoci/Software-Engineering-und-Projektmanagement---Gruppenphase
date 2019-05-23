@@ -28,7 +28,7 @@ public class WorkoutExercise {
     @Column(name = "workout_version")
     private Integer workoutVersion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @MapsId("workout_id")
     @JoinColumns({
         @JoinColumn(name = "workout_id", referencedColumnName = "id"),
@@ -36,7 +36,7 @@ public class WorkoutExercise {
     })
     private Workout workout;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @MapsId("exercise_id")
     @JoinColumns({
         @JoinColumn(name = "exercise_id", referencedColumnName = "id"),

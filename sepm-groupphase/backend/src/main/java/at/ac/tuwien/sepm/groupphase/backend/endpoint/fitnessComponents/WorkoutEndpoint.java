@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutExerciseDtoOut;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
 import io.swagger.annotations.Api;
@@ -92,4 +94,23 @@ public class WorkoutEndpoint {
         }
         return workoutDtos;
     }
+
+    @RequestMapping(value = "/{id}/{version}/exercises", method = RequestMethod.GET)
+    @ApiOperation(value = "Get exercises that are part of workout with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public WorkoutExerciseDtoOut[] getAllExercisesByWorkoutIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+        List<WorkoutExercise> workoutExercises;
+        try {
+            workoutExercises = iWorkoutService.findByIdAndVersion(id, version).getExercises();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        WorkoutExerciseDtoOut[] workoutExerciseDtoOuts = new WorkoutExerciseDtoOut[workoutExercises.size()];
+        for (int i = 0; i < workoutExercises.size(); i++) {
+            workoutExerciseDtoOuts[i] = workoutMapper.workoutExerciseToWorkoutExerciseDtoOut(workoutExercises.get(i));
+        }
+        return workoutExerciseDtoOuts;
+    }
+
 }
