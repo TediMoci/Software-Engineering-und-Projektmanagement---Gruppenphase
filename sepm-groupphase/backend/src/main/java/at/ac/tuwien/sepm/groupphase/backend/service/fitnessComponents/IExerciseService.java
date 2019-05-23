@@ -24,13 +24,6 @@ public interface IExerciseService {
     Exercise findByIdAndVersion(Long id, Integer version) throws ServiceException;
 
     /**
-     * @param name of the Exercises to find
-     * @return Exercises with name beginning with the given name-string
-     * @throws ServiceException if an error occurred while trying to find the Exercises in the system
-     */
-    List<Exercise> findByName(String name) throws ServiceException;
-
-    /**
      * @return all Exercises in the system
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */

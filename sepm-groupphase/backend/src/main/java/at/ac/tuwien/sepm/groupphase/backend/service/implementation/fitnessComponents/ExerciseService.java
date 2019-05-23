@@ -44,16 +44,6 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
-    public List<Exercise> findByName(String name) throws ServiceException {
-        LOGGER.info("Entering findByName with name: " + name);
-        try {
-            return iExerciseRepository.findByName(name);
-        } catch (DataAccessException e) {
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    @Override
     public List<Exercise> findAll() throws ServiceException {
         LOGGER.info("Entering findAll");
         try {
@@ -71,9 +61,14 @@ public class ExerciseService implements IExerciseService {
         String equipment = exercisePo.getEquipment() != null ? exercisePo.getEquipment() : "";
         String muscleGroup = exercisePo.getMuscleGroup() != null ? exercisePo.getMuscleGroup() : "";
         Double rating = exercisePo.getRating() != null ? exercisePo.getRating() : 1.0;
-        String category = exercisePo.getCategory() != null ? exercisePo.getCategory().toString() : "";
+        Category category = exercisePo.getCategory();
         try {
-            return iExerciseRepository.findByFilters(name, description, equipment, muscleGroup, rating, category);
+            if (category != null) {
+                return iExerciseRepository.findByFiltersWithCategory(name, description, equipment, muscleGroup, rating, category);
+            } else {
+                return iExerciseRepository.findByFiltersWithoutCategory(name, description, equipment, muscleGroup, rating);
+            }
+
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }

@@ -1,15 +1,28 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.parameterObjects;
 
-
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 public class ExercisePo {
 
+    @Size(max = 50, message = "Max name length is 50")
     private String name;
+
+    @Size(max = 1000, message = "Max description length is 1000")
     private String description;
+
+    @Size(max = 300, message = "Max equipment length is 300")
     private String equipment;
+
+    @Size(max = 100, message = "Max muscleGroup length is 100")
     private String muscleGroup;
+
+    @Min(value = 1, message = "Min rating value is 1") @Max(value = 5, message = "Max rating value is 5")
     private Double rating;
+
     private Category category;
 
     public ExercisePo() {
