@@ -65,9 +65,9 @@ const routes: Routes = [
   {path: 'exercise', canActivate: [AuthGuard], component: ExerciseComponent},
   {path: 'edit-exercise', canActivate: [RoleGuard], component: EditExerciseComponent},
   {path: 'edit-course', canActivate: [FitnessProviderRoleGuard], component: EditCourseComponent},
-  {path: 'workout', canActivate: [RoleGuard], component: WorkoutComponent},
+  {path: 'workout', canActivate: [AuthGuard], component: WorkoutComponent},
   {path: 'edit-workout', canActivate: [RoleGuard], component: EditWorkoutComponent},
-  {path: 'course', canActivate: [AuthGuard], component: CourseComponent}
+  {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent}
 ];
 
 @NgModule({
