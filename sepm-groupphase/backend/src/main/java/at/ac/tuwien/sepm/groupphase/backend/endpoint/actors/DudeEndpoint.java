@@ -111,9 +111,12 @@ public class DudeEndpoint {
     @ApiOperation(value = "Get exercises created by dude", authorizations = {@Authorization(value = "apiKey")})
     public ExerciseDto[] getExercisesCreatedByDudeId(@PathVariable Long id) {
         LOGGER.info("Entering getExercisesCreatedByDudeId with id: " + id);
-        List<Exercise> exercises;
+        List<Exercise> exercises = new ArrayList<>();
         try {
-            exercises = iDudeService.findDudeById(id).getExercises();
+            List<Exercise> allExercises = iDudeService.findDudeById(id).getExercises();
+            for (Exercise e : allExercises) {
+                if (!e.getHistory()) exercises.add(e);
+            }
         } catch (ServiceException e) {
             LOGGER.error("Could not getExercisesCreatedByDudeId with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
