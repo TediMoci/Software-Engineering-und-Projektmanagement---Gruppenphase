@@ -28,6 +28,8 @@ import {ExerciseComponent} from './components/exercise/exercise.component';
 import {EditExerciseComponent} from './components/edit-exercise/edit-exercise.component';
 import {WorkoutComponent} from './components/workout/workout.component';
 import {EditWorkoutComponent} from './components/edit-workout/edit-workout.component';
+import {CreateForFitnessProviderComponent} from './components/create-for-fitness-provider/create-for-fitness-provider.component';
+import {MyContentFitnessProviderComponent} from './components/my-content-fitness-provider/my-content-fitness-provider.component';
 
 const routes: Routes = [
 
@@ -38,11 +40,13 @@ const routes: Routes = [
   {path: 'dude-profile', canActivate: [RoleGuard], component: DudeProfileComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'bros', canActivate: [RoleGuard], component: BrosComponent},
-  {path: 'create', canActivate: [AuthGuard], component: CreateComponent},
-  {path: 'create-exercise', component: CreateExerciseComponent},
+  {path: 'create', canActivate: [RoleGuard], component: CreateComponent},
+  {path: 'create-for-FP', canActivate: [FitnessProviderRoleGuard], component: CreateForFitnessProviderComponent},
+  {path: 'create-exercise', canActivate: [RoleGuard], component: CreateExerciseComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
-  {path: 'myContent', canActivate: [AuthGuard], component: MyContentComponent},
+  {path: 'myContent', canActivate: [RoleGuard], component: MyContentComponent},
+  {path: 'myContent-FP', canActivate: [FitnessProviderRoleGuard], component: MyContentFitnessProviderComponent},
   {path: 'favourites', canActivate: [RoleGuard], component: FavouritesComponent},
   {path: 'edit-dude', canActivate: [RoleGuard], component: EditProfileComponent},
   {path: 'edit-fitnessProvider', canActivate: [FitnessProviderRoleGuard], component: EditFitnessProviderProfileComponent},
