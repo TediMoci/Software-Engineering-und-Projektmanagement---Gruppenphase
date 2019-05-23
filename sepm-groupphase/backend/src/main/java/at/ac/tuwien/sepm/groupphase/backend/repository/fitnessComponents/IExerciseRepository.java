@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.parameterObjects.ExercisePo;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
+import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ExerciseKey;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
-public interface IExerciseRepository extends JpaRepository<Exercise, Long> {
+public interface IExerciseRepository extends JpaRepository<Exercise, ExerciseKey> {
 
     /**
      * @param exercise to be saved in the database

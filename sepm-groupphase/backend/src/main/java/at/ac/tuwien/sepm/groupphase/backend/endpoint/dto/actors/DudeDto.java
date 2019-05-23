@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.ElementCollection;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,33 +19,49 @@ public class DudeDto {
     private Long id;
 
     @ApiModelProperty(required = true, name = "Name of Dude")
+    @NotBlank(message = "Name must not be blank")
+    @Size(max = 50, message = "Max length for name is 50")
     private String name;
 
     @ApiModelProperty(required = true, name = "Password of Dude")
+    @NotBlank(message = "Password must not be blank")
     private String password;
 
     @ApiModelProperty(name = "Self description of Dude")
+    @Size(max = 500, message = "Max length for description is 500")
     private String description = "No description given.";
 
     @ApiModelProperty(required = true, name = "Email adress of Dude")
+    @NotBlank(message = "Email must not be blank")
+    @Size(max = 50, message = "Max length for email is 50")
     private String email;
 
     @ApiModelProperty(required = true, name = "Sex of Dude")
+    @NotNull(message = "Sex must not be null")
     private Sex sex;
 
     @ApiModelProperty(required = true, name = "System status of Dude: 1-3")
+    @Min(value = 1, message = "Min value for status is 1") @Max(value = 3, message = "Max value for status is 3")
     private Integer status = 1;
 
     @ApiModelProperty(required = true, name = "Self assessment status of Dude")
+    @NotNull(message = "SelfAssessment must not be null")
+    @Min(value = 1, message = "Min value for selfAssessment is 1") @Max(value = 3, message = "Max value for selfAssessment is 3")
     private Integer selfAssessment;
 
     @ApiModelProperty(required = true, name = "Birthday of Dude")
+    @NotNull(message = "Birthday must not be null")
+    @Past(message = "Birthday must be in the past")
     private LocalDate birthday;
 
     @ApiModelProperty(required = true, name = "Height of Dude")
+    @NotNull(message = "Height must not be null")
+    @Min(value = 50, message = "Min value for height is 50") @Max(value = 300, message = "Max value for height is 300")
     private Double height;
 
     @ApiModelProperty(required = true, name = "Weight of Dude")
+    @NotNull(message = "weight must not be null")
+    @Min(value = 1, message = "Min value for weight is 1") @Max(value = 700, message = "Max value for weight is 700")
     private Double weight;
 
     @ElementCollection

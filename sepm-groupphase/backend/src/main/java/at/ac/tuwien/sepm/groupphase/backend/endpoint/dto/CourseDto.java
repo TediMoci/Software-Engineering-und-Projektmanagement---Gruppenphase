@@ -1,13 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.util.Arrays;
 
 @ApiModel(value = "CourseDto", description = "A dto for course entries via rest")
 public class CourseDto {
@@ -25,10 +24,10 @@ public class CourseDto {
     private String description = "No description given.";
 
     @ApiModelProperty(name = "FitnessProvider offering the Course")
-    private FitnessProviderDto fitnessProviderDto;
+    private Long creatorId;
 
     @ApiModelProperty(name = "Dudes having the Course bookmarked")
-    private Set<DudeDto> dudeDtos;
+    private DudeDto[] dudeDtos;
 
     public Long getId() {
         return id;
@@ -54,19 +53,19 @@ public class CourseDto {
         this.description = description;
     }
 
-    public FitnessProviderDto getFitnessProviderDto() {
-        return fitnessProviderDto;
+    public Long getCreatorId() {
+        return creatorId;
     }
 
-    public void setFitnessProviderDto(FitnessProviderDto fitnessProviderDto) {
-        this.fitnessProviderDto = fitnessProviderDto;
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
     }
 
-    public Set<DudeDto> getDudeDtos() {
+    public DudeDto[] getDudeDtos() {
         return dudeDtos;
     }
 
-    public void setDudeDtos(Set<DudeDto> dudeDtos) {
+    public void setDudeDtos(DudeDto[] dudeDtos) {
         this.dudeDtos = dudeDtos;
     }
 
@@ -80,8 +79,8 @@ public class CourseDto {
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
-            ", fitnessProviderDto=" + fitnessProviderDto +
-            ", dudeDtos=" + dudeDtos +
+            ", creatorId=" + creatorId +
+            ", dudeDtos=" + Arrays.toString(dudeDtos) +
             '}';
     }
 
@@ -96,9 +95,9 @@ public class CourseDto {
         if (name != null ? !name.equals(courseDto.name) : courseDto.name != null) return false;
         if (description != null ? !description.equals(courseDto.description) : courseDto.description != null)
             return false;
-        if (fitnessProviderDto != null ? !fitnessProviderDto.equals(courseDto.fitnessProviderDto) : courseDto.fitnessProviderDto != null)
-            return false;
-        return dudeDtos != null ? dudeDtos.equals(courseDto.dudeDtos) : courseDto.dudeDtos == null;
+        if (creatorId != null ? !creatorId.equals(courseDto.creatorId) : courseDto.creatorId != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(dudeDtos, courseDto.dudeDtos);
 
     }
 
@@ -107,8 +106,8 @@ public class CourseDto {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (fitnessProviderDto != null ? fitnessProviderDto.hashCode() : 0);
-        result = 31 * result + (dudeDtos != null ? dudeDtos.hashCode() : 0);
+        result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(dudeDtos);
         return result;
     }
 
@@ -116,8 +115,8 @@ public class CourseDto {
         private Long id;
         private String name;
         private String description;
-        private FitnessProviderDto fitnessProviderDto;
-        private Set<DudeDto> dudeDtos;
+        private Long creatorId;
+        private DudeDto[] dudeDtos;
 
         public CourseDtoBuilder() {
         }
@@ -137,12 +136,12 @@ public class CourseDto {
             return this;
         }
 
-        public CourseDtoBuilder fitnessProviderDto(FitnessProviderDto fitnessProviderDto) {
-            this.fitnessProviderDto = fitnessProviderDto;
+        public CourseDtoBuilder creatorId(Long creatorId) {
+            this.creatorId = creatorId;
             return this;
         }
 
-        public CourseDtoBuilder dudeDtos(Set<DudeDto> dudeDtos) {
+        public CourseDtoBuilder dudeDtos(DudeDto[] dudeDtos) {
             this.dudeDtos = dudeDtos;
             return this;
         }
@@ -152,7 +151,7 @@ public class CourseDto {
             courseDto.setId(id);
             courseDto.setName(name);
             courseDto.setDescription(description);
-            courseDto.setFitnessProviderDto(fitnessProviderDto);
+            courseDto.setCreatorId(creatorId);
             courseDto.setDudeDtos(dudeDtos);
             return courseDto;
         }
