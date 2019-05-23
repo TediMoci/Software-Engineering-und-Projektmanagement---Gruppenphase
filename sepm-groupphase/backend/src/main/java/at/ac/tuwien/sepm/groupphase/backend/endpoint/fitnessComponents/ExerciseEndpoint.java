@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.parameterObjects.ExercisePo;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -57,6 +58,7 @@ public class ExerciseEndpoint {
         }
     }
 
+    /*
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get Exercises by name", authorizations = {@Authorization(value = "apiKey")})
     public List<ExerciseDto> findByName(@RequestParam String name) {
@@ -74,6 +76,7 @@ public class ExerciseEndpoint {
         }
         return exerciseDtos;
     }
+    */
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ApiOperation(value = "Get all exercises", authorizations = {@Authorization(value = "apiKey")})
@@ -89,6 +92,24 @@ public class ExerciseEndpoint {
         List<ExerciseDto> exerciseDtos = new ArrayList<>();
         for (Exercise exercise : exercises) {
             exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+        }
+        return exerciseDtos;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation(value = "Get Exercises by filters", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto[] findByFilters(ExercisePo exercisePo) {
+        LOGGER.info("Entering findByFilters with: " + exercisePo);
+        List<Exercise> exercises;
+        try {
+            exercises = iExerciseService.findByFilters(exercisePo);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilters with: " + exercisePo);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
         }
         return exerciseDtos;
     }

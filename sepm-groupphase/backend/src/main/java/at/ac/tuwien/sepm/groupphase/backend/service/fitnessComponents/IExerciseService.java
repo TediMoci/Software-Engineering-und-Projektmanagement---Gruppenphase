@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.parameterObjects.ExercisePo;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
@@ -34,5 +35,12 @@ public interface IExerciseService {
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
     List<Exercise> findAll() throws ServiceException;
+
+    /**
+     * @param exercisePo parameter object containing the filters
+     * @return all Exercises in the system according to the given filters
+     * @throws ServiceException if an error occurred while trying to find the Exercises in the system
+     */
+    List<Exercise> findByFilters(ExercisePo exercisePo) throws ServiceException;
 
 }
