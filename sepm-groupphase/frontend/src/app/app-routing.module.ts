@@ -31,6 +31,9 @@ import {WorkoutComponent} from './components/workout/workout.component';
 import {EditWorkoutComponent} from './components/edit-workout/edit-workout.component';
 import {CreateForFitnessProviderComponent} from './components/create-for-fitness-provider/create-for-fitness-provider.component';
 import {MyContentFitnessProviderComponent} from './components/my-content-fitness-provider/my-content-fitness-provider.component';
+import {EditCourseComponent} from './components/edit-course/edit-course.component';
+import {OwnCoursesComponent} from './components/own-courses/own-courses.component';
+import {CourseComponent} from './components/course/course.component';
 import {CreateWorkoutComponent} from './components/create-workout/create-workout.component';
 import {WorkoutExercisesComponent} from './components/workout-exercises/workout-exercises.component';
 
@@ -61,11 +64,14 @@ const routes: Routes = [
   {path: 'fitnessProviders', canActivate: [RoleGuard], component: FitnessProvidersFollowedComponent},
   {path: 'myExercises', canActivate: [RoleGuard], component: OwnExercisesComponent},
   {path: 'myWorkouts', canActivate: [RoleGuard], component: OwnWorkoutsComponent},
+  {path: 'myCourses', canActivate: [FitnessProviderRoleGuard], component: OwnCoursesComponent},
   {path: 'myTrainingSchedules', canActivate: [RoleGuard], component: OwnTrainingScheduleComponent},
   {path: 'exercise', canActivate: [AuthGuard], component: ExerciseComponent},
   {path: 'edit-exercise', canActivate: [RoleGuard], component: EditExerciseComponent},
-  {path: 'workout', canActivate: [RoleGuard], component: WorkoutComponent},
-  {path: 'edit-workout', canActivate: [RoleGuard], component: EditWorkoutComponent}
+  {path: 'edit-course', canActivate: [FitnessProviderRoleGuard], component: EditCourseComponent},
+  {path: 'workout', canActivate: [AuthGuard], component: WorkoutComponent},
+  {path: 'edit-workout', canActivate: [RoleGuard], component: EditWorkoutComponent},
+  {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent}
 ];
 
 @NgModule({

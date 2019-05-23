@@ -1,6 +1,5 @@
-export class Course {
+export class CreateCourse {
   constructor(
-    public id: number,
     public name: string,
     public description: string,
     public creatorId: number

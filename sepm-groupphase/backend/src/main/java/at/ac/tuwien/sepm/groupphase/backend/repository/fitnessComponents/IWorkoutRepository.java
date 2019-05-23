@@ -3,8 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -40,7 +43,20 @@ public interface IWorkoutRepository extends JpaRepository<Workout, Long> {
      * @return all Workouts in the database
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE w.isHistory=false ORDER BY w.id")
     List<Workout> findAll() throws DataAccessException;
+
+    @Query("SELECT w FROM Workout w WHERE w.id=?1 AND w.isHistory=false")
+    Workout findById(long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Workout w SET w.id=:myID WHERE w.id=:dbID AND w.isHistory=false")
+    void updateNew(@Param("myID")long myId, @Param("dbID")long dbId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Workout w SET w.isHistory=true WHERE w.id=:id AND w.isHistory=false")
+    void delete(@Param("id")long id);
 
 }

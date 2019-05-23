@@ -42,6 +42,9 @@ import { MyContentFitnessProviderComponent } from './components/my-content-fitne
 import { CreateForFitnessProviderComponent } from './components/create-for-fitness-provider/create-for-fitness-provider.component';
 import { CreateWorkoutComponent } from './components/create-workout/create-workout.component';
 import { WorkoutExercisesComponent } from './components/workout-exercises/workout-exercises.component';
+import { CourseComponent } from './components/course/course.component';
+import { EditCourseComponent } from './components/edit-course/edit-course.component';
+import { OwnCoursesComponent } from './components/own-courses/own-courses.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,10 @@ import { WorkoutExercisesComponent } from './components/workout-exercises/workou
     CreateForFitnessProviderComponent,
     CreateWorkoutComponent,
     WorkoutExercisesComponent
+    CreateForFitnessProviderComponent,
+    CourseComponent,
+    EditCourseComponent,
+    OwnCoursesComponent
   ],
   imports: [
     BrowserModule,
