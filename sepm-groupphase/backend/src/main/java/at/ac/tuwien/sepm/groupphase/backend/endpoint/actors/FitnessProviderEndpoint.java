@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class FitnessProviderEndpoint {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Save new Fitness Provider", authorizations = {@Authorization(value = "apiKey")})
-    public FitnessProviderDto saveFitnessProvider(@RequestBody FitnessProviderDto fitnessProviderDto){
+    public FitnessProviderDto saveFitnessProvider(@Valid @RequestBody FitnessProviderDto fitnessProviderDto){
         FitnessProvider fitnessProvider = fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(fitnessProviderDto);
         try{
             fitnessProvider = iFitnessProviderService.save(fitnessProvider);
