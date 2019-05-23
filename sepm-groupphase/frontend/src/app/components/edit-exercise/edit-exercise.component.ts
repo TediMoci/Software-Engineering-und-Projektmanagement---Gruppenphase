@@ -78,12 +78,12 @@ export class EditExerciseComponent implements OnInit {
     const exercise: Exercise = new Exercise(
       this.oldExercise.id,
       this.oldExercise.version,
-      this.oldExercise.name,
-      this.oldExercise.description,
-      this.oldExercise.equipment,
-      this.oldExercise.muscleGroup,
-      this.oldExercise.category,
-      this.oldExercise.difficulty_level,
+      this.editExForm.controls.name.value,
+      this.editExForm.controls.description.value,
+      this.editExForm.controls.equipment.value,
+      this.editExForm.controls.muscleGroup.value,
+      this.editExForm.controls.category.value,
+      this.editExForm.controls.difficultyLevel.value,
       this.oldExercise.creatorId
     );
 

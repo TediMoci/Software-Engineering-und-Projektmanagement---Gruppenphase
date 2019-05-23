@@ -17,6 +17,7 @@ export class OwnExercisesComponent implements OnInit {
   dude: Dude;
   exercises: any;
   error: any;
+  exerciseToDelete;
 
   constructor(private ownExercisesService: OwnExercisesService, private router: Router) {
   }
@@ -29,7 +30,6 @@ export class OwnExercisesComponent implements OnInit {
     this.ownExercisesService.getAllExercisesOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all exercises created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
-        this.exercises = data;
         console.log(this.exercises);
         this.exercises = data.sort(function (a, b) { // sort data alphabetically
           if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
@@ -59,6 +59,7 @@ export class OwnExercisesComponent implements OnInit {
 
   setToDeleteExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
+    this.exerciseToDelete = element.name;
     console.log(element);
   }
 
