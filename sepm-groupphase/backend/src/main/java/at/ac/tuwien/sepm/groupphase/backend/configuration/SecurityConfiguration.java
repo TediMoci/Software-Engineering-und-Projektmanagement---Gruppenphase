@@ -121,10 +121,12 @@ public class SecurityConfiguration {
                     "/swagger-ui.html")
                 .permitAll()
                 .antMatchers(HttpMethod.DELETE,
-                    "/exercise/{id}").permitAll()
+                    "/exercise/{id}",
+                    "/course/{id}").permitAll()
                 .antMatchers(HttpMethod.PUT,
             "/dudes/{name}",
                     "/exercise/{id}",
+                    "/course/{id}",
                     "/fitnessProvider/{name}").permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {
