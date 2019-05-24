@@ -50,7 +50,6 @@ public class ExerciseServiceTest {
         exercise1.setEquipment("Equipment1");
         exercise1.setMuscleGroup("Muscles1");
         exercise1.setRating(1.0);
-        exercise1.setDifficulty_level("High");
         exercise1.setCreator(dude);
 
         exercise2.setId(2L);
@@ -62,7 +61,6 @@ public class ExerciseServiceTest {
         exercise2.setEquipment("Equipment2");
         exercise2.setMuscleGroup("Muscles2");
         exercise2.setRating(1.0);
-        exercise2.setDifficulty_level("Low");
         exercise2.setCreator(dude);
     }
 

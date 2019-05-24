@@ -39,7 +39,7 @@
               <label for="editCourseDescription">Description</label>
               <input ngModel="{{description}}" type="text" name="description" class="form-control" id="editCourseDescription" formControlName="description"
                      aria-describedby="editCourseDescriptionHelp">
-              <div *ngIf="submitted && !!v.controls.description.errors" class="error">
+              <div *ngIf="submitted && !!editCourseForm.controls.description.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!editCourseForm.controls.description.errors.required">Description is
                   required!
                 </small>
