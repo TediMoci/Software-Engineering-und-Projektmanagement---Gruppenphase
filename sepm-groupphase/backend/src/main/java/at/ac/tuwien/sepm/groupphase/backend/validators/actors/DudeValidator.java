@@ -14,21 +14,6 @@ public class DudeValidator {
 
     private String name_is_null = "Username must be set!";
     private String name_is_blank = "Username must not be blank!";
-    private String email_is_null = "Email adress must be set!";
-    private String email_is_blank = "Email adress must not be blank!";
-    private String sex_is_null = "Sex must be set!";
-    private String invalid_sex = "Sex must be Male, Female or Other!";
-    private String selfAssessment_is_null = "Self assessment must not be null!";
-    private String invalid_selfAssessment = "Self assessment must be 1 (Beginner), 2 (Advanced) or 3 (Pro)!";
-    private String birthday_is_null = "Birthday must not be null!";
-    private String invalid_birthday = "Invalid birthday!";
-    private String born_in_the_future = "You can not be born after the current day.";
-    private String height_is_null = "Height must not be null!";
-    private String invalid_height = "Unnatural height. Check your entry!";
-    private String weight_is_null = "Weight must not be null!";
-    private String invalid_weight = "Unnatural weight. Check your entry!";
-    private String password_too_short = "Your password is too short. The minimum length is 8.";
-    private String password_is_null = "Passwort must be given!";
 
     private IUserService userService;
 
@@ -42,6 +27,22 @@ public class DudeValidator {
      * @throws ValidationException
      */
     public void validateDude(Dude dude) throws ValidationException {
+
+        String email_is_null = "Email adress must be set!";
+        String email_is_blank = "Email adress must not be blank!";
+        String sex_is_null = "Sex must be set!";
+        String invalid_sex = "Sex must be Male, Female or Other!";
+        String selfAssessment_is_null = "Self assessment must not be null!";
+        String invalid_selfAssessment = "Self assessment must be 1 (Beginner), 2 (Advanced) or 3 (Pro)!";
+        String birthday_is_null = "Birthday must not be null!";
+        String invalid_birthday = "Invalid birthday!";
+        String born_in_the_future = "You can not be born after the current day.";
+        String height_is_null = "Height must not be null!";
+        String invalid_height = "Unnatural height. Check your entry!";
+        String weight_is_null = "Weight must not be null!";
+        String invalid_weight = "Unnatural weight. Check your entry!";
+        String password_too_short = "Your password is too short. The minimum length is 8.";
+        String password_is_null = "Passwort must be given!";
 
         if (dude.getName() == null) {
             throw new ValidationException(name_is_null);

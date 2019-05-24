@@ -10,10 +10,12 @@
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/dude-profile']" class="btn btn-link">Profile</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/fitnessProvider-profile']" class="btn btn-link">Profile</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/bros']" class="btn btn-link">Bros</a></a>
-        <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/create-for-FP']" class="btn btn-link">Create</a></a>
         <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/find']" class="btn btn-link">Find</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/history']" class="btn btn-link">History</a></a>
-        <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/myContent']" class="btn btn-link">My Content</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/myContent']" class="btn btn-link">My Content</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/myContent-FP']" class="btn btn-link">My Content</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/favourites']" class="btn btn-link">Favourites</a></a>
       </li>
     </ul>

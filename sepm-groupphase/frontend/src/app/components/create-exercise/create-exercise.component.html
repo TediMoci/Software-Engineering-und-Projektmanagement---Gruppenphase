@@ -14,7 +14,7 @@
         <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
         <div class="row-sm-1"></div>
         <div class="row-sm-10">
-          <h4 style="text-decoration: underline;">{{userName}}</h4>
+          <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
           <img class="img-exercise" src="{{imagePathExercise}}" alt="exercise image">
         </div>
       </div>
@@ -38,33 +38,7 @@
           <div class="form-group">
             <label for="equipmentExercise">Equipment</label>
             <input type="text" name="equipmentExercise" class="form-control" id="equipmentExercise" formControlName="equipmentExercise"
-                   aria-describedby="equipmentExercise" value = "No equipment required">
-          </div>
-
-          <div class="form-group">
-            <span class="difficultyLevelExercise">Difficulty Level</span>
-            <div class="gap_space">
-              <div class= "custom-control custom-radio custom-control-inline">
-                <input id="beginner" type="radio" class="custom-control-input" value= "Beginner" name="difficultyLevelExercise" formControlName="difficultyLevelExercise">
-                <label class="custom-control-label" for="beginner">Beginner</label>
-              </div>
-
-              <div class="custom-control custom-radio custom-control-inline">
-                <input id="advanced" type="radio" class="custom-control-input" value= "Advanced" name="difficultyLevelExercise" formControlName="difficultyLevelExercise">
-                <label class="custom-control-label" for="advanced">Advanced</label>
-              </div>
-
-              <div class="custom-control custom-radio custom-control-inline">
-                <input id="pro" type="radio" class="custom-control-input" value= "Pro" name="difficultyLevelExercise" formControlName="difficultyLevelExercise">
-                <label class="custom-control-label" for="pro">Pro</label>
-              </div>
-
-              <div *ngIf="submitted && !!registerForm.controls.difficultyLevelExercise.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.difficultyLevelExercise.errors.required">Difficulty level is
-                  required!
-                </small>
-              </div>
-            </div>
+                   aria-describedby="equipmentExercise" ngModel = "No needed equipment given">
           </div>
 
           <div class="form-group">
@@ -107,7 +81,7 @@
               <div class="form-group">
                 <label for="muscleGroupExercise">Muscle Group</label>
                 <input type="text" name="muscleGroupExercise" class="form-control" id="muscleGroupExercise" formControlName="muscleGroupExercise"
-                       aria-describedby="muscleGroupExercise" placeholder="Enter muscle group">
+                       aria-describedby="muscleGroupExercise" ngModel="No muscle group given">
               </div>
           </form>
 

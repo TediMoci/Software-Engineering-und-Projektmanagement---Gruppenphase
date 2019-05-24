@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,32 +15,25 @@ public class Dude {
     private Long id;
 
     @Column(nullable = false, length = 50)
-    @Size(min = 1, max = 50)
     private String name;
 
     @Column(nullable = false)
-    @Size(min = 8)
     private String password;
 
     @Column(nullable = false, length = 500)
-    @Size(max = 500)
     private String description = "No description given.";
 
     @Column(nullable = false, length = 50)
-    @NotNull
-    @Size(max = 50)
     private String email;
 
     @Column(nullable = false)
     private Sex sex;
 
     @Column(nullable = false)
-    @Min(1) @Max(3)
     private Integer status = 1;
     // 1 = New Dude; 2 = Experienced Dude; 3 = Ancient Dude
 
     @Column(nullable = false, name = "self_assessment")
-    @Min(1) @Max(3)
     private Integer selfAssessment;
     // 1 = Beginner; 2 = Advanced; 3 = Pro
 
@@ -49,12 +41,10 @@ public class Dude {
     private LocalDate birthday;
 
     @Column(nullable = false)
-    @Min(1)
     private Double height;
     // in centimeters
 
     @Column(nullable = false)
-    @Min(1)
     private Double weight;
     // in kilograms
 

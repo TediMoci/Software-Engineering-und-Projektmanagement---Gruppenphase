@@ -13,11 +13,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class DudeEndpoint {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Save a new Dude", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto saveDude(@RequestBody DudeDto dudeDto) {
+    public DudeDto saveDude(@Valid @RequestBody DudeDto dudeDto) {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.save(dude));
@@ -54,8 +55,9 @@ public class DudeEndpoint {
     public List<DudeDto> findAll() {
         List<DudeDto> dudeListDTO = new ArrayList<>();
         try {
-            for (int i=0; i< iDudeService.findAll().size(); i++){
-                dudeListDTO.add(dudeMapper.dudeToDudeDto(iDudeService.findAll().get(i)));
+            List<Dude> dudeList = iDudeService.findAll();
+            for (int i=0; i< dudeList.size(); i++){
+                dudeListDTO.add(dudeMapper.dudeToDudeDto(dudeList.get(i)));
             }
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -110,9 +112,12 @@ public class DudeEndpoint {
     @ApiOperation(value = "Get exercises created by dude", authorizations = {@Authorization(value = "apiKey")})
     public ExerciseDto[] getExercisesCreatedByDudeId(@PathVariable Long id) {
         LOGGER.info("Entering getExercisesCreatedByDudeId with id: " + id);
-        List<Exercise> exercises;
+        List<Exercise> exercises = new ArrayList<>();
         try {
-            exercises = iDudeService.findDudeById(id).getExercises();
+            List<Exercise> allExercises = iDudeService.findDudeById(id).getExercises();
+            for (Exercise e : allExercises) {
+                if (!e.getHistory()) exercises.add(e);
+            }
         } catch (ServiceException e) {
             LOGGER.error("Could not getExercisesCreatedByDudeId with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

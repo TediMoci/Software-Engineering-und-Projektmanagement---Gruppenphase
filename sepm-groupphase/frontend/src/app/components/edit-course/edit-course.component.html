@@ -1,0 +1,60 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<body>
+<div class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <div class="row-sm-1"></div>
+        <div class="row-sm-10">
+          <h4 style="text-decoration: underline;">{{userName}}</h4>
+          <img class="img-exercise" src="{{imagePath2}}" alt="course image">
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="form">
+          <form [formGroup]="editCourseForm" (ngSubmit)="addCourse()">
+            <span class="anchor" id="formRegister"></span>
+            <h1>Edit Course</h1>
+
+            <div class="form-group">
+              <label for="editCourseName">Name</label>
+              <input ngModel="{{courseName}}" type="text" name="name" maxlength="50" class="form-control" id="editCourseName" formControlName="name"
+                     aria-describedby="editCourseNameHelp">
+              <div *ngIf="submitted && !!editCourseForm.controls.name.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editCourseForm.controls.name.errors.required">Name is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="editCourseDescription">Description</label>
+              <input ngModel="{{description}}" type="text" name="description" class="form-control" id="editCourseDescription" formControlName="description"
+                     aria-describedby="editCourseDescriptionHelp">
+              <div *ngIf="submitted && !!editCourseForm.controls.description.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editCourseForm.controls.description.errors.required">Description is
+                  required!
+                </small>
+              </div>
+            </div>
+          </form>
+          <button type="button" (click)="editCourse()" class="btn btn-success float-right">Edit</button>
+          <a [routerLink]="['/create-for-FP']" class="btn btn-link">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+
+

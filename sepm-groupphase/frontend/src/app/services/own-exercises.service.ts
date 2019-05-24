@@ -3,7 +3,8 @@ import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Dude} from '../dtos/dude';
-import {Exercise} from '../dtos/Exercise';
+import {CreateExercise} from '../dtos/create-exercise';
+import {Exercise} from '../dtos/exercise';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,15 @@ import {Exercise} from '../dtos/Exercise';
 export class OwnExercisesService {
 
   private exerciseBaseUri: string = this.globals.backendUri + '/dudes';
-  private dude: Dude = JSON.parse(localStorage.getItem('loggedInDude'));
+  private exerciseEditBaseUri: string = this.globals.backendUri + '/exercise';
   constructor(private httpClient: HttpClient, private globals: Globals) { }
-  getAllExercisesOfLoggedInDude(): Observable<Exercise[]> {
-    console.log('get all created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
-    const params = new HttpParams().set('id', JSON.stringify(this.dude.id));
-    return this.httpClient.get<Exercise[]>(this.exerciseBaseUri + '/' + this.dude.id + '/exercises', {params: params});
+  getAllExercisesOfLoggedInDude(dude: Dude): Observable<CreateExercise[]> {
+    console.log('get all created by dude with name ' + dude.name + ' and id ' + dude.id);
+    return this.httpClient.get<CreateExercise[]>(this.exerciseBaseUri + '/' + dude.id + '/exercises');
+  }
+
+  deleteExercise(exerciseId: number){
+    console.log('delete exercise with id ' + exerciseId);
+    return this.httpClient.delete(this.exerciseEditBaseUri + '/' + exerciseId);
   }
 }

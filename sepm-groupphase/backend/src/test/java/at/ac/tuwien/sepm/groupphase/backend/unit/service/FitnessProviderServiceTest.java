@@ -84,9 +84,9 @@ public class FitnessProviderServiceTest {
     }
 
     @Test(expected = ServiceException.class)
-    public void TestSaveFitnessProvider_invalidPassword() throws ServiceException {
+    public void TestSaveFitnessProvider_invalidAddress() throws ServiceException {
         FitnessProvider fitnessProvider = fitnessProviderBuilder();
-        fitnessProvider.setPassword("");
+        fitnessProvider.setAddress("");
         Mockito.when(fpRepository.save(fitnessProvider)).thenReturn(fitnessProvider);
         fpService.save(fitnessProvider);
     }

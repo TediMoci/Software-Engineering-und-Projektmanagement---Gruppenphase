@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.parameterObjects.ExercisePo;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
 import io.swagger.annotations.Api;
@@ -58,26 +60,26 @@ public class ExerciseEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "Get Exercises by name", authorizations = {@Authorization(value = "apiKey")})
-    public List<ExerciseDto> findByName(@RequestParam String name) {
+    @ApiOperation(value = "Get exercises with given name", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto[] findByName(@RequestParam String name) {
         LOGGER.info("Entering findByName with name: " + name);
         List<Exercise> exercises;
         try {
             exercises = iExerciseService.findByName(name);
         } catch (ServiceException e) {
-            LOGGER.error("Could not find exercises with name: " + name);
+            LOGGER.error("Could not findByName with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        List<ExerciseDto> exerciseDtos = new ArrayList<>();
-        for (Exercise exercise : exercises) {
-            exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
         }
         return exerciseDtos;
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ApiOperation(value = "Get all exercises", authorizations = {@Authorization(value = "apiKey")})
-    public List<ExerciseDto> findAll() {
+    public ExerciseDto[] findAll() {
         LOGGER.info("Entering findAll");
         List<Exercise> exercises;
         try {
@@ -86,11 +88,53 @@ public class ExerciseEndpoint {
             LOGGER.error("Could not find all exercises");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        List<ExerciseDto> exerciseDtos = new ArrayList<>();
-        for (Exercise exercise : exercises) {
-            exerciseDtos.add(exerciseMapper.exerciseToExerciseDto(exercise));
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
         }
         return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Exercises by filters", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Category category) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category);
+        List<Exercise> exercises;
+        try {
+            exercises = iExerciseService.findByFilter(filter, category);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and category: " + category);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
+        }
+        return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update an Exercise", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto updateExercise(@PathVariable("id") long id, @RequestBody ExerciseDto newExercise) {
+        LOGGER.info("Updating exercise with id: " + id);
+        try {
+            return exerciseMapper.exerciseToExerciseDto(iExerciseService.update(id, exerciseMapper.exerciseDtoToExercise(newExercise)));
+        } catch (ServiceException e){
+            LOGGER.error("Could not update exercise with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete an Exercise", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteExercise(@PathVariable("id") long id) {
+        LOGGER.info("Deleting exercise with id " + id);
+        try {
+            iExerciseService.delete(id);
+        } catch (ServiceException e){
+            LOGGER.error("Could not delete exercise with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 
 }

@@ -94,9 +94,9 @@ public class DudeServiceTest {
     }
 
     @Test(expected = ServiceException.class)
-    public void TestSaveDude_invalidPassword() throws ServiceException {
+    public void TestSaveDude_invalidHeight() throws ServiceException {
         Dude dude = dudeBuilder();
-        dude.setPassword("");
+        dude.setHeight(0.0);
         Mockito.when(dudeRepository.save(dude)).thenReturn(dude);
         dudeService.save(dude);
     }
@@ -141,7 +141,7 @@ public class DudeServiceTest {
     }
 
     @Test
-    public void findAll() throws ServiceException {
+    public void TestFindAll() throws ServiceException {
         List<Dude> dudes = new ArrayList<>();
         dudes.add(dude1);
         dudes.add(dude2);
@@ -151,7 +151,7 @@ public class DudeServiceTest {
     }
 
     @Test
-    public void findAll_afterUpdate_sameSize() throws ServiceException {
+    public void TestFindAll_afterUpdate_sameSize() throws ServiceException {
         List<Dude> dudes = new ArrayList<>();
         dudes.add(dude1);
         dudes.add(dude2);

@@ -34,4 +34,9 @@ public interface ICourseService {
      */
     List<Course> findAll() throws ServiceException;
 
+    //TODO write log
+    Course update(long id, Course newCourse) throws ServiceException;
+
+    void delete(long id) throws ServiceException;
+
 }

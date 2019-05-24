@@ -102,6 +102,8 @@ public class SecurityConfiguration {
                     "/dudes/{id}/exercises",
                     "/user",
                     "/fitnessProvider",
+                    "/fitnessProvider/{id}",
+                    "/fitnessProvider/{id}/courses",
                     "/fitnessProvider/all",
                     "/fitnessProvider/{name}/followers",
                     "/course",
@@ -109,14 +111,27 @@ public class SecurityConfiguration {
                     "/course/{id}",
                     "/exercise",
                     "/exercise/all",
+                    "/exercise/filtered",
                     "/exercise/{id}/{version}",
+                    "/workout",
+                    "/workout/all",
+                    "/workout/{id}/{version}",
+                    "/workout/{id}/{version}/exercises",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html")
                 .permitAll()
-                .antMatchers(HttpMethod.DELETE).permitAll()
-                .antMatchers(HttpMethod.PUT).permitAll()
+                .antMatchers(HttpMethod.DELETE,
+                    "/exercise/{id}",
+                    "/course/{id}",
+                    "/workout/{id}").permitAll()
+                .antMatchers(HttpMethod.PUT,
+            "/dudes/{name}",
+                    "/exercise/{id}",
+                    "/course/{id}",
+                    "/workout/{id}",
+                    "/fitnessProvider/{name}").permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {
                 http
@@ -146,7 +161,7 @@ public class SecurityConfiguration {
                 registry
                     .addMapping("/**")
                     .allowedOrigins("*")
-                    .allowedMethods("PUT","POST","OPTION","GET", "PUT", "DELETE");
+                    .allowedMethods("PUT","POST","OPTION","GET", "DELETE");
             }
         };
     }

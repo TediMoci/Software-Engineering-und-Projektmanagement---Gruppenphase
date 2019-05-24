@@ -37,9 +37,6 @@ public class Exercise {
     @Column(nullable = false)
     private Category category;
 
-    @Column(nullable = false)
-    private String difficulty_level;
-
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
@@ -114,14 +111,6 @@ public class Exercise {
         this.category = category;
     }
 
-    public String getDifficulty_level() {
-        return difficulty_level;
-    }
-
-    public void setDifficulty_level(String difficulty_level) {
-        this.difficulty_level = difficulty_level;
-    }
-
     public Set<WorkoutExercise> getWorkouts() {
         return workouts;
     }
@@ -161,7 +150,6 @@ public class Exercise {
             ", muscleGroup='" + muscleGroup + '\'' +
             ", rating=" + rating +
             ", category=" + category +
-            ", difficulty_level='" + difficulty_level + '\'' +
             ", isHistory=" + isHistory +
             ", workouts=" + workouts +
             ", creator=" + creator +
@@ -185,8 +173,6 @@ public class Exercise {
             return false;
         if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
         if (category != exercise.category) return false;
-        if (difficulty_level != null ? !difficulty_level.equals(exercise.difficulty_level) : exercise.difficulty_level != null)
-            return false;
         if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
         if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
         return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
@@ -202,7 +188,6 @@ public class Exercise {
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (difficulty_level != null ? difficulty_level.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
@@ -218,7 +203,6 @@ public class Exercise {
         private String muscleGroup;
         private Double rating;
         private Category category;
-        private String difficulty_level;
         private Boolean isHistory;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
@@ -266,10 +250,6 @@ public class Exercise {
             return this;
         }
 
-        public ExerciseBuilder difficulty_level(String difficulty_level){
-            this.difficulty_level = difficulty_level;
-            return this;
-        }
 
         public ExerciseBuilder isHistory(Boolean isHistory) {
             this.isHistory = isHistory;
@@ -296,7 +276,6 @@ public class Exercise {
             exercise.setMuscleGroup(muscleGroup);
             exercise.setRating(rating);
             exercise.setCategory(category);
-            exercise.setDifficulty_level(difficulty_level);
             exercise.setHistory(isHistory);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
