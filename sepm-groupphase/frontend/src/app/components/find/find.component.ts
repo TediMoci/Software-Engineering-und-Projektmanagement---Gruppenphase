@@ -95,5 +95,8 @@ export class FindComponent implements OnInit {
         break;
     }
   }
+  setSelectedExercise(element: Exercise) {
+    localStorage.setItem('selectedExercise', JSON.stringify(element));
+  }
 
 }
