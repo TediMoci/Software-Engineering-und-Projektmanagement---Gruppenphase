@@ -11,15 +11,18 @@ import {ExerciseFilter} from "../dtos/exercise-filter";
 })
 export class FindService {
 
-  private exerciseBaseUri: string = this.globals.backendUri + '/exercise';
+  private exerciseBaseUri: string = this.globals.backendUri + '/exercise/filtered';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) { }
+  constructor(private httpClient: HttpClient, private globals: Globals) {  }
   getAllExercisesFilterd(exerciseFilter: ExerciseFilter): Observable<Exercise[]> {
-    //todo: handle NULL values
     console.log('get all exercises');
-    const params = new HttpParams()
-    .set('name', JSON.stringify(exerciseFilter.filter))
-    .set('description', JSON.stringify(exerciseFilter.category))
+    let params = new HttpParams();
+    if(exerciseFilter.filter !=null){
+      params = params.set("filter",exerciseFilter.filter)
+    }
+    if(exerciseFilter.category !=null){
+      params = params.set("category",exerciseFilter.category)
+    }
 
     console.log('get all exercises with params: ' + params.toString());
 
