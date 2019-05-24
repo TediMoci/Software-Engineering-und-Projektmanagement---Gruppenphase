@@ -96,7 +96,14 @@
         </div>
         <hr>
         <div class="row">
-          <p>test</p>
+          <div class="col">
+            <ul>
+              <li *ngFor='let element of exercises'>
+                <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn2 btn-link">{{element.name}}</a>
+              </li>
+            </ul>
+          </div>
+
         </div>
       </div>
 

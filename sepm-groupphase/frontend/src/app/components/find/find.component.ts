@@ -25,8 +25,11 @@ export class FindComponent implements OnInit {
   public inputTextActual: any;
   public filterExerciseCategoryActual:string = "None";
 
+  exercises: any;
+
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
+  error: any;
   dude: Dude;
   exerciseFilter: ExerciseFilter;
 
@@ -64,7 +67,23 @@ export class FindComponent implements OnInit {
           this.inputTextActual,
           this.filterExerciseCategoryActual);
         console.log("name: "+this.exerciseFilter.filter);
-        this.findService.getAllExercisesFilterd(this.exerciseFilter);
+        this.findService.getAllExercisesFilterd(this.exerciseFilter).subscribe(
+          (data) => {
+            console.log('get all exercises');
+            this.exercises = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
             break;
       case "Course": console.log("Course not implemented yet");
             break;
