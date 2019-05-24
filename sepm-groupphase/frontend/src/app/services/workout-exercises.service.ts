@@ -10,12 +10,13 @@ import {Exercise} from '../dtos/exercise';
 export class WorkoutExercisesService {
 
   private exerciseBaseUri: string = this.globals.backendUri + '/exercise';
-
+  private dudeBaseUri: string = this.globals.backendUri + '/dudes';
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
   getExercisesByName(name: string): Observable<Exercise[]> {
-    console.log('get all created exercises by name ' + name);
+    console.log('get all exercises by name ' + name);
     const params = new HttpParams().set('name', name);
     return this.httpClient.get<Exercise[]>(this.exerciseBaseUri, {params: params});
   }
+
 }
