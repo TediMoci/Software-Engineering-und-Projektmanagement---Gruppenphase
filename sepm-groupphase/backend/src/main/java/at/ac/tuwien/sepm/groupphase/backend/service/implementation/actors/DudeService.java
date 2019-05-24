@@ -83,7 +83,9 @@ public class DudeService implements IDudeService {
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-        return iDudeRepository.findByName(name);
+        Dude dude = iDudeRepository.findByName(name);
+        if (dude==null) throw new ServiceException("Could not find dude with name: " + name);
+        return dude;
     }
 
     @Override
