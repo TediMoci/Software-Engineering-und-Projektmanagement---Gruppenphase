@@ -4,7 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @IdClass(WorkoutKey.class)
@@ -38,7 +38,7 @@ public class Workout {
     private Boolean isHistory = false;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workout")
-    private Set<WorkoutExercise> exercises;
+    private List<WorkoutExercise> exercises;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dude_id")
@@ -108,11 +108,11 @@ public class Workout {
         isHistory = history;
     }
 
-    public Set<WorkoutExercise> getExercises() {
+    public List<WorkoutExercise> getExercises() {
         return exercises;
     }
 
-    public void setExercises(Set<WorkoutExercise> exercises) {
+    public void setExercises(List<WorkoutExercise> exercises) {
         this.exercises = exercises;
     }
 
@@ -189,7 +189,7 @@ public class Workout {
         private Double calorieConsumption;
         private Double rating;
         private Boolean isHistory;
-        private Set<WorkoutExercise> exercises;
+        private List<WorkoutExercise> exercises;
         private Dude creator;
 
         public WorkoutBuilder() {
@@ -235,7 +235,7 @@ public class Workout {
             return this;
         }
 
-        public WorkoutBuilder exercises(Set<WorkoutExercise> exercises) {
+        public WorkoutBuilder exercises(List<WorkoutExercise> exercises) {
             this.exercises = exercises;
             return this;
         }

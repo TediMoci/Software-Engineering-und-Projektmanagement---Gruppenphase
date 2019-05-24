@@ -35,7 +35,6 @@ public class FitnessProviderService implements IFitnessProviderService {
         try{
             fitnessProviderValidator.validateNameUnique(fitnessProvider.getName());
             fitnessProvider.setPassword(passwordEncoder.encode(fitnessProvider.getPassword()));
-            fitnessProviderValidator.validateFitnessProvider(fitnessProvider);
         }catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
