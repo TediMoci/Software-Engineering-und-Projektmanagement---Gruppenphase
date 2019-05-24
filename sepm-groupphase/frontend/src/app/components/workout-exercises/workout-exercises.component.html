@@ -29,6 +29,7 @@
         <div class="row">
           <div class="searchResults">
             <h4>Search Results</h4>
+            <p>Click <i class="fas fa-plus"></i> to add a found exercise to your workout.</p>
             <ul>
               <li *ngFor='let element of exercisesFound'>
                 <p> {{element.name}}
@@ -43,11 +44,13 @@
           <div class="row">
             <div class="chosenExercises">
               <h4>Chosen Exercises</h4>
+              <p>Click <i class="fa fa-trash"></i> to remove an exercise from your workout. Click <i class="fas fa-check"></i> to confirm the entered exercise data.</p>
               <ul>
                 <li *ngFor='let element of chosenExercises'>
-                  <p>{{element.name}}
+                  <p>{{element.exercise.name}}
                     <button type="button" (click)="removeFromChosenExercises(element)" class="btn btn-secondary"><i
                       class="fa fa-trash"></i></button>
+                    <button type="button" (click)="setExData(element)" class="btn btn-secondary"><i class="fas fa-check"></i></button>
                   </p>
                   <div class="form">
                     <form [formGroup]="workoutExForm" (ngSubmit)="addCourse()">
@@ -84,7 +87,7 @@
                         <label for="duration">Duration</label>
                         <input type="number" name="duration" class="form-control" id="duration"
                                formControlName="duration"
-                               aria-describedby="durationHelp" placeholder="Enter duration of exercise">
+                               aria-describedby="durationHelp" placeholder="Enter duration of exercise in minutes">
                         <div *ngIf="submitted && !!workoutExForm.controls.duration.errors" class="error">
                           <small class="form-text text-warning"
                                  *ngIf="!!workoutExForm.controls.duration.errors.required">
@@ -95,6 +98,10 @@
                       </div>
                     </form>
                   </div>
+                  <h6>Current Exercise Status: {{element.exercise.name}}</h6>
+                  <p>Repetitions: {{element.repetitions}}</p>
+                  <p>Sets: {{element.sets}}</p>
+                  <p>Duration: {{element.exDuration}} min</p>
                 </li>
               </ul>
             </div>

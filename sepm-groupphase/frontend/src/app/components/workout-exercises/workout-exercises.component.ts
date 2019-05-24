@@ -15,7 +15,7 @@ export class WorkoutExercisesComponent implements OnInit {
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   dude: Dude;
-  toRemove: number;
+  index: number;
   chosenExercises: WorkoutEx[] = [];
   exercisesFound: Exercise[];
   workoutExForm: FormGroup;
@@ -42,20 +42,34 @@ export class WorkoutExercisesComponent implements OnInit {
 
   }
 
-  setSelectedExercise(element: Exercise){
+  setSelectedExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
   }
 
-  addToChosenExercises(element:Exercise){
-    this.chosenExercises.push(new WorkoutEx(element, 0, 0, 0));
+  addToChosenExercises(element: Exercise) {
+    this.chosenExercises.push(new WorkoutEx(element, 1, 1, 1));
   }
 
-  removeFromChosenExercises(element:WorkoutEx){
-    this.toRemove = this.chosenExercises.indexOf(element);
-    this.chosenExercises.splice(this.toRemove, 1);
+  removeFromChosenExercises(element: WorkoutEx) {
+    this.index = this.chosenExercises.indexOf(element);
+    this.chosenExercises.splice(this.index, 1);
   }
 
-  saveExercisesTemporarily(){
+  setExData(element: WorkoutEx) {
+   this.index = this.chosenExercises.indexOf(element);
+   if (!(this.workoutExForm.controls.repetitions.value === '')) {
+     this.chosenExercises[this.index].repetitions = this.workoutExForm.controls.repetitions.value;
+   }
+   if (!(this.workoutExForm.controls.sets.value === '')) {
+     this.chosenExercises[this.index].sets = this.workoutExForm.controls.sets.value;
+   }
+   if (!(this.workoutExForm.controls.duration.value === '')) {
+     this.chosenExercises[this.index].exDuration = this.workoutExForm.controls.duration.value;
+   }
+   console.log(this.chosenExercises[this.index]);
+  }
+
+  saveExercisesTemporarily() {
     localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.chosenExercises));
     console.log(JSON.parse(localStorage.getItem('chosenExercisesForWorkout')));
     this.router.navigate(['/create-workout']);
