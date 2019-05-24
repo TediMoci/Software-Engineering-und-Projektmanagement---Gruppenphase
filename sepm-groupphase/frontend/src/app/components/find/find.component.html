@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
 <div class="container-fluid">
 
   <div class="container">
@@ -10,38 +12,95 @@
         </div>
       </div>
       <div class="col-sm-9">
-        <h1>Find</h1>
-          <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="category">
-            <label ngbButtonLabel class="btn-secondary">
-              <input ngbButton type="radio" value="Exercise"> Exercise
-            </label>
-            <label ngbButtonLabel class="btn-secondary">
-              <input ngbButton type="radio"  value="Course"> Course
-            </label>
-            <label ngbButtonLabel class="btn-secondary">
-              <input ngbButton type="radio" value="Workout"> Workout
-            </label>
-            <label ngbButtonLabel class="btn-secondary">
-              <input ngbButton type="radio" value="Dudes"> Dudes
-            </label>
-            <label ngbButtonLabel class="btn-secondary">
-              <input ngbButton type="radio" value="Fitness Provider"> Fitness Provider
-            </label>
-          </div>
-        <div class="card-body row no-gutters align-items-center">
-          <!-- Search form -->
-          <div class="col-lg">
-            <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find '+ category" [(ngModel)]="inputText" />
+        <div class="row">
+          <!--start of col-->
+          <div class="col-lg-8">
+            <h1>Find</h1>
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="category">
+              <label ngbButtonLabel class="btn-secondary">
+                <input ngbButton type="radio" value="Exercise"> Exercise
+              </label>
+              <label ngbButtonLabel class="btn-secondary">
+                <input ngbButton type="radio"  value="Course"> Course
+              </label>
+              <label ngbButtonLabel class="btn-secondary">
+                <input ngbButton type="radio" value="Workout"> Workout
+              </label>
+              <label ngbButtonLabel class="btn-secondary">
+                <input ngbButton type="radio" value="Dudes"> Dudes
+              </label>
+              <label ngbButtonLabel class="btn-secondary">
+                <input ngbButton type="radio" value="Fitness Provider"> Fitness Provider
+              </label>
+            </div>
+            <div class="card-body row no-gutters align-items-center">
+              <!-- Search form -->
+              <div class="col-lg">
+                <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find '+ category" [(ngModel)]="inputText" />
+              </div>
+              <!--end of col-->
+              <div class="col-auto">
+                <button class="btn btn-md btn-success" (click)="startSearch(category)" type="submit"><i class="fas fa-search"></i></button>
+              </div>
+            </div>
+            <pre>Find {{category}} where name is like: {{inputText| json}}</pre>
           </div>
           <!--end of col-->
-          <div class="col-auto">
-            <button class="btn btn-md btn-success" (click)="startSearch(category)" type="submit">Find</button>
+          <!--start of col-->
+          <div [ngSwitch]="category" class="col">
+            <div *ngSwitchCase="'Exercise'">
+              <p>Filter for Exercise</p>
+              <div class="btn-group  btn-group-vertical" ngbRadioGroup name="radioBasic" [(ngModel)]="filterExercise" >
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio" value="Strength"> Strength
+                </label>
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio"  value="Endurance"> Endurance
+                </label>
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio" value="Other"> Other
+                </label>
+              </div>
+            </div>
+
+            <div *ngSwitchCase="'Course'">
+              <p>Filter for Course</p>
+              <div class="btn-group btn-group-toggle btn-group-vertical" ngbRadioGroup name="radioBasic" [(ngModel)]="filterCourse" >
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio" value="Strength"> Strength
+                </label>
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio"  value="Endurance"> Endurance
+                </label>
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio" value="Other"> Other
+                </label>
+              </div>
+            </div>
+
+            <div *ngSwitchCase="'Workout'">
+              <p>Filter for Workout</p>
+              <div class="btn-group btn-group-toggle btn-group-vertical" ngbRadioGroup name="radioBasic" [(ngModel)]="filterWorkout" >
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio" value="Strength"> Strength
+                </label>
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio"  value="Endurance"> Endurance
+                </label>
+                <label ngbButtonLabel class="btn-secondary">
+                  <input ngbButton type="radio" value="Other"> Other
+                </label>
+              </div>
+            </div>
           </div>
+          <!--end of col-->
         </div>
-        <pre>Find {{category}} where name is like: {{inputText| json}}</pre>
+        <hr>
+        <div class="row">
+          <p>test</p>
+        </div>
       </div>
 
     </div>
   </div>
-
 </div>

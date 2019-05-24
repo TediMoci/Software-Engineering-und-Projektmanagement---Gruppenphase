@@ -37,6 +37,10 @@
     -webkit-overflow-scrolling: touch;
     font-size: 30px;
   }
+  .col-sm-3 {
+    background: magenta;
+    min-height: 50px;
+  }
   .btn {
     margin: 5px;
     cursor: pointer;
