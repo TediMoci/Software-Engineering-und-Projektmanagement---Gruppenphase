@@ -1,11 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
-import java.util.Set;
+import java.util.Arrays;
 
 @ApiModel(value = "WorkoutDto", description = "A dto for workout entries via rest")
 public class WorkoutDto {
@@ -33,14 +32,15 @@ public class WorkoutDto {
     // TODO: selfAssessment enum
 
     @ApiModelProperty(name = "Calorie consumption of Workout")
+    @Min(value = 0, message = "Min for calorieConsumption is 0")
     private Double calorieConsumption = 0.0;
 
     @ApiModelProperty(name = "Rating of Workout")
     @Min(1) @Max(5)
     private Double rating = 1.0;
 
-    @ApiModelProperty(name = "Workout-Exercise relationships that the Workout is part of")
-    private Set<WorkoutExercise> exercises;
+    @ApiModelProperty(name = "Workout-Exercises that are part of the Workout")
+    private WorkoutExerciseDtoIn[] workoutExercises;
 
     @ApiModelProperty(required = true, name = "ID of creator of Workout")
     private Long creatorId;
@@ -101,12 +101,12 @@ public class WorkoutDto {
         this.rating = rating;
     }
 
-    public Set<WorkoutExercise> getExercises() {
-        return exercises;
+    public WorkoutExerciseDtoIn[] getWorkoutExercises() {
+        return workoutExercises;
     }
 
-    public void setExercises(Set<WorkoutExercise> exercises) {
-        this.exercises = exercises;
+    public void setWorkoutExercises(WorkoutExerciseDtoIn[] workoutExercises) {
+        this.workoutExercises = workoutExercises;
     }
 
     public Long getCreatorId() {
@@ -131,7 +131,7 @@ public class WorkoutDto {
             ", difficulty=" + difficulty +
             ", calorieConsumption=" + calorieConsumption +
             ", rating=" + rating +
-            ", exercises=" + exercises +
+            ", workoutExercises=" + Arrays.toString(workoutExercises) +
             ", creatorId=" + creatorId +
             '}';
     }
@@ -151,7 +151,8 @@ public class WorkoutDto {
         if (calorieConsumption != null ? !calorieConsumption.equals(that.calorieConsumption) : that.calorieConsumption != null)
             return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
-        if (exercises != null ? !exercises.equals(that.exercises) : that.exercises != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(workoutExercises, that.workoutExercises)) return false;
         return creatorId != null ? creatorId.equals(that.creatorId) : that.creatorId == null;
 
     }
@@ -165,7 +166,7 @@ public class WorkoutDto {
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (calorieConsumption != null ? calorieConsumption.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
-        result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(workoutExercises);
         result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
         return result;
     }
@@ -178,7 +179,7 @@ public class WorkoutDto {
         private Integer difficulty;
         private Double calorieConsumption;
         private Double rating;
-        private Set<WorkoutExercise> exercises;
+        private WorkoutExerciseDtoIn[] workoutExercises;
         private Long creatorId;
 
         public WorkoutDtoBuilder() {
@@ -219,8 +220,8 @@ public class WorkoutDto {
             return this;
         }
 
-        public WorkoutDtoBuilder exercises(Set<WorkoutExercise> exercises) {
-            this.exercises = exercises;
+        public WorkoutDtoBuilder workoutExercises(WorkoutExerciseDtoIn[] workoutExercises) {
+            this.workoutExercises = workoutExercises;
             return this;
         }
 
@@ -238,7 +239,7 @@ public class WorkoutDto {
             workoutDto.setDifficulty(difficulty);
             workoutDto.setCalorieConsumption(calorieConsumption);
             workoutDto.setRating(rating);
-            workoutDto.setExercises(exercises);
+            workoutDto.setWorkoutExercises(workoutExercises);
             workoutDto.setCreatorId(creatorId);
             return workoutDto;
         }

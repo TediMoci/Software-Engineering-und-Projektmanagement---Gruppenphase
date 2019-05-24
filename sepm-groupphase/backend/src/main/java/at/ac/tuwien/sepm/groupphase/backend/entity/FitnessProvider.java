@@ -1,47 +1,37 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "fitness_provider")
 public class FitnessProvider {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_fitness_provider_id")
     @SequenceGenerator(name = "seq_fitness_provider_id", sequenceName = "seq_fitness_provider_id")
     private Long id;
 
     @Column(nullable = false, length = 40)
-    @Size(min = 1, max = 50)
     private String name;
 
     @Column(nullable = false)
-    @Size(min = 8)
     private String password;
 
     @Column(nullable = false, length = 100)
-    @NotBlank @Size(max = 100)
     private String address;
 
     @Column(nullable = false, length = 1000)
-    @Size(max = 1000)
     private String description = "No description given.";
 
     @Column(nullable = false, length = 50)
-    @NotNull
-    @Size(max = 50)
     private String email;
 
     @Column(nullable = false, length = 30, name = "phone_number")
-    @Size(max = 30)
     private String phoneNumber = "No phone number given.";
 
     @Column(nullable = false, length = 100)
-    @Size(max = 100)
     private String website = "No website given.";
 
     @ElementCollection

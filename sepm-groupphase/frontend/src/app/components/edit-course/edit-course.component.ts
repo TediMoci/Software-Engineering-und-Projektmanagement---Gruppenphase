@@ -41,7 +41,7 @@ export class EditCourseComponent implements OnInit {
 
   }
 
-  editCourse(){
+  editCourse() {
     this.submitted = true;
 
     const course: Course = new Course(

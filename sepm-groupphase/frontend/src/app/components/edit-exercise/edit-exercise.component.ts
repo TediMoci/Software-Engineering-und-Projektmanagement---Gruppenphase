@@ -22,7 +22,7 @@ export class EditExerciseComponent implements OnInit {
   submitted: boolean = false;
   endurance: boolean;
   strength: boolean;
-  other:boolean;
+  other: boolean;
   name: string;
   equipment: string;
   description: string;

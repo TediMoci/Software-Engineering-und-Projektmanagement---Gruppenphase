@@ -7,10 +7,10 @@ export class WorkoutExercise {
     public equipment:  string,
     public muscleGroup: string,
     public category: string,
-    public difficulty_level:  string,
+    public difficulty_level:  string, // difficulty
     public repetitions: number,
     public sets: number,
     public exDuration: number,
-    public creatorId: number
+    public creatorId: number // name of creator
   ) {}
 }
