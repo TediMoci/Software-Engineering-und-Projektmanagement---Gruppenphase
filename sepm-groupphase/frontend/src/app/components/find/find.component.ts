@@ -3,6 +3,7 @@ import {from, Observable} from 'rxjs';
 import {FindService} from '../../services/find.service';
 import {Dude} from '../../dtos/dude';
 import {Exercise} from "../../dtos/Exercise";
+import {ExerciseFilter} from "../../dtos/exercise-filter";
 
 @Component({
   selector: 'app-find',
@@ -12,12 +13,22 @@ import {Exercise} from "../../dtos/Exercise";
 //todo: add filter to different categories
 //todo: display entities form backend
 export class FindComponent implements OnInit {
-  category: string = "Exercise";
+
+  //Inputs from html
+  public category: string = "Exercise";
   public inputText: any;
+  public filterExerciseCategory:string = "None";
+  public filterCourse: any;
+
+
+  //Transfer Variables
+  public inputTextActual: any;
+  public filterExerciseCategoryActual:string = "None";
+
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   dude: Dude;
-  exercise: Exercise;
+  exerciseFilter: ExerciseFilter;
 
 
 
@@ -30,20 +41,30 @@ export class FindComponent implements OnInit {
   }
 
   startSearch(category: string){
-    console.log("searchvalue: " + this.inputText)
+    console.log("searchvalue: " + this.inputText);
+
+    if(this.inputText == undefined){
+      this.inputTextActual = null;
+    }else {
+      this.inputTextActual = this.inputText;
+    }
+
     switch (category) {
       case "Exercise":
         console.log("Exercise not implemented yet");
-        this.exercise = new Exercise(
-          this.inputText,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null);
-        console.log("name: "+this.exercise.name);
-        this.findService.getAllExercisesFilterd(this.exercise);
+
+        if(this.filterExerciseCategory=="None"){
+          this.filterExerciseCategoryActual = null;
+        } else {
+          this.filterExerciseCategoryActual = this.filterExerciseCategory;
+        }
+
+
+        this.exerciseFilter = new ExerciseFilter(
+          this.inputTextActual,
+          this.filterExerciseCategoryActual);
+        console.log("name: "+this.exerciseFilter.filter);
+        this.findService.getAllExercisesFilterd(this.exerciseFilter);
             break;
       case "Course": console.log("Course not implemented yet");
             break;

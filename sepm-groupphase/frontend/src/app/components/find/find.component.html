@@ -50,31 +50,30 @@
           <div [ngSwitch]="category" class="col">
             <div *ngSwitchCase="'Exercise'">
               <p>Filter for Exercise</p>
-              <div class="btn-group  btn-group-vertical" ngbRadioGroup name="radioBasic" [(ngModel)]="filterExercise" >
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="Strength"> Strength
-                </label>
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio"  value="Endurance"> Endurance
-                </label>
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="Other"> Other
-                </label>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonExerciseCategory" data-toggle="dropdown" [(ngModel)]="filterExerciseCategory" ngDefaultControl>
+                  Category: {{filterExerciseCategory}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='None'">None</a>
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='Strength'">Strength</a>
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='Endurance'">Endurance</a>
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='Other'">Other</a>
+                </div>
               </div>
             </div>
 
             <div *ngSwitchCase="'Course'">
               <p>Filter for Course</p>
-              <div class="btn-group btn-group-toggle btn-group-vertical" ngbRadioGroup name="radioBasic" [(ngModel)]="filterCourse" >
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="Strength"> Strength
-                </label>
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio"  value="Endurance"> Endurance
-                </label>
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="Other"> Other
-                </label>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" [(ngModel)]="filterCourse" ngDefaultControl>
+                   Filter: {{filterCourse}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterCourse ='test'">test</a>
+                  <a class="dropdown-item" (click)="filterCourse ='test2'">test2</a>
+                  <a class="dropdown-item" (click)="filterCourse ='test3'">test3</a>
+                </div>
               </div>
             </div>
 
