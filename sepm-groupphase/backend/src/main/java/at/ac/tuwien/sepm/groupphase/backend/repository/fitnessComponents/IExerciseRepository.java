@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.parameterObjects.ExercisePo;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
@@ -51,32 +50,24 @@ public interface IExerciseRepository extends JpaRepository<Exercise, ExerciseKey
 
     /**
      * filtering according to the given parameters
-     * @param name
-     * @param description
-     * @param equipment
-     * @param muscleGroup
-     * @param rating
+     * @param filter
      * @param category
      * @return all Exercises in the database according to the given filters
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
-    @Query("SELECT e FROM Exercise e WHERE e.name LIKE ?1% AND e.description LIKE %?2% AND e.equipment LIKE %?3%" +
-        " AND e.muscleGroup LIKE %?4% AND e.rating>=?5 AND e.category=?6 AND e.isHistory=false")
-    List<Exercise> findByFiltersWithCategory(String name, String description, String equipment, String muscleGroup, Double rating, Category category) throws DataAccessException;
+    @Query("SELECT e FROM Exercise e WHERE (e.name LIKE %?1% OR e.description LIKE %?1% OR e.equipment LIKE %?1%" +
+        " OR e.muscleGroup LIKE %?1%) AND e.category=?2 AND e.isHistory=false")
+    List<Exercise> findByFilterWithCategory(String filter, Category category) throws DataAccessException;
 
     /**
-     * filtering according to the given parameters
-     * @param name
-     * @param description
-     * @param equipment
-     * @param muscleGroup
-     * @param rating
-     * @return all Exercises in the database according to the given filters
+     * filtering according to the given parameter
+     * @param filter
+     * @return all Exercises in the database according to the given filter
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
-    @Query("SELECT e FROM Exercise e WHERE e.name LIKE ?1% AND e.description LIKE %?2% AND e.equipment LIKE %?3%" +
-        " AND e.muscleGroup LIKE %?4% AND e.rating>=?5 AND e.isHistory=false")
-    List<Exercise> findByFiltersWithoutCategory(String name, String description, String equipment, String muscleGroup, Double rating) throws DataAccessException;
+    @Query("SELECT e FROM Exercise e WHERE (e.name LIKE %?1% OR e.description LIKE %?1% OR e.equipment LIKE %?1%" +
+        " OR e.muscleGroup LIKE %?1%) AND e.isHistory=false")
+    List<Exercise> findByFilterWithoutCategory(String filter) throws DataAccessException;
 
     @Query("SELECT e FROM Exercise e WHERE e.id=?1 AND e.isHistory=false")
     Exercise findById(long id);

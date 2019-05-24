@@ -111,6 +111,7 @@ public class SecurityConfiguration {
                     "/course/{id}",
                     "/exercise",
                     "/exercise/all",
+                    "/exercise/filtered",
                     "/exercise/{id}/{version}",
                     "/workout",
                     "/workout/all",

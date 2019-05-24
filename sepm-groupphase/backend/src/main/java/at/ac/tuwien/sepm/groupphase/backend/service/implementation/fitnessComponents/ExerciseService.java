@@ -1,5 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.parameterObjects.ExercisePo;
+
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -44,6 +44,16 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
+    public List<Exercise> findByName(String name) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name);
+        try {
+            return iExerciseRepository.findByName(name);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public List<Exercise> findAll() throws ServiceException {
         LOGGER.info("Entering findAll");
         try {
@@ -54,21 +64,16 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
-    public List<Exercise> findByFilters(ExercisePo exercisePo) throws ServiceException {
-        LOGGER.info("Entering findByFilters with: " + exercisePo);
-        String name = exercisePo.getName() != null ? exercisePo.getName() : "";
-        String description = exercisePo.getDescription() != null ? exercisePo.getDescription() : "";
-        String equipment = exercisePo.getEquipment() != null ? exercisePo.getEquipment() : "";
-        String muscleGroup = exercisePo.getMuscleGroup() != null ? exercisePo.getMuscleGroup() : "";
-        Double rating = exercisePo.getRating() != null ? exercisePo.getRating() : 1.0;
-        Category category = exercisePo.getCategory();
+    public List<Exercise> findByFilter(String filter, Category category) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category);
         try {
             if (category != null) {
-                return iExerciseRepository.findByFiltersWithCategory(name, description, equipment, muscleGroup, rating, category);
+                LOGGER.debug("category!=null");
+                return iExerciseRepository.findByFilterWithCategory(filter, category);
             } else {
-                return iExerciseRepository.findByFiltersWithoutCategory(name, description, equipment, muscleGroup, rating);
+                LOGGER.debug("category==null");
+                return iExerciseRepository.findByFilterWithoutCategory(filter);
             }
-
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
