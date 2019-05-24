@@ -4,90 +4,90 @@
   </button>
 </div>
 
-<h3 class="registerTitle">Edit Fitness-Provider-Profile</h3>
+<h3 class="editFPTitle" align="center">Edit Fitness-Provider-Profile</h3>
 
 <div class="pt-3">
   <div class="row">
     <div class="col-md-6 mx-auto">
-      <span class="anchor" id="formRegister"></span>
-      <form [formGroup]="editForm" (ngSubmit)="editFitnessProvider()">
+      <span class="anchor" id="editFPForm"></span>
+      <form [formGroup]="editFPForm" (ngSubmit)="editFitnessProvider()">
 
         <div class="form-group">
-          <label for="editName">Name</label>
-          <input value = "{{userName}}" type="text" name="name" maxlength="50" class="form-control" id="editName"
-                 aria-describedby="editNameHelp">
-          <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your name is
+          <label for="editFPName">Name</label>
+          <input ngModel = "{{userName}}" formControlName="name" type="text" name="name" maxlength="50" class="form-control" id="editFPName"
+                 aria-describedby="editFPNameHelp">
+          <div *ngIf="submitted && !!editFPForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.name.errors.required">Your name is
               required!
             </small>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="editPassword">Password</label>
-          <input value="{{password}}" knifeNoSpaces type="password" name="password" class="form-control" id="editPassword">
-          <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
+          <label for="editFPPassword">Password</label>
+          <input ngModel="{{password}}" formControlName="password" knifeNoSpaces type="password" name="password" class="form-control" id="editFPPassword">
+          <div *ngIf="submitted && !!editFPForm.controls.password.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.password.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.minlength">Your password
+            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.password.errors.minlength">Your password
               must be at least 8 characters long!
             </small>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="editPasswordConfirmed">Password Confirmed</label>
-          <input value="{{password}}" knifeNoSpaces type="password" name="passwordConfirmed" class="form-control" id="editPasswordConfirmed">
-          <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
-            <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
+          <label for="editFPPasswordConfirmed">Password Confirmed</label>
+          <input ngModel="{{password}}" formControlName="passwordConfirmed" knifeNoSpaces type="password" name="passwordConfirmed" class="form-control" id="editFPPasswordConfirmed">
+          <div *ngIf="submitted && !!editFPForm.controls.passwordConfirmed.errors" class="error">
+            <small class="form-text text-warning" *ngIf=" !!editFPForm.controls.passwordConfirmed.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
+            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
             </small>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="editDescription">Description</label>
-          <input value = "{{description}}" type="text" name="description" maxlength="1000" class="form-control" id="editDescription"
-                 aria-describedby="editDescriptionHelp">
+          <label for="editFPDescription">Description</label>
+          <input ngModel = "{{description}}" formControlName="description" type="text" name="description" maxlength="1000" class="form-control" id="editFPDescription"
+                 aria-describedby="editFPDescriptionHelp">
         </div>
 
         <div class="form-group">
-          <label for="editEmail">Email</label>
-          <input value="{{email}}" type="text" name="email" class="form-control" id="editEmail"
+          <label for="editFPEmail">Email</label>
+          <input ngModel="{{email}}" formControlName="email" type="text" name="email" class="form-control" id="editFPEmail"
                  aria-describedby="editEmailHelp">
-          <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
+          <div *ngIf="submitted && !!editFPForm.controls.email.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.email.errors.required">Your email is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.email">Your email is
+            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.email.errors.email">Your email is
               invalid!
             </small>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="editAddress">Address</label>
-          <input value="{{address}}" type="text" name="address" class="form-control" id="editAddress"
+          <label for="editFPAddress">Address</label>
+          <input ngModel="{{address}}" formControlName="address" type="text" name="address" class="form-control" id="editFPAddress"
                  aria-describedby="editAddressHelp">
-          <div *ngIf="submitted && !!registerForm.controls.address.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.address.errors.required">Your address is
+          <div *ngIf="submitted && !!editFPForm.controls.address.errors" class="error">
+            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.address.errors.required">Your address is
               required!
             </small>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="editPhoneNumber">Phone number</label>
-          <input value = "{{phoneNumber}}" type="text" name="phoneNumber" maxlength="50" class="form-control" id="editPhoneNumber"
-                 aria-describedby="editPhoneNumberHelp">
+          <label for="editFPPhoneNumber">Phone number</label>
+          <input ngModel="{{phoneNumber}}" type="text" name="phoneNumber" maxlength="50" formControlName="phoneNumber" class="form-control" id="editFPPhoneNumber"
+                 aria-describedby="editFPPhoneNumberHelp">
         </div>
 
         <div class="form-group">
           <label for="editWebsite">Website</label>
-          <input value = "{{website}}" type="text" name="website" maxlength="50" class="form-control" id="editWebsite"
+          <input ngModel= "{{website}}" type="text" name="website" formControlName="website" maxlength="50" class="form-control" id="editWebsite"
                  aria-describedby="editWebsiteHelp">
         </div>
 

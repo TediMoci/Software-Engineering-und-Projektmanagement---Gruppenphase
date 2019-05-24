@@ -63,8 +63,8 @@ export class EditProfileComponent implements OnInit {
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      sex: ['', [Validators.required]],
-      selfAssessment: ['', [Validators.required]],
+      sex: [this.oldDude.sex, [Validators.required]],
+      selfAssessment: [this.oldDude.selfAssessment, [Validators.required]],
       birthday: ['', [Validators.required]],
       height: ['', [Validators.required]],
       weight: ['', [Validators.required]],
@@ -92,15 +92,14 @@ export class EditProfileComponent implements OnInit {
       this.editForm.controls.weight.value,
     );
 
-    console.log(dude);
-
     if (this.editForm.invalid) {
       console.log('input is invalid');
       return;
     }
 
     this.editDudeService.editDude(dude, this.oldDude).subscribe(
-      () => {
+      (data) => {
+        localStorage.setItem('loggedInDude', JSON.stringify(data));
         this.router.navigate(['/dude-profile']);
       },
       error => {

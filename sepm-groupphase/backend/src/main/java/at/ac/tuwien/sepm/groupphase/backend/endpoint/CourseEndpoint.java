@@ -92,4 +92,28 @@ public class CourseEndpoint {
         }
         return courseDtos;
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Course", authorizations = {@Authorization(value = "apiKey")})
+    public CourseDto updateCourse(@PathVariable("id") long id, @RequestBody CourseDto newCourse) {
+        LOGGER.info("Updating course with id: " + id);
+        try {
+            return courseMapper.courseToCourseDto(iCourseService.update(id, courseMapper.courseDtoToCourse(newCourse)));
+        } catch (ServiceException e){
+            LOGGER.error("Could not update course with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete a Course", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteCourse(@PathVariable("id") long id) {
+        LOGGER.info("Deleting course with id: " + id);
+        try {
+            iCourseService.delete(id);
+        } catch (ServiceException e){
+            LOGGER.error("Could not delete course with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 }

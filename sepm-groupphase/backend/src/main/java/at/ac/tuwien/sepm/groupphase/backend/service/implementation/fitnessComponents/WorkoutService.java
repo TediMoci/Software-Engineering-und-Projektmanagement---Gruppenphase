@@ -98,4 +98,45 @@ public class WorkoutService implements IWorkoutService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public Workout findById(long id) throws ServiceException {
+        LOGGER.info("Entering findById with id: " + id);
+        try {
+            return iWorkoutRepository.findById(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Workout update(long id, Workout newWorkout) throws ServiceException {
+        LOGGER.info("Updating workout with id: " + id);
+        try {
+            Workout oldWorkout = iWorkoutRepository.findById(id);
+            if (oldWorkout == null) throw new ServiceException("Could not find workout with id: " + id);
+
+            oldWorkout.setHistory(true);
+            newWorkout.setId(id);
+            newWorkout.setVersion(oldWorkout.getVersion()+1);
+            iWorkoutRepository.save(oldWorkout);
+            Long dbID = iWorkoutRepository.save(newWorkout).getId();
+            iWorkoutRepository.updateNew(newWorkout.getId(), dbID);
+            return newWorkout;
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void delete(long id) throws ServiceException {
+        LOGGER.info("Deleting workout with id: " + id);
+        try {
+            Workout workout = iWorkoutRepository.findById(id);
+            if (workout == null) throw new ServiceException("Could not find workout with id: " + id);
+            iWorkoutRepository.delete(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

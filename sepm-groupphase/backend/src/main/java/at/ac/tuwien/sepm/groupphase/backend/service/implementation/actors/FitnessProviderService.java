@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -73,8 +74,14 @@ public class FitnessProviderService implements IFitnessProviderService {
 
     @Override
     public FitnessProvider findByName(String name) throws ServiceException {
-
-        return iFitnessProviderRepository.findByName(name);
+        try {
+            fitnessProviderValidator.validateName(name);
+        } catch (ValidationException e){
+            throw new ServiceException(e.getMessage());
+        }
+        FitnessProvider fitnessProvider = iFitnessProviderRepository.findByName(name);
+        if (fitnessProvider==null) throw new ServiceException("Could not find fitness provider with name: " + name);
+        return fitnessProvider;
     }
 
     @Override
@@ -84,7 +91,9 @@ public class FitnessProviderService implements IFitnessProviderService {
             if (oldFitnessProvider==null) throw new ServiceException("There is no fitness provider with that name in the database.");
             if (!(oldFitnessProvider.getName().equals(newFitnessProvider.getName()))) fitnessProviderValidator.validateNameUnique(newFitnessProvider.getName());
             oldFitnessProvider.setName(newFitnessProvider.getName());
-            oldFitnessProvider.setPassword(newFitnessProvider.getPassword());
+            if (!newFitnessProvider.getPassword().equals(oldFitnessProvider.getPassword())){
+                oldFitnessProvider.setPassword(passwordEncoder.encode(newFitnessProvider.getPassword()));
+            }
             oldFitnessProvider.setDescription(newFitnessProvider.getDescription());
             oldFitnessProvider.setAddress(newFitnessProvider.getAddress());
             oldFitnessProvider.setEmail(newFitnessProvider.getEmail());

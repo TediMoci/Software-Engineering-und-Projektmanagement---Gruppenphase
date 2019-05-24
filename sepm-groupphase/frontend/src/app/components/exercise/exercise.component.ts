@@ -14,7 +14,6 @@ export class ExerciseComponent implements OnInit {
   userName: string;
   exerciseName: string;
   equipment: string;
-  difficulty: string;
   category: string;
   muscleGroup: string;
   description: string;
@@ -29,7 +28,6 @@ export class ExerciseComponent implements OnInit {
     this.userName = this.dude.name;
     this.exerciseName = this.exercise.name;
     this.equipment = this.exercise.equipment;
-    this.difficulty = this.exercise.difficulty_level;
     this.muscleGroup = this.exercise.muscleGroup;
     this.category = this.exercise.category;
     this.description = this.exercise.description;

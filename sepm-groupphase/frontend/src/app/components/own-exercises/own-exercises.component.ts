@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {OwnExercisesService} from '../../services/own-exercises.service';
 import {CreateExercise} from '../../dtos/create-exercise';
 import {Router} from '@angular/router';
+import {Exercise} from '../../dtos/exercise';
 
 @Component({
   selector: 'app-own-exercises',
@@ -15,24 +16,29 @@ export class OwnExercisesComponent implements OnInit {
   userName: string;
   dude: Dude;
   exercises: any;
-  exerciseToDelete: string;
   error: any;
-  constructor(private ownExercisesService: OwnExercisesService, private router: Router) { }
+  exerciseToDelete;
+
+  constructor(private ownExercisesService: OwnExercisesService, private router: Router) {
+  }
 
   ngOnInit() {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
 
-    this.ownExercisesService.getAllExercisesOfLoggedInDude().subscribe(
+    this.ownExercisesService.getAllExercisesOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all exercises created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
         this.exercises = data.sort(function (a, b) { // sort data alphabetically
-          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1;}
-          if (a.name > b.name) {return 1;}
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
           return 0;
         });
-        console.log(this.exercises);
       },
       error => {
         this.error = error;
@@ -41,22 +47,31 @@ export class OwnExercisesComponent implements OnInit {
 
   }
 
-  setSelectedExercise(element: CreateExercise) {
+  setSelectedExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
   }
 
-  goToEditExercise(element: CreateExercise) {
+  goToEditExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
     this.router.navigate(['/edit-exercise']);
   }
 
-  setToDeleteExercise(element: CreateExercise) {
+  setToDeleteExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
     this.exerciseToDelete = element.name;
+    console.log(element);
   }
 
-  deleteExercise(){
-
+  deleteExercise() {
+    this.ownExercisesService.deleteExercise(JSON.parse(localStorage.getItem('selectedExercise')).id)
+      .subscribe(() => {
+          console.log('removed exercise successfully');
+          localStorage.removeItem('selectedExercise');
+          this.ngOnInit();
+        },
+        error => {
+          this.error = error;
+        }
+      );
   }
-
 }

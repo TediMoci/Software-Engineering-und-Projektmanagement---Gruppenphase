@@ -87,8 +87,9 @@ public class FitnessProviderEndpoint {
     public List<FitnessProviderDto> findAll() {
         List<FitnessProviderDto> fpListDto = new ArrayList<>();
         try {
-            for (int i=0; i< iFitnessProviderService.findAll().size(); i++){
-                fpListDto.add(fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.findAll().get(i)));
+            List<FitnessProvider> fpList = iFitnessProviderService.findAll();
+            for (int i=0; i< fpList.size(); i++){
+                fpListDto.add(fitnessProviderMapper.fitnessProviderToFitnessProviderDto(fpList.get(i)));
             }
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

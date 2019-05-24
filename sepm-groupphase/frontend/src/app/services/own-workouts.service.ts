@@ -11,11 +11,16 @@ import {Workout} from '../dtos/workout';
 export class OwnWorkoutsService {
 
   private workoutsBaseUri: string = this.globals.backendUri + '/dudes';
-  private dude: Dude = JSON.parse(localStorage.getItem('loggedInDude'));
+  private workoutEditBaseUri: string = this.globals.backendUri + '/workout';
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
-  getAllWorkoutsOfLoggedInDude(): Observable<Workout[]>{
-    console.log('get all workouts created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
-    return this.httpClient.get<Workout[]>(this.workoutsBaseUri + '/' + this.dude.id + '/workouts');
+  getAllWorkoutsOfLoggedInDude(dude: Dude): Observable<Workout[]>{
+    console.log('get all workouts created by dude with name ' + dude.name + ' and id ' + dude.id);
+    return this.httpClient.get<Workout[]>(this.workoutsBaseUri + '/' + dude.id + '/workouts');
+  }
+
+  deleteWorkout(workoutId: number) {
+      console.log('delete workout with id ' + workoutId);
+      return this.httpClient.delete(this.workoutEditBaseUri + '/' + workoutId);
   }
 }

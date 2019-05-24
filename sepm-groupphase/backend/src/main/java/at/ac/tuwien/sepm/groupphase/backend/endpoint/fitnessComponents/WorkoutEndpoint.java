@@ -95,6 +95,30 @@ public class WorkoutEndpoint {
         return workoutDtos;
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Workout", authorizations = {@Authorization(value = "apiKey")})
+    public WorkoutDto update(@PathVariable("id") long id, @RequestBody WorkoutDto newWorkout) {
+        LOGGER.info("Updating workout with id: " + id);
+        try {
+            return workoutMapper.workoutToWorkoutDto(iWorkoutService.update(id, workoutMapper.workoutDtoToWorkout(newWorkout)));
+        } catch (ServiceException e){
+            LOGGER.error("Could not update workout with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete a Workout", authorizations = {@Authorization(value = "apiKey")})
+    public void delete(@PathVariable("id") long id) {
+        LOGGER.info("Deleting workout with id " + id);
+        try {
+            iWorkoutService.delete(id);
+        } catch (ServiceException e){
+            LOGGER.error("Could not delete workout with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
     @RequestMapping(value = "/{id}/{version}/exercises", method = RequestMethod.GET)
     @ApiOperation(value = "Get exercises that are part of workout with given id and version", authorizations = {@Authorization(value = "apiKey")})
     public WorkoutExerciseDtoOut[] getAllExercisesByWorkoutIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {

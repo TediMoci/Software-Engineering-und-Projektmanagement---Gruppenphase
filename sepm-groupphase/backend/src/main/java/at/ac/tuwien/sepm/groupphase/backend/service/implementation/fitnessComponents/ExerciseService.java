@@ -74,4 +74,44 @@ public class ExerciseService implements IExerciseService {
         }
     }
 
+    @Override
+    public Exercise findById(long id) throws ServiceException {
+        LOGGER.info("Entering findById with id: " + id);
+        try {
+            return iExerciseRepository.findById(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Exercise update(long id, Exercise newExercise) throws ServiceException {
+        LOGGER.info("Updating exercise with id: " + id);
+        try {
+            Exercise oldExercise = iExerciseRepository.findById(id);
+            if (oldExercise == null) throw new ServiceException("Could not find exercise with id: " + id);
+
+            oldExercise.setHistory(true);
+            newExercise.setId(id);
+            newExercise.setVersion(oldExercise.getVersion()+1);
+            iExerciseRepository.save(oldExercise);
+            Long dbID = iExerciseRepository.save(newExercise).getId();
+            iExerciseRepository.updateNew(newExercise.getId(), dbID);
+            return newExercise;
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void delete(long id) throws ServiceException {
+        LOGGER.info("Deleting exercise with id: " + id);
+        try {
+            Exercise exercise = iExerciseRepository.findById(id);
+            if (exercise == null) throw new ServiceException("Could not find exercise with id: " + id);
+            iExerciseRepository.delete(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

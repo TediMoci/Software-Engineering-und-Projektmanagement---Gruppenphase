@@ -121,8 +121,16 @@ public class SecurityConfiguration {
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html")
                 .permitAll()
-                .antMatchers(HttpMethod.DELETE).permitAll()
-                .antMatchers(HttpMethod.PUT).permitAll()
+                .antMatchers(HttpMethod.DELETE,
+                    "/exercise/{id}",
+                    "/course/{id}",
+                    "/workout/{id}").permitAll()
+                .antMatchers(HttpMethod.PUT,
+            "/dudes/{name}",
+                    "/exercise/{id}",
+                    "/course/{id}",
+                    "/workout/{id}",
+                    "/fitnessProvider/{name}").permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {
                 http
@@ -152,7 +160,7 @@ public class SecurityConfiguration {
                 registry
                     .addMapping("/**")
                     .allowedOrigins("*")
-                    .allowedMethods("PUT","POST","OPTION","GET", "PUT", "DELETE");
+                    .allowedMethods("PUT","POST","OPTION","GET", "DELETE");
             }
         };
     }

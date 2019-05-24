@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {Router} from '@angular/router';
 import {OwnWorkoutsService} from '../../services/own-workouts.service';
@@ -17,19 +17,25 @@ export class OwnWorkoutsComponent implements OnInit {
   workouts: Workout[];
   workoutToDelete: string;
   error: any;
-  constructor(private ownWorkoutsService: OwnWorkoutsService, private router: Router) { }
+
+  constructor(private ownWorkoutsService: OwnWorkoutsService, private router: Router) {
+  }
 
   ngOnInit() {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
 
-    this.ownWorkoutsService.getAllWorkoutsOfLoggedInDude().subscribe(
+    this.ownWorkoutsService.getAllWorkoutsOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all workouts created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
         this.workouts = data.sort(function (a, b) { // sort data alphabetically
-          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1;}
-          if (a.name > b.name) {return 1;}
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
           return 0;
         });
         console.log(this.workouts);
@@ -55,8 +61,17 @@ export class OwnWorkoutsComponent implements OnInit {
     this.workoutToDelete = element.name;
   }
 
-  deleteWorkout(){
-
+  deleteWorkout() {
+    this.ownWorkoutsService.deleteWorkout(JSON.parse(localStorage.getItem('selectedWorkout')).id)
+      .subscribe(() => {
+          console.log('removed workout successfully');
+          localStorage.removeItem('selectedWorkout');
+          this.ngOnInit();
+        },
+        error => {
+          this.error = error;
+        }
+      );
   }
 
 }

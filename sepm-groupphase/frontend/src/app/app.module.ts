@@ -28,6 +28,7 @@ import { FitnessProviderProfileComponent } from './components/fitness-provider-p
 import { LoginAsFitnessProviderComponent } from './components/login-as-fitness-provider/login-as-fitness-provider.component';
 import { FollowerComponent } from './components/follower/follower.component';
 import { FitnessProvidersFollowedComponent } from './components/fitness-providers-followed/fitness-providers-followed.component';
+import { CreateCourseComponent } from './components/create-course/create-course.component';
 import { CreateExerciseComponent } from './components/create-exercise/create-exercise.component';
 import { EditFitnessProviderProfileComponent } from './components/edit-fitness-provider-profile/edit-fitness-provider-profile.component';
 import { OwnExercisesComponent } from './components/own-exercises/own-exercises.component';
@@ -37,6 +38,11 @@ import { ExerciseComponent } from './components/exercise/exercise.component';
 import { EditExerciseComponent } from './components/edit-exercise/edit-exercise.component';
 import { WorkoutComponent } from './components/workout/workout.component';
 import { EditWorkoutComponent } from './components/edit-workout/edit-workout.component';
+import { MyContentFitnessProviderComponent } from './components/my-content-fitness-provider/my-content-fitness-provider.component';
+import { CreateForFitnessProviderComponent } from './components/create-for-fitness-provider/create-for-fitness-provider.component';
+import { CourseComponent } from './components/course/course.component';
+import { EditCourseComponent } from './components/edit-course/edit-course.component';
+import { OwnCoursesComponent } from './components/own-courses/own-courses.component';
 
 @NgModule({
   declarations: [
@@ -59,17 +65,21 @@ import { EditWorkoutComponent } from './components/edit-workout/edit-workout.com
     LoginAsFitnessProviderComponent,
     FollowerComponent,
     FitnessProvidersFollowedComponent,
-    EditFitnessProviderProfileComponent,
+    CreateCourseComponent,
     OwnExercisesComponent,
     OwnWorkoutsComponent,
     OwnTrainingScheduleComponent,
     EditFitnessProviderProfileComponent,
-    FitnessProvidersFollowedComponent,
     CreateExerciseComponent,
     ExerciseComponent,
     EditExerciseComponent,
     WorkoutComponent,
-    EditWorkoutComponent
+    EditWorkoutComponent,
+    MyContentFitnessProviderComponent,
+    CreateForFitnessProviderComponent,
+    CourseComponent,
+    EditCourseComponent,
+    OwnCoursesComponent
   ],
   imports: [
     BrowserModule,
