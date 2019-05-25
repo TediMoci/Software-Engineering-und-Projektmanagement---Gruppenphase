@@ -33,6 +33,7 @@ public class CourseEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new Course", authorizations = {@Authorization(value = "apiKey")})
     public CourseDto save(@Valid @RequestBody CourseDto courseDto) {
         LOGGER.info("Entering save for: " + courseDto);

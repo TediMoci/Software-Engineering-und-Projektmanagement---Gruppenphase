@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.*;
 @SpringBootTest
 @ActiveProfiles(profiles = "integration-test")
 public class ExerciseServiceTest {
+
     private final static Exercise exercise1 = new Exercise();
     private final static Exercise exercise2 = new Exercise();
 
@@ -38,9 +39,10 @@ public class ExerciseServiceTest {
     IExerciseService exerciseService;
 
     @BeforeClass
-    public static void beforeEach() {
+    public static void beforeClass() {
         Dude dude = new Dude();
         dude.setId(1L);
+
         exercise1.setId(1L);
         exercise1.setVersion(1);
         exercise1.setName("Name1");
