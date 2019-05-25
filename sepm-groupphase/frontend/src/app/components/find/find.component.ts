@@ -122,10 +122,12 @@ export class FindComponent implements OnInit {
       case "Workout":
         console.log("min: "+this.filterWorkoutCaloriesMin);
         console.log("max: "+this.filterWorkoutCaloriesMax);
-        if(this.filterWorkoutDifficulty=="None"){
-          this.filterWorkoutDifficultyActual = null;
-        } else {
-          this.filterWorkoutDifficultyActual = this.filterWorkoutDifficulty;
+
+        switch (this.filterWorkoutDifficulty) {
+          case "None": this.filterWorkoutDifficultyActual = null; break;
+          case  "Beginner": this.filterWorkoutDifficultyActual = "1"; break;
+          case  "Advanced": this.filterWorkoutDifficultyActual = "2"; break;
+          case  "Pro": this.filterWorkoutDifficultyActual = "3"; break;
         }
 
         if(this.filterWorkoutCaloriesMin==""){
