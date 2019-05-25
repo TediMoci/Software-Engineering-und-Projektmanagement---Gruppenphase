@@ -20,7 +20,6 @@ export class CreateWorkoutComponent implements OnInit {
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
-  addExercisesBoolean: boolean = false;
   exercisesWorkout: WorkoutEx[];
   exercisesWorkoutIn: WorkoutExerciseDtoIn[] = [];
   dude: Dude;
@@ -91,7 +90,7 @@ export class CreateWorkoutComponent implements OnInit {
       console.log('input is invalid');
       return;
     }
-    console.log(workout.workoutExerciseDtoIn);
+    console.log(workout.workoutExercises);
 
     this.createWorkoutService.addWorkout(workout).subscribe(
       (data) => {

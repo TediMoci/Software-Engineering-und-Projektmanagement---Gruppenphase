@@ -1,4 +1,3 @@
-import {WorkoutEx} from './workoutEx';
 import {WorkoutExerciseDtoIn} from './workoutExerciseDtoIn';
 
 export class CreateWorkout {
@@ -7,7 +6,7 @@ export class CreateWorkout {
     public description: string,
     public difficulty: number,
     public calorieConsumption: number,
-    public workoutExerciseDtoIn: WorkoutExerciseDtoIn[],
+    public workoutExercises: WorkoutExerciseDtoIn[],
     public creatorId: number
   ) {}
 }

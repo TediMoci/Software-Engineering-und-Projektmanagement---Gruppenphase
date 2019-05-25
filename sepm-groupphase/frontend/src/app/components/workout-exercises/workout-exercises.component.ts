@@ -67,8 +67,9 @@ export class WorkoutExercisesComponent implements OnInit {
   }
 
   addToChosenExercises(element: Exercise) {
-    console.log(element );
+    console.log(element);
     this.chosenExercises.push(new WorkoutEx(element, 1, 1, 1));
+    console.log(this.chosenExercises);
   }
 
   findExercisesByName() {
@@ -103,6 +104,7 @@ export class WorkoutExercisesComponent implements OnInit {
   }
 
   saveExercisesTemporarily() {
+    console.log('save exercises temporarily');
     localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.chosenExercises));
     console.log(JSON.parse(localStorage.getItem('chosenExercisesForWorkout')));
   }

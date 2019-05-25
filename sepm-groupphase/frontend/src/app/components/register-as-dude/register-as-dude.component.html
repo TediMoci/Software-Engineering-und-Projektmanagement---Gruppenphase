@@ -130,11 +130,11 @@
   </div>
 
             <div class="form-group">
-              <label for="descriptionForWorkout">Description</label>
-              <input type="text" name="descriptionForWorkout" class="form-control" id="descriptionForWorkout" formControlName="descriptionForWorkout"
-                     aria-describedby="descriptionForWorkoutHelp" placeholder="Enter description">
-              <div *ngIf="submitted && !!registerForm.controls.descriptionForWorkout.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForWorkout.errors.required">Description is
+              <label for="height">Height in cm</label>
+              <input knifeOnlyNumbers type="text" maxlength="3" name="height" formControlName="height" class="form-control" id="height"
+                     aria-describedby="heightHelp" placeholder="Enter height">
+              <div *ngIf="submitted && !!registerForm.controls.height.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!registerForm.controls.height.errors.required">Your height is
                   required!
                 </small>
               </div>
