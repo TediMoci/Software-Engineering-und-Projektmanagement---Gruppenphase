@@ -18,18 +18,18 @@
       <div class="col-sm-9">
         <div class="row">
           <div class="col">
-            <h1>Workout {{workoutName}}</h1>
-            <p> Difficulty level: {{difficulty}} </p>
-            <p> Calorie Consumption: {{calories}} </p>
+            <h1>{{workoutName}}</h1>
+            <p> Difficulty: {{difficulty}}</p>
+            <p> Calorie Consumption: {{calories}} kcal</p>
             <p> Description: {{description}} </p>
             <h3>Exercises</h3>
             <ul>
               <li *ngFor='let element of exercises'>
                 <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn2 btn-link">{{element.name}}</a>
                 <ul>
-                  <li>{{element.repetitions}}</li>
-                  <li>{{element.sets}}</li>
-                  <li>{{element.exDuration}}}</li>
+                  <li>Repetitions: {{element.repetitions}}</li>
+                  <li>Sets: {{element.sets}}</li>
+                  <li>Duration: {{element.exDuration}}</li>
                 </ul>
               </li>
             </ul>

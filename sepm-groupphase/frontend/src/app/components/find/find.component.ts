@@ -2,26 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import {from, Observable} from 'rxjs';
 import {FindService} from '../../services/find.service';
 import {Dude} from '../../dtos/dude';
-import {Exercise} from "../../dtos/Exercise";
-import {ExerciseFilter} from "../../dtos/exercise-filter";
+import {Exercise} from '../../dtos/exercise';
+import {ExerciseFilter} from '../../dtos/exercise-filter';
 
 @Component({
   selector: 'app-find',
   templateUrl: './find.component.html',
   styleUrls: ['./find.component.scss']
 })
-//todo: add filter to different categories
-//todo: display entities form backend
+
+// todo: add filter to different categories
+// todo: display entities form backend
 export class FindComponent implements OnInit {
 
-  //Inputs from html
+  // Inputs from html
   public category: string = "Exercise";
   public inputText: any;
   public filterExerciseCategory:string = "None";
   public filterCourse: any;
 
 
-  //Transfer Variables
+  // Transfer Variables
   public inputTextActual: any;
   public filterExerciseCategoryActual:string = "None";
 
@@ -35,7 +36,7 @@ export class FindComponent implements OnInit {
 
 
 
-  constructor(private findService:FindService) {}
+  constructor(private findService: FindService) {}
 
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));

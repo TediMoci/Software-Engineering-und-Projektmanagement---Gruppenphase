@@ -32,7 +32,13 @@ export class WorkoutComponent implements OnInit {
 
     this.userName = this.dude.name;
     this.workoutName = this.workout.name;
-    this.difficulty = this.workout.difficulty;
+    if (this.workout.difficulty === 1) {
+      this.difficulty = 'Beginner';
+    } if (this.workout.difficulty === 2) {
+      this.difficulty = 'Advanced';
+    } if (this.workout.difficulty === 3) {
+      this.difficulty = 'Pro';
+    }
     this.calories = this.workout.calorieConsumption;
     this.description = this.workout.description;
 
@@ -40,8 +46,8 @@ export class WorkoutComponent implements OnInit {
       (data) => {
         console.log('get all exercises of workout ' + this.workoutName);
         this.exercises = data.sort(function (a, b) { // sort data alphabetically
-          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1;}
-          if (a.name > b.name) {return 1;}
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+          if (a.name > b.name) {return 1; }
           return 0;
         });
         console.log(this.exercises);

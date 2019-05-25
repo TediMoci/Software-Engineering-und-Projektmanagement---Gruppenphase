@@ -4,7 +4,7 @@ export class Workout {
     public version, number,
     public name: string,
     public description: string,
-    public difficulty: string,
+    public difficulty: number,
     public calorieConsumption: number,
     public creatorId: number
   ) {}
