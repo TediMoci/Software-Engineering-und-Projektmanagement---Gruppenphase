@@ -47,15 +47,14 @@ export class WorkoutExercisesComponent implements OnInit {
   addToChosenExercisesFromCreateExercise() {
     this.newExercises =  JSON.parse(localStorage.getItem('addNewExerciseForWorkout'));
     console.log(this.newExercises);
-    this.addToChosenExercises(this.newExercises);
+    this.chosenExercises.push(new WorkoutEx(this.newExercises, 1, 1, 1));
+    console.log(this.chosenExercises);
+
   }
 
   addToChosenExercises(element: Exercise) {
-    console.log(element);
+    console.log(element );
     this.chosenExercises.push(new WorkoutEx(element, 1, 1, 1));
-    this.registerForm = this.formBuilder.group({
-      name: [''],
-    });
   }
 
   findExercisesByName() {

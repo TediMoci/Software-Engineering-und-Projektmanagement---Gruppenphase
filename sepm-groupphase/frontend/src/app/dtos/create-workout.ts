@@ -5,7 +5,7 @@ export class CreateWorkout {
   constructor(
     public name: string,
     public description: string,
-    public difficulty: string,
+    public difficulty: number,
     public calorieConsumption: number,
     public workoutExerciseDtoIn: WorkoutExerciseDtoIn[],
     public creatorId: number
