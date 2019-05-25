@@ -68,10 +68,8 @@ public class ExerciseService implements IExerciseService {
         LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category);
         try {
             if (category != null) {
-                LOGGER.debug("category!=null");
                 return iExerciseRepository.findByFilterWithCategory(filter, category);
             } else {
-                LOGGER.debug("category==null");
                 return iExerciseRepository.findByFilterWithoutCategory(filter);
             }
         } catch (DataAccessException e) {

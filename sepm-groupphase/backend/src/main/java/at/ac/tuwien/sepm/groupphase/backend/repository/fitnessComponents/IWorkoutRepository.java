@@ -47,6 +47,27 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
     @Query("SELECT w FROM Workout w WHERE w.isHistory=false ORDER BY w.id")
     List<Workout> findAll() throws DataAccessException;
 
+    /**
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param difficulty to be filtered for
+     * @param calorieLower lower bound for calorieConsumption
+     * @param calorieUpper upper bound for calorieConsumption
+     * @return all Workouts in the database according to the given filters
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.difficulty=?2 AND w.calorieConsumption>=?3 AND w.calorieConsumption<=?4 AND w.isHistory=false")
+    List<Workout> findByFilterWithDifficulty(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws DataAccessException;
+
+    /**
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param calorieLower lower bound for calorieConsumption
+     * @param calorieUpper upper bound for calorieConsumption
+     * @return all Workouts in the database according to the given filters
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.calorieConsumption>=?2 AND w.calorieConsumption<=?3 AND w.isHistory=false")
+    List<Workout> findByFilterWithoutDifficulty(String filter, Double calorieLower, Double calorieUpper) throws DataAccessException;
+
     @Query("SELECT w FROM Workout w WHERE w.id=?1 AND w.isHistory=false")
     Workout findById(long id);
 

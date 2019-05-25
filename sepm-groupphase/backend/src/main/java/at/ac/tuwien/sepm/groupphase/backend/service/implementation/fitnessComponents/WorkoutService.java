@@ -100,6 +100,21 @@ public class WorkoutService implements IWorkoutService {
     }
 
     @Override
+    public List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper);
+        try {
+            if (difficulty != null) {
+                return iWorkoutRepository.findByFilterWithDifficulty(filter, difficulty, calorieLower, calorieUpper);
+            } else {
+                return iWorkoutRepository.findByFilterWithoutDifficulty(filter, calorieLower, calorieUpper);
+            }
+
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public Workout findById(long id) throws ServiceException {
         LOGGER.info("Entering findById with id: " + id);
         try {

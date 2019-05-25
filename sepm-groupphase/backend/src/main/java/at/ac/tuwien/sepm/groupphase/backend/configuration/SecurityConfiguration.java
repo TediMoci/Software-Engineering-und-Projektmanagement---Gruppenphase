@@ -115,6 +115,7 @@ public class SecurityConfiguration {
                     "/exercise/{id}/{version}",
                     "/workout",
                     "/workout/all",
+                    "/workout/filtered",
                     "/workout/{id}/{version}",
                     "/workout/{id}/{version}/exercises",
                     "/v2/api-docs",
