@@ -33,6 +33,7 @@ public class ExerciseEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new Exercise", authorizations = {@Authorization(value = "apiKey")})
     public ExerciseDto save(@Valid @RequestBody ExerciseDto exerciseDto) {
         LOGGER.info("Entering save for: " + exerciseDto);

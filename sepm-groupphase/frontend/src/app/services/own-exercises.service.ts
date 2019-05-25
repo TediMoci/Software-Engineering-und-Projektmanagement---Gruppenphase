@@ -4,7 +4,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Dude} from '../dtos/dude';
 import {CreateExercise} from '../dtos/create-exercise';
-import {Exercise} from '../dtos/exercise';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,7 @@ export class OwnExercisesService {
     return this.httpClient.get<CreateExercise[]>(this.exerciseBaseUri + '/' + dude.id + '/exercises');
   }
 
-  deleteExercise(exerciseId: number){
+  deleteExercise(exerciseId: number) {
     console.log('delete exercise with id ' + exerciseId);
     return this.httpClient.delete(this.exerciseEditBaseUri + '/' + exerciseId);
   }

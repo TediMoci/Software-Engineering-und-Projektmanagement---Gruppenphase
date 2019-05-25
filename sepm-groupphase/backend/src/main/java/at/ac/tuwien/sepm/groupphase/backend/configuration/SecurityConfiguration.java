@@ -94,6 +94,7 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers(HttpMethod.POST).permitAll()
                 .antMatchers(HttpMethod.GET,
+                    "/authentication",
                     "/user",
                     "/user/name",
                     "/dudes",
@@ -101,6 +102,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}",
                     "/dudes/{id}/exercises",
                     "/dudes/{id}/workouts",
+                    "/{id}/{version}/exercises",
                     "/user",
                     "/fitnessProvider",
                     "/fitnessProvider/{id}",

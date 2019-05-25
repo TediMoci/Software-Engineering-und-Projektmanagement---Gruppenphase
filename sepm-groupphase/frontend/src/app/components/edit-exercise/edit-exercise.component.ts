@@ -59,7 +59,7 @@ export class EditExerciseComponent implements OnInit {
 
   }
 
-  editExercise(){
+  editExercise() {
     this.submitted = true;
 
     const exercise: Exercise = new Exercise(

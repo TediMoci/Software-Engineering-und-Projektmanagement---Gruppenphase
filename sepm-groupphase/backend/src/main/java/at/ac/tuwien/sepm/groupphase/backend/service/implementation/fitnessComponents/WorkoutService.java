@@ -38,19 +38,7 @@ public class WorkoutService implements IWorkoutService {
         LOGGER.info("Entering save for: " + workout);
         List<WorkoutExercise> workoutExercises = workout.getExercises();
         workout.setExercises(null);
-
-        for (WorkoutExercise workoutExercise : workoutExercises) {
-            try {
-                workoutExerciseValidator.validateWorkoutExercise(workoutExercise);
-                if (iExerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion()).isEmpty()) {
-                    throw new NoSuchElementException();
-                }
-            } catch (NoSuchElementException e) {
-                throw new ServiceException("Exercise with id: " + workoutExercise.getExerciseId() + " and version: " + workoutExercise.getExerciseVersion() + " does not exist");
-            } catch (ValidationException e) {
-                throw new ServiceException(e.getMessage());
-            }
-        }
+        validateWorkoutExercises(workoutExercises);
 
         Workout savedWorkout;
         try {
@@ -58,14 +46,7 @@ public class WorkoutService implements IWorkoutService {
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
-        for (int i = 0; i < workoutExercises.size(); i++) {
-            workoutExercises.get(i).setWorkoutId(savedWorkout.getId());
-            try {
-                iWorkoutExerciseRepository.save(workoutExercises.get(i));
-            } catch (DataAccessException e) {
-                throw new ServiceException(e.getMessage());
-            }
-        }
+        saveWorkoutExercises(workoutExercises, savedWorkout);
         return savedWorkout;
     }
 
@@ -130,13 +111,18 @@ public class WorkoutService implements IWorkoutService {
         try {
             Workout oldWorkout = iWorkoutRepository.findById(id);
             if (oldWorkout == null) throw new ServiceException("Could not find workout with id: " + id);
-
-            oldWorkout.setHistory(true);
             newWorkout.setId(id);
-            newWorkout.setVersion(oldWorkout.getVersion()+1);
-            iWorkoutRepository.save(oldWorkout);
-            Long dbID = iWorkoutRepository.save(newWorkout).getId();
-            iWorkoutRepository.updateNew(newWorkout.getId(), dbID);
+            newWorkout.setVersion(1+oldWorkout.getVersion());
+            iWorkoutRepository.delete(id);
+
+            List<WorkoutExercise> workoutExercises = newWorkout.getExercises();
+            newWorkout.setExercises(null);
+            validateWorkoutExercises(workoutExercises);
+
+            Long dbId = iWorkoutRepository.save(newWorkout).getId();
+            iWorkoutRepository.updateNew(newWorkout.getId(), dbId);
+            saveWorkoutExercises(workoutExercises, newWorkout);
+
             return newWorkout;
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
@@ -152,6 +138,33 @@ public class WorkoutService implements IWorkoutService {
             iWorkoutRepository.delete(id);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
+        }
+    }
+
+    private void validateWorkoutExercises(List<WorkoutExercise> workoutExercises) throws ServiceException {
+        for (WorkoutExercise workoutExercise : workoutExercises) {
+            try {
+                workoutExerciseValidator.validateWorkoutExercise(workoutExercise);
+                if (iExerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion()).isEmpty()) {
+                    throw new NoSuchElementException();
+                }
+            } catch (NoSuchElementException e) {
+                throw new ServiceException("Exercise with id: " + workoutExercise.getExerciseId() + " and version: " + workoutExercise.getExerciseVersion() + " does not exist");
+            } catch (ValidationException e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
+    }
+
+    private void saveWorkoutExercises(List<WorkoutExercise> workoutExercises, Workout savedWorkout) throws ServiceException {
+        for (int i = 0; i < workoutExercises.size(); i++) {
+            workoutExercises.get(i).setWorkoutId(savedWorkout.getId());
+            workoutExercises.get(i).setWorkoutVersion(savedWorkout.getVersion());
+            try {
+                iWorkoutExerciseRepository.save(workoutExercises.get(i));
+            } catch (DataAccessException e) {
+                throw new ServiceException(e.getMessage());
+            }
         }
     }
 }
