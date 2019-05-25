@@ -44,7 +44,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void whenSaveOneValidCourse_thenSuccess() throws ServiceException {
+    public void whenSaveOneCourse_thenGetSavedCourse() throws ServiceException {
         Mockito.when(courseRepository.save(course1)).thenReturn(course1);
         assertEquals(courseService.save(course1), course1);
     }
