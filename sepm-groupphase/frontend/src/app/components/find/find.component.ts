@@ -6,6 +6,8 @@ import {Exercise} from "../../dtos/Exercise";
 import {ExerciseFilter} from "../../dtos/exercise-filter";
 import {CourseFilter} from "../../dtos/course-filter";
 import {WorkoutFilter} from "../../dtos/workout-filter";
+import {Course} from "../../dtos/course";
+import {Workout} from "../../dtos/workout";
 
 @Component({
   selector: 'app-find',
@@ -175,6 +177,15 @@ export class FindComponent implements OnInit {
   }
   setSelectedExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
+  }
+  setSelectedCourse(element: Course) {
+    localStorage.setItem('selectedCourse', JSON.stringify(element));
+  }
+  setSelectedWorkout(element: Workout) {
+    localStorage.setItem('selectedWorkout', JSON.stringify(element));
+  }
+  resetResults() {
+    this.entries = null;
   }
 
 }

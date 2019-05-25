@@ -18,19 +18,19 @@
             <h1>Find</h1>
             <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="category">
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio" value="Exercise"> Exercise
+                <input ngbButton type="radio" (click)="resetResults()" value="Exercise"> Exercise
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"  value="Course"> Course
+                <input ngbButton type="radio" (click)="resetResults()" value="Course"> Course
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio" value="Workout"> Workout
+                <input ngbButton type="radio"(click)="resetResults()" value="Workout"> Workout
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio" disabled value="Dudes"> Dudes
+                <input ngbButton type="radio"(click)="resetResults()" disabled value="Dudes"> Dudes
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio" disabled value="Fitness Provider"> Fitness Provider
+                <input ngbButton type="radio"(click)="resetResults()" disabled value="Fitness Provider"> Fitness Provider
               </label>
             </div>
             <div class="card-body row no-gutters align-items-center">
@@ -109,12 +109,28 @@
         </div>
         <hr>
         <div class="row">
-          <div class="col">
-            <ul>
+          <div [ngSwitch]="category" class="col">
+            <!--start case-->
+            <ul *ngSwitchCase="'Exercise'">
               <li *ngFor='let element of entries'>
                 <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn2 btn-link">{{element.name}}</a>
               </li>
             </ul>
+            <!--end case-->
+            <!--start case-->
+            <ul *ngSwitchCase="'Course'">
+              <li *ngFor='let element of entries'>
+                <a [routerLink]="['/course']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
+              </li>
+            </ul>
+            <!--end case-->
+            <!--start case-->
+            <ul *ngSwitchCase="'Workout'">
+              <li *ngFor='let element of entries'>
+                <a [routerLink]="['/workout']" (click)="setSelectedWorkout(element)" class="btn2 btn-link">{{element.name}}</a>
+              </li>
+            </ul>
+            <!--end case-->
           </div>
 
         </div>
