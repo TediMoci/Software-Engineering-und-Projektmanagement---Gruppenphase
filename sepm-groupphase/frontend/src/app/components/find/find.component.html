@@ -27,10 +27,10 @@
                 <input ngbButton type="radio" value="Workout"> Workout
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio" value="Dudes"> Dudes
+                <input ngbButton type="radio" disabled value="Dudes"> Dudes
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio" value="Fitness Provider"> Fitness Provider
+                <input ngbButton type="radio" disabled value="Fitness Provider"> Fitness Provider
               </label>
             </div>
             <div class="card-body row no-gutters align-items-center">
@@ -68,17 +68,41 @@
 
             <div *ngSwitchCase="'Workout'">
               <p>Filter for Workout</p>
-              <div class="btn-group btn-group-toggle btn-group-vertical" ngbRadioGroup name="radioBasic" [(ngModel)]="filterWorkout" >
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="Strength"> Strength
-                </label>
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio"  value="Endurance"> Endurance
-                </label>
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="Other"> Other
-                </label>
+              <!--start dropdown-->
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutDifficulty" data-toggle="dropdown" [(ngModel)]="filterWorkoutDifficulty" ngDefaultControl>
+                  Difficulty: {{filterWorkoutDifficulty}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='None'">None</a>
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Beginner'">Beginner</a>
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Advanced'">Advanced</a>
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Pro'">Pro</a>
+                </div>
               </div>
+              <!--end dropdown-->
+              <!--start dropdown-->
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutCaloriesMin" data-toggle="dropdown" [(ngModel)]="filterWorkoutCaloriesMin" ngDefaultControl>
+                  Min Calories: {{filterWorkoutCaloriesMin == '' || filterWorkoutCaloriesMin == undefined  ? 'None' : filterWorkoutCaloriesMin}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterWorkoutCaloriesMin =''">None</a>
+                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMin" placeholder="Minimum Calories" [(ngModel)]="filterWorkoutCaloriesMin">
+                </div>
+              </div>
+              <!--end dropdown-->
+              <!--start dropdown-->
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutCaloriesMax" data-toggle="dropdown" [(ngModel)]="filterWorkoutCaloriesMax " ngDefaultControl>
+                  Max Calories: {{filterWorkoutCaloriesMax == '' || filterWorkoutCaloriesMax == undefined  ? 'None' : filterWorkoutCaloriesMax}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterWorkoutCaloriesMax =''">None</a>
+                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMax" placeholder="Maximum Calories" [(ngModel)]="filterWorkoutCaloriesMax">
+                </div>
+              </div>
+              <!--end dropdown-->
             </div>
           </div>
           <!--end of col-->

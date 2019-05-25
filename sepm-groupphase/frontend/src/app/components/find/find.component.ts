@@ -5,6 +5,7 @@ import {Dude} from '../../dtos/dude';
 import {Exercise} from "../../dtos/Exercise";
 import {ExerciseFilter} from "../../dtos/exercise-filter";
 import {CourseFilter} from "../../dtos/course-filter";
+import {WorkoutFilter} from "../../dtos/workout-filter";
 
 @Component({
   selector: 'app-find',
@@ -19,12 +20,16 @@ export class FindComponent implements OnInit {
   public category: string = "Exercise";
   public inputText: any;
   public filterExerciseCategory:string = "None";
-
-
+  public filterWorkoutDifficulty: string = "None";
+  public filterWorkoutCaloriesMin: string = "";
+  public filterWorkoutCaloriesMax: string = "";
 
   //Transfer Variables
   public inputTextActual: any;
   public filterExerciseCategoryActual:string = "None";
+  public filterWorkoutDifficultyActual: string = "None";
+  public filterWorkoutCaloriesMinActual: string = "";
+  public filterWorkoutCaloriesMaxActual: string = "";
 
   entries: any;
   exercises: any;
@@ -38,6 +43,7 @@ export class FindComponent implements OnInit {
   //Filter Objects
   courceFilter: CourseFilter;
   exerciseFilter: ExerciseFilter;
+  workoutFilter: WorkoutFilter;
 
 
 
@@ -113,7 +119,51 @@ export class FindComponent implements OnInit {
           }
         );
         break;
-      case "Workout": console.log("Workout not implemented yet");
+      case "Workout":
+        console.log("min: "+this.filterWorkoutCaloriesMin);
+        console.log("max: "+this.filterWorkoutCaloriesMax);
+        if(this.filterWorkoutDifficulty=="None"){
+          this.filterWorkoutDifficultyActual = null;
+        } else {
+          this.filterWorkoutDifficultyActual = this.filterWorkoutDifficulty;
+        }
+
+        if(this.filterWorkoutCaloriesMin==""){
+          this.filterWorkoutCaloriesMinActual = null;
+        } else {
+          this.filterWorkoutCaloriesMinActual = this.filterWorkoutCaloriesMin;
+        }
+
+        if(this.filterWorkoutCaloriesMax==""){
+          this.filterWorkoutCaloriesMaxActual = null;
+        } else {
+          this.filterWorkoutCaloriesMaxActual = this.filterWorkoutCaloriesMax;
+        }
+
+        this.workoutFilter = new WorkoutFilter(
+          this.inputTextActual,
+          this.filterWorkoutDifficultyActual,
+          this.filterWorkoutCaloriesMinActual,
+          this.filterWorkoutCaloriesMaxActual);
+
+        console.log("name: "+this.workoutFilter.calorieLower);
+        this.findService.getAllWorkoutsFilterd(this.workoutFilter).subscribe(
+          (data) => {
+            console.log('get all courses');
+            this.entries = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
         break;
       case "Dudes": console.log("Dudes not implemented yet");
         break;
