@@ -37,9 +37,8 @@ public interface IExerciseService {
     List<Exercise> findAll() throws ServiceException;
 
     /**
-     * filtering according to the given parameters
-     * @param filter
-     * @param category
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param category to be filtered for
      * @return all Exercises in the system according to the given filters
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */

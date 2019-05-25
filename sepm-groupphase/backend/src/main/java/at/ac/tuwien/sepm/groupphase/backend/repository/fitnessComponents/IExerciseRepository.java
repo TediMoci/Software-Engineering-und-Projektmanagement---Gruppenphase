@@ -49,9 +49,8 @@ public interface IExerciseRepository extends JpaRepository<Exercise, ExerciseKey
     List<Exercise> findAll() throws DataAccessException;
 
     /**
-     * filtering according to the given parameters
-     * @param filter
-     * @param category
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param category to be filtered for
      * @return all Exercises in the database according to the given filters
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
@@ -60,8 +59,7 @@ public interface IExerciseRepository extends JpaRepository<Exercise, ExerciseKey
     List<Exercise> findByFilterWithCategory(String filter, Category category) throws DataAccessException;
 
     /**
-     * filtering according to the given parameter
-     * @param filter
+     * @param filter containing the string to be filtered for across all string-values of the entity
      * @return all Exercises in the database according to the given filter
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
