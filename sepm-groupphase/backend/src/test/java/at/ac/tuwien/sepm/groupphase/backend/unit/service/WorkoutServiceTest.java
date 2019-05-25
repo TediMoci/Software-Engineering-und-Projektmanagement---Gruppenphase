@@ -83,4 +83,15 @@ public class WorkoutServiceTest {
         assertEquals(workoutService.save(validWorkout1), validWorkout1);
     }
 
+    @Test(expected = ServiceException.class)
+    public void whenSaveOneInvalidWorkout_thenServiceException() throws ServiceException {
+        Optional<Exercise> optionalExercise = Optional.of(new Exercise());
+        Mockito.when(workoutRepository.save(invalidWorkout1)).thenReturn(invalidWorkout1);
+        for (WorkoutExercise workoutExercise : invalidWorkout1.getExercises()) {
+            Mockito.when(exerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion())).thenReturn(optionalExercise);
+            Mockito.when(workoutExerciseRepository.save(workoutExercise)).thenReturn(workoutExercise);
+        }
+        workoutService.save(invalidWorkout1);
+    }
+
 }
