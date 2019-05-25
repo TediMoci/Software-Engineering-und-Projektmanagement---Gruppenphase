@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 import java.util.List;
@@ -34,6 +35,14 @@ public interface IExerciseService {
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
     List<Exercise> findAll() throws ServiceException;
+
+    /**
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param category to be filtered for
+     * @return all Exercises in the system according to the given filters
+     * @throws ServiceException if an error occurred while trying to find the Exercises in the system
+     */
+    List<Exercise> findByFilter(String filter, Category category) throws ServiceException;
 
     // TODO : write log
     Exercise update(long id, Exercise newExercise) throws ServiceException;

@@ -34,6 +34,13 @@ public interface ICourseService {
      */
     List<Course> findAll() throws ServiceException;
 
+    /**
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @return all Courses in the system according to the given filters
+     * @throws ServiceException if an error occurred while trying to find the Exercises in the system
+     */
+    List<Course> findByFilter(String filter) throws ServiceException;
+
     //TODO write log
     Course update(long id, Course newCourse) throws ServiceException;
 

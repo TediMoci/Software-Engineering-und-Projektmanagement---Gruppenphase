@@ -59,7 +59,7 @@ public class CourseEndpoint {
 
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get Courses by name", authorizations = {@Authorization(value = "apiKey")})
-    public List<CourseDto> findByName(@RequestParam String name) {
+    public CourseDto[] findByName(@RequestParam String name) {
         LOGGER.info("Entering findByName with name: " + name);
         List<Course> courses;
         try {
@@ -68,16 +68,16 @@ public class CourseEndpoint {
             LOGGER.error("Could not find courses with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        List<CourseDto> courseDtos = new ArrayList<>();
-        for (Course course : courses) {
-            courseDtos.add(courseMapper.courseToCourseDto(course));
+        CourseDto[] courseDtos = new CourseDto[courses.size()];
+        for (int i = 0; i < courses.size(); i++) {
+            courseDtos[i] = courseMapper.courseToCourseDto(courses.get(i));
         }
         return courseDtos;
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ApiOperation(value = "Get all Courses", authorizations = {@Authorization(value = "apiKey")})
-    public List<CourseDto> findAll() {
+    public CourseDto[] findAll() {
         LOGGER.info("Entering findAll");
         List<Course> courses;
         try {
@@ -86,9 +86,27 @@ public class CourseEndpoint {
             LOGGER.error("Could not find all courses");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        List<CourseDto> courseDtos = new ArrayList<>();
-        for (Course course : courses) {
-            courseDtos.add(courseMapper.courseToCourseDto(course));
+        CourseDto[] courseDtos = new CourseDto[courses.size()];
+        for (int i = 0; i < courses.size(); i++) {
+            courseDtos[i] = courseMapper.courseToCourseDto(courses.get(i));
+        }
+        return courseDtos;
+    }
+
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Courses by filter", authorizations = {@Authorization(value = "apiKey")})
+    public CourseDto[] findByFilter(@RequestParam(defaultValue = "") String filter) {
+        LOGGER.info("Entering findByFilter with filter: " + filter);
+        List<Course> courses;
+        try {
+            courses = iCourseService.findByFilter(filter);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        CourseDto[] courseDtos = new CourseDto[courses.size()];
+        for (int i = 0; i < courses.size(); i++) {
+            courseDtos[i] = courseMapper.courseToCourseDto(courses.get(i));
         }
         return courseDtos;
     }

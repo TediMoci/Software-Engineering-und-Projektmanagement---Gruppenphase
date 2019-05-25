@@ -95,6 +95,25 @@ public class WorkoutEndpoint {
         return workoutDtos;
     }
 
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Workouts by filters", authorizations = {@Authorization(value = "apiKey")})
+    public WorkoutDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer difficulty,
+                                     @RequestParam(defaultValue = "0.0") Double calorieLower, @RequestParam(defaultValue = "10000.0") Double calorieUpper) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper);
+        List<Workout> workouts;
+        try {
+            workouts = iWorkoutService.findByFilter(filter, difficulty, calorieLower, calorieUpper);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        WorkoutDto[] workoutDtos = new WorkoutDto[workouts.size()];
+        for (int i = 0; i < workouts.size(); i++) {
+            workoutDtos[i] = workoutMapper.workoutToWorkoutDto(workouts.get(i));
+        }
+        return workoutDtos;
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Workout", authorizations = {@Authorization(value = "apiKey")})
     public WorkoutDto update(@PathVariable("id") long id, @RequestBody WorkoutDto newWorkout) {
