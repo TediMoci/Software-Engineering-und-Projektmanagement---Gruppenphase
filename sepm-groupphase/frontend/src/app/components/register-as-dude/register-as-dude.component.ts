@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {passwordCheck, checkName } from '../../validator/validator';
+import {passwordCheck} from '../../validator/validator';
 import {RegisterAsDude} from '../../dtos/register-as-dude';
 import {RegisterAsDudeService} from '../../services/register-as-dude.service';
 
