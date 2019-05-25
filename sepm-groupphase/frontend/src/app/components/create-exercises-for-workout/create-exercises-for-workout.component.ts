@@ -4,7 +4,6 @@ import {Dude} from '../../dtos/dude';
 import {CreateExerciseService} from '../../services/create-exercise.service';
 import {Router} from '@angular/router';
 import {CreateExercise} from '../../dtos/create-exercise';
-import {Exercise} from '../../dtos/exercise';
 
 @Component({
   selector: 'app-create-exercises-for-workout',
@@ -24,6 +23,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.setItem('previousRoute', JSON.stringify('/create-exercise-for-workout'));
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.registerForm = this.formBuilder.group({

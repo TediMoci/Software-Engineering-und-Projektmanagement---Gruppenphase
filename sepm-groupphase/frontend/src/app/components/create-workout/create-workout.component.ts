@@ -27,18 +27,25 @@ export class CreateWorkoutComponent implements OnInit {
   name: string;
   description: string;
   calorie: number;
+  prevRoute: string;
+
   constructor(private createWorkoutService: CreateWorkoutService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
   ngOnInit() {
-    if (!(localStorage.getItem('nameForWorkout') === null)) {
-      localStorage.removeItem('nameForWorkout');
-    }
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-    this.name = JSON.parse(localStorage.getItem('nameForWorkout'));
-    this.description = JSON.parse(localStorage.getItem('descriptionForWorkout'));
-    this.calorie = JSON.parse(localStorage.getItem('calorieConsumption'));
+    this.prevRoute = JSON.parse(localStorage.getItem('previousRoute'));
+    console.log(this.prevRoute);
+
+     if (this.prevRoute === '/workout-exercises' || this.prevRoute === '/create-exercise-for-workout') {
+      this.name = JSON.parse(localStorage.getItem('nameForWorkout'));
+      this.description = JSON.parse(localStorage.getItem('descriptionForWorkout'));
+      this.calorie = JSON.parse(localStorage.getItem('calorieConsumption'));
+    }
+
+     localStorage.setItem('previousRoute', JSON.stringify('/create-workout'));
+
     this.registerForm = this.formBuilder.group({
       nameForWorkout: ['', [Validators.required]],
       difficultyLevelWorkout: ['', [Validators.required]],
@@ -53,6 +60,9 @@ export class CreateWorkoutComponent implements OnInit {
     localStorage.setItem('calorieConsumption', JSON.stringify(this.registerForm.controls.calorieConsumption.value));
   }
     addWorkout() {
+    localStorage.setItem('previousRoute', JSON.stringify('/'));
+    localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));
+
     this.submitted = true;
     this.exercisesWorkout = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
 

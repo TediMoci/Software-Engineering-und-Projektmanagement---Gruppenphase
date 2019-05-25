@@ -16,6 +16,8 @@ export class CreateComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    localStorage.setItem('previousRoute', JSON.stringify('/'));
+    localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));
   }
 }
 

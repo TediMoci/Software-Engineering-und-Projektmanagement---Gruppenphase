@@ -25,9 +25,24 @@ export class WorkoutExercisesComponent implements OnInit {
   exercises: any;
   newExercises: any;
   error: any;
+
   constructor(private workoutExercisesService: WorkoutExercisesService, private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {
+
+    if (JSON.parse(localStorage.getItem('previousRoute')) === '/create-exercise-for-workout') {
+      this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+    }
+
+    console.log(JSON.parse(localStorage.getItem('previousPreviousRoute')));
+
+    if ((JSON.parse(localStorage.getItem('previousRoute')) === '/create-workout') && (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises')) {
+      this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+    }
+
+    localStorage.setItem('previousRoute', JSON.stringify('/workout-exercises'));
+    localStorage.setItem('previousPreviousRoute', JSON.stringify('/workout-exercises'));
+
     this.registerForm = this.formBuilder.group({
       name: [''],
     });
@@ -38,7 +53,6 @@ export class WorkoutExercisesComponent implements OnInit {
       sets: ['', [Validators.required]],
       duration: ['', [Validators.required]]
     });
-
   }
 
   setSelectedExercise(element: Exercise) {
@@ -87,12 +101,14 @@ export class WorkoutExercisesComponent implements OnInit {
    if (!(this.workoutExForm.controls.duration.value === '')) {
      this.chosenExercises[this.index].exDuration = this.workoutExForm.controls.duration.value;
    }
-   console.log(this.chosenExercises[this.index]);
   }
 
   saveExercisesTemporarily() {
     localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.chosenExercises));
     console.log(JSON.parse(localStorage.getItem('chosenExercisesForWorkout')));
+  }
+
+  backToCreateWorkout() {
     this.router.navigate(['/create-workout']);
   }
 

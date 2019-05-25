@@ -26,7 +26,7 @@
           <div class="form-group">
             <input class="form-control" type="text" name="search" formControlName="name" autocomplete="off">
             <button type="button" (click)="findExercisesByName()" class="btn btn-search">Search</button>
-            <button type="button" [routerLink]="['/create-exercise-for-workout']" (click)="addToChosenExercisesFromCreateExercise()" class="btn btn-search">Add new Exercise</button>
+            <button type="button" [routerLink]="['/create-exercise-for-workout']" (click)="saveExercisesTemporarily(); addToChosenExercisesFromCreateExercise()" class="btn btn-search">Add new Exercise</button>
 
           </div>
         <div class="row">
@@ -129,6 +129,6 @@
       </div>
       </div>
   </div>
-  <button type="button" (click)="saveExercisesTemporarily()" class="btn btn-success float-right">Add to workout</button>
+  <button type="button" (click)="saveExercisesTemporarily(); backToCreateWorkout()" class="btn btn-success float-right">Add to workout</button>
   <a [routerLink]="['/create-workout']" class="btn btn-link">Cancel</a>
 </div>

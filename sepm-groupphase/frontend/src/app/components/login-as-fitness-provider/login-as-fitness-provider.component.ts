@@ -34,7 +34,7 @@ export class LoginAsFitnessProviderComponent implements OnInit {
         if (this.loginForm.valid) {
           const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
           this.authenticateUser(authRequest);
-          // recieves the coúrrent user
+          // receives the current user
           this.fitnessProvider = data;
           // save the currentUser in local storage to use it in other components
           localStorage.setItem('currentUser', JSON.stringify(this.fitnessProvider));
