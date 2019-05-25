@@ -117,12 +117,19 @@ public class DudeEndpoint {
     @ApiOperation(value = "Get exercises created by dude", authorizations = {@Authorization(value = "apiKey")})
     public ExerciseDto[] getExercisesCreatedByDudeId(@PathVariable Long id) {
         LOGGER.info("Entering getExercisesCreatedByDudeId with id: " + id);
-        List<Exercise> exercises;
+        List<Exercise> allExercises;
+
         try {
-            exercises = iDudeService.findDudeById(id).getExercises();
+            allExercises = iDudeService.findDudeById(id).getExercises();
         } catch (ServiceException e) {
             LOGGER.error("Could not getExercisesCreatedByDudeId with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<Exercise> exercises = new ArrayList<>();
+        for (Exercise exercise : allExercises) {
+            if (!exercise.getHistory()) {
+                exercises.add(exercise);
+            }
         }
         ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
         for (int i = 0; i < exercises.size(); i++) {
@@ -137,12 +144,18 @@ public class DudeEndpoint {
     @ApiOperation(value = "Get workouts created by dude", authorizations = {@Authorization(value = "apiKey")})
     public WorkoutDto[] getWorkoutsCreatedByDudeId(@PathVariable Long id) {
         LOGGER.info("Entering getWorkoutsCreatedByDudeId with id: " + id);
-        List<Workout> workouts;
+        List<Workout> allWorkouts;
         try {
-            workouts = iDudeService.findDudeById(id).getWorkouts();
+            allWorkouts = iDudeService.findDudeById(id).getWorkouts();
         } catch (ServiceException e) {
             LOGGER.error("Could not getWorkoutsCreatedByDudeId with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<Workout> workouts = new ArrayList<>();
+        for (Workout workout : allWorkouts) {
+            if (!workout.getHistory()) {
+                workouts.add(workout);
+            }
         }
         WorkoutDto[] workoutDtos = new WorkoutDto[workouts.size()];
         for (int i = 0; i < workouts.size(); i++) {
