@@ -54,9 +54,16 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       console.log('input is invalid');
       return;
     }
-    localStorage.setItem('addNewExerciseForWorkout', JSON.stringify(exercise));
-    this.router.navigate(['workout-exercises']);
-
+    this.createExerciseService.addExercise(exercise).subscribe(
+      () => {
+        console.log(exercise);
+        localStorage.setItem('addNewExerciseForWorkout', JSON.stringify(exercise));
+        this.router.navigate(['workout-exercises']);
+        },
+      error => {
+        this.error = error;
+      }
+    );
   }
 
   vanishError() {
