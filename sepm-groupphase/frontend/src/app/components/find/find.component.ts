@@ -4,6 +4,7 @@ import {FindService} from '../../services/find.service';
 import {Dude} from '../../dtos/dude';
 import {Exercise} from "../../dtos/Exercise";
 import {ExerciseFilter} from "../../dtos/exercise-filter";
+import {CourseFilter} from "../../dtos/course-filter";
 
 @Component({
   selector: 'app-find',
@@ -18,19 +19,24 @@ export class FindComponent implements OnInit {
   public category: string = "Exercise";
   public inputText: any;
   public filterExerciseCategory:string = "None";
-  public filterCourse: any;
+
 
 
   //Transfer Variables
   public inputTextActual: any;
   public filterExerciseCategoryActual:string = "None";
 
+  entries: any;
   exercises: any;
+  cources: any;
 
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   error: any;
   dude: Dude;
+
+  //Filter Objects
+  courceFilter: CourseFilter;
   exerciseFilter: ExerciseFilter;
 
 
@@ -54,14 +60,12 @@ export class FindComponent implements OnInit {
 
     switch (category) {
       case "Exercise":
-        console.log("Exercise not implemented yet");
 
         if(this.filterExerciseCategory=="None"){
           this.filterExerciseCategoryActual = null;
         } else {
           this.filterExerciseCategoryActual = this.filterExerciseCategory;
         }
-
 
         this.exerciseFilter = new ExerciseFilter(
           this.inputTextActual,
@@ -70,7 +74,7 @@ export class FindComponent implements OnInit {
         this.findService.getAllExercisesFilterd(this.exerciseFilter).subscribe(
           (data) => {
             console.log('get all exercises');
-            this.exercises = data.sort(function (a, b) { // sort data alphabetically
+            this.entries = data.sort(function (a, b) { // sort data alphabetically
               if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
                 return -1;
               }
@@ -84,9 +88,31 @@ export class FindComponent implements OnInit {
             this.error = error;
           }
         );
-            break;
-      case "Course": console.log("Course not implemented yet");
-            break;
+        break;
+      case "Course":
+
+        this.courceFilter = new CourseFilter(
+          this.inputTextActual);
+
+        console.log("name: "+this.courceFilter.filter);
+        this.findService.getAllCoursesFilterd(this.courceFilter).subscribe(
+          (data) => {
+            console.log('get all courses');
+            this.entries = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
       case "Workout": console.log("Workout not implemented yet");
         break;
       case "Dudes": console.log("Dudes not implemented yet");

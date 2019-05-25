@@ -64,17 +64,6 @@
             </div>
 
             <div *ngSwitchCase="'Course'">
-              <p>Filter for Course</p>
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" [(ngModel)]="filterCourse" ngDefaultControl>
-                   Filter: {{filterCourse}}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" (click)="filterCourse ='test'">test</a>
-                  <a class="dropdown-item" (click)="filterCourse ='test2'">test2</a>
-                  <a class="dropdown-item" (click)="filterCourse ='test3'">test3</a>
-                </div>
-              </div>
             </div>
 
             <div *ngSwitchCase="'Workout'">
@@ -98,7 +87,7 @@
         <div class="row">
           <div class="col">
             <ul>
-              <li *ngFor='let element of exercises'>
+              <li *ngFor='let element of entries'>
                 <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn2 btn-link">{{element.name}}</a>
               </li>
             </ul>
