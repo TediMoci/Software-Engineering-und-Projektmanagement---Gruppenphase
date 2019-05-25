@@ -40,9 +40,45 @@ import { WorkoutComponent } from './components/workout/workout.component';
 import { EditWorkoutComponent } from './components/edit-workout/edit-workout.component';
 import { MyContentFitnessProviderComponent } from './components/my-content-fitness-provider/my-content-fitness-provider.component';
 import { CreateForFitnessProviderComponent } from './components/create-for-fitness-provider/create-for-fitness-provider.component';
+import { CreateWorkoutComponent } from './components/create-workout/create-workout.component';
+import { WorkoutExercisesComponent } from './components/workout-exercises/workout-exercises.component';
 import { CourseComponent } from './components/course/course.component';
 import { EditCourseComponent } from './components/edit-course/edit-course.component';
 import { OwnCoursesComponent } from './components/own-courses/own-courses.component';
+import {
+  MatAutocompleteModule,
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatRippleModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSliderModule,
+  MatSlideToggleModule,
+  MatSnackBarModule,
+  MatSortModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  MatStepperModule,
+} from '@angular/material';
+import { CreateExercisesForWorkoutComponent } from './components/create-exercises-for-workout/create-exercises-for-workout.component';
 
 @NgModule({
   declarations: [
@@ -77,11 +113,46 @@ import { OwnCoursesComponent } from './components/own-courses/own-courses.compon
     EditWorkoutComponent,
     MyContentFitnessProviderComponent,
     CreateForFitnessProviderComponent,
+    CreateWorkoutComponent,
+    WorkoutExercisesComponent,
+    CreateForFitnessProviderComponent,
     CourseComponent,
     EditCourseComponent,
-    OwnCoursesComponent
+    OwnCoursesComponent,
+    CreateExercisesForWorkoutComponent
   ],
   imports: [
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatStepperModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
@@ -91,7 +162,7 @@ import { OwnCoursesComponent } from './components/own-courses/own-courses.compon
     BrowserAnimationsModule,
     NgKnifeModule
   ],
-  providers: [httpInterceptorProviders, Globals, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
+  providers: [httpInterceptorProviders, Globals, WorkoutExercisesComponent, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
     multi: true}],
   bootstrap: [AppComponent]
 })

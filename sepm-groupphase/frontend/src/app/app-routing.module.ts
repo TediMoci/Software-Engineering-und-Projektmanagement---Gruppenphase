@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Injectable, NgModule} from '@angular/core';
+import {NavigationEnd, Router, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './components/login/login.component';
 import {RegisterAsDudeComponent} from './components/register-as-dude/register-as-dude.component';
 import {RegisterAsFitnessProviderComponent} from './components/register-as-fitness-provider/register-as-fitness-provider.component';
@@ -34,6 +34,9 @@ import {MyContentFitnessProviderComponent} from './components/my-content-fitness
 import {EditCourseComponent} from './components/edit-course/edit-course.component';
 import {OwnCoursesComponent} from './components/own-courses/own-courses.component';
 import {CourseComponent} from './components/course/course.component';
+import {CreateWorkoutComponent} from './components/create-workout/create-workout.component';
+import {WorkoutExercisesComponent} from './components/workout-exercises/workout-exercises.component';
+import {CreateExercisesForWorkoutComponent} from './components/create-exercises-for-workout/create-exercises-for-workout.component';
 
 const routes: Routes = [
 
@@ -47,7 +50,10 @@ const routes: Routes = [
   {path: 'create', canActivate: [RoleGuard], component: CreateComponent},
   {path: 'create-for-FP', canActivate: [FitnessProviderRoleGuard], component: CreateForFitnessProviderComponent},
   {path: 'create-exercise', canActivate: [RoleGuard], component: CreateExerciseComponent},
+  {path: 'create-exercise-for-workout', canActivate: [RoleGuard], component: CreateExercisesForWorkoutComponent},
   {path: 'create-course', canActivate: [FitnessProviderRoleGuard], component: CreateCourseComponent},
+  {path: 'create-workout', canActivate: [RoleGuard], component: CreateWorkoutComponent},
+  {path: 'workout-exercises', canActivate: [RoleGuard], component: WorkoutExercisesComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
   {path: 'myContent', canActivate: [RoleGuard], component: MyContentComponent},
