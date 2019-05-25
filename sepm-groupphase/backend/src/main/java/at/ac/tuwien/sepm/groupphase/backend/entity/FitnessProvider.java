@@ -13,7 +13,7 @@ public class FitnessProvider {
     @SequenceGenerator(name = "seq_fitness_provider_id", sequenceName = "seq_fitness_provider_id")
     private Long id;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(nullable = false)

@@ -32,4 +32,11 @@ public interface ICourseRepository extends JpaRepository<Course, Long> {
      */
     List<Course> findAll() throws DataAccessException;
 
+    /**
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @return all Courses in the database according to the given filters
+     * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
+     */
+    @Query("SELECT c FROM Course c WHERE c.name LIKE %?1% OR c.description LIKE %?1%")
+    List<Course> findByFilter(String filter) throws DataAccessException;
 }

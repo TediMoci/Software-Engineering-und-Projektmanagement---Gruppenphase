@@ -63,6 +63,16 @@ public class CourseService implements ICourseService {
     }
 
     @Override
+    public List<Course> findByFilter(String filter) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter);
+        try {
+            return iCourseRepository.findByFilter(filter);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public Course update(long id, Course newCourse) throws ServiceException {
         LOGGER.info("Updating course with id: " + id);
         try {

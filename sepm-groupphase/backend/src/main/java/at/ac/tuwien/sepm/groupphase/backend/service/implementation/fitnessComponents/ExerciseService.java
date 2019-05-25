@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
@@ -56,6 +58,20 @@ public class ExerciseService implements IExerciseService {
         LOGGER.info("Entering findAll");
         try {
             return iExerciseRepository.findAll();
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Exercise> findByFilter(String filter, Category category) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category);
+        try {
+            if (category != null) {
+                return iExerciseRepository.findByFilterWithCategory(filter, category);
+            } else {
+                return iExerciseRepository.findByFilterWithoutCategory(filter);
+            }
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }

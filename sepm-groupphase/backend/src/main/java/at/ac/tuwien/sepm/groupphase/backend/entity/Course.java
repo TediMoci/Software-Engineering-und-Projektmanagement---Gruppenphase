@@ -11,7 +11,7 @@ public class Course {
     @SequenceGenerator(name = "seq_course_id", sequenceName = "seq_course_id")
     private Long id;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(nullable = false, length = 1000)
