@@ -62,6 +62,6 @@ export class FindService {
 
     console.log('get all workouts with params: ' + params.toString());
 
-    return this.httpClient.get<Course[]>(this.exerciseBaseUri + '/workouts/filtered', {params: params});
+    return this.httpClient.get<Course[]>(this.exerciseBaseUri + '/workout/filtered', {params: params});
   }
 }
