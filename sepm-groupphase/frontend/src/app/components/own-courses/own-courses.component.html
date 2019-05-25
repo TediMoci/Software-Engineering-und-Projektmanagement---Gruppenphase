@@ -16,15 +16,13 @@
         <ul>
           <li *ngFor='let element of courses'>
             <a [routerLink]="['/course']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
-            <button type="button" (click)="goToEditCourse(element)" class="btn btn-secondary"><i class="fa fa-pencil"></i></button>
+            <button type="button" (click)="goToEditCourse(element)" class="btn btn-secondary"><i class="fa fa-pencil-alt"></i></button>
             <button type="button" (click)="setToDeleteCourse(element)" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash"></i></button>
           </li>
         </ul>
       </div>
-
     </div>
   </div>
-
 </div>
 
 <!-- modal for deleting course -->

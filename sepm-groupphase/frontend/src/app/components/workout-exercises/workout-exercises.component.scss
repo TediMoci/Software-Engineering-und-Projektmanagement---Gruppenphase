@@ -32,7 +32,12 @@
   padding: 40px;
 }
 
+.btn {
+  margin-right: 10px;
+}
+
 .searchResults{
+  margin-left: 30px;
   ul{
     height: 200px;
     width: 670px;
@@ -41,17 +46,22 @@
     -webkit-overflow-scrolling: touch;
   }
   .btn{
-    margin-left: 20px;
+    margin-left: 30px;
   }
 }
 
 .chosenExercises{
+  margin-left: 30px;
   ul{
     height: 600px;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
   }
   .btn{
-    margin-left: 20px;
+    margin-left: 30px;
   }
+}
+
+.form-group {
+  margin-left: 20px;
 }
