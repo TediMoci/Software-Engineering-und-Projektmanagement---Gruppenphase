@@ -100,6 +100,7 @@ public class SecurityConfiguration {
                     "/dudes/all",
                     "/dudes/{id}",
                     "/dudes/{id}/exercises",
+                    "/dudes/{id}/workouts",
                     "/user",
                     "/fitnessProvider",
                     "/fitnessProvider/{id}",
