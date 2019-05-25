@@ -31,13 +31,17 @@ export class WorkoutExercisesComponent implements OnInit {
   ngOnInit() {
 
     if (JSON.parse(localStorage.getItem('previousRoute')) === '/create-exercise-for-workout') {
-      this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      if (localStorage.getItem('chosenExercisesForWorkout') !== null) {
+        this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      }
     }
 
     console.log(JSON.parse(localStorage.getItem('previousPreviousRoute')));
 
     if ((JSON.parse(localStorage.getItem('previousRoute')) === '/create-workout') && (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises')) {
-      this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      if (localStorage.getItem('chosenExercisesForWorkout') !== null) {
+        this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      }
     }
 
     localStorage.setItem('previousRoute', JSON.stringify('/workout-exercises'));
@@ -60,16 +64,15 @@ export class WorkoutExercisesComponent implements OnInit {
   }
   addToChosenExercisesFromCreateExercise() {
     this.newExercises =  JSON.parse(localStorage.getItem('addNewExerciseForWorkout'));
-    console.log(this.newExercises);
     this.chosenExercises.push(new WorkoutEx(this.newExercises, 1, 1, 1));
-    console.log(this.chosenExercises);
+    console.log('add new created exercise' + this.chosenExercises + ' for workout' );
 
   }
 
   addToChosenExercises(element: Exercise) {
     console.log(element);
     this.chosenExercises.push(new WorkoutEx(element, 1, 1, 1));
-    console.log(this.chosenExercises);
+    console.log('add exercise' + this.chosenExercises + 'from search result' );
   }
 
   findExercisesByName() {
@@ -88,6 +91,7 @@ export class WorkoutExercisesComponent implements OnInit {
   removeFromChosenExercises(element: WorkoutEx) {
     this.index = this.chosenExercises.indexOf(element);
     this.chosenExercises.splice(this.index, 1);
+    localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.chosenExercises));
   }
 
   setExData(element: WorkoutEx) {
@@ -110,6 +114,10 @@ export class WorkoutExercisesComponent implements OnInit {
   }
 
   backToCreateWorkout() {
+    localStorage.removeItem('chosenExercisesForWorkout');
+    console.log(localStorage.getItem('addNewExerciseForWorkout'));
+    localStorage.removeItem('addNewExerciseForWorkout');
+    console.log(localStorage.getItem('addNewExerciseForWorkout'));
     this.router.navigate(['/create-workout']);
   }
 

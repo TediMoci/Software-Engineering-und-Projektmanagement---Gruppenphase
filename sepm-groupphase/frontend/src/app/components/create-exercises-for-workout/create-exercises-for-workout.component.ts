@@ -4,6 +4,7 @@ import {Dude} from '../../dtos/dude';
 import {CreateExerciseService} from '../../services/create-exercise.service';
 import {Router} from '@angular/router';
 import {CreateExercise} from '../../dtos/create-exercise';
+import {WorkoutExercisesComponent} from '../workout-exercises/workout-exercises.component';
 
 @Component({
   selector: 'app-create-exercises-for-workout',
@@ -19,7 +20,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   submitted: boolean = false;
   dude: Dude;
 
-  constructor(private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
+  constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
   ngOnInit() {
@@ -57,7 +58,9 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     this.createExerciseService.addExercise(exercise).subscribe(
       (data) => {
         console.log(data);
-        localStorage.setItem('addNewExerciseForWorkout', JSON.stringify(exercise));
+        localStorage.setItem('addNewExerciseForWorkout', JSON.stringify(data));
+        this.workoutExercisesComponent.addToChosenExercisesFromCreateExercise();
+        this.workoutExercisesComponent.saveExercisesTemporarily();
         this.router.navigate(['workout-exercises']);
         },
       error => {

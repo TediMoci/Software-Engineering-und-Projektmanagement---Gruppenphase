@@ -26,7 +26,7 @@
           <div class="form-group">
             <input class="form-control" type="text" name="search" formControlName="name" autocomplete="off">
             <button type="button" (click)="findExercisesByName()" class="btn btn-search">Search</button>
-            <button type="button" [routerLink]="['/create-exercise-for-workout']" (click)="addToChosenExercisesFromCreateExercise();saveExercisesTemporarily()" class="btn btn-search">Add new Exercise</button>
+            <button type="button" [routerLink]="['/create-exercise-for-workout']" class="btn btn-search">Add new Exercise</button>
 
           </div>
         <div class="row">
@@ -50,7 +50,7 @@
                   </mat-expansion-panel>
 
                 </mat-accordion>
-                <button type="button" (click)="addToChosenExercises(element)" class="btn btn-secondary"><i
+                <button type="button" (click)="addToChosenExercises(element);saveExercisesTemporarily()" class="btn btn-secondary"><i
                   class="fa fa-plus"></i></button>
               </li>
             </ul>
@@ -129,6 +129,6 @@
       </div>
       </div>
   </div>
-  <button type="button" (click)="saveExercisesTemporarily(); backToCreateWorkout()" class="btn btn-success float-right">Add to workout</button>
-  <a [routerLink]="['/create-workout']" class="btn btn-link">Cancel</a>
+  <button type="button" [routerLink]="['/create-workout']" (click)="saveExercisesTemporarily()" class="btn btn-success float-right">Add to workout</button>
+  <a [routerLink]="['/create-workout']" (click)="backToCreateWorkout()" class="btn btn-link">Cancel</a>
 </div>
