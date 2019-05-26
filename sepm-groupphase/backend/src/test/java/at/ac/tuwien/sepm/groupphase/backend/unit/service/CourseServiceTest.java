@@ -16,6 +16,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 
@@ -25,6 +27,7 @@ import static org.mockito.ArgumentMatchers.*;
 public class CourseServiceTest {
 
     private final static Course course1 = new Course();
+    private final static Course course2 = new Course();
 
     @MockBean
     private ICourseRepository courseRepository;
@@ -37,10 +40,15 @@ public class CourseServiceTest {
         FitnessProvider fitnessProvider = new FitnessProvider();
         fitnessProvider.setId(1L);
 
+        course1.setId(1L);
         course1.setName("Course1");
         course1.setDescription("Description1");
         course1.setCreator(fitnessProvider);
 
+        course2.setId(2L);
+        course2.setName("Course2");
+        course2.setDescription("Description2");
+        course2.setCreator(fitnessProvider);
     }
 
     @Test
@@ -55,6 +63,19 @@ public class CourseServiceTest {
         courseService.save(course1);
     }
 
+    @Test
+    public void whenUpdateOneCourse_thenGetUpdatedCourse() throws ServiceException {
+        Optional<Course> optionalCourse1 = Optional.of(course1);
+        Mockito.when(courseRepository.findById(1L)).thenReturn(optionalCourse1);
+        Mockito.when(courseRepository.save(course2)).thenReturn(course2);
+        assertEquals(courseService.update(course1.getId(), course2), course2);
+    }
 
+    @Test(expected = ServiceException.class)
+    public void whenUpdateOneCourseWithInvalidId_thenServiceException() throws ServiceException {
+        Mockito.when(courseRepository.findById(3L)).thenReturn(Optional.empty());
+        Mockito.when(courseRepository.save(course2)).thenReturn(course2);
+        assertEquals(courseService.update(3L, course2), course2);
+    }
 
 }

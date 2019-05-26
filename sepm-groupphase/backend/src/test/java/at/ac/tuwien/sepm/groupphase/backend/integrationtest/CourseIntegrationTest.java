@@ -53,7 +53,7 @@ public class CourseIntegrationTest {
         validCourseDto2.setDescription("Description2");
 
         invalidCourseDto1.setName("");
-        invalidCourseDto1.setDescription("Description2");
+        invalidCourseDto1.setDescription("Description3");
     }
 
     @Before
@@ -115,7 +115,5 @@ public class CourseIntegrationTest {
         HttpEntity<CourseDto> courseRequest2 = new HttpEntity<>(validCourseDto2);
         REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/" + savedCourseId+1, HttpMethod.PUT, courseRequest2, CourseDto.class);
     }
-
-
 
 }

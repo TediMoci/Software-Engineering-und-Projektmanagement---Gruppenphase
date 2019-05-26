@@ -39,6 +39,7 @@ public class FitnessProviderEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save new Fitness Provider", authorizations = {@Authorization(value = "apiKey")})
     public FitnessProviderDto saveFitnessProvider(@Valid @RequestBody FitnessProviderDto fitnessProviderDto){
         FitnessProvider fitnessProvider = fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(fitnessProviderDto);
