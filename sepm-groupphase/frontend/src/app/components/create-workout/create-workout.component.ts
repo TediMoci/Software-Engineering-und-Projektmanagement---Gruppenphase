@@ -104,7 +104,6 @@ export class CreateWorkoutComponent implements OnInit {
       console.log('input is invalid');
       return;
     }
-    console.log(workout.workoutExercises);
 
     this.createWorkoutService.addWorkout(workout).subscribe(
       (data) => {
