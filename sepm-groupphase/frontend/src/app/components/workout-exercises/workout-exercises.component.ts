@@ -31,13 +31,20 @@ export class WorkoutExercisesComponent implements OnInit {
   ngOnInit() {
 
     if (JSON.parse(localStorage.getItem('previousRoute')) === '/create-exercise-for-workout') {
-      this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      if (localStorage.getItem('chosenExercisesForWorkout') !== null) {
+        console.log('return from create-exercise-for-workout ');
+        this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+        console.log(this.chosenExercises);
+      }
     }
 
     console.log(JSON.parse(localStorage.getItem('previousPreviousRoute')));
 
     if ((JSON.parse(localStorage.getItem('previousRoute')) === '/create-workout') && (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises')) {
-      this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      if (localStorage.getItem('chosenExercisesForWorkout') !== null) {
+        console.log('return create-workout ' +  this.chosenExercises);
+        this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      }
     }
 
     localStorage.setItem('previousRoute', JSON.stringify('/workout-exercises'));
@@ -49,27 +56,22 @@ export class WorkoutExercisesComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.workoutExForm = this.formBuilder.group({
-      repetitions: ['', [Validators.required]],
-      sets: ['', [Validators.required]],
-      duration: ['', [Validators.required]]
+      repetitions: ['', [Validators.required, Validators.max(200)]],
+      sets: ['', [Validators.required, Validators.max(15)]],
+      duration: ['', [Validators.required, Validators.max(1440)]]
     });
   }
 
   setSelectedExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
   }
-  addToChosenExercisesFromCreateExercise() {
-    this.newExercises =  JSON.parse(localStorage.getItem('addNewExerciseForWorkout'));
-    console.log(this.newExercises);
-    this.chosenExercises.push(new WorkoutEx(this.newExercises, 1, 1, 1));
-    console.log(this.chosenExercises);
-
-  }
 
   addToChosenExercises(element: Exercise) {
     console.log(element);
+    console.log('current status' +  localStorage.getItem('chosenExercisesForWorkout'));
     this.chosenExercises.push(new WorkoutEx(element, 1, 1, 1));
-    console.log(this.chosenExercises);
+    localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.chosenExercises));
+    console.log('add exercise' + localStorage.getItem('chosenExercisesForWorkout'));
   }
 
   findExercisesByName() {
@@ -88,9 +90,14 @@ export class WorkoutExercisesComponent implements OnInit {
   removeFromChosenExercises(element: WorkoutEx) {
     this.index = this.chosenExercises.indexOf(element);
     this.chosenExercises.splice(this.index, 1);
+    console.log('delete' +  this.chosenExercises);
+    localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.chosenExercises));
+    console.log('delete' + localStorage.getItem('chosenExercisesForWorkout') );
+
   }
 
   setExData(element: WorkoutEx) {
+    this.submitted = true;
    this.index = this.chosenExercises.indexOf(element);
    if (!(this.workoutExForm.controls.repetitions.value === '')) {
      this.chosenExercises[this.index].repetitions = this.workoutExForm.controls.repetitions.value;
@@ -110,6 +117,7 @@ export class WorkoutExercisesComponent implements OnInit {
   }
 
   backToCreateWorkout() {
+    localStorage.removeItem('chosenExercisesForWorkout');
     this.router.navigate(['/create-workout']);
   }
 

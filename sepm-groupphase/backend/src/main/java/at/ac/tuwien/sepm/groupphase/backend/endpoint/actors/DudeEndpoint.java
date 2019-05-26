@@ -2,10 +2,13 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import io.swagger.annotations.Api;
@@ -31,15 +34,18 @@ public class DudeEndpoint {
     private final IDudeService iDudeService;
     private final IDudeMapper dudeMapper;
     private final IExerciseMapper exerciseMapper;
+    private final IWorkoutMapper workoutMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, IDudeMapper dudeMapper, IExerciseMapper exerciseMapper) {
+    public DudeEndpoint(IDudeService iDudeService, IDudeMapper dudeMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
         this.iDudeService = iDudeService;
         this.dudeMapper = dudeMapper;
         this.exerciseMapper = exerciseMapper;
+        this.workoutMapper = workoutMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new Dude", authorizations = {@Authorization(value = "apiKey")})
     public DudeDto saveDude(@Valid @RequestBody DudeDto dudeDto) {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
@@ -112,15 +118,19 @@ public class DudeEndpoint {
     @ApiOperation(value = "Get exercises created by dude", authorizations = {@Authorization(value = "apiKey")})
     public ExerciseDto[] getExercisesCreatedByDudeId(@PathVariable Long id) {
         LOGGER.info("Entering getExercisesCreatedByDudeId with id: " + id);
-        List<Exercise> exercises = new ArrayList<>();
+        List<Exercise> allExercises;
+
         try {
-            List<Exercise> allExercises = iDudeService.findDudeById(id).getExercises();
-            for (Exercise e : allExercises) {
-                if (!e.getHistory()) exercises.add(e);
-            }
+            allExercises = iDudeService.findDudeById(id).getExercises();
         } catch (ServiceException e) {
             LOGGER.error("Could not getExercisesCreatedByDudeId with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<Exercise> exercises = new ArrayList<>();
+        for (Exercise exercise : allExercises) {
+            if (!exercise.getHistory()) {
+                exercises.add(exercise);
+            }
         }
         ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
         for (int i = 0; i < exercises.size(); i++) {
@@ -129,6 +139,32 @@ public class DudeEndpoint {
             }
         }
         return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/{id}/workouts", method = RequestMethod.GET)
+    @ApiOperation(value = "Get workouts created by dude", authorizations = {@Authorization(value = "apiKey")})
+    public WorkoutDto[] getWorkoutsCreatedByDudeId(@PathVariable Long id) {
+        LOGGER.info("Entering getWorkoutsCreatedByDudeId with id: " + id);
+        List<Workout> allWorkouts;
+        try {
+            allWorkouts = iDudeService.findDudeById(id).getWorkouts();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getWorkoutsCreatedByDudeId with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<Workout> workouts = new ArrayList<>();
+        for (Workout workout : allWorkouts) {
+            if (!workout.getHistory()) {
+                workouts.add(workout);
+            }
+        }
+        WorkoutDto[] workoutDtos = new WorkoutDto[workouts.size()];
+        for (int i = 0; i < workouts.size(); i++) {
+            if (!workouts.get(i).getHistory()) {
+                workoutDtos[i] = workoutMapper.workoutToWorkoutDto(workouts.get(i));
+            }
+        }
+        return workoutDtos;
     }
 }
 

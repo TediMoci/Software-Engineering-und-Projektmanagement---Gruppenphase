@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Dude} from '../dtos/dude';
-import {Exercise} from '../dtos/Exercise';
+import {Exercise} from '../dtos/exercise';
 import {ExerciseFilter} from "../dtos/exercise-filter";
 import {CourseFilter} from "../dtos/course-filter";
 import {Course} from "../dtos/course";

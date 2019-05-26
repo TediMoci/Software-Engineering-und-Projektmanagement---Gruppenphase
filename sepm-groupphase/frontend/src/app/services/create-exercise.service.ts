@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {CreateExercise} from '../dtos/create-exercise';
+import {Exercise} from '../dtos/exercise';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class CreateExerciseService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) {}
 
-  addExercise(exercise: CreateExercise): Observable<CreateExercise> {
+  addExercise(exercise: CreateExercise): Observable<Exercise> {
     console.log('add exercise with name ' + exercise.name);
-    return this.httpClient.post<CreateExercise>(this.exerciseBaseUri, exercise);
+    return this.httpClient.post<Exercise>(this.exerciseBaseUri, exercise);
   }
 }

@@ -162,7 +162,7 @@ import { CreateExercisesForWorkoutComponent } from './components/create-exercise
     BrowserAnimationsModule,
     NgKnifeModule
   ],
-  providers: [httpInterceptorProviders, Globals, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
+  providers: [httpInterceptorProviders, Globals, WorkoutExercisesComponent, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
     multi: true}],
   bootstrap: [AppComponent]
 })

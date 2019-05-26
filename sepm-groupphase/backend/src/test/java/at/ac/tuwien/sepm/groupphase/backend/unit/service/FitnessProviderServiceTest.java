@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -76,19 +77,9 @@ public class FitnessProviderServiceTest {
     }
 
     @Test(expected = ServiceException.class)
-    public void TestSaveFitnessProvider_invalidName() throws ServiceException {
-        FitnessProvider fitnessProvider = fitnessProviderBuilder();
-        fitnessProvider.setName("");
-        Mockito.when(fpRepository.save(fitnessProvider)).thenReturn(fitnessProvider);
-        fpService.save(fitnessProvider);
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestSaveFitnessProvider_invalidAddress() throws ServiceException {
-        FitnessProvider fitnessProvider = fitnessProviderBuilder();
-        fitnessProvider.setAddress("");
-        Mockito.when(fpRepository.save(fitnessProvider)).thenReturn(fitnessProvider);
-        fpService.save(fitnessProvider);
+    public void TestSaveFitnessProvider_invalidInput_thenServiceException() throws ServiceException {
+        Mockito.when(fpRepository.save(anyObject())).thenThrow(Mockito.mock(DataAccessException.class));
+        fpService.save(fitnessProvider1);
     }
 
     @Test
@@ -97,10 +88,10 @@ public class FitnessProviderServiceTest {
         assertEquals(fpService.findByName("name of FP11"),fitnessProvider1);
     }
 
-    @Test
-    public void TestFindByName_ifNameNotFound_thenNull() throws ServiceException{
+    @Test(expected = ServiceException.class)
+    public void TestFindByName_ifNameNotFound_thenServiceException() throws ServiceException{
         Mockito.when(fpRepository.findByName(anyString())).thenReturn(null);
-        assertNull(fpService.findByName("name not in database"));
+        fpService.findByName("name not in database");
     }
 
     @Test

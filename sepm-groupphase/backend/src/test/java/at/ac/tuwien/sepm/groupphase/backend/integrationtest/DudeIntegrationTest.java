@@ -123,12 +123,11 @@ public class  DudeIntegrationTest  {
         Dude dude = dudeBuilder();
         HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(testDude);
         Mockito.when(dudeRepository.save(anyObject())).thenReturn(dude);
-
         ResponseEntity<DudeDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
         DudeDto dudeResponse = response.getBody();
-        assertEquals(dudeRequest,dudeResponse);
+        assertEquals(testDude,dudeResponse);
     }
 
     @Test(expected = HttpClientErrorException.class)

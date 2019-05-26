@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {OwnExercisesService} from '../../services/own-exercises.service';
-import {CreateExercise} from '../../dtos/create-exercise';
 import {Router} from '@angular/router';
 import {Exercise} from '../../dtos/exercise';
 

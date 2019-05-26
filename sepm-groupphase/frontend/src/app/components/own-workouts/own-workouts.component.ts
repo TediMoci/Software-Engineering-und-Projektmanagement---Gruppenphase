@@ -3,6 +3,7 @@ import {Dude} from '../../dtos/dude';
 import {Router} from '@angular/router';
 import {OwnWorkoutsService} from '../../services/own-workouts.service';
 import {Workout} from '../../dtos/workout';
+import {GetWorkout} from '../../dtos/get-workout';
 
 @Component({
   selector: 'app-own-workouts',
@@ -14,7 +15,7 @@ export class OwnWorkoutsComponent implements OnInit {
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   dude: Dude;
-  workouts: Workout[];
+  workouts: GetWorkout[];
   workoutToDelete: string;
   error: any;
 
@@ -59,6 +60,8 @@ export class OwnWorkoutsComponent implements OnInit {
   setToDeleteWorkout(element: Workout) {
     localStorage.setItem('selectedWorkout', JSON.stringify(element));
     this.workoutToDelete = element.name;
+    console.log('preparing to delete ');
+    console.log(element);
   }
 
   deleteWorkout() {
