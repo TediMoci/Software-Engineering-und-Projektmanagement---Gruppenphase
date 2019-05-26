@@ -72,8 +72,8 @@
                         <button type="button" (click)="setExData(element)" class="btn btn-secondary"><i
                           class="fas fa-check"></i></button>
                       </p>
-                      <div class="form">
-                        <form [formGroup]="workoutExForm" (ngSubmit)="addCourse()">
+                      <div class="form-group">
+                        <form [formGroup]="workoutExForm">
                           <span class="anchor" id="workoutExForm"></span>
 
                           <div class="form-group">
@@ -86,6 +86,10 @@
                                      *ngIf="!!workoutExForm.controls.repetitions.errors.required">
                                 Number of repetitions is
                                 required!
+                              </small>
+                              <small class="form-text text-warning"
+                                     *ngIf="!!workoutExForm.controls.repetitions.errors?.max">
+                                The maximum number of repetitions can only be 200!
                               </small>
                             </div>
                           </div>
@@ -101,6 +105,10 @@
                                 of sets is
                                 required!
                               </small>
+                              <small class="form-text text-warning"
+                                     *ngIf="!!workoutExForm.controls.sets.errors.max">
+                                The maximum number of sets can only be 20!
+                              </small>
                             </div>
                           </div>
 
@@ -114,6 +122,10 @@
                                      *ngIf="!!workoutExForm.controls.duration.errors.required">
                                 Duration exercise is
                                 required!
+                              </small>
+                              <small class="form-text text-warning"
+                                     *ngIf="!!workoutExForm.controls.duration.errors.max">
+                                The duration cannot exceed 1440 minutes!
                               </small>
                             </div>
                           </div>
