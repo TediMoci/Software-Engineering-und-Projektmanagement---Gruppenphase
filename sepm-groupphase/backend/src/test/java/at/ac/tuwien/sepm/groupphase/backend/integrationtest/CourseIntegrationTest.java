@@ -117,7 +117,7 @@ public class CourseIntegrationTest {
     }
 
     @Test()
-    public void whenSaveTwoAndFilterByCharacter2_then(){
+    public void whenSaveTwoAndFilterByCharacter2_thenGetFilteredCourse(){
         validCourseDto1.setId(1L);
         validCourseDto2.setId(2L);
         HttpEntity<CourseDto> courseRequest1 = new HttpEntity<>(validCourseDto1);
