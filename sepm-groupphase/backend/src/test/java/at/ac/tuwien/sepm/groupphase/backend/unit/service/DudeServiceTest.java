@@ -12,6 +12,7 @@ import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -37,7 +38,7 @@ public class DudeServiceTest {
     IDudeRepository dudeRepository;
 
     @BeforeClass
-    public static void beforeEach() {
+    public static void beforeClass() {
         dude1.setId(1L);
         dude1.setName("John");
         dude1.setPassword("123456789");
@@ -86,19 +87,9 @@ public class DudeServiceTest {
     }
 
     @Test(expected = ServiceException.class)
-    public void TestSaveDude_invalidName() throws ServiceException {
-        Dude dude = dudeBuilder();
-        dude.setName("");
-        Mockito.when(dudeRepository.save(dude)).thenReturn(dude);
-        dudeService.save(dude);
-    }
-
-    @Test(expected = ServiceException.class)
-    public void TestSaveDude_invalidHeight() throws ServiceException {
-        Dude dude = dudeBuilder();
-        dude.setHeight(0.0);
-        Mockito.when(dudeRepository.save(dude)).thenReturn(dude);
-        dudeService.save(dude);
+    public void TestSaveDude_invalidInput_thenServiceException() throws ServiceException {
+        Mockito.when(dudeRepository.save(anyObject())).thenThrow(Mockito.mock(DataAccessException.class));
+        dudeService.save(dude1);
     }
 
     @Test
@@ -107,10 +98,10 @@ public class DudeServiceTest {
         assertEquals(dudeService.findByName("name of Dude1"),dude1);
     }
 
-    @Test
-    public void TestFindByName_ifNameNotFound_thenNull() throws ServiceException{
+    @Test(expected = ServiceException.class)
+    public void TestFindByName_ifNameNotFound_thenServiceException() throws ServiceException{
         Mockito.when(dudeRepository.findByName(anyString())).thenReturn(null);
-        assertEquals(dudeService.findByName("name not in database"),null);
+        dudeService.findByName("name not in database");
     }
 
     @Test
