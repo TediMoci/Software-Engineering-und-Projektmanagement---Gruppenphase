@@ -173,4 +173,17 @@ public class WorkoutIntegrationTest {
         REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/" + savedWorkoutId+1, HttpMethod.PUT, workoutRequest2, WorkoutDto.class);
     }
 
+    @Test()
+    public void whenSaveTwoAndFilterByCharacter2_thenGetOneResult(){
+        validWorkoutDto1.setId(1L);
+        validWorkoutDto2.setId(2L);
+        HttpEntity<WorkoutDto> courseRequest1 = new HttpEntity<>(validWorkoutDto1);
+        HttpEntity<WorkoutDto> courseRequest2 = new HttpEntity<>(validWorkoutDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, courseRequest1, WorkoutDto.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, courseRequest2, WorkoutDto.class);
+        ResponseEntity<WorkoutDto[]> response3 = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, WorkoutDto[].class);
+        assertEquals(1, response3.getBody() == null ? 0 : response3.getBody().length);
+    }
+
 }
