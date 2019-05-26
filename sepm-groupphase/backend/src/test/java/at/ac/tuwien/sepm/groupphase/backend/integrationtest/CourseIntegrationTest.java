@@ -80,7 +80,7 @@ public class CourseIntegrationTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         CourseDto responseCourseDto = response.getBody();
         assertNotNull(responseCourseDto.getId());
-        responseCourseDto.setId(null);
+        responseCourseDto.setId(1L);
         assertEquals(validCourseDto1, responseCourseDto);
     }
 
@@ -102,7 +102,7 @@ public class CourseIntegrationTest {
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         CourseDto responseCourseDto = response2.getBody();
         assertEquals(savedCourseId, responseCourseDto.getId());
-        responseCourseDto.setId(null);
+        responseCourseDto.setId(2L);
         assertEquals(validCourseDto2, responseCourseDto);
     }
 

@@ -133,7 +133,7 @@ public class WorkoutIntegrationTest {
         assertEquals(HttpStatus.CREATED, workoutResponse.getStatusCode());
         WorkoutDto responseWorkoutDto = workoutResponse.getBody();
         assertNotNull(responseWorkoutDto.getId());
-        responseWorkoutDto.setId(null);
+        responseWorkoutDto.setId(1L);
         responseWorkoutDto.setWorkoutExercises(validWorkoutDto1.getWorkoutExercises());
         assertEquals(validWorkoutDto1, responseWorkoutDto);
     }
@@ -157,7 +157,7 @@ public class WorkoutIntegrationTest {
         WorkoutDto responseWorkoutDto = workoutResponse2.getBody();
         assertEquals(savedWorkoutId, responseWorkoutDto.getId());
         assertEquals((Integer)2, responseWorkoutDto.getVersion());
-        responseWorkoutDto.setId(null);
+        responseWorkoutDto.setId(2L);
         responseWorkoutDto.setVersion(1);
         responseWorkoutDto.setWorkoutExercises(validWorkoutDto2.getWorkoutExercises());
         assertEquals(validWorkoutDto2, responseWorkoutDto);

@@ -96,7 +96,7 @@ public class ExerciseIntegrationTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         ExerciseDto responseExerciseDto = response.getBody();
         assertNotNull(responseExerciseDto.getId());
-        responseExerciseDto.setId(null);
+        responseExerciseDto.setId(1L);
         assertEquals(validExerciseDto1, responseExerciseDto);
     }
 
@@ -119,7 +119,7 @@ public class ExerciseIntegrationTest {
         ExerciseDto responseExerciseDto = response2.getBody();
         assertEquals(savedExerciseId, responseExerciseDto.getId());
         assertEquals((Integer)2, responseExerciseDto.getVersion());
-        responseExerciseDto.setId(null);
+        responseExerciseDto.setId(2L);
         responseExerciseDto.setVersion(1);
         assertEquals(validExerciseDto2, responseExerciseDto);
     }
