@@ -35,6 +35,7 @@ public class ExerciseIntegrationTest {
     private static final String DUDE_ENDPOINT = "/dudes";
     private static final DudeDto dudeDto = new DudeDto();
     private static final ExerciseDto validExerciseDto1 = new ExerciseDto();
+    private static final ExerciseDto validExerciseDto2 = new ExerciseDto();
     private static final ExerciseDto invalidExerciseDto1 = new ExerciseDto();
 
     private static boolean initialized = false;
@@ -59,10 +60,16 @@ public class ExerciseIntegrationTest {
         validExerciseDto1.setMuscleGroup("MuscleGroup1");
         validExerciseDto1.setCategory(Category.Strength);
 
-        invalidExerciseDto1.setName("Exercise2");
-        invalidExerciseDto1.setDescription("Description2");
-        invalidExerciseDto1.setEquipment("Equipment2");
-        invalidExerciseDto1.setMuscleGroup("MuscleGroup2");
+        validExerciseDto2.setName("Exercise2");
+        validExerciseDto2.setDescription("Description2");
+        validExerciseDto2.setEquipment("Equipment2");
+        validExerciseDto2.setMuscleGroup("MuscleGroup2");
+        validExerciseDto2.setCategory(Category.Endurance);
+
+        invalidExerciseDto1.setName("Exercise3");
+        invalidExerciseDto1.setDescription("Description3");
+        invalidExerciseDto1.setEquipment("Equipment3");
+        invalidExerciseDto1.setMuscleGroup("MuscleGroup3");
         invalidExerciseDto1.setCategory(null);
     }
 
@@ -74,6 +81,7 @@ public class ExerciseIntegrationTest {
                 .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
             Long dudeId = response.getBody().getId();
             validExerciseDto1.setCreatorId(dudeId);
+            validExerciseDto2.setCreatorId(dudeId);
             invalidExerciseDto1.setCreatorId(dudeId);
 
             initialized = true;
@@ -98,4 +106,31 @@ public class ExerciseIntegrationTest {
         REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, exerciseRequest, ExerciseDto.class);
     }
 
+    @Test
+    public void whenUpdateOneExercise_then200OkAndGetUpdatedExercise() {
+        HttpEntity<ExerciseDto> exerciseRequest1 = new HttpEntity<>(validExerciseDto1);
+        ResponseEntity<ExerciseDto> response1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, exerciseRequest1, ExerciseDto.class);
+        Long savedExerciseId = response1.getBody().getId();
+        HttpEntity<ExerciseDto> exerciseRequest2 = new HttpEntity<>(validExerciseDto2);
+        ResponseEntity<ExerciseDto> response2 = REST_TEMPLATE
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/" + savedExerciseId, HttpMethod.PUT, exerciseRequest2, ExerciseDto.class);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        ExerciseDto responseExerciseDto = response2.getBody();
+        assertEquals(savedExerciseId, responseExerciseDto.getId());
+        assertEquals((Integer)2, responseExerciseDto.getVersion());
+        responseExerciseDto.setId(null);
+        responseExerciseDto.setVersion(1);
+        assertEquals(validExerciseDto2, responseExerciseDto);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenUpdateOneExerciseWithInvalidId_then400BadRequest() {
+        HttpEntity<ExerciseDto> exerciseRequest1 = new HttpEntity<>(validExerciseDto1);
+        ResponseEntity<ExerciseDto> response1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, exerciseRequest1, ExerciseDto.class);
+        Long savedExerciseId = response1.getBody().getId();
+        HttpEntity<ExerciseDto> exerciseRequest2 = new HttpEntity<>(validExerciseDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/" + savedExerciseId+1, HttpMethod.PUT, exerciseRequest2, ExerciseDto.class);
+    }
 }

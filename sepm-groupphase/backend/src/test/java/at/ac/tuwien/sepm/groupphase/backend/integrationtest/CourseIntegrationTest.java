@@ -102,7 +102,7 @@ public class CourseIntegrationTest {
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         CourseDto responseCourseDto = response2.getBody();
         assertEquals(savedCourseId, responseCourseDto.getId());
-        responseCourseDto.setId(validCourseDto1.getId());
+        responseCourseDto.setId(null);
         assertEquals(validCourseDto2, responseCourseDto);
     }
 
