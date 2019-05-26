@@ -61,7 +61,6 @@
                   <input id="pro" type="radio" class="custom-control-input" value= 3 name="difficultyLevelWorkout" formControlName="difficultyLevelWorkout">
                   <label class="custom-control-label" for="pro">Pro</label>
                 </div>
-
                 <div *ngIf="submitted && !!registerForm.controls.difficultyLevelWorkout.errors" class="error">
                   <small class="form-text text-warning" *ngIf="!!registerForm.controls.difficultyLevelWorkout.errors.required">Difficulty level is
                     required!
@@ -79,7 +78,7 @@
                   required!
                 </small>
               </div>
-            </div>
+            </div>a
 
           </form>
           <a [routerLink]="['/workout-exercises']" (click)="addExercises()" class="btn2 btn-link">Add Exercises</a>

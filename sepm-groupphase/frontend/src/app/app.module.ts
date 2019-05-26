@@ -79,6 +79,8 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import { CreateExercisesForWorkoutComponent } from './components/create-exercises-for-workout/create-exercises-for-workout.component';
+import { EditWorkoutExercisesComponent } from './components/edit-workout-exercises/edit-workout-exercises.component';
+import { EditComponent } from './components/edit/edit.component';
 
 @NgModule({
   declarations: [
@@ -119,7 +121,9 @@ import { CreateExercisesForWorkoutComponent } from './components/create-exercise
     CourseComponent,
     EditCourseComponent,
     OwnCoursesComponent,
-    CreateExercisesForWorkoutComponent
+    CreateExercisesForWorkoutComponent,
+    EditWorkoutExercisesComponent,
+    EditComponent
   ],
   imports: [
     MatAutocompleteModule,

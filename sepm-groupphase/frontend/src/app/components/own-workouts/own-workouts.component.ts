@@ -26,6 +26,7 @@ export class OwnWorkoutsComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    localStorage.setItem('chosenExercisesForEditWorkout', JSON.stringify('empty'));
 
     this.ownWorkoutsService.getAllWorkoutsOfLoggedInDude(this.dude).subscribe(
       (data) => {

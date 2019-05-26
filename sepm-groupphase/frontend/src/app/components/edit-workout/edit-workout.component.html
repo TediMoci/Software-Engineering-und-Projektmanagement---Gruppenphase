@@ -1,3 +1,121 @@
-<p>
-  edit-workout works!
-</p>
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<body>
+<div class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <div class="row-sm-1"></div>
+        <div class="row-sm-10">
+          <h4 style="text-decoration: underline;">{{userName}}</h4>
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="form">
+          <form [formGroup]="registerForm">
+            <span class="anchor" id="formRegister"></span>
+            <h1>Edit Workout</h1>
+
+            <div class="form-group">
+              <label for="nameForEditWorkout">Name</label>
+              <input type="text" name="nameForEditWorkout" maxlength="50" class="form-control" id="nameForEditWorkout" formControlName="nameForEditWorkout"
+                     aria-describedby="nameForEditWorkoutHelp" ngModel="{{name}}">
+              <div *ngIf="submitted && !!registerForm.controls.nameForWorkout.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForWorkout.errors.required">Name is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="descriptionForEditWorkout">Description</label>
+              <input type="text" name="descriptionForEditWorkout" class="form-control" id="descriptionForEditWorkout" formControlName="descriptionForEditWorkout"
+                     aria-describedby="descriptionForEditWorkout" ngModel="{{description}}">
+              <div *ngIf="submitted && !!registerForm.controls.descriptionForWorkout.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForWorkout.errors.required">Description is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <span class="difficultyLevelEditWorkout">Difficulty Level</span>
+              <div class="gap_space">
+                <div class= "custom-control custom-radio custom-control-inline">
+                  <input id="beginner" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
+                  <label class="custom-control-label" for="beginner">Beginner</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="advanced" type="radio" class="custom-control-input" value= 2 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
+                  <label class="custom-control-label" for="advanced">Advanced</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="pro" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
+                  <label class="custom-control-label" for="pro">Pro</label>
+                </div>
+                <div *ngIf="submitted && !!registerForm.controls.difficultyLevelWorkout.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.difficultyLevelWorkout.errors.required">Difficulty level is
+                    required!
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="calorieConsumptionEditWorkout">Calorie consumption</label>
+              <input knifeOnlyNumbers type="text" name="calorieConsumptionEditWorkout" class="form-control" id="calorieConsumptionEditWorkout" formControlName="calorieConsumptionEditWorkout"
+                     aria-describedby="calorieConsumptionEditWorkoutHelp" ngModel="{{calorie}}">
+              <div *ngIf="submitted && !!registerForm.controls.calorieConsumption.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!registerForm.controls.calorieConsumption.errors.required">Calorie consumption is
+                  required!
+                </small>
+              </div>
+            </div>a
+
+          </form>
+          <a [routerLink]="['/workout-exercises']" (click)="editExercises()" class="btn2 btn-link">Edit Exercises</a>
+        </div>
+        <button type="button" (click)="editWorkout()" class="btn btn-success float-right">Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
