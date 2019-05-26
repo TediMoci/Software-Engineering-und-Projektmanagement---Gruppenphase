@@ -1,22 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
-
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
-import at.ac.tuwien.sepm.groupphase.backend.integrationtest.base.BaseIntegrationTest;
-import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -24,18 +13,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.anyInt;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,95 +26,77 @@ public class  DudeIntegrationTest  {
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
     private static final String BASE_URL = "http://localhost:";
     private static final String DUDE_ENDPOINT = "/dudes";
-    private static final DudeDto testDude = new DudeDto();
-
-    @MockBean
-    IDudeRepository dudeRepository;
+    private static final DudeDto testDude1 = new DudeDto();
+    private static final DudeDto testDude2 = new DudeDto();
 
     @LocalServerPort
     private int port;
 
     @BeforeClass
     public static void setUp(){
-        testDude.setId(1L);
-        testDude.setName("John");
-        testDude.setPassword("123456789");
-        testDude.setEmail("john1@dude.com");
-        testDude.setDescription("Description 1");
-        testDude.setBirthday(LocalDate.of(1982,1,1));
-        testDude.setSex(Sex.Male);
-        testDude.setStatus(1);
-        testDude.setSelfAssessment(1);
-        testDude.setHeight(185.0);
-        testDude.setWeight(85.0);
+        testDude1.setId(1L);
+        testDude1.setName("John");
+        testDude1.setPassword("123456789");
+        testDude1.setEmail("john1@dude.com");
+        testDude1.setDescription("Description 1");
+        testDude1.setBirthday(LocalDate.of(1982,1,1));
+        testDude1.setSex(Sex.Male);
+        testDude1.setStatus(1);
+        testDude1.setSelfAssessment(1);
+        testDude1.setHeight(185.0);
+        testDude1.setWeight(85.0);
+
+        testDude2.setId(2L);
+        testDude2.setName("Linda");
+        testDude2.setPassword("987654321");
+        testDude2.setEmail("linda@dude.com");
+        testDude2.setDescription("Description 2");
+        testDude2.setBirthday(LocalDate.of(1988,10,10));
+        testDude2.setSex(Sex.Female);
+        testDude2.setStatus(1);
+        testDude2.setSelfAssessment(2);
+        testDude2.setHeight(172.0);
+        testDude2.setWeight(68.0);
     }
 
-    private Dude dudeBuilder(){
-        Dude dude = new Dude();
-        dude.setId(1L);
-        dude.setName("John");
-        dude.setPassword("123456789");
-        dude.setEmail("john1@dude.com");
-        dude.setDescription("Description 1");
-        dude.setBirthday(LocalDate.of(1982,1,1));
-        dude.setSex(Sex.Male);
-        dude.setStatus(1);
-        dude.setSelfAssessment(1);
-        dude.setHeight(185.0);
-        dude.setWeight(85.0);
-        return dude;
-    }
 
-    private DudeDto dudeDtoBuilder(){
+    private DudeDto dudeDtoBuilder(DudeDto d){
         DudeDto dude = new DudeDto();
-        dude.setId(1L);
-        dude.setName("John");
-        dude.setPassword("123456789");
-        dude.setEmail("john1@dude.com");
-        dude.setDescription("Description 1");
-        dude.setBirthday(LocalDate.of(1982,1,1));
-        dude.setSex(Sex.Male);
-        dude.setStatus(1);
-        dude.setSelfAssessment(1);
-        dude.setHeight(185.0);
-        dude.setWeight(85.0);
+        dude.setId(d.getId());
+        dude.setName(d.getName());
+        dude.setPassword(d.getPassword());
+        dude.setEmail(d.getEmail());
+        dude.setDescription(d.getDescription());
+        dude.setBirthday(d.getBirthday());
+        dude.setSex(d.getSex());
+        dude.setStatus(d.getStatus());
+        dude.setSelfAssessment(d.getSelfAssessment());
+        dude.setHeight(d.getHeight());
+        dude.setWeight(d.getWeight());
         return dude;
     }
 
-    @Test
-    public void TestFindAll(){
-        Dude dude = dudeBuilder();
-        List<Dude> dudes = new ArrayList<>();
-        dudes.add(dude);
-        dudes.add(dude);
-        List<DudeDto> dudesDto = new ArrayList<>();
-        dudesDto.add(testDude);
-        dudesDto.add(testDude);
-        Mockito.when(dudeRepository.findAll()).thenReturn(dudes);
-
-        ResponseEntity<List<DudeDto>> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<List<DudeDto>>() {
-            });
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        List<DudeDto> dudesDto2 = response.getBody();
-        Assert.assertThat(dudesDto2, is(dudesDto));
+    private void postDude(DudeDto dude) {
+        REST_TEMPLATE.postForObject(BASE_URL + port + DUDE_ENDPOINT, new HttpEntity<>(dude), DudeDto.class);
     }
 
     @Test
-    public void TestSaveDude(){
-        Dude dude = dudeBuilder();
-        HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(testDude);
-        Mockito.when(dudeRepository.save(anyObject())).thenReturn(dude);
+    public void whenSaveDude_then201CreatedAndGetSavedDude(){
+        DudeDto dude = dudeDtoBuilder(testDude1);
+        HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dude);
+
         ResponseEntity<DudeDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
         DudeDto dudeResponse = response.getBody();
-        assertEquals(testDude,dudeResponse);
+        dude.setId(dudeResponse.getId());
+        dude.setPassword(dudeResponse.getPassword());
+        assertEquals(dude,dudeResponse);
     }
 
     @Test(expected = HttpClientErrorException.class)
-    public void TestSaveDude_invalidDude(){
-        DudeDto dude = dudeDtoBuilder();
+    public void whenSaveDude_ifInvalidDude_thenHttpClientErrorException(){
+        DudeDto dude = dudeDtoBuilder(testDude1);
         dude.setName("");
         HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dude);
 
@@ -141,95 +105,64 @@ public class  DudeIntegrationTest  {
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
-    @Test
-    public void TestFindDudeById(){
-        Dude dude = dudeBuilder();
-        Mockito.when(dudeRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(dude));
-        DudeDto foundDude = REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "/" + dude.getId(), DudeDto.class);
+    @Test(expected = HttpClientErrorException.class)
+    public void whenSaveDude_ifNameExists_thenHttpClientErrorException(){
+        postDude(testDude1);
+        DudeDto dude = dudeDtoBuilder(testDude1);
+        HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dude);
 
-        assertEquals(foundDude.getId(), dude.getId());
-        assertEquals(foundDude.getName(), dude.getName());
-        assertEquals(foundDude.getHeight(), dude.getHeight());
+        ResponseEntity<DudeDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void givenTwoDudes_whenFindAllDudes_thenStatus200AndGetListWithTwoDudes(){
+        postDude(testDude1);
+        postDude(testDude2);
+        ResponseEntity<List<DudeDto>> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<List<DudeDto>>() {
+            });
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody().size(),2);
+    }
+
+
+    @Test
+    public void givenDude_whenFindDudeById_thenGetDude(){
+        postDude(testDude1);
+        DudeDto foundDude = REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "/1", DudeDto.class);
+        assertEquals(foundDude.getName(), testDude1.getName());
+        assertEquals(foundDude.getDescription(), testDude1.getDescription());
+        assertEquals(foundDude.getBirthday(), testDude1.getBirthday());
+        assertEquals(foundDude.getSex(), testDude1.getSex());
     }
 
     @Test(expected = HttpClientErrorException.class)
-    public void TestFindDudeById_NotFound(){
-        Dude dude = dudeBuilder();
-        Mockito.when(dudeRepository.findById(anyLong())).thenThrow(NoSuchElementException.class);
-        REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "/" + dude.getId(), DudeDto.class);
+    public void givenNothing_whenFindDudeById_thenHttpClientErrorException(){
+        REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "/1", DudeDto.class);
     }
 
     @Test
-    public void TestFindDudeByName(){
-        Dude dude = dudeBuilder();
-        Mockito.when(dudeRepository.findByName(anyString())).thenReturn(dude);
-        DudeDto foundDude = REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "?name=" + dude.getName(), DudeDto.class);
-
-        assertEquals(foundDude.getId(), dude.getId());
-        assertEquals(foundDude.getName(), dude.getName());
-        assertEquals(foundDude.getHeight(), dude.getHeight());
+    public void givenOneDude_whenFindDudeByName_thenGetDude(){
+        postDude(testDude2);
+        DudeDto foundDude = REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "?name=" + testDude2.getName(), DudeDto.class);
+        assertEquals(foundDude.getName(), testDude2.getName());
+        assertEquals(foundDude.getHeight(), testDude2.getHeight());
+        assertEquals(foundDude.getWeight(), testDude2.getWeight());
+        assertEquals(foundDude.getSex(), testDude2.getSex());
     }
 
     @Test(expected = HttpClientErrorException.class)
-    public void TestFindDudeByName_invalidName(){
-        Dude dude = dudeBuilder();
-        dude.setName("");
-        Mockito.when(dudeRepository.findByName(anyString())).thenReturn(dude);
-        REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "?name=" + dude.getName(), DudeDto.class);
+    public void whenFindDudeByName_ifInvalidName_thenHttpClientErrorException(){
+        postDude(testDude2);
+        REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "?name=  ", DudeDto.class);
     }
 
     @Test(expected = HttpClientErrorException.class)
-    public void TestFindDudeByName_NotFound(){
-        Dude dude = dudeBuilder();
-        Mockito.when(dudeRepository.findByName(anyString())).thenReturn(null);
-        REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "?name=" + dude.getName(), DudeDto.class);
+    public void whenFindDudeByName_ifDudeNotFound_thenHttpClientErrorException(){
+        postDude(testDude2);
+        REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "?name=random" + testDude2.getName(), DudeDto.class);
     }
-
-    /**
-    @Test
-    public void TestFindAll2(){
-        Dude dude = dudeBuilder();
-
-        List<Dude> dudes = new ArrayList<>();
-        dudes.add(dude);
-        dudes.add(dude);
-
-        List<DudeDto> dudesDto = new ArrayList<>();
-        dudesDto.add(testDude);
-        dudesDto.add(testDude);
-
-        Mockito.when(dudeRepository.findAll()).thenReturn(dudes);
-
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(DUDE_ENDPOINT+"/all")
-            .then().extract().response();
-
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-        List<DudeDto> dudesDto2 = Arrays.asList(response.as(DudeDto[].class));
-        Assert.assertThat(dudesDto2, is(dudesDto));
-    } **/
-
-    /**
-    @Test
-    public void TestFindByName(){
-        Dude dude = dudeBuilder();
-        Mockito.when(dudeRepository.findByName(anyString())).thenReturn(dude);
-
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(DUDE_ENDPOINT + "/" + dude.getId())
-            .then().extract().response();
-
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-        DudeDto dudeDto = response.as(DudeDto.class);
-        Assert.assertThat(dudeDto, is(testDude));
-    } **/
-
 
 }
