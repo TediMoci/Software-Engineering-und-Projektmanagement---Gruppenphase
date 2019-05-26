@@ -3,7 +3,6 @@ import {from, Observable} from 'rxjs';
 import {FindService} from '../../services/find.service';
 import {Dude} from '../../dtos/dude';
 import {Exercise} from '../../dtos/exercise';
-import {ExerciseFilter} from '../../dtos/exercise-filter';
 import {AuthService} from '../../services/auth.service';
 import {FitnessProvider} from '../../dtos/fitness-provider';
 import {ExerciseFilter} from "../../dtos/exercise-filter";
@@ -11,6 +10,7 @@ import {CourseFilter} from "../../dtos/course-filter";
 import {WorkoutFilter} from "../../dtos/workout-filter";
 import {Course} from "../../dtos/course";
 import {Workout} from "../../dtos/workout";
+import {WorkoutService} from "../../services/workout.service";
 
 @Component({
   selector: 'app-find',
@@ -33,14 +33,12 @@ export class FindComponent implements OnInit {
   // Transfer Variables
   public inputTextActual: any;
   public filterExerciseCategoryActual: string = "None";
-  public filterExerciseCategoryActual:string = "None";
   public filterWorkoutDifficultyActual: string = "None";
   public filterWorkoutCaloriesMinActual: string = "";
   public filterWorkoutCaloriesMaxActual: string = "";
 
   entries: any;
-  exercises: any;
-  cources: any;
+  exercisesForWorkouts: any;
 
   imagePath: string;
   userName: string;
@@ -55,7 +53,7 @@ export class FindComponent implements OnInit {
 
 
 
-  constructor(private findService: FindService, private authService: AuthService) {}
+  constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
 
   ngOnInit() {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'DUDE') {
@@ -187,6 +185,23 @@ export class FindComponent implements OnInit {
         break;
     }
   }
+  getSelectedWorkoutExercises(workout: Workout){
+    this.workoutService.getExercisesOfWorkoutById(workout.id, workout.version).subscribe(
+      (data) => {
+        console.log('get all exercises of workout ' + workout.name);
+        this.exercisesForWorkouts = data.sort(function (a, b) { // sort data alphabetically
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+          if (a.name > b.name) {return 1; }
+          return 0;
+        });
+        console.log(this.exercisesForWorkouts);
+      },
+      error => {
+        this.error = error;
+      }
+    );
+  }
+
   setSelectedExercise(element: Exercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
   }
@@ -195,9 +210,13 @@ export class FindComponent implements OnInit {
   }
   setSelectedWorkout(element: Workout) {
     localStorage.setItem('selectedWorkout', JSON.stringify(element));
+    console.log(localStorage.getItem("selectedWorkout"))
   }
   resetResults() {
     this.entries = null;
   }
+
+
+
 
 }

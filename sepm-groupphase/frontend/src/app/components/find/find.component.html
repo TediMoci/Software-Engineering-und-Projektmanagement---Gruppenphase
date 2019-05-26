@@ -43,7 +43,6 @@
                 <button class="btn btn-md btn-success" (click)="startSearch(category)" type="submit"><i class="fas fa-search"></i></button>
               </div>
             </div>
-            <pre>Find {{category}} where name is like: {{inputText| json}}</pre>
           </div>
           <!--end of col-->
           <!--start of col-->
@@ -111,29 +110,96 @@
         <div class="row">
           <div [ngSwitch]="category" class="col">
             <!--start case-->
-            <ul *ngSwitchCase="'Exercise'">
-              <li *ngFor='let element of entries'>
-                <a [routerLink]="['/exercise']" (click)="setSelectedExercise(element)" class="btn2 btn-link">{{element.name}}</a>
+            <ul *ngSwitchCase="'Exercise'" style="list-style-type: none;" >
+              <li  *ngFor='let element of entries' >
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Equipment: {{element.equipment}}</p>
+                    <p>Category: {{element.category}}</p>
+                    <p>Muscle Group: {{element.muscleGroup}}</p>
+                    <hr>
+                    <p>Description: {{element.description}}</p>
+                  </mat-expansion-panel>
+                </mat-accordion>
               </li>
             </ul>
             <!--end case-->
             <!--start case-->
-            <ul *ngSwitchCase="'Course'">
+            <ul *ngSwitchCase="'Course'" style="list-style-type: none;" >
               <li *ngFor='let element of entries'>
-                <a [routerLink]="['/course']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Description: {{element.description}}</p>
+                  </mat-expansion-panel>
+                </mat-accordion>
               </li>
             </ul>
             <!--end case-->
             <!--start case-->
-            <ul *ngSwitchCase="'Workout'">
+            <ul *ngSwitchCase="'Workout'" style="list-style-type: none;">
               <li *ngFor='let element of entries'>
-                <a [routerLink]="['/workout']" (click)="setSelectedWorkout(element)" class="btn2 btn-link">{{element.name}}</a>
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{element.difficulty}}</p>
+                    <p>Calorie Consumotion: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <ul style="list-style-type: none;" >
+                      <li *ngFor='let exercise of exercisesForWorkouts'>
+                        <mat-accordion>
+                          <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                              <mat-panel-title style="font-size: large">
+                                {{exercise.name}}
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <hr>
+                            <p>Category: {{exercise.category}}</p>
+                            <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                            <p>Difficulty: {{exercise.difficulty_level}}</p>
+                            <hr>
+                            <p>Repetitions: {{exercise.repetitions}}</p>
+                            <p>Sets: {{exercise.sets}}</p>
+                            <hr>
+                            <p>Duration: {{exercise.exDuration}}</p>
+                            <p>Equipment: {{exercise.equipment}}</p>
+                            <hr>
+                            <p>"{{exercise.description}}"</p>
+
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </li>
+                    </ul>
+                  </mat-expansion-panel>
+                </mat-accordion>
               </li>
             </ul>
             <!--end case-->
           </div>
 
         </div>
+
+
       </div>
 
     </div>
