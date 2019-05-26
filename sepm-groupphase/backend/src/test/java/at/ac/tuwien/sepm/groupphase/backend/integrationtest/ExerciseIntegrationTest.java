@@ -133,4 +133,17 @@ public class ExerciseIntegrationTest {
         HttpEntity<ExerciseDto> exerciseRequest2 = new HttpEntity<>(validExerciseDto2);
         REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/" + savedExerciseId+1, HttpMethod.PUT, exerciseRequest2, ExerciseDto.class);
     }
+
+    @Test()
+    public void whenSaveTwoAndFilterByCharacter2_thenGetFilteredExercise(){
+        validExerciseDto1.setId(1L);
+        validExerciseDto2.setId(2L);
+        HttpEntity<ExerciseDto> courseRequest1 = new HttpEntity<>(validExerciseDto1);
+        HttpEntity<ExerciseDto> courseRequest2 = new HttpEntity<>(validExerciseDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, courseRequest1, ExerciseDto.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, courseRequest2, ExerciseDto.class);
+        ResponseEntity<ExerciseDto[]> response3 = REST_TEMPLATE
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, ExerciseDto[].class);
+        assertEquals(validExerciseDto2, response3.getBody() == null ? null : response3.getBody()[0]);
+    }
 }

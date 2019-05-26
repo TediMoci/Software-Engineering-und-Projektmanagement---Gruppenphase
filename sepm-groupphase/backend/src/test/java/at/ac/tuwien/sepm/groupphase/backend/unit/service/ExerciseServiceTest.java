@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -31,6 +32,7 @@ public class ExerciseServiceTest {
 
     private final static Exercise validExercise1 = new Exercise();
     private final static Exercise validExercise2 = new Exercise();
+    private final static List<Exercise> validExercises2 = new ArrayList<Exercise>();
 
     @MockBean
     IExerciseRepository exerciseRepository;
@@ -64,6 +66,8 @@ public class ExerciseServiceTest {
         validExercise2.setMuscleGroup("Muscles2");
         validExercise2.setRating(1.0);
         validExercise2.setCreator(dude);
+
+        validExercises2.add(validExercise2);
     }
 
     private Exercise buildExercise(Exercise e){
@@ -141,4 +145,11 @@ public class ExerciseServiceTest {
         Mockito.when(exerciseRepository.findById(anyLong())).thenReturn(null);
         exerciseService.delete(exercise.getId());
     }
+    @Test
+    public void whenFindByFilter_thenGetExerciseWhereFilterTrueAndNotExerciseWhereFilterFalse(){
+        Mockito.when(exerciseRepository.findByFilterWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
+        assertEquals(exerciseRepository.findByFilterWithCategory("2",Category.Endurance), validExercises2);
+        assertFalse(exerciseRepository.findByFilterWithCategory("2",Category.Endurance).contains(validExercise1));
+    }
+
 }
