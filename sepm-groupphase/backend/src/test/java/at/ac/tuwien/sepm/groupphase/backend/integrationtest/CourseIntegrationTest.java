@@ -116,4 +116,17 @@ public class CourseIntegrationTest {
         REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/" + savedCourseId+1, HttpMethod.PUT, courseRequest2, CourseDto.class);
     }
 
+    @Test()
+    public void whenSaveTwoAndFilterByCharacter2_then(){
+        validCourseDto1.setId(1L);
+        validCourseDto2.setId(2L);
+        HttpEntity<CourseDto> courseRequest1 = new HttpEntity<>(validCourseDto1);
+        HttpEntity<CourseDto> courseRequest2 = new HttpEntity<>(validCourseDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest1, CourseDto.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest2, CourseDto.class);
+        ResponseEntity<CourseDto[]> response3 = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, CourseDto[].class);
+        assertEquals(validCourseDto2, response3.getBody() == null ? null : response3.getBody()[0]);
+    }
+
 }
