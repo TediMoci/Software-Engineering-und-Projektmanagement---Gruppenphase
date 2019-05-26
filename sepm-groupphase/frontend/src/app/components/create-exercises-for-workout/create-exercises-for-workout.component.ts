@@ -58,9 +58,8 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     this.createExerciseService.addExercise(exercise).subscribe(
       (data) => {
         console.log(data);
-        localStorage.setItem('addNewExerciseForWorkout', JSON.stringify(data));
-        this.workoutExercisesComponent.addToChosenExercisesFromCreateExercise();
-        this.workoutExercisesComponent.saveExercisesTemporarily();
+
+        this.workoutExercisesComponent.addToChosenExercises(data);
         this.router.navigate(['workout-exercises']);
         },
       error => {
