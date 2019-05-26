@@ -45,6 +45,7 @@ public class DudeEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new Dude", authorizations = {@Authorization(value = "apiKey")})
     public DudeDto saveDude(@Valid @RequestBody DudeDto dudeDto) {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
