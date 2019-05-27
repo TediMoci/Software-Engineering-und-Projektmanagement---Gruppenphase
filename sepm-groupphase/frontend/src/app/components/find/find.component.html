@@ -164,32 +164,30 @@
                     <p>"{{element.description}}"</p>
                     <hr>
                     <p style="font-size: medium">Exercises:</p>
-                    <ul style="list-style-type: none;" >
-                      <li *ngFor='let exercise of exercisesForWorkouts'>
-                        <mat-accordion>
-                          <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                              <mat-panel-title style="font-size: large">
-                                {{exercise.name}}
-                              </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <hr>
-                            <p>Category: {{exercise.category}}</p>
-                            <p>Muscle Group: {{exercise.muscleGroup}}</p>
-                            <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
-                            <hr>
-                            <p>Repetitions: {{exercise.repetitions}}</p>
-                            <p>Sets: {{exercise.sets}}</p>
-                            <hr>
-                            <p>Duration: {{exercise.exDuration}}</p>
-                            <p>Equipment: {{exercise.equipment}}</p>
-                            <hr>
-                            <p>"{{exercise.description}}"</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
 
-                          </mat-expansion-panel>
-                        </mat-accordion>
-                      </li>
-                    </ul>
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
                   </mat-expansion-panel>
                 </mat-accordion>
               </li>
