@@ -69,6 +69,7 @@ export class EditWorkoutExercisesComponent implements OnInit {
                 this.gottenExercises[counter].sets,
                 this.gottenExercises[counter].exDuration));
         }
+        localStorage.setItem('chosenExercisesForEditWorkout', JSON.stringify(this.chosenExercises));
       }
       localStorage.setItem('firstAccess', JSON.stringify('false'));
     }
