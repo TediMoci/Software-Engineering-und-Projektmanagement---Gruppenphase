@@ -74,7 +74,7 @@ const routes: Routes = [
   {path: 'edit-course', canActivate: [FitnessProviderRoleGuard], component: EditCourseComponent},
   {path: 'workout', canActivate: [AuthGuard], component: WorkoutComponent},
   {path: 'edit-workout', canActivate: [RoleGuard], component: EditWorkoutComponent},
-  {path: 'course', canActivate: [AuthGuard], component: CourseComponent}
+  {path: 'course', canActivate: [AuthGuard], component: CourseComponent},
   {path: 'edit-workout-exercises', canActivate: [RoleGuard], component: EditWorkoutExercisesComponent},
   {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent}
 ];
