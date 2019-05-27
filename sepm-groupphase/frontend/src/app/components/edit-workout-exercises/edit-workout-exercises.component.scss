@@ -1,0 +1,67 @@
+.container {
+  padding: 0px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  background: white;
+  min-height: 1000px;
+}
+
+.img-fluid {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  width: 200px;
+  height: 200px;
+}
+
+.col-sm-3 {
+  background: lightskyblue;
+  min-height: 1000px;
+}
+
+.row-sm-1 {
+  padding: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+  color: black;
+  line-height: 10px;
+}
+
+.col-sm-9 {
+  padding: 40px;
+}
+
+.btn {
+  margin-right: 10px;
+}
+
+.searchResults{
+  margin-left: 30px;
+  ul{
+    height: 200px;
+    width: 670px;
+    line-height: 40px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  .btn{
+    margin-left: 30px;
+  }
+}
+
+.chosenExercises{
+  margin-left: 30px;
+  ul{
+    height: 600px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  .btn{
+    margin-left: 30px;
+  }
+}
+
+.form-group {
+  margin-left: 20px;
+}

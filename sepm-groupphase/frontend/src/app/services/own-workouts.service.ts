@@ -3,7 +3,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Dude} from '../dtos/dude';
-import {WorkoutExerciseDtoOut} from '../dtos/workoutExerciseDtoOut';
 import {GetWorkout} from '../dtos/get-workout';
 
 @Injectable({
