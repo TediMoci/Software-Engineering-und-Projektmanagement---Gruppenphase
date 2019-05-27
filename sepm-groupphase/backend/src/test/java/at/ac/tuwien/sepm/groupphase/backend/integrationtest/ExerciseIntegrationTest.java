@@ -96,7 +96,7 @@ public class ExerciseIntegrationTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         ExerciseDto responseExerciseDto = response.getBody();
         assertNotNull(responseExerciseDto.getId());
-        responseExerciseDto.setId(null);
+        responseExerciseDto.setId(1L);
         assertEquals(validExerciseDto1, responseExerciseDto);
     }
 
@@ -119,7 +119,7 @@ public class ExerciseIntegrationTest {
         ExerciseDto responseExerciseDto = response2.getBody();
         assertEquals(savedExerciseId, responseExerciseDto.getId());
         assertEquals((Integer)2, responseExerciseDto.getVersion());
-        responseExerciseDto.setId(null);
+        responseExerciseDto.setId(2L);
         responseExerciseDto.setVersion(1);
         assertEquals(validExerciseDto2, responseExerciseDto);
     }
@@ -132,5 +132,18 @@ public class ExerciseIntegrationTest {
         Long savedExerciseId = response1.getBody().getId();
         HttpEntity<ExerciseDto> exerciseRequest2 = new HttpEntity<>(validExerciseDto2);
         REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/" + savedExerciseId+1, HttpMethod.PUT, exerciseRequest2, ExerciseDto.class);
+    }
+
+    @Test()
+    public void whenSaveTwoAndFilterByCharacter2_thenGetFilteredExercise(){
+        validExerciseDto1.setId(1L);
+        validExerciseDto2.setId(2L);
+        HttpEntity<ExerciseDto> courseRequest1 = new HttpEntity<>(validExerciseDto1);
+        HttpEntity<ExerciseDto> courseRequest2 = new HttpEntity<>(validExerciseDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, courseRequest1, ExerciseDto.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, courseRequest2, ExerciseDto.class);
+        ResponseEntity<ExerciseDto[]> response3 = REST_TEMPLATE
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, ExerciseDto[].class);
+        assertEquals(validExerciseDto2, response3.getBody() == null ? null : response3.getBody()[0]);
     }
 }

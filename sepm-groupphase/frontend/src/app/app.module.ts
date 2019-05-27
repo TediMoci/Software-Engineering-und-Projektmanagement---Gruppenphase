@@ -79,6 +79,7 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import { CreateExercisesForWorkoutComponent } from './components/create-exercises-for-workout/create-exercises-for-workout.component';
+import { EditWorkoutExercisesComponent } from './components/edit-workout-exercises/edit-workout-exercises.component';
 
 @NgModule({
   declarations: [
@@ -119,7 +120,8 @@ import { CreateExercisesForWorkoutComponent } from './components/create-exercise
     CourseComponent,
     EditCourseComponent,
     OwnCoursesComponent,
-    CreateExercisesForWorkoutComponent
+    CreateExercisesForWorkoutComponent,
+    EditWorkoutExercisesComponent,
   ],
   imports: [
     MatAutocompleteModule,
@@ -162,7 +164,7 @@ import { CreateExercisesForWorkoutComponent } from './components/create-exercise
     BrowserAnimationsModule,
     NgKnifeModule
   ],
-  providers: [httpInterceptorProviders, Globals, WorkoutExercisesComponent, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
+  providers: [httpInterceptorProviders, Globals, WorkoutExercisesComponent, EditWorkoutExercisesComponent, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
     multi: true}],
   bootstrap: [AppComponent]
 })

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -29,8 +30,9 @@ import static org.mockito.ArgumentMatchers.*;
 @ActiveProfiles(profiles = "integration-test")
 public class ExerciseServiceTest {
 
-    private final static Exercise exercise1 = new Exercise();
-    private final static Exercise exercise2 = new Exercise();
+    private final static Exercise validExercise1 = new Exercise();
+    private final static Exercise validExercise2 = new Exercise();
+    private final static List<Exercise> validExercises2 = new ArrayList<Exercise>();
 
     @MockBean
     IExerciseRepository exerciseRepository;
@@ -43,79 +45,111 @@ public class ExerciseServiceTest {
         Dude dude = new Dude();
         dude.setId(1L);
 
-        exercise1.setId(1L);
-        exercise1.setVersion(1);
-        exercise1.setName("Name1");
-        exercise1.setHistory(false);
-        exercise1.setCategory(Category.Strength);
-        exercise1.setDescription("Description1");
-        exercise1.setEquipment("Equipment1");
-        exercise1.setMuscleGroup("Muscles1");
-        exercise1.setRating(1.0);
-        exercise1.setCreator(dude);
+        validExercise1.setId(1L);
+        validExercise1.setVersion(1);
+        validExercise1.setName("Name1");
+        validExercise1.setHistory(false);
+        validExercise1.setCategory(Category.Strength);
+        validExercise1.setDescription("Description1");
+        validExercise1.setEquipment("Equipment1");
+        validExercise1.setMuscleGroup("Muscles1");
+        validExercise1.setRating(1.0);
+        validExercise1.setCreator(dude);
 
-        exercise2.setId(2L);
-        exercise2.setVersion(1);
-        exercise2.setName("Name2");
-        exercise2.setHistory(false);
-        exercise2.setCategory(Category.Endurance);
-        exercise2.setDescription("Description2");
-        exercise2.setEquipment("Equipment2");
-        exercise2.setMuscleGroup("Muscles2");
-        exercise2.setRating(1.0);
-        exercise2.setCreator(dude);
+        validExercise2.setId(2L);
+        validExercise2.setVersion(1);
+        validExercise2.setName("Name2");
+        validExercise2.setHistory(false);
+        validExercise2.setCategory(Category.Endurance);
+        validExercise2.setDescription("Description2");
+        validExercise2.setEquipment("Equipment2");
+        validExercise2.setMuscleGroup("Muscles2");
+        validExercise2.setRating(1.0);
+        validExercise2.setCreator(dude);
+
+        validExercises2.add(validExercise2);
+    }
+
+    private Exercise buildExercise(Exercise e){
+        Exercise exercise = new Exercise();
+        exercise.setId(e.getId());
+        exercise.setVersion(e.getVersion());
+        exercise.setName(e.getName());
+        exercise.setHistory(e.getHistory());
+        exercise.setCategory(e.getCategory());
+        exercise.setDescription(e.getDescription());
+        exercise.setEquipment(e.getEquipment());
+        exercise.setMuscleGroup(e.getMuscleGroup());
+        exercise.setRating(e.getRating());
+        exercise.setCreator(e.getCreator());
+        return e;
     }
 
     @Test
-    public void TestSaveExercise() throws ServiceException {
-        Mockito.when(exerciseRepository.save(exercise1)).thenReturn(exercise1);
-        assertEquals(exerciseService.save(exercise1),exercise1);
+    public void whenSaveOneExercise_thenGetSavedExercise() throws ServiceException {
+        Exercise exercise = buildExercise(validExercise1);
+        Mockito.when(exerciseRepository.save(exercise)).thenReturn(exercise);
+        assertEquals(exerciseService.save(exercise),exercise);
     }
 
     @Test(expected = ServiceException.class)
-    public void TestSaveExercise_DataAccessException() throws ServiceException {
+    public void whenSaveOneExercise_ifDataAccessException_thenServiceException() throws ServiceException {
+        Exercise exercise = buildExercise(validExercise1);
         Mockito.when(exerciseRepository.save(anyObject())).thenThrow(Mockito.mock(DataAccessException.class));
-        exerciseService.save(exercise1);
+        exerciseService.save(exercise);
     }
 
     @Test
-    public void TestFindByIdAndVersion() throws ServiceException {
-        Mockito.when(exerciseRepository.findByIdAndVersion(anyLong(),anyInt())).thenReturn(java.util.Optional.of(exercise1));
-        assertEquals(exerciseService.findByIdAndVersion(exercise1.getId(),exercise1.getVersion()),exercise1);
+    public void whenFindByIdAndVersion_thenGetFoundExercise() throws ServiceException {
+        Exercise exercise = buildExercise(validExercise1);
+        Mockito.when(exerciseRepository.findByIdAndVersion(anyLong(),anyInt())).thenReturn(java.util.Optional.of(exercise));
+        assertEquals(exerciseService.findByIdAndVersion(exercise.getId(),exercise.getVersion()),exercise);
     }
 
     @Test(expected = ServiceException.class)
-    public void TestFindByIdAndVersionNotFound() throws ServiceException {
+    public void whenFindByIdAndVersion_ifNotFound_thenServiceException() throws ServiceException {
         Mockito.when(exerciseRepository.findByIdAndVersion(anyLong(),anyInt())).thenThrow(Mockito.mock(NoSuchElementException.class));
-        exerciseService.findByIdAndVersion(exercise1.getId(),exercise1.getVersion());
+        exerciseService.findByIdAndVersion(1L,1);
     }
 
     @Test
-    public void TestFindByName() throws ServiceException {
+    public void whenFindByName_thenGetFoundExercise() throws ServiceException {
         List<Exercise> exercises = new ArrayList<>();
-        exercises.add(exercise1);
-        exercises.add(exercise1);
+        Exercise exercise = buildExercise(validExercise1);
+        exercises.add(exercise);
+        exercises.add(exercise);
         Mockito.when(exerciseRepository.findByName(anyString())).thenReturn(exercises);
-        assertEquals(exerciseService.findByName(exercise1.getName()),exercises);
+        assertEquals(exerciseService.findByName(exercise.getName()),exercises);
     }
 
     @Test
-    public void TestUpdate() throws ServiceException {
-        Mockito.when(exerciseRepository.findById(anyLong())).thenReturn(exercise1);
+    public void whenUpdateExercise_thenGetUpdatedExercise() throws ServiceException {
+        Exercise exercise1 = buildExercise(validExercise1);
+        Exercise exercise2 = buildExercise(validExercise2);
+        Mockito.when(exerciseRepository.findById(1L)).thenReturn(exercise1);
         Mockito.when(exerciseRepository.save(anyObject())).thenReturn(exercise2);
-        assertEquals(exerciseService.update(exercise1.getId(),exercise2),exercise2);
+        assertEquals(exerciseService.update(1L,exercise2),exercise2);
     }
 
     @Test(expected = ServiceException.class)
-    public void TestUpdate_NotFound() throws ServiceException {
+    public void whenUpdateExercise_ifExerciseNotFound_thenServiceException() throws ServiceException {
+        Exercise exercise = buildExercise(validExercise1);
         Mockito.when(exerciseRepository.findById(anyLong())).thenReturn(null);
-        Mockito.when(exerciseRepository.save(anyObject())).thenReturn(exercise2);
-        exerciseService.update(exercise1.getId(),exercise2);
+        Mockito.when(exerciseRepository.save(anyObject())).thenReturn(exercise);
+        exerciseService.update(1L,exercise);
     }
 
     @Test(expected = ServiceException.class)
-    public void TestDelete_NotFound() throws ServiceException {
+    public void whenDeleteExercise_ifExerciseNotFound_thenServiceException() throws ServiceException {
+        Exercise exercise = buildExercise(validExercise1);
         Mockito.when(exerciseRepository.findById(anyLong())).thenReturn(null);
-        exerciseService.delete(exercise1.getId());
+        exerciseService.delete(exercise.getId());
     }
+    @Test
+    public void whenFindByFilter_thenGetExerciseWhereFilterTrueAndNotExerciseWhereFilterFalse(){
+        Mockito.when(exerciseRepository.findByFilterWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
+        assertEquals(exerciseRepository.findByFilterWithCategory("2",Category.Endurance), validExercises2);
+        assertFalse(exerciseRepository.findByFilterWithCategory("2",Category.Endurance).contains(validExercise1));
+    }
+
 }

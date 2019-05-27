@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,6 +35,7 @@ public class WorkoutServiceTest {
     private static final Workout validWorkout1 = new Workout();
     private static final Workout validWorkout2 = new Workout();
     private static final Workout invalidWorkout1 = new Workout();
+    private static final List<Workout> validWorkouts2 = new ArrayList<Workout>();
 
     @MockBean
     private IWorkoutRepository workoutRepository;
@@ -77,6 +80,8 @@ public class WorkoutServiceTest {
         invalidWorkout1.setCalorieConsumption(300.0);
         invalidWorkout1.setCreator(dude);
         invalidWorkout1.setExercises(invalidWorkoutExercises1);
+
+        validWorkouts2.add(validWorkout2);
     }
 
     @Test
@@ -151,6 +156,12 @@ public class WorkoutServiceTest {
             Mockito.when(workoutExerciseRepository.save(workoutExercise)).thenReturn(workoutExercise);
         }
         workoutService.update(1L, workout);
+    }
+    @Test
+    public void whenFindByFilter_thenGetWorkoutWhereFilterTrueAndNotWorkoutWhereFilterFalse(){
+        Mockito.when(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null)).thenReturn(validWorkouts2);
+        assertEquals(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null), validWorkouts2);
+        assertFalse(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null).contains(validWorkout1));
     }
 
 }

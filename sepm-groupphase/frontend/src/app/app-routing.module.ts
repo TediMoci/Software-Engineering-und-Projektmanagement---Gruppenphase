@@ -37,6 +37,7 @@ import {CourseComponent} from './components/course/course.component';
 import {CreateWorkoutComponent} from './components/create-workout/create-workout.component';
 import {WorkoutExercisesComponent} from './components/workout-exercises/workout-exercises.component';
 import {CreateExercisesForWorkoutComponent} from './components/create-exercises-for-workout/create-exercises-for-workout.component';
+import {EditWorkoutExercisesComponent} from './components/edit-workout-exercises/edit-workout-exercises.component';
 
 const routes: Routes = [
 
@@ -73,7 +74,9 @@ const routes: Routes = [
   {path: 'edit-course', canActivate: [FitnessProviderRoleGuard], component: EditCourseComponent},
   {path: 'workout', canActivate: [AuthGuard], component: WorkoutComponent},
   {path: 'edit-workout', canActivate: [RoleGuard], component: EditWorkoutComponent},
-  {path: 'course', canActivate: [AuthGuard], component: CourseComponent}
+  {path: 'course', canActivate: [AuthGuard], component: CourseComponent},
+  {path: 'edit-workout-exercises', canActivate: [RoleGuard], component: EditWorkoutExercisesComponent},
+  {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent}
 ];
 
 @NgModule({

@@ -87,6 +87,7 @@ export class WorkoutExercisesComponent implements OnInit {
       }
     );
   }
+
   removeFromChosenExercises(element: WorkoutEx) {
     this.index = this.chosenExercises.indexOf(element);
     this.chosenExercises.splice(this.index, 1);

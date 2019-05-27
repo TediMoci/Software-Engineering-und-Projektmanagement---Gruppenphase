@@ -7,6 +7,7 @@ import {CreateExercise} from '../../dtos/create-exercise';
 import {WorkoutExercisesComponent} from '../workout-exercises/workout-exercises.component';
 import {WorkoutEx} from '../../dtos/workoutEx';
 import {Exercise} from '../../dtos/exercise';
+import {EditWorkoutExercisesComponent} from '../edit-workout-exercises/edit-workout-exercises.component';
 
 @Component({
   selector: 'app-create-exercises-for-workout',
@@ -23,7 +24,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   dude: Dude;
   currentChosenExercises: WorkoutEx[];
 
-  constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
+  constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
   ngOnInit() {
@@ -38,11 +39,16 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       muscleGroupExercise: ['']
     });
 
-    this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
-    console.log('gotten from localstorage');
-    console.log(this.currentChosenExercises);
+    if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
+      this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      console.log('gotten from localstorage');
+      console.log(this.currentChosenExercises);
+    } else {
+      this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
+      console.log('gotten from localstorage edit');
+      console.log(this.currentChosenExercises);
+    }
   }
-
 
   addExercise() {
 
@@ -63,21 +69,42 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     }
     this.createExerciseService.addExercise(exercise).subscribe(
       (data) => {
-        console.log('newEx');
-        console.log(data);
-        this.addToLocalStorage(data);
-        this.router.navigate(['/workout-exercises']);
+        if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
+          console.log('newEx');
+          console.log(data);
+          this.addToLocalStorage(data);
+          this.router.navigate(['/workout-exercises']);
+        } else {
+          this.addToLocalStorageEdit(data);
+          this.router.navigate(['edit-workout-exercises']);
+        }
         },
       error => {
         this.error = error;
       }
     );
   }
+
   addToLocalStorage(newExercise: Exercise) {
     this.currentChosenExercises.push(new WorkoutEx(newExercise, 1, 1, 1));
     console.log('updated currentEx');
     console.log(this.currentChosenExercises);
     localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.currentChosenExercises));
+  }
+
+  addToLocalStorageEdit(newExercise: Exercise) {
+    this.currentChosenExercises.push(new WorkoutEx(newExercise, 1, 1, 1));
+    console.log('updated currentEx');
+    console.log(this.currentChosenExercises);
+    localStorage.setItem('chosenExercisesForEditWorkout', JSON.stringify(this.currentChosenExercises));
+  }
+
+  Back() {
+    if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
+      this.router.navigate(['workout-exercises']);
+    } else {
+      this.router.navigate(['edit-workout-exercises']);
+    }
   }
 
   vanishError() {
