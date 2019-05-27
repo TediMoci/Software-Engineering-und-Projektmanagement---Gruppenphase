@@ -44,6 +44,7 @@ export class WorkoutExercisesComponent implements OnInit {
       if (localStorage.getItem('chosenExercisesForWorkout') !== null) {
         console.log('return create-workout ' +  this.chosenExercises);
         this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+        console.log(this.chosenExercises);
       }
     }
 

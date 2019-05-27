@@ -57,11 +57,13 @@ export class EditWorkoutComponent implements OnInit {
       this.description = JSON.parse(localStorage.getItem('descriptionForEditWorkout'));
       this.calorie = JSON.parse(localStorage.getItem('calorieConsumptionForEditWorkout'));
       this.difficulty = JSON.parse(localStorage.getItem('difficultyEdit'));
+      console.log(this.difficulty === 2);
     } else {
       this.name = this.workout.name;
       this.calorie = this.workout.calorieConsumption;
       this.description = this.workout.description;
       this.difficulty = this.workout.difficulty;
+      console.log(this.difficulty);
     }
 
     if (JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) === 'empty') {
@@ -75,7 +77,6 @@ export class EditWorkoutComponent implements OnInit {
         }
       );
     }
-
     if (this.difficulty === 1) {
       this.beginner = true;
     } if (this.difficulty === 2) {
@@ -90,6 +91,8 @@ export class EditWorkoutComponent implements OnInit {
       descriptionForEditWorkout: ['', [Validators.required]],
       calorieConsumptionEditWorkout: ['', [Validators.required]]
     });
+
+    localStorage.setItem('previousRoute', JSON.stringify('/edit-workout'));
 
   }
 

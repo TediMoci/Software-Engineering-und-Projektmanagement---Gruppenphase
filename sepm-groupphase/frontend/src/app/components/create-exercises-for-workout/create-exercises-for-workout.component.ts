@@ -40,11 +40,11 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     });
 
     if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
-      this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+      this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout')) || [];
       console.log('gotten from localstorage');
       console.log(this.currentChosenExercises);
     } else {
-      this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
+      this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) || [];
       console.log('gotten from localstorage edit');
       console.log(this.currentChosenExercises);
     }
@@ -76,7 +76,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
           this.router.navigate(['/workout-exercises']);
         } else {
           this.addToLocalStorageEdit(data);
-          this.router.navigate(['edit-workout-exercises']);
+          this.router.navigate(['/edit-workout-exercises']);
         }
         },
       error => {
