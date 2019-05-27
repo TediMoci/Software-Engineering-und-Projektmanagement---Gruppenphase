@@ -158,7 +158,7 @@
                       </mat-panel-title>
                     </mat-expansion-panel-header>
                     <hr>
-                    <p>Difficulty: {{element.difficulty}}</p>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
                     <p>Calorie Consumption: {{element.calorieConsumption}}</p>
                     <hr>
                     <p>"{{element.description}}"</p>
@@ -176,7 +176,7 @@
                             <hr>
                             <p>Category: {{exercise.category}}</p>
                             <p>Muscle Group: {{exercise.muscleGroup}}</p>
-                            <p>Difficulty: {{exercise.difficulty_level}}</p>
+                            <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
                             <hr>
                             <p>Repetitions: {{exercise.repetitions}}</p>
                             <p>Sets: {{exercise.sets}}</p>
