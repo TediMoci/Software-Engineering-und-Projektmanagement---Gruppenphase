@@ -45,7 +45,6 @@ export class EditWorkoutExercisesComponent implements OnInit {
       if (localStorage.getItem('chosenExercisesForEditWorkout') !== null) {
         console.log('return edit-workout ' +  this.chosenExercises);
         this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
-        console.log(this.chosenExercises);
       }
     }
 
@@ -55,7 +54,6 @@ export class EditWorkoutExercisesComponent implements OnInit {
     if (JSON.parse(localStorage.getItem('firstAccess')) === 'true') {
       this.gottenExercises = JSON.parse(localStorage.getItem('gottenExercises'));
       if (!(this.gottenExercises === null)) {
-        console.log('first access');
         for (let counter = 0; counter < this.gottenExercises.length; counter++) {
             this.chosenExercises.push(new WorkoutEx(
               new Exercise(
@@ -71,7 +69,6 @@ export class EditWorkoutExercisesComponent implements OnInit {
                 this.gottenExercises[counter].sets,
                 this.gottenExercises[counter].exDuration));
         }
-
         localStorage.setItem('chosenExercisesForEditWorkout', JSON.stringify(this.chosenExercises));
       }
       localStorage.setItem('firstAccess', JSON.stringify('false'));
