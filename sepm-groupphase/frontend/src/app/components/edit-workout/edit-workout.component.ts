@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {WorkoutExerciseDtoIn} from '../../dtos/workoutExerciseDtoIn';
 import {Dude} from '../../dtos/dude';
-import {OwnWorkoutsComponent} from '../own-workouts/own-workouts.component';
 import {Router} from '@angular/router';
 import {Workout} from '../../dtos/workout';
 import {EditWorkout} from '../../dtos/edit-workout';
@@ -10,6 +9,9 @@ import {WorkoutService} from '../../services/workout.service';
 import {WorkoutExercise} from '../../dtos/workoutExercise';
 import {WorkoutEx} from '../../dtos/workoutEx';
 import {EditWorkoutService} from '../../services/edit-workout.service';
+import {OwnWorkoutsService} from '../../services/own-workouts.service';
+import {Exercise} from '../../dtos/exercise';
+import {EditWorkoutExercisesComponent} from '../edit-workout-exercises/edit-workout-exercises.component';
 
 @Component({
   selector: 'app-edit-workout',
@@ -29,6 +31,7 @@ export class EditWorkoutComponent implements OnInit {
 
   workoutExercises: WorkoutExercise[] = [];
   newAddedExercises: WorkoutEx[];
+  exerciseHelp: Exercise [];
   newAddedExercisesIn: WorkoutExerciseDtoIn[] = [];
   workout: Workout;
 
@@ -40,7 +43,7 @@ export class EditWorkoutComponent implements OnInit {
   advanced: boolean;
   pro: boolean;
 
-  constructor(private editWorkoutService: EditWorkoutService, private workoutService: WorkoutService, private ownWorkoutService: OwnWorkoutsComponent , private formBuilder: FormBuilder, private router: Router ) {
+  constructor(private editWorkoutService: EditWorkoutService, private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private workoutService: WorkoutService, private ownWorkoutService: OwnWorkoutsService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
   ngOnInit() {
@@ -51,9 +54,9 @@ export class EditWorkoutComponent implements OnInit {
     this.workout = JSON.parse(localStorage.getItem('selectedWorkout'));
 
     if (this.prevRoute === '/edit-workout-exercises' || this.prevRoute === '/create-exercise-for-workout') {
-      this.name = JSON.parse(localStorage.getItem('nameForWorkout'));
-      this.description = JSON.parse(localStorage.getItem('descriptionForWorkout'));
-      this.calorie = JSON.parse(localStorage.getItem('calorieConsumption'));
+      this.name = JSON.parse(localStorage.getItem('nameForEditWorkout'));
+      this.description = JSON.parse(localStorage.getItem('descriptionForEditWorkout'));
+      this.calorie = JSON.parse(localStorage.getItem('calorieConsumptionForEditWorkout'));
     } else {
       this.name = this.workout.name;
       this.calorie = this.workout.calorieConsumption;
@@ -63,6 +66,8 @@ export class EditWorkoutComponent implements OnInit {
     if (JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) === 'empty') {
       this.workoutService.getExercisesOfWorkoutById(this.workout.id, this.workout.version).subscribe((data) => {
           this.workoutExercises = data;
+          console.log(this.workoutExercises);
+          localStorage.setItem('gottenExercises', JSON.stringify(this.workoutExercises));
         },
         error => {
           this.error = error;
@@ -80,17 +85,17 @@ export class EditWorkoutComponent implements OnInit {
     }
 
     this.editWorkoutForm = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      difficulty: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      calorieConsumption: ['', [Validators.required]]
+      nameForEditWorkout: ['', [Validators.required]],
+      difficultyLevelEditWorkout: ['', [Validators.required]],
+      descriptionForEditWorkout: ['', [Validators.required]],
+      calorieConsumptionEditWorkout: ['', [Validators.required]]
     });
   }
 
   editExercises() {
-    localStorage.setItem('nameForWorkout', JSON.stringify(this.editWorkoutForm.controls.name.value));
-    localStorage.setItem('descriptionForWorkout', JSON.stringify(this.editWorkoutForm.controls.description.value));
-    localStorage.setItem('calorieConsumption', JSON.stringify(this.editWorkoutForm.controls.calorieConsumption.value));
+    localStorage.setItem('nameForEditWorkout', JSON.stringify(this.editWorkoutForm.controls.nameForEditWorkout.value));
+    localStorage.setItem('descriptionForEditWorkout', JSON.stringify(this.editWorkoutForm.controls.descriptionForEditWorkout.value));
+    localStorage.setItem('calorieConsumptionForEditWorkout', JSON.stringify(this.editWorkoutForm.controls.calorieConsumptionEditWorkout.value));
   }
   editWorkout() {
     localStorage.setItem('previousRoute', JSON.stringify('/'));
@@ -113,10 +118,10 @@ export class EditWorkoutComponent implements OnInit {
     const editWorkout: EditWorkout = new EditWorkout(
       this.workout.id,
       this.workout.version,
-      this.editWorkoutForm.controls.nameForWorkout.value,
-      this.editWorkoutForm.controls.descriptionForWorkout.value,
-      this.editWorkoutForm.controls.difficultyLevelWorkout.value,
-      this.editWorkoutForm.controls.calorieConsumption.value,
+      this.editWorkoutForm.controls.nameForEditWorkout.value,
+      this.editWorkoutForm.controls.descriptionForEditWorkout.value,
+      this.editWorkoutForm.controls.difficultyLevelEditWorkout.value,
+      this.editWorkoutForm.controls.calorieConsumptionEditWorkout.value,
       this.newAddedExercisesIn,
       this.workout.creatorId
     );
@@ -129,6 +134,10 @@ export class EditWorkoutComponent implements OnInit {
     this.editWorkoutService.editWorkout(editWorkout).subscribe(
       (data) => {
         console.log(data);
+        localStorage.removeItem('nameForEditWorkout');
+        localStorage.removeItem('descriptionForEditWorkout');
+        localStorage.removeItem('calorieConsumptionForEditWorkout');
+        localStorage.removeItem('chosenExercisesForEditWorkout');
         this.router.navigate(['myWorkouts']);
       },
       error => {
@@ -138,6 +147,16 @@ export class EditWorkoutComponent implements OnInit {
   }
   vanishError() {
     this.error = false;
+  }
+
+  backToCreateWorkout() {
+    localStorage.setItem('previousRoute', JSON.stringify('/'));
+    localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));
+    localStorage.removeItem('nameForEditWorkout');
+    localStorage.removeItem('descriptionForEditWorkout');
+    localStorage.removeItem('calorieConsumptionForEditWorkout');
+    localStorage.removeItem('chosenExercisesForEditWorkout');
+    this.router.navigate(['myWorkouts']);
   }
 
 }

@@ -5,6 +5,7 @@ import {WorkoutEx} from '../../dtos/workoutEx';
 import {WorkoutExercisesService} from '../../services/workout-exercises.service';
 import {Router} from '@angular/router';
 import {Exercise} from '../../dtos/exercise';
+import {WorkoutExercise} from '../../dtos/workoutExercise';
 
 @Component({
   selector: 'app-edit-workout-exercises',
@@ -18,6 +19,7 @@ export class EditWorkoutExercisesComponent implements OnInit {
   dude: Dude;
   registerForm: FormGroup;
   index: number;
+  gottenExercises: WorkoutExercise[] = [];
   chosenExercises: WorkoutEx[] = [];
   workoutExForm: FormGroup;
   submitted: boolean = false;
@@ -48,6 +50,28 @@ export class EditWorkoutExercisesComponent implements OnInit {
 
     localStorage.setItem('previousRoute', JSON.stringify('/edit-workout-exercises'));
     localStorage.setItem('previousPreviousRoute', JSON.stringify('/edit-workout-exercises'));
+
+    if (JSON.parse(localStorage.getItem('firstAccess')) === 'true') {
+      this.gottenExercises = JSON.parse(localStorage.getItem('gottenExercises'));
+      if (!(this.gottenExercises === null)) {
+        for (let counter = 0; counter < this.gottenExercises.length; counter++) {
+            this.chosenExercises.push(new WorkoutEx(
+              new Exercise(
+                this.gottenExercises[counter].id,
+                this.gottenExercises[counter].version,
+                this.gottenExercises[counter].name,
+                this.gottenExercises[counter].description,
+                this.gottenExercises[counter].equipment,
+                this.gottenExercises[counter].muscleGroup,
+                this.gottenExercises[counter].category,
+                this.gottenExercises[counter].creatorId),
+                this.gottenExercises[counter].repetitions,
+                this.gottenExercises[counter].sets,
+                this.gottenExercises[counter].exDuration));
+        }
+      }
+      localStorage.setItem('firstAccess', JSON.stringify('false'));
+    }
 
     this.registerForm = this.formBuilder.group({
       name: [''],

@@ -18,7 +18,7 @@
       </div>
       <div class="col-sm-9">
         <div class="form">
-          <form [formGroup]="registerForm">
+          <form [formGroup]="editWorkoutForm">
             <span class="anchor" id="formRegister"></span>
             <h1>Edit Workout</h1>
 
@@ -26,8 +26,8 @@
               <label for="nameForEditWorkout">Name</label>
               <input type="text" name="nameForEditWorkout" maxlength="50" class="form-control" id="nameForEditWorkout" formControlName="nameForEditWorkout"
                      aria-describedby="nameForEditWorkoutHelp" ngModel="{{name}}">
-              <div *ngIf="submitted && !!registerForm.controls.nameForWorkout.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForWorkout.errors.required">Name is
+              <div *ngIf="submitted && !!editWorkoutForm.controls.nameForEditWorkout.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editWorkoutForm.controls.nameForEditWorkout.errors.required">Name is
                   required!
                 </small>
               </div>
@@ -37,8 +37,8 @@
               <label for="descriptionForEditWorkout">Description</label>
               <input type="text" name="descriptionForEditWorkout" class="form-control" id="descriptionForEditWorkout" formControlName="descriptionForEditWorkout"
                      aria-describedby="descriptionForEditWorkout" ngModel="{{description}}">
-              <div *ngIf="submitted && !!registerForm.controls.descriptionForWorkout.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForWorkout.errors.required">Description is
+              <div *ngIf="submitted && !!editWorkoutForm.controls.descriptionForEditWorkout.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editWorkoutForm.controls.descriptionForEditWorkout.errors.required">Description is
                   required!
                 </small>
               </div>
@@ -61,8 +61,8 @@
                   <input id="pro" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
                   <label class="custom-control-label" for="pro">Pro</label>
                 </div>
-                <div *ngIf="submitted && !!registerForm.controls.difficultyLevelWorkout.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.difficultyLevelWorkout.errors.required">Difficulty level is
+                <div *ngIf="submitted && !!editWorkoutForm.controls.difficultyLevelEditWorkout.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!editWorkoutForm.controls.difficultyLevelEditWorkout.errors.required">Difficulty level is
                     required!
                   </small>
                 </div>
@@ -73,17 +73,18 @@
               <label for="calorieConsumptionEditWorkout">Calorie consumption</label>
               <input knifeOnlyNumbers type="text" name="calorieConsumptionEditWorkout" class="form-control" id="calorieConsumptionEditWorkout" formControlName="calorieConsumptionEditWorkout"
                      aria-describedby="calorieConsumptionEditWorkoutHelp" ngModel="{{calorie}}">
-              <div *ngIf="submitted && !!registerForm.controls.calorieConsumption.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.calorieConsumption.errors.required">Calorie consumption is
+              <div *ngIf="submitted && !!editWorkoutForm.controls.calorieConsumptionEditWorkout.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editWorkoutForm.controls.calorieConsumptionEditWorkout.errors.required">Calorie consumption is
                   required!
                 </small>
               </div>
-            </div>a
+            </div>
 
           </form>
-          <a [routerLink]="['/workout-exercises']" (click)="editExercises()" class="btn2 btn-link">Edit Exercises</a>
+          <a [routerLink]="['/edit-workout-exercises']" (click)="editExercises()" class="btn2 btn-link">Edit Exercises</a>
         </div>
         <button type="button" (click)="editWorkout()" class="btn btn-success float-right">Edit</button>
+        <a (click)="backToCreateWorkout()" class="btn btn-link">Cancel</a>
       </div>
     </div>
   </div>

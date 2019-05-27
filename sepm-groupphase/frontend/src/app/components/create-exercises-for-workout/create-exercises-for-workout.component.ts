@@ -5,6 +5,7 @@ import {CreateExerciseService} from '../../services/create-exercise.service';
 import {Router} from '@angular/router';
 import {CreateExercise} from '../../dtos/create-exercise';
 import {WorkoutExercisesComponent} from '../workout-exercises/workout-exercises.component';
+import {EditWorkoutExercisesComponent} from '../edit-workout-exercises/edit-workout-exercises.component';
 
 @Component({
   selector: 'app-create-exercises-for-workout',
@@ -20,7 +21,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   submitted: boolean = false;
   dude: Dude;
 
-  constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
+  constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
   ngOnInit() {
@@ -59,8 +60,13 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       (data) => {
         console.log(data);
 
-        this.workoutExercisesComponent.addToChosenExercises(data);
-        this.router.navigate(['workout-exercises']);
+        if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
+          this.workoutExercisesComponent.addToChosenExercises(data);
+          this.router.navigate(['workout-exercises']);
+        } else {
+          this.editWorkoutExercisesComponent.addToChosenExercises(data);
+          this.router.navigate(['edit-workout-exercises']);
+        }
         },
       error => {
         this.error = error;
@@ -68,6 +74,13 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     );
   }
 
+  Back() {
+    if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
+      this.router.navigate(['workout-exercises']);
+    } else {
+      this.router.navigate(['edit-workout-exercises']);
+    }
+  }
   vanishError() {
     this.error = false;
   }
