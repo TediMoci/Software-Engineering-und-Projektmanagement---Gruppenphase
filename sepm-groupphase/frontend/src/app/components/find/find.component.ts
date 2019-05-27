@@ -194,12 +194,20 @@ export class FindComponent implements OnInit {
           if (a.name > b.name) {return 1; }
           return 0;
         });
-        console.log(this.exercisesForWorkouts);
+        console.log(this.exercisesForWorkouts.toString().toString());
       },
       error => {
         this.error = error;
       }
     );
+  }
+
+  convertDifficulty(element:any){
+    switch (element) {
+      case 1: return "Beginner";
+      case 2:return "Advanced";
+      case 3:return "Pro";
+    }
   }
 
   setSelectedExercise(element: Exercise) {

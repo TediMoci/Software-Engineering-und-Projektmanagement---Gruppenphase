@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
@@ -34,6 +36,9 @@ public class FitnessProviderIntegrationTest {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    IFitnessProviderRepository fitnessProviderRepository;
+
     @BeforeClass
     public static void setUp(){
         testFitnessProvider1.setId(1L);
@@ -55,6 +60,11 @@ public class FitnessProviderIntegrationTest {
         testFitnessProvider2.setWebsite("Website 2");
     }
 
+    @After
+    public void deleteEntitiesAfterTest(){
+        fitnessProviderRepository.deleteAll();
+    }
+
     private FitnessProviderDto fitnessProviderDtoBuilder(FitnessProviderDto fp){
         FitnessProviderDto fitnessProvider = new FitnessProviderDto();
         fitnessProvider.setId(fp.getId());
@@ -68,8 +78,12 @@ public class FitnessProviderIntegrationTest {
         return fitnessProvider;
     }
 
-    private void postFitnessProvider(FitnessProviderDto fitnessProvider) {
-        REST_TEMPLATE.postForObject(BASE_URL + port + FITNESSPROVIDER_ENDPOINT, new HttpEntity<>(fitnessProvider), FitnessProviderDto.class);
+    //posts fitness provider in repository
+    private Long postFitnessProvider(FitnessProviderDto fitnessProvider) {
+        HttpEntity<FitnessProviderDto> request = new HttpEntity<>(fitnessProvider);
+        ResponseEntity<FitnessProviderDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + FITNESSPROVIDER_ENDPOINT, HttpMethod.POST, request, FitnessProviderDto.class);
+        return response.getBody().getId();
     }
 
     @Test
@@ -110,8 +124,13 @@ public class FitnessProviderIntegrationTest {
 
     @Test
     public void givenTwoFitnessProviders_whenFindAllFitnessProviders_thenStatus200AndGetListWithTwoFitnessProviders(){
-        postFitnessProvider(testFitnessProvider1);
-        postFitnessProvider(testFitnessProvider2);
+        FitnessProviderDto fitnessProvider1 = fitnessProviderDtoBuilder(testFitnessProvider1);
+        FitnessProviderDto fitnessProvider2 = fitnessProviderDtoBuilder(testFitnessProvider2);
+        fitnessProvider1.setId(null);
+        fitnessProvider2.setId(null);
+        postFitnessProvider(fitnessProvider1);
+        postFitnessProvider(fitnessProvider2);
+
         ResponseEntity<List<FitnessProviderDto>> response = REST_TEMPLATE
             .exchange(BASE_URL + port + FITNESSPROVIDER_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<List<FitnessProviderDto>>() {
             });
@@ -122,9 +141,10 @@ public class FitnessProviderIntegrationTest {
 
     @Test
     public void givenDude_whenFindDudeById_thenGetDude(){
-        postFitnessProvider(testFitnessProvider1);
-        FitnessProviderDto foundFitnessProvider = REST_TEMPLATE.getForObject(BASE_URL + port + FITNESSPROVIDER_ENDPOINT + "/1",
-            FitnessProviderDto.class);
+        Long i = postFitnessProvider(testFitnessProvider1);
+        FitnessProviderDto foundFitnessProvider = REST_TEMPLATE.getForObject(BASE_URL + port + FITNESSPROVIDER_ENDPOINT +
+            "/"+i, FitnessProviderDto.class);
+
         assertEquals(foundFitnessProvider.getName(), testFitnessProvider1.getName());
         assertEquals(foundFitnessProvider.getDescription(), testFitnessProvider1.getDescription());
         assertEquals(foundFitnessProvider.getEmail(), testFitnessProvider1.getEmail());
@@ -142,10 +162,9 @@ public class FitnessProviderIntegrationTest {
         FitnessProviderDto foundFitnessProvider = REST_TEMPLATE.getForObject(BASE_URL + port + FITNESSPROVIDER_ENDPOINT +
             "?name=" + testFitnessProvider2.getName(), FitnessProviderDto.class);
         assertEquals(foundFitnessProvider.getName(), testFitnessProvider2.getName());
-        assertEquals(foundFitnessProvider.getName(), testFitnessProvider1.getName());
-        assertEquals(foundFitnessProvider.getDescription(), testFitnessProvider1.getDescription());
-        assertEquals(foundFitnessProvider.getEmail(), testFitnessProvider1.getEmail());
-        assertEquals(foundFitnessProvider.getPhoneNumber(), testFitnessProvider1.getPhoneNumber());
+        assertEquals(foundFitnessProvider.getDescription(), testFitnessProvider2.getDescription());
+        assertEquals(foundFitnessProvider.getEmail(), testFitnessProvider2.getEmail());
+        assertEquals(foundFitnessProvider.getPhoneNumber(), testFitnessProvider2.getPhoneNumber());
     }
 
     @Test(expected = HttpClientErrorException.class)
@@ -159,6 +178,26 @@ public class FitnessProviderIntegrationTest {
         postFitnessProvider(testFitnessProvider2);
         REST_TEMPLATE.getForObject(BASE_URL + port + FITNESSPROVIDER_ENDPOINT + "?name=random" + testFitnessProvider2.getName(),
             FitnessProviderDto.class);
+    }
+
+    @Test
+    public void givenFitnessProvider_whenUpdateFitnessProvider_thenGetUpdatedFitnessProvider(){
+        postFitnessProvider(testFitnessProvider1);
+        FitnessProviderDto fitnessProvider = fitnessProviderDtoBuilder(testFitnessProvider2);
+        fitnessProvider.setId(null);
+        fitnessProvider.setName("randomName");
+
+        HttpEntity<FitnessProviderDto> request = new HttpEntity<>(fitnessProvider);
+        ResponseEntity<FitnessProviderDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + FITNESSPROVIDER_ENDPOINT + "/" + testFitnessProvider1.getName(), HttpMethod.PUT,
+                request, new ParameterizedTypeReference<FitnessProviderDto>() {});
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        FitnessProviderDto fitnessProviderResponse = response.getBody();
+        assertEquals(fitnessProvider.getName(), fitnessProviderResponse.getName());
+        assertEquals(fitnessProvider.getDescription(), fitnessProviderResponse.getDescription());
+        assertEquals(fitnessProvider.getEmail(), fitnessProviderResponse.getEmail());
+        assertEquals(fitnessProvider.getPhoneNumber(), fitnessProviderResponse.getPhoneNumber());
     }
 
 }

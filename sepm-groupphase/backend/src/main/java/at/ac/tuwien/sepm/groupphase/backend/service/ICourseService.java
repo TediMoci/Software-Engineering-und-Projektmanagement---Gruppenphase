@@ -41,9 +41,18 @@ public interface ICourseService {
      */
     List<Course> findByFilter(String filter) throws ServiceException;
 
-    //TODO write log
+    /**
+     * @param id of Course to be found
+     * @param newCourse that will be updated
+     * @return updated Course
+     * @throws ServiceException if an error occurred while trying to find the Course in the system
+     */
     Course update(long id, Course newCourse) throws ServiceException;
 
+    /**
+     * @param id of Course to be deleted
+     * @throws ServiceException if an error occurred while trying to find the Course in the system
+     */
     void delete(long id) throws ServiceException;
 
 }

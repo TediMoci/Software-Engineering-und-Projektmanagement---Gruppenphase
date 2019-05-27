@@ -45,13 +45,25 @@ public interface IWorkoutService {
      */
     List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws ServiceException;
 
-    // TODO : write log
+    /**
+     * @param id of Workout to be found
+     * @param newWorkout that will be updated
+     * @return updated Workout
+     * @throws ServiceException if an error occurred while trying to find the Workout in the system
+     */
     Workout update(long id, Workout newWorkout) throws ServiceException;
 
-    //TODO: write log
+    /**
+     * @param id of Workout to be found
+     * @return Workout found with the given id
+     * @throws ServiceException if an error occurred while trying to find the Workout in the system
+     */
     Workout findById(long id) throws ServiceException;
 
-    //TODO: write log
+    /**
+     * @param id of Workout to be deleted
+     * @throws ServiceException if an error occurred while trying to find the Workout in the system
+     */
     void delete(long id) throws ServiceException;
 
 }

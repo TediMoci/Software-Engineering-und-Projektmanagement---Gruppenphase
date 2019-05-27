@@ -44,12 +44,24 @@ public interface IExerciseService {
      */
     List<Exercise> findByFilter(String filter, Category category) throws ServiceException;
 
-    // TODO : write log
+    /**
+     * @param id of Exercise to be found
+     * @param newExercise that will be updated
+     * @return updated Exercise
+     * @throws ServiceException if an error occurred while trying to find the Exercise in the system
+     */
     Exercise update(long id, Exercise newExercise) throws ServiceException;
 
-    //TODO: write log
+    /**
+     * @param id of Exercise to be found
+     * @return Exercise found with the given id
+     * @throws ServiceException if an error occurred while trying to find the Exercise in the system
+     */
     Exercise findById(long id) throws ServiceException;
 
-    //TODO: write log
+    /**
+     * @param id of Exercise to be deleted
+     * @throws ServiceException if an error occurred while trying to find the Exercise in the system
+     */
     void delete(long id) throws ServiceException;
 }

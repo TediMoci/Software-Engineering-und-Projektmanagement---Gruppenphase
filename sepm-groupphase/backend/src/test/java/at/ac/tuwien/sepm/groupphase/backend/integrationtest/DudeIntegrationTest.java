@@ -2,9 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = "integration-test")
-public class  DudeIntegrationTest  {
+public class DudeIntegrationTest  {
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
     private static final String BASE_URL = "http://localhost:";
     private static final String DUDE_ENDPOINT = "/dudes";
@@ -31,6 +34,9 @@ public class  DudeIntegrationTest  {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    IDudeRepository dudeRepository;
 
     @BeforeClass
     public static void setUp(){
@@ -76,8 +82,17 @@ public class  DudeIntegrationTest  {
         return dude;
     }
 
-    private void postDude(DudeDto dude) {
-        REST_TEMPLATE.postForObject(BASE_URL + port + DUDE_ENDPOINT, new HttpEntity<>(dude), DudeDto.class);
+    //posts dude in repository
+    private Long postDude(DudeDto dude) {
+        HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dude);
+        ResponseEntity<DudeDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
+        return response.getBody().getId();
+    }
+
+    @After
+    public void deleteEntitiesAfterTest(){
+        dudeRepository.deleteAll();
     }
 
     @Test
@@ -118,8 +133,13 @@ public class  DudeIntegrationTest  {
 
     @Test
     public void givenTwoDudes_whenFindAllDudes_thenStatus200AndGetListWithTwoDudes(){
-        postDude(testDude1);
-        postDude(testDude2);
+        DudeDto dude1 = dudeDtoBuilder(testDude1);
+        DudeDto dude2 = dudeDtoBuilder(testDude2);
+        dude1.setId(null);
+        dude2.setId(null);
+        postDude(dude1);
+        postDude(dude2);
+
         ResponseEntity<List<DudeDto>> response = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<List<DudeDto>>() {
             });
@@ -130,8 +150,8 @@ public class  DudeIntegrationTest  {
 
     @Test
     public void givenDude_whenFindDudeById_thenGetDude(){
-        postDude(testDude1);
-        DudeDto foundDude = REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "/1", DudeDto.class);
+        Long i = postDude(testDude1);
+        DudeDto foundDude = REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "/" + i, DudeDto.class);
         assertEquals(foundDude.getName(), testDude1.getName());
         assertEquals(foundDude.getDescription(), testDude1.getDescription());
         assertEquals(foundDude.getBirthday(), testDude1.getBirthday());
@@ -163,6 +183,26 @@ public class  DudeIntegrationTest  {
     public void whenFindDudeByName_ifDudeNotFound_thenHttpClientErrorException(){
         postDude(testDude2);
         REST_TEMPLATE.getForObject(BASE_URL + port + DUDE_ENDPOINT + "?name=random" + testDude2.getName(), DudeDto.class);
+    }
+
+    @Test
+    public void givenDude_whenUpdateDude_thenGetUpdatedDude(){
+        postDude(testDude1);
+        DudeDto dude = dudeDtoBuilder(testDude2);
+        dude.setId(null);
+        dude.setName("randomName");
+
+        HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dude);
+        ResponseEntity<DudeDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + testDude1.getName(), HttpMethod.PUT,
+                dudeRequest, new ParameterizedTypeReference<DudeDto>() {});
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        DudeDto dudeResponse = response.getBody();
+        assertEquals(dude.getName(), dudeResponse.getName());
+        assertEquals(dude.getDescription(), dudeResponse.getDescription());
+        assertEquals(dude.getBirthday(), dudeResponse.getBirthday());
+        assertEquals(dude.getSex(), dudeResponse.getSex());
     }
 
 }
