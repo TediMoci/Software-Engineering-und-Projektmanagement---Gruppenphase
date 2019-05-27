@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.DudeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
@@ -67,7 +68,12 @@ public class DudeService implements IDudeService {
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
-        return iDudeRepository.save(dude);
+        try {
+            return iDudeRepository.save(dude);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+
     }
 
     /**

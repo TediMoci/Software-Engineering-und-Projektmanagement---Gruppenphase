@@ -4,6 +4,8 @@ import {FindService} from '../../services/find.service';
 import {Dude} from '../../dtos/dude';
 import {Exercise} from '../../dtos/exercise';
 import {ExerciseFilter} from '../../dtos/exercise-filter';
+import {AuthService} from '../../services/auth.service';
+import {FitnessProvider} from '../../dtos/fitness-provider';
 
 @Component({
   selector: 'app-find',
@@ -24,30 +26,37 @@ export class FindComponent implements OnInit {
 
   // Transfer Variables
   public inputTextActual: any;
-  public filterExerciseCategoryActual:string = "None";
+  public filterExerciseCategoryActual: string = "None";
 
   exercises: any;
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   error: any;
   dude: Dude;
+  fitnessProvider: FitnessProvider;
   exerciseFilter: ExerciseFilter;
 
 
 
-  constructor(private findService: FindService) {}
+  constructor(private findService: FindService, private authService: AuthService) {}
 
   ngOnInit() {
-    this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
-    this.userName = this.dude.name;
-
+    if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'DUDE') {
+      this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
+      this.userName = this.dude.name;
+      this.imagePath = '/assets/img/kugelfisch.jpg';
+    } if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'FITNESS_PROVIDER') {
+      this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
+      this.userName = this.fitnessProvider.name;
+      this.imagePath = '/assets/img/kugelfisch2.jpg';
+    }
   }
 
   startSearch(category: string){
     console.log("searchvalue: " + this.inputText);
 
-    if(this.inputText == undefined){
+    if(this.inputText === undefined){
       this.inputTextActual = null;
     }else {
       this.inputTextActual = this.inputText;

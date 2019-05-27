@@ -32,8 +32,9 @@ export class WorkoutExercisesComponent implements OnInit {
 
     if (JSON.parse(localStorage.getItem('previousRoute')) === '/create-exercise-for-workout') {
       if (localStorage.getItem('chosenExercisesForWorkout') !== null) {
-        console.log('return from create-exercise-for-workout ' +  this.chosenExercises);
+        console.log('return from create-exercise-for-workout ');
         this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+        console.log(this.chosenExercises);
       }
     }
 
@@ -55,9 +56,9 @@ export class WorkoutExercisesComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.workoutExForm = this.formBuilder.group({
-      repetitions: ['', [Validators.required]],
-      sets: ['', [Validators.required]],
-      duration: ['', [Validators.required]]
+      repetitions: ['', [Validators.required, Validators.max(200)]],
+      sets: ['', [Validators.required, Validators.max(15)]],
+      duration: ['', [Validators.required, Validators.max(1440)]]
     });
   }
 
@@ -96,6 +97,7 @@ export class WorkoutExercisesComponent implements OnInit {
   }
 
   setExData(element: WorkoutEx) {
+    this.submitted = true;
    this.index = this.chosenExercises.indexOf(element);
    if (!(this.workoutExForm.controls.repetitions.value === '')) {
      this.chosenExercises[this.index].repetitions = this.workoutExForm.controls.repetitions.value;

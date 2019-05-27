@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 public class WorkoutServiceTest {
 
     private static final Workout validWorkout1 = new Workout();
+    private static final Workout validWorkout2 = new Workout();
     private static final Workout invalidWorkout1 = new Workout();
 
     @MockBean
@@ -65,33 +66,91 @@ public class WorkoutServiceTest {
         validWorkout1.setCreator(dude);
         validWorkout1.setExercises(validWorkoutExercises1);
 
-        invalidWorkout1.setName("Workout1");
-        invalidWorkout1.setDifficulty(1);
-        invalidWorkout1.setCalorieConsumption(100.0);
+        validWorkout2.setName("Workout2");
+        validWorkout2.setDifficulty(2);
+        validWorkout2.setCalorieConsumption(200.0);
+        validWorkout2.setCreator(dude);
+        validWorkout2.setExercises(validWorkoutExercises1);
+
+        invalidWorkout1.setName("Workout3");
+        invalidWorkout1.setDifficulty(3);
+        invalidWorkout1.setCalorieConsumption(300.0);
         invalidWorkout1.setCreator(dude);
         invalidWorkout1.setExercises(invalidWorkoutExercises1);
     }
 
     @Test
     public void whenSaveOneWorkout_thenGetSavedWorkout() throws ServiceException {
+        Workout workout = new Workout();
+        workout.setName(validWorkout1.getName());
+        workout.setDifficulty(validWorkout1.getDifficulty());
+        workout.setCalorieConsumption(validWorkout1.getCalorieConsumption());
+        workout.setCreator(validWorkout1.getCreator());
+        workout.setExercises(validWorkout1.getExercises());
+
         Optional<Exercise> optionalExercise = Optional.of(new Exercise());
-        Mockito.when(workoutRepository.save(validWorkout1)).thenReturn(validWorkout1);
-        for (WorkoutExercise workoutExercise : validWorkout1.getExercises()) {
+        Mockito.when(workoutRepository.save(workout)).thenReturn(workout);
+        for (WorkoutExercise workoutExercise : workout.getExercises()) {
             Mockito.when(exerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion())).thenReturn(optionalExercise);
             Mockito.when(workoutExerciseRepository.save(workoutExercise)).thenReturn(workoutExercise);
         }
-        assertEquals(workoutService.save(validWorkout1), validWorkout1);
+        assertEquals(workoutService.save(workout), workout);
     }
 
     @Test(expected = ServiceException.class)
     public void whenSaveOneInvalidWorkout_thenServiceException() throws ServiceException {
+        Workout workout = new Workout();
+        workout.setName(invalidWorkout1.getName());
+        workout.setDifficulty(invalidWorkout1.getDifficulty());
+        workout.setCalorieConsumption(invalidWorkout1.getCalorieConsumption());
+        workout.setCreator(invalidWorkout1.getCreator());
+        workout.setExercises(invalidWorkout1.getExercises());
+
         Optional<Exercise> optionalExercise = Optional.of(new Exercise());
-        Mockito.when(workoutRepository.save(invalidWorkout1)).thenReturn(invalidWorkout1);
-        for (WorkoutExercise workoutExercise : invalidWorkout1.getExercises()) {
+        Mockito.when(workoutRepository.save(workout)).thenReturn(workout);
+        for (WorkoutExercise workoutExercise : workout.getExercises()) {
             Mockito.when(exerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion())).thenReturn(optionalExercise);
             Mockito.when(workoutExerciseRepository.save(workoutExercise)).thenReturn(workoutExercise);
         }
-        workoutService.save(invalidWorkout1);
+        workoutService.save(workout);
+    }
+
+    @Test
+    public void whenUpdateOneWorkout_thenGetUpdatedWorkout() throws ServiceException {
+        Workout workout = new Workout();
+        workout.setName(validWorkout2.getName());
+        workout.setDifficulty(validWorkout2.getDifficulty());
+        workout.setCalorieConsumption(validWorkout2.getCalorieConsumption());
+        workout.setCreator(validWorkout2.getCreator());
+        workout.setExercises(validWorkout2.getExercises());
+
+        Optional<Exercise> optionalExercise = Optional.of(new Exercise());
+        Mockito.when(workoutRepository.save(workout)).thenReturn(workout);
+        Mockito.when(workoutRepository.findById(1L)).thenReturn(validWorkout1);
+        for (WorkoutExercise workoutExercise : workout.getExercises()) {
+            Mockito.when(exerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion())).thenReturn(optionalExercise);
+            Mockito.when(workoutExerciseRepository.save(workoutExercise)).thenReturn(workoutExercise);
+        }
+        assertEquals(workoutService.update(1L, workout), workout);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenUpdateOneWorkoutWithInvalidSetNumber_thenServiceException() throws ServiceException {
+        Workout workout = new Workout();
+        workout.setName(invalidWorkout1.getName());
+        workout.setDifficulty(invalidWorkout1.getDifficulty());
+        workout.setCalorieConsumption(invalidWorkout1.getCalorieConsumption());
+        workout.setCreator(invalidWorkout1.getCreator());
+        workout.setExercises(invalidWorkout1.getExercises());
+
+        Optional<Exercise> optionalExercise = Optional.of(new Exercise());
+        Mockito.when(workoutRepository.save(workout)).thenReturn(workout);
+        Mockito.when(workoutRepository.findById(1L)).thenReturn(validWorkout1);
+        for (WorkoutExercise workoutExercise : workout.getExercises()) {
+            Mockito.when(exerciseRepository.findByIdAndVersion(workoutExercise.getExerciseId(), workoutExercise.getExerciseVersion())).thenReturn(optionalExercise);
+            Mockito.when(workoutExerciseRepository.save(workoutExercise)).thenReturn(workoutExercise);
+        }
+        workoutService.update(1L, workout);
     }
 
 }

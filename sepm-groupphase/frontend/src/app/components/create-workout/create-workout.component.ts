@@ -26,6 +26,7 @@ export class CreateWorkoutComponent implements OnInit {
   name: string;
   description: string;
   calorie: number;
+  difficulty: number;
   prevRoute: string;
 
   constructor(private createWorkoutService: CreateWorkoutService , private formBuilder: FormBuilder, private router: Router ) {
@@ -41,22 +42,31 @@ export class CreateWorkoutComponent implements OnInit {
       this.name = JSON.parse(localStorage.getItem('nameForWorkout'));
       this.description = JSON.parse(localStorage.getItem('descriptionForWorkout'));
       this.calorie = JSON.parse(localStorage.getItem('calorieConsumption'));
-    }
+      this.difficulty = JSON.parse(localStorage.getItem('difficulty'));
+
+       this.registerForm = this.formBuilder.group({
+         nameForWorkout: ['', [Validators.required]],
+         difficultyLevelWorkout: [this.difficulty, [Validators.required]],
+         descriptionForWorkout: ['', [Validators.required]],
+         calorieConsumption: ['', [Validators.required]]
+       });
+    } else {
+       this.registerForm = this.formBuilder.group({
+         nameForWorkout: ['', [Validators.required]],
+         difficultyLevelWorkout: ['', [Validators.required]],
+         descriptionForWorkout: ['', [Validators.required]],
+         calorieConsumption: ['', [Validators.required]]
+       });
+     }
 
      localStorage.setItem('previousRoute', JSON.stringify('/create-workout'));
-
-    this.registerForm = this.formBuilder.group({
-      nameForWorkout: ['', [Validators.required]],
-      difficultyLevelWorkout: ['', [Validators.required]],
-      descriptionForWorkout: ['', [Validators.required]],
-      calorieConsumption: ['', [Validators.required]]
-    });
   }
 
   addExercises() {
     localStorage.setItem('nameForWorkout', JSON.stringify(this.registerForm.controls.nameForWorkout.value));
     localStorage.setItem('descriptionForWorkout', JSON.stringify(this.registerForm.controls.descriptionForWorkout.value));
     localStorage.setItem('calorieConsumption', JSON.stringify(this.registerForm.controls.calorieConsumption.value));
+    localStorage.setItem('difficulty', JSON.stringify(this.registerForm.controls.difficultyLevelWorkout.value));
   }
     addWorkout() {
     localStorage.setItem('previousRoute', JSON.stringify('/'));
@@ -65,6 +75,9 @@ export class CreateWorkoutComponent implements OnInit {
     this.submitted = true;
     this.exercisesWorkout = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
 
+    if (this.exercisesWorkout === null) {
+      this.exercisesWorkoutIn = [];
+    } else {
       for (let counter = 0; counter < this.exercisesWorkout.length; counter++) {
         const currentEx = this.exercisesWorkout[counter].exercise;
         this.exercisesWorkoutIn.push(new WorkoutExerciseDtoIn(
@@ -75,6 +88,7 @@ export class CreateWorkoutComponent implements OnInit {
           this.exercisesWorkout[counter].sets
         ));
       }
+    }
     console.log(this.exercisesWorkoutIn);
 
     const workout: CreateWorkout = new CreateWorkout(
@@ -90,11 +104,11 @@ export class CreateWorkoutComponent implements OnInit {
       console.log('input is invalid');
       return;
     }
-    console.log(workout.workoutExercises);
 
     this.createWorkoutService.addWorkout(workout).subscribe(
       (data) => {
         console.log(data);
+        this.removeFromLocalStorage();
         this.router.navigate(['create']);
       },
       error => {
@@ -106,4 +120,11 @@ export class CreateWorkoutComponent implements OnInit {
     this.error = false;
   }
 
+  removeFromLocalStorage() {
+    localStorage.removeItem('chosenExercisesForWorkout');
+    localStorage.removeItem('nameForWorkout');
+    localStorage.removeItem('descriptionForWorkout');
+    localStorage.removeItem('calorieConsumption');
+    localStorage.removeItem('difficulty');
+  }
 }

@@ -31,6 +31,7 @@ public class CourseIntegrationTest {
     private static final String FITNESS_PROVIDER_ENDPOINT = "/fitnessProvider";
     private static final FitnessProviderDto fitnessProviderDto = new FitnessProviderDto();
     private static final CourseDto validCourseDto1 = new CourseDto();
+    private static final CourseDto validCourseDto2 = new CourseDto();
     private static final CourseDto invalidCourseDto1 = new CourseDto();
 
     private static boolean initialized = false;
@@ -48,8 +49,11 @@ public class CourseIntegrationTest {
         validCourseDto1.setName("Course1");
         validCourseDto1.setDescription("Description1");
 
+        validCourseDto2.setName("Course2");
+        validCourseDto2.setDescription("Description2");
+
         invalidCourseDto1.setName("");
-        invalidCourseDto1.setDescription("Description2");
+        invalidCourseDto1.setDescription("Description3");
     }
 
     @Before
@@ -60,6 +64,7 @@ public class CourseIntegrationTest {
                 .exchange(BASE_URL + port + FITNESS_PROVIDER_ENDPOINT, HttpMethod.POST, fitnessProviderRequest, FitnessProviderDto.class);
             Long fitnessProviderId = response.getBody().getId();
             validCourseDto1.setCreatorId(fitnessProviderId);
+            validCourseDto2.setCreatorId(fitnessProviderId);
             invalidCourseDto1.setCreatorId(fitnessProviderId);
 
             initialized = true;
@@ -83,6 +88,32 @@ public class CourseIntegrationTest {
     public void whenSaveOneCourseWithBlankName_then400BadRequest() {
         HttpEntity<CourseDto> courseRequest = new HttpEntity<>(invalidCourseDto1);
         REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest, CourseDto.class);
+    }
+
+    @Test
+    public void whenUpdateOneCourse_then200OkAndGetUpdatedCourse() {
+        HttpEntity<CourseDto> courseRequest1 = new HttpEntity<>(validCourseDto1);
+        ResponseEntity<CourseDto> response1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest1, CourseDto.class);
+        Long savedCourseId = response1.getBody().getId();
+        HttpEntity<CourseDto> courseRequest2 = new HttpEntity<>(validCourseDto2);
+        ResponseEntity<CourseDto> response2 = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT + "/" + savedCourseId, HttpMethod.PUT, courseRequest2, CourseDto.class);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        CourseDto responseCourseDto = response2.getBody();
+        assertEquals(savedCourseId, responseCourseDto.getId());
+        responseCourseDto.setId(null);
+        assertEquals(validCourseDto2, responseCourseDto);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenUpdateOneCourseWithInvalidId_then400BadRequest() {
+        HttpEntity<CourseDto> courseRequest1 = new HttpEntity<>(validCourseDto1);
+        ResponseEntity<CourseDto> response1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest1, CourseDto.class);
+        Long savedCourseId = response1.getBody().getId();
+        HttpEntity<CourseDto> courseRequest2 = new HttpEntity<>(validCourseDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/" + savedCourseId+1, HttpMethod.PUT, courseRequest2, CourseDto.class);
     }
 
 }

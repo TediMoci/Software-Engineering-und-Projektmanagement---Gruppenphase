@@ -5,6 +5,8 @@ import {CreateExerciseService} from '../../services/create-exercise.service';
 import {Router} from '@angular/router';
 import {CreateExercise} from '../../dtos/create-exercise';
 import {WorkoutExercisesComponent} from '../workout-exercises/workout-exercises.component';
+import {WorkoutEx} from '../../dtos/workoutEx';
+import {Exercise} from '../../dtos/exercise';
 import {EditWorkoutExercisesComponent} from '../edit-workout-exercises/edit-workout-exercises.component';
 
 @Component({
@@ -20,6 +22,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
+  currentChosenExercises: WorkoutEx[];
 
   constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
@@ -35,6 +38,10 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       descriptionForExercise: ['', [Validators.required]],
       muscleGroupExercise: ['']
     });
+
+    this.currentChosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForWorkout'));
+    console.log('gotten from localstorage');
+    console.log(this.currentChosenExercises);
   }
 
 
@@ -42,7 +49,6 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
 
     this.submitted = true;
     console.log(this.registerForm);
-
     const exercise: CreateExercise = new CreateExercise(
       this.registerForm.controls.nameForExercise.value,
       this.registerForm.controls.equipmentExercise.value,
@@ -58,11 +64,11 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     }
     this.createExerciseService.addExercise(exercise).subscribe(
       (data) => {
-        console.log(data);
-
         if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
-          this.workoutExercisesComponent.addToChosenExercises(data);
-          this.router.navigate(['workout-exercises']);
+          console.log('newEx');
+          console.log(data);
+          this.addToLocalStorage(data);
+          this.router.navigate(['/workout-exercises']);
         } else {
           this.editWorkoutExercisesComponent.addToChosenExercises(data);
           this.router.navigate(['edit-workout-exercises']);
@@ -74,6 +80,13 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     );
   }
 
+  addToLocalStorage(newExercise: Exercise) {
+    this.currentChosenExercises.push(new WorkoutEx(newExercise, 1, 1, 1));
+    console.log('updated currentEx');
+    console.log(this.currentChosenExercises);
+    localStorage.setItem('chosenExercisesForWorkout', JSON.stringify(this.currentChosenExercises));
+  }
+
   Back() {
     if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
       this.router.navigate(['workout-exercises']);
@@ -81,6 +94,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       this.router.navigate(['edit-workout-exercises']);
     }
   }
+
   vanishError() {
     this.error = false;
   }

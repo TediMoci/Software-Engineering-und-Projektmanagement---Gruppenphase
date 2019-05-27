@@ -41,6 +41,7 @@ public class WorkoutIntegrationTest {
     private static final ExerciseDto exerciseDto1 = new ExerciseDto();
     private static final ExerciseDto exerciseDto2 = new ExerciseDto();
     private static final WorkoutDto validWorkoutDto1 = new WorkoutDto();
+    private static final WorkoutDto validWorkoutDto2 = new WorkoutDto();
     private static final WorkoutDto invalidWorkoutDto1 = new WorkoutDto();
 
     private static boolean initialized = false;
@@ -76,10 +77,15 @@ public class WorkoutIntegrationTest {
         validWorkoutDto1.setDifficulty(1);
         validWorkoutDto1.setCalorieConsumption(100.0);
 
-        invalidWorkoutDto1.setName("Workout2");
-        invalidWorkoutDto1.setDescription("Description2");
+        validWorkoutDto2.setName("Workout2");
+        validWorkoutDto2.setDescription("Description2");
+        validWorkoutDto2.setDifficulty(2);
+        validWorkoutDto2.setCalorieConsumption(200.0);
+
+        invalidWorkoutDto1.setName("Workout3");
+        invalidWorkoutDto1.setDescription("Description3");
         invalidWorkoutDto1.setDifficulty(0);
-        invalidWorkoutDto1.setCalorieConsumption(200.0);
+        invalidWorkoutDto1.setCalorieConsumption(300.0);
     }
 
     @Before
@@ -92,6 +98,7 @@ public class WorkoutIntegrationTest {
             exerciseDto1.setCreatorId(dudeId);
             exerciseDto2.setCreatorId(dudeId);
             validWorkoutDto1.setCreatorId(dudeId);
+            validWorkoutDto2.setCreatorId(dudeId);
             invalidWorkoutDto1.setCreatorId(dudeId);
             HttpEntity<ExerciseDto> exerciseRequest1 = new HttpEntity<>(exerciseDto1);
             ResponseEntity<ExerciseDto> exerciseResponse1 = REST_TEMPLATE
@@ -111,6 +118,7 @@ public class WorkoutIntegrationTest {
             workoutExerciseDtoIn2.setExerciseVersion(exercise2Version);
             WorkoutExerciseDtoIn[] workoutExerciseDtoIns = new WorkoutExerciseDtoIn[]{workoutExerciseDtoIn1, workoutExerciseDtoIn2};
             validWorkoutDto1.setWorkoutExercises(workoutExerciseDtoIns);
+            validWorkoutDto2.setWorkoutExercises(workoutExerciseDtoIns);
             invalidWorkoutDto1.setWorkoutExercises(workoutExerciseDtoIns);
 
             initialized = true;
@@ -134,6 +142,35 @@ public class WorkoutIntegrationTest {
     public void whenSaveOneInvalidWorkout_then400BadRequest() {
         HttpEntity<WorkoutDto> workoutRequest = new HttpEntity<>(invalidWorkoutDto1);
         REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest, WorkoutDto.class);
+    }
+
+    @Test
+    public void whenUpdateOneWorkout_then200OkAndGetUpdatedWorkout() {
+        HttpEntity<WorkoutDto> workoutRequest1 = new HttpEntity<>(validWorkoutDto1);
+        ResponseEntity<WorkoutDto> workoutResponse1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest1, WorkoutDto.class);
+        Long savedWorkoutId = workoutResponse1.getBody().getId();
+        HttpEntity<WorkoutDto> workoutRequest2 = new HttpEntity<>(validWorkoutDto2);
+        ResponseEntity<WorkoutDto> workoutResponse2 = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/" + savedWorkoutId, HttpMethod.PUT, workoutRequest2, WorkoutDto.class);
+        assertEquals(HttpStatus.OK, workoutResponse2.getStatusCode());
+        WorkoutDto responseWorkoutDto = workoutResponse2.getBody();
+        assertEquals(savedWorkoutId, responseWorkoutDto.getId());
+        assertEquals((Integer)2, responseWorkoutDto.getVersion());
+        responseWorkoutDto.setId(null);
+        responseWorkoutDto.setVersion(1);
+        responseWorkoutDto.setWorkoutExercises(validWorkoutDto2.getWorkoutExercises());
+        assertEquals(validWorkoutDto2, responseWorkoutDto);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenUpdateOneWorkoutWithInvalidId_then400BadRequest() {
+        HttpEntity<WorkoutDto> workoutRequest1 = new HttpEntity<>(validWorkoutDto1);
+        ResponseEntity<WorkoutDto> workoutResponse1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest1, WorkoutDto.class);
+        Long savedWorkoutId = workoutResponse1.getBody().getId();
+        HttpEntity<WorkoutDto> workoutRequest2 = new HttpEntity<>(validWorkoutDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/" + savedWorkoutId+1, HttpMethod.PUT, workoutRequest2, WorkoutDto.class);
     }
 
 }
