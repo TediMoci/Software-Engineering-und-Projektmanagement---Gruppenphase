@@ -78,6 +78,7 @@ public class FitnessProviderIntegrationTest {
         return fitnessProvider;
     }
 
+    //posts fitness provider in repository
     private Long postFitnessProvider(FitnessProviderDto fitnessProvider) {
         HttpEntity<FitnessProviderDto> request = new HttpEntity<>(fitnessProvider);
         ResponseEntity<FitnessProviderDto> response = REST_TEMPLATE

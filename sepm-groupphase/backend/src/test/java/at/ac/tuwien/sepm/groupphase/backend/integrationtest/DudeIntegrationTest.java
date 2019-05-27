@@ -82,6 +82,7 @@ public class DudeIntegrationTest  {
         return dude;
     }
 
+    //posts dude in repository
     private Long postDude(DudeDto dude) {
         HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dude);
         ResponseEntity<DudeDto> response = REST_TEMPLATE
