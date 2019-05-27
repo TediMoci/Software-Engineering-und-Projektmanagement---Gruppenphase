@@ -16,9 +16,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -28,6 +31,7 @@ public class CourseServiceTest {
 
     private final static Course course1 = new Course();
     private final static Course course2 = new Course();
+    private final static List<Course> courses2 = new ArrayList<Course>();
 
     @MockBean
     private ICourseRepository courseRepository;
@@ -49,6 +53,8 @@ public class CourseServiceTest {
         course2.setName("Course2");
         course2.setDescription("Description2");
         course2.setCreator(fitnessProvider);
+
+        courses2.add(course2);
     }
 
     @Test
@@ -76,6 +82,12 @@ public class CourseServiceTest {
         Mockito.when(courseRepository.findById(3L)).thenReturn(Optional.empty());
         Mockito.when(courseRepository.save(course2)).thenReturn(course2);
         assertEquals(courseService.update(3L, course2), course2);
+    }
+    @Test
+    public void whenFindByFilterByCharacter2_thenGetCourseWhereNameContains2andNotCourseWhereNameContains1(){
+        Mockito.when(courseRepository.findByFilter("2")).thenReturn(courses2);
+        assertEquals(courseRepository.findByFilter("2"), courses2);
+        assertFalse(courseRepository.findByFilter("2").contains(course1));
     }
 
 }

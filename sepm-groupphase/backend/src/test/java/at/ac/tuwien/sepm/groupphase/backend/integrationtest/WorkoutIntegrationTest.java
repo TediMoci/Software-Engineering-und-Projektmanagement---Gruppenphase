@@ -133,7 +133,7 @@ public class WorkoutIntegrationTest {
         assertEquals(HttpStatus.CREATED, workoutResponse.getStatusCode());
         WorkoutDto responseWorkoutDto = workoutResponse.getBody();
         assertNotNull(responseWorkoutDto.getId());
-        responseWorkoutDto.setId(null);
+        responseWorkoutDto.setId(1L);
         responseWorkoutDto.setWorkoutExercises(validWorkoutDto1.getWorkoutExercises());
         assertEquals(validWorkoutDto1, responseWorkoutDto);
     }
@@ -157,7 +157,7 @@ public class WorkoutIntegrationTest {
         WorkoutDto responseWorkoutDto = workoutResponse2.getBody();
         assertEquals(savedWorkoutId, responseWorkoutDto.getId());
         assertEquals((Integer)2, responseWorkoutDto.getVersion());
-        responseWorkoutDto.setId(null);
+        responseWorkoutDto.setId(2L);
         responseWorkoutDto.setVersion(1);
         responseWorkoutDto.setWorkoutExercises(validWorkoutDto2.getWorkoutExercises());
         assertEquals(validWorkoutDto2, responseWorkoutDto);
@@ -171,6 +171,19 @@ public class WorkoutIntegrationTest {
         Long savedWorkoutId = workoutResponse1.getBody().getId();
         HttpEntity<WorkoutDto> workoutRequest2 = new HttpEntity<>(validWorkoutDto2);
         REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/" + savedWorkoutId+1, HttpMethod.PUT, workoutRequest2, WorkoutDto.class);
+    }
+
+    @Test()
+    public void whenSaveTwoAndFilterByCharacter2_thenGetOneResult(){
+        validWorkoutDto1.setId(1L);
+        validWorkoutDto2.setId(2L);
+        HttpEntity<WorkoutDto> courseRequest1 = new HttpEntity<>(validWorkoutDto1);
+        HttpEntity<WorkoutDto> courseRequest2 = new HttpEntity<>(validWorkoutDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, courseRequest1, WorkoutDto.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, courseRequest2, WorkoutDto.class);
+        ResponseEntity<WorkoutDto[]> response3 = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, WorkoutDto[].class);
+        assertEquals(1, response3.getBody() == null ? 0 : response3.getBody().length);
     }
 
 }
