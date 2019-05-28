@@ -27,7 +27,6 @@ export class EditWorkoutComponent implements OnInit {
   submitted: boolean = false;
   prevRoute: string;
 
-
   workoutExercises: WorkoutExercise[] = [];
   newAddedExercises: WorkoutEx[];
   newAddedExercisesIn: WorkoutExerciseDtoIn[] = [];
@@ -36,11 +35,8 @@ export class EditWorkoutComponent implements OnInit {
   dude: Dude;
   name: string;
   description: string;
-  difficulty: number;
+  difficulty: string;
   calorie: number;
-  beginner: boolean;
-  advanced: boolean;
-  pro: boolean;
 
   constructor(private editWorkoutService: EditWorkoutService, private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private workoutService: WorkoutService, private ownWorkoutService: OwnWorkoutsService , private formBuilder: FormBuilder, private router: Router ) {
   }
@@ -57,34 +53,22 @@ export class EditWorkoutComponent implements OnInit {
       this.description = JSON.parse(localStorage.getItem('descriptionForEditWorkout'));
       this.calorie = JSON.parse(localStorage.getItem('calorieConsumptionForEditWorkout'));
       this.difficulty = JSON.parse(localStorage.getItem('difficultyEdit'));
-      console.log(this.difficulty === 2);
     } else {
       this.name = this.workout.name;
       this.calorie = this.workout.calorieConsumption;
       this.description = this.workout.description;
-      this.difficulty = this.workout.difficulty;
-      console.log(this.difficulty);
+      this.difficulty = JSON.stringify(this.workout.difficulty);
     }
 
     if (JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) === 'empty') {
       this.workoutService.getExercisesOfWorkoutById(this.workout.id, this.workout.version).subscribe((data) => {
           this.workoutExercises = data;
           localStorage.setItem('gottenExercises', JSON.stringify(this.workoutExercises));
-
-          console.log('set gottenExercises');
-          console.log(JSON.parse(localStorage.getItem('gottenExercises')));
         },
         error => {
           this.error = error;
         }
       );
-    }
-    if (this.difficulty === 1) {
-      this.beginner = true;
-    } if (this.difficulty === 2) {
-      this.advanced = true;
-    } if (this.difficulty === 3) {
-      this.pro = true;
     }
 
     this.editWorkoutForm = this.formBuilder.group({
@@ -110,11 +94,22 @@ export class EditWorkoutComponent implements OnInit {
     localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));
 
     this.submitted = true;
-    this.newAddedExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
 
-    if (this.newAddedExercises === null) {
-      this.newAddedExercisesIn = [];
+    if (JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) === 'empty') {
+      for (let counter1 = 0; counter1 < this.workoutExercises.length; counter1++){
+        const ex = this.workoutExercises[counter1];
+        this.newAddedExercisesIn.push(new WorkoutExerciseDtoIn(
+          ex.id,
+          ex.version,
+          ex.exDuration,
+          ex.repetitions,
+          ex.sets
+        ));
+      }
+
     } else {
+      this.newAddedExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
+
       for (let counter = 0; counter < this.newAddedExercises.length; counter++) {
         const currentEx = this.newAddedExercises[counter].exercise;
         this.newAddedExercisesIn.push(new WorkoutExerciseDtoIn(
@@ -125,6 +120,7 @@ export class EditWorkoutComponent implements OnInit {
           this.newAddedExercises[counter].sets
         ));
       }
+      console.log(this.newAddedExercisesIn);
     }
 
     const editWorkout: EditWorkout = new EditWorkout(

@@ -48,17 +48,17 @@
               <span class="difficultyLevelEditWorkout">Difficulty Level</span>
               <div class="gap_space">
                 <div class= "custom-control custom-radio custom-control-inline">
-                  <input id="beginner" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout" [checked]="beginner">
+                  <input id="beginner" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
                   <label class="custom-control-label" for="beginner">Beginner</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input id="advanced" type="radio" class="custom-control-input" value= 2 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout" [checked]="advanced">
+                  <input id="advanced" type="radio" class="custom-control-input" value= 2 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
                   <label class="custom-control-label" for="advanced">Advanced</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input id="pro" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout" [checked]="pro">
+                  <input id="pro" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
                   <label class="custom-control-label" for="pro">Pro</label>
                 </div>
                 <div *ngIf="submitted && !!editWorkoutForm.controls.difficultyLevelEditWorkout.errors" class="error">
