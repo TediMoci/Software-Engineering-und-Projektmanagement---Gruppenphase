@@ -13,25 +13,25 @@ public class FitnessProvider {
     @SequenceGenerator(name = "seq_fitness_provider_id", sequenceName = "seq_fitness_provider_id")
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String name;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String address;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 2000)
     private String description = "No description given.";
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 30, name = "phone_number")
+    @Column(nullable = false, length = 50, name = "phone_number")
     private String phoneNumber = "No phone number given.";
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String website = "No website given.";
 
     @ElementCollection

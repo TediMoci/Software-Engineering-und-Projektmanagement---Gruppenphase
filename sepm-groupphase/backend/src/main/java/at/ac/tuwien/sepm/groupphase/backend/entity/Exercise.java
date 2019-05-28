@@ -19,10 +19,10 @@ public class Exercise {
     @Id
     private Integer version = 1;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 3000)
     private String description = "No description given.";
 
     @Column(nullable = false, length = 300)

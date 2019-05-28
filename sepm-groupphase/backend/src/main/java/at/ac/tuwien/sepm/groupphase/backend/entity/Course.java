@@ -11,10 +11,10 @@ public class Course {
     @SequenceGenerator(name = "seq_course_id", sequenceName = "seq_course_id")
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 3000)
     private String description = "No description given.";
 
     @ManyToOne(fetch = FetchType.EAGER)

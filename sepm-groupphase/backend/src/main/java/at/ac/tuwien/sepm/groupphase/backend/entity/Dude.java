@@ -20,10 +20,10 @@ public class Dude {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 1000)
     private String description = "No description given.";
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String email;
 
     @Column(nullable = false)

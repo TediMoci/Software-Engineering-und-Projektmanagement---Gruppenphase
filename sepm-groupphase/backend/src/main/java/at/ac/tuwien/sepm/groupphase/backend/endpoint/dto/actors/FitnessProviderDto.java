@@ -14,7 +14,7 @@ public class FitnessProviderDto {
 
     @ApiModelProperty(required = true, name = "Name of Fitness Provider")
     @NotBlank(message = "Name must not be blank")
-    @Size(max = 50, message = "Max length for name is 50")
+    @Size(max = 100, message = "Max length for name is 100")
     private String name;
 
     @ApiModelProperty(required = true, name = "Password of Fitness provider")
@@ -23,24 +23,24 @@ public class FitnessProviderDto {
 
     @ApiModelProperty(required = true, name = "Address of Fitness Provider")
     @NotBlank(message = "Address must not be blank")
-    @Size(max = 100, message = "Max length for address is 100")
+    @Size(max = 200, message = "Max length for address is 200")
     private String address;
 
     @ApiModelProperty(name = "Self description of Fitness Provider")
-    @Size(max = 1000, message = "Max length for description is 1000")
+    @Size(max = 2000, message = "Max length for description is 2000")
     private String description = "No description given.";
 
     @ApiModelProperty(required = true, name = "Email address of  Fitness Provider")
     @NotBlank(message = "Email must not be blank")
-    @Size(max = 50, message = "Max length for email is 50")
+    @Size(max = 100, message = "Max length for email is 100")
     private String email;
 
     @ApiModelProperty(name = "Phone number of the Fitness Provider")
-    @Size(max = 30, message = "Max length for phoneNumber is 30")
+    @Size(max = 50, message = "Max length for phoneNumber is 50")
     private String phoneNumber = "No phone number given.";
 
     @ApiModelProperty(name = "Website of the Fitness Provider")
-    @Size(max = 100, message = "Max length for website is 100")
+    @Size(max = 200, message = "Max length for website is 200")
     private String website = "No website given.";
 
     public Long getId() {

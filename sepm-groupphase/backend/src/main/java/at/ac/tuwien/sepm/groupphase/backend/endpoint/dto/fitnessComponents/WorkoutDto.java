@@ -18,11 +18,11 @@ public class WorkoutDto {
 
     @ApiModelProperty(required = true, name = "Name of Workout")
     @NotBlank(message = "Name must not be empty")
-    @Size(min = 1, max = 50, message = "Name length must be between 1 and 50")
+    @Size(min = 1, max = 100, message = "Name length must be between 1 and 100")
     private String name;
 
     @ApiModelProperty(name = "Description of Workout")
-    @Size(max = 1000, message = "Max description length is 1000")
+    @Size(max = 3000, message = "Max description length is 3000")
     private String description = "No description given.";
 
     @ApiModelProperty(required = true, name = "Difficulty of Workout")

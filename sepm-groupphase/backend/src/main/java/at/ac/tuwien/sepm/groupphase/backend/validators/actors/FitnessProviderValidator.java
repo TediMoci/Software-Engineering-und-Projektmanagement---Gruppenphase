@@ -51,7 +51,7 @@ public class FitnessProviderValidator {
     public void validateName(String name) throws ValidationException {
         if(name == null){throw new ValidationException( name_is_null);}
         if(name.isBlank()){throw new ValidationException( name_is_blank);}
-        if(name.length()< 1 || name.length() > 50){ throw new ValidationException(name_lenght_invalid);}
+        if(name.length()< 1 || name.length() > 100){ throw new ValidationException(name_lenght_invalid);}
     }
 
     /**

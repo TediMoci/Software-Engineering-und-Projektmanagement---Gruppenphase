@@ -28,12 +28,12 @@ public class DudeDto {
     private String password;
 
     @ApiModelProperty(name = "Self description of Dude")
-    @Size(max = 500, message = "Max length for description is 500")
+    @Size(max = 1000, message = "Max length for description is 1000")
     private String description = "No description given.";
 
     @ApiModelProperty(required = true, name = "Email adress of Dude")
     @NotBlank(message = "Email must not be blank")
-    @Size(max = 50, message = "Max length for email is 50")
+    @Size(max = 100, message = "Max length for email is 100")
     private String email;
 
     @ApiModelProperty(required = true, name = "Sex of Dude")
