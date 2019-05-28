@@ -25,7 +25,6 @@ export class EditWorkoutExercisesComponent implements OnInit {
   submitted: boolean = false;
   exerciseName: string;
   exercises: any;
-  newExercises: any;
   error: any;
 
   constructor(private workoutExercisesService: WorkoutExercisesService, private formBuilder: FormBuilder, private router: Router) { }
@@ -38,8 +37,6 @@ export class EditWorkoutExercisesComponent implements OnInit {
         this.chosenExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
       }
     }
-
-    console.log(JSON.parse(localStorage.getItem('previousPreviousRoute')));
 
     if ((JSON.parse(localStorage.getItem('previousRoute')) === '/edit-workout') && (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/edit-workout-exercises')) {
       if (localStorage.getItem('chosenExercisesForEditWorkout') !== null) {
@@ -69,9 +66,12 @@ export class EditWorkoutExercisesComponent implements OnInit {
                 this.gottenExercises[counter].sets,
                 this.gottenExercises[counter].exDuration));
         }
-        localStorage.setItem('chosenExercisesForEditWorkout', JSON.stringify(this.chosenExercises));
       }
       localStorage.setItem('firstAccess', JSON.stringify('false'));
+      localStorage.setItem('chosenExercisesForEditWorkout', JSON.stringify(this.chosenExercises));
+
+      console.log('got gottenExercises from edit workout');
+      console.log(localStorage.getItem('chosenExercisesForEditWorkout'));
     }
 
     this.registerForm = this.formBuilder.group({
@@ -84,10 +84,6 @@ export class EditWorkoutExercisesComponent implements OnInit {
       sets: ['', [Validators.required]],
       duration: ['', [Validators.required]]
     });
-  }
-
-  setSelectedExercise(element: Exercise) {
-    localStorage.setItem('selectedExercise', JSON.stringify(element));
   }
 
   addToChosenExercises(element: Exercise) {

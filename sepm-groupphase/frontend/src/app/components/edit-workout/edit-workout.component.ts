@@ -69,8 +69,10 @@ export class EditWorkoutComponent implements OnInit {
     if (JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) === 'empty') {
       this.workoutService.getExercisesOfWorkoutById(this.workout.id, this.workout.version).subscribe((data) => {
           this.workoutExercises = data;
-          console.log(this.workoutExercises);
           localStorage.setItem('gottenExercises', JSON.stringify(this.workoutExercises));
+
+          console.log('set gottenExercises');
+          console.log(JSON.parse(localStorage.getItem('gottenExercises')));
         },
         error => {
           this.error = error;
@@ -102,6 +104,7 @@ export class EditWorkoutComponent implements OnInit {
     localStorage.setItem('calorieConsumptionForEditWorkout', JSON.stringify(this.editWorkoutForm.controls.calorieConsumptionEditWorkout.value));
     localStorage.setItem('difficultyEdit', JSON.stringify(this.editWorkoutForm.controls.difficultyLevelEditWorkout.value));
   }
+
   editWorkout() {
     localStorage.setItem('previousRoute', JSON.stringify('/'));
     localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));

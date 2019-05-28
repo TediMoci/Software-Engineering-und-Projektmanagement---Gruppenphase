@@ -38,8 +38,6 @@ export class WorkoutExercisesComponent implements OnInit {
       }
     }
 
-    console.log(JSON.parse(localStorage.getItem('previousPreviousRoute')));
-
     if ((JSON.parse(localStorage.getItem('previousRoute')) === '/create-workout') && (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises')) {
       if (localStorage.getItem('chosenExercisesForWorkout') !== null) {
         console.log('return create-workout ' +  this.chosenExercises);

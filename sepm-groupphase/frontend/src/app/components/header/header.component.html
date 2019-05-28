@@ -9,7 +9,6 @@
       <li class="nav-item">
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/dude-profile']" class="btn btn-link">Profile</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/fitnessProvider-profile']" class="btn btn-link">Profile</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/bros']" class="btn btn-link">Bros</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>
         <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/create-for-FP']" class="btn btn-link">Create</a></a>
         <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/find']" class="btn btn-link">Find</a></a>

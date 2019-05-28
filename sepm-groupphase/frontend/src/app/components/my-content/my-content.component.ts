@@ -14,6 +14,18 @@ export class MyContentComponent implements OnInit {
 
   ngOnInit() {
 
+    localStorage.setItem('previousRoute', JSON.stringify('/myContent'));
+    localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));
+    localStorage.removeItem('chosenExercisesForEditWorkout');
+    localStorage.removeItem('chosenExercisesForWorkout');
+    localStorage.removeItem('selectedWorkout');
+    localStorage.removeItem('gottenExercises');
+    localStorage.removeItem('firstAccess');
+    localStorage.removeItem('nameForEditWorkout');
+    localStorage.removeItem('descriptionForEditWorkout');
+    localStorage.removeItem('calorieConsumptionForEditWorkout');
+    localStorage.removeItem('difficultyEdit');
+
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
   }
