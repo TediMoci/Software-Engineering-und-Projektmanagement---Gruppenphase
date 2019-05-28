@@ -7,8 +7,16 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring", uses = DudeMapper.class)
 public interface IDudeMapper {
 
+    /**
+     * @param dudedto to be mapped to an entity
+     * @return Dude-entity mapped from given Dude-DTO
+     */
     Dude dudeDtoToDude(DudeDto dudedto);
 
+    /**
+     * @param dude to be mapped to a DTO
+     * @return Dude-DTO mapped from given Dude-entity
+     */
     DudeDto dudeToDudeDto(Dude dude);
 
 }
