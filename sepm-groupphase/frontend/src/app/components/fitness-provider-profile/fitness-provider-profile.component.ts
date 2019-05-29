@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FitnessProviderProfileService} from '../../services/fitness-provider-profile.service';
 import {FitnessProvider} from '../../dtos/fitness-provider';
+import {Course} from '../../dtos/course';
+import {OwnCoursesService} from '../../services/own-courses.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-fitness-provider-profile',
@@ -17,10 +20,10 @@ export class FitnessProviderProfileComponent implements OnInit {
   phoneNumber: string;
   website: string;
   numOfFollowers: number = 0;
-  courses: any;
+  courses: Course[];
   description: string;
   currentUser: FitnessProvider;
-  constructor(private fitnessProviderProfile: FitnessProviderProfileService) { }
+  constructor(private fitnessProviderProfile: FitnessProviderProfileService, private ownCoursesService: OwnCoursesService, private authService: AuthService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -30,6 +33,16 @@ export class FitnessProviderProfileComponent implements OnInit {
     this.phoneNumber = this.currentUser.phoneNumber;
     this.website = this.currentUser.website;
     this.description = this.currentUser.description;
+
+    this.ownCoursesService.getAllCoursesOfLoggedInFP(this.currentUser).subscribe(
+      (data) => {
+        this.courses = data;
+    },
+      error => {
+        this.error = error;
+      }
+    );
+
     this.fitnessProviderProfile.getFollower(this.currentUser.name).subscribe(
       (data) => {
         console.log('number of followers of fitness provider : ' + data + 'and name of fitness provider' + name);
@@ -39,6 +52,10 @@ export class FitnessProviderProfileComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+  setChosenCourse(element: Course) {
+    localStorage.setItem('selectedCourse', JSON.stringify(element));
   }
 
   vanishError() {

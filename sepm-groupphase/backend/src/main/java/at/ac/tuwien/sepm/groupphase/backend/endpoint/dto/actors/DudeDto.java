@@ -40,10 +40,6 @@ public class DudeDto {
     @NotNull(message = "Sex must not be null")
     private Sex sex;
 
-    @ApiModelProperty(required = true, name = "System status of Dude: 1-3")
-    @Min(value = 1, message = "Min value for status is 1") @Max(value = 3, message = "Max value for status is 3")
-    private Integer status = 1;
-
     @ApiModelProperty(required = true, name = "Self assessment status of Dude")
     @NotNull(message = "SelfAssessment must not be null")
     @Min(value = 1, message = "Min value for selfAssessment is 1") @Max(value = 3, message = "Max value for selfAssessment is 3")
@@ -121,14 +117,6 @@ public class DudeDto {
         this.sex = sex;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Integer getSelfAssessment() {
         return selfAssessment;
     }
@@ -198,7 +186,6 @@ public class DudeDto {
             ", description='" + description + '\'' +
             ", email='" + email + '\'' +
             ", sex=" + sex +
-            ", status=" + status +
             ", selfAssessment=" + selfAssessment +
             ", birthday=" + birthday +
             ", height=" + height +
@@ -222,7 +209,6 @@ public class DudeDto {
         if (description != null ? !description.equals(dudeDto.description) : dudeDto.description != null) return false;
         if (email != null ? !email.equals(dudeDto.email) : dudeDto.email != null) return false;
         if (sex != dudeDto.sex) return false;
-        if (status != null ? !status.equals(dudeDto.status) : dudeDto.status != null) return false;
         if (selfAssessment != null ? !selfAssessment.equals(dudeDto.selfAssessment) : dudeDto.selfAssessment != null)
             return false;
         if (birthday != null ? !birthday.equals(dudeDto.birthday) : dudeDto.birthday != null) return false;
@@ -242,7 +228,6 @@ public class DudeDto {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (selfAssessment != null ? selfAssessment.hashCode() : 0);
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
@@ -260,7 +245,6 @@ public class DudeDto {
         private String description;
         private String email;
         private Sex sex;
-        private Integer status;
         private Integer selfAssessment;
         private LocalDate birthday;
         private Double height;
@@ -299,11 +283,6 @@ public class DudeDto {
 
         public DudeDtoBuilder sex(Sex sex) {
             this.sex = sex;
-            return this;
-        }
-
-        public DudeDtoBuilder status(Integer status) {
-            this.status = status;
             return this;
         }
 
@@ -350,7 +329,6 @@ public class DudeDto {
             dude.setDescription(description);
             dude.setEmail(email);
             dude.setSex(sex);
-            dude.setStatus(status);
             dude.setSelfAssessment(selfAssessment);
             dude.setBirthday(birthday);
             dude.setHeight(height);

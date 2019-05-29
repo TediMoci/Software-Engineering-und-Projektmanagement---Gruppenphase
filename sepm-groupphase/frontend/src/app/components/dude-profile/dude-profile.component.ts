@@ -18,12 +18,12 @@ export class DudeProfileComponent implements OnInit {
   userName: string;
   sex: any;
   skill: string;
-  rank: string;
   age: number;
   height: number;
   weight: number;
   bmi: number;
   description: string;
+  email: string;
 
   dude: Dude;
 
@@ -43,18 +43,12 @@ export class DudeProfileComponent implements OnInit {
     } else {
       this.skill = 'Pro';
     }
-    if (this.dude.status === 1) {
-      this.rank = 'New Dude';
-    } else if (this.dude.status === 2) {
-      this.rank = 'Experienced Dude';
-    } else {
-      this.rank = 'Ancient Dude';
-    }
 
     this.height = this.dude.height;
     this.weight = this.dude.weight;
     this.sex = this.dude.sex;
     this.description = this.dude.description;
+    this.email = this.dude.email;
 
     this.profileService.getAge(this.dude.birthday, this.dude.name).subscribe(
       (data) => {

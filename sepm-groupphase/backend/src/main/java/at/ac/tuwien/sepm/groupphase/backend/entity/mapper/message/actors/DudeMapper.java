@@ -22,7 +22,6 @@ public class DudeMapper implements IDudeMapper{
         builder.description(dudedto.getDescription());
         builder.email(dudedto.getEmail());
         builder.sex(dudedto.getSex());
-        builder.status(dudedto.getStatus());
         builder.selfAssessment(dudedto.getSelfAssessment());
         builder.birthday(dudedto.getBirthday());
         builder.height(dudedto.getHeight());
@@ -49,7 +48,6 @@ public class DudeMapper implements IDudeMapper{
         builder.description(dude.getDescription());
         builder.email(dude.getEmail());
         builder.sex(dude.getSex());
-        builder.status(dude.getStatus());
         builder.selfAssessment(dude.getSelfAssessment());
         builder.birthday(dude.getBirthday());
         builder.height(dude.getHeight());

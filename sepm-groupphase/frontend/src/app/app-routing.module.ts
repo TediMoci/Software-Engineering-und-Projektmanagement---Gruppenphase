@@ -62,7 +62,7 @@ const routes: Routes = [
   {path: 'favourites', canActivate: [RoleGuard], component: FavouritesComponent},
   {path: 'edit-dude', canActivate: [RoleGuard], component: EditProfileComponent},
   {path: 'edit-fitnessProvider', canActivate: [FitnessProviderRoleGuard], component: EditFitnessProviderProfileComponent},
-  {path: 'fitnessProvider-profile', canActivate: [FitnessProviderRoleGuard], component: FitnessProviderProfileComponent},
+  {path: 'fitnessProvider-profile', canActivate: [AuthGuard], component: FitnessProviderProfileComponent},
   {path: 'follower', canActivate: [FitnessProviderRoleGuard], component: FollowerComponent},
   {path: 'fitnessProviders', canActivate: [RoleGuard], component: FitnessProvidersFollowedComponent},
   {path: 'myExercises', canActivate: [RoleGuard], component: OwnExercisesComponent},

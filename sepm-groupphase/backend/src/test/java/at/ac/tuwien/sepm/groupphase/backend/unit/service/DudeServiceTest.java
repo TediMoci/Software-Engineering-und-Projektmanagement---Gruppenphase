@@ -46,7 +46,6 @@ public class DudeServiceTest {
         dude1.setDescription("Description 1");
         dude1.setBirthday(LocalDate.of(1982,1,1));
         dude1.setSex(Sex.Female);
-        dude1.setStatus(1);
         dude1.setSelfAssessment(1);
         dude1.setHeight(185.0);
         dude1.setWeight(85.0);
@@ -58,7 +57,6 @@ public class DudeServiceTest {
         dude2.setDescription("Description 2");
         dude2.setBirthday(LocalDate.of(1995,5,7));
         dude2.setSex(Sex.Male);
-        dude2.setStatus(3);
         dude2.setSelfAssessment(3);
         dude2.setHeight(165.0);
         dude2.setWeight(60.0);
@@ -73,7 +71,6 @@ public class DudeServiceTest {
         dude.setDescription("Description 3");
         dude.setBirthday(LocalDate.of(1997,1,1));
         dude.setSex(Sex.Other);
-        dude.setStatus(1);
         dude.setSelfAssessment(2);
         dude.setHeight(185.0);
         dude.setWeight(85.0);

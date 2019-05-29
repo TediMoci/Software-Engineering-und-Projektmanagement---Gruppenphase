@@ -29,10 +29,6 @@ public class Dude {
     @Column(nullable = false)
     private Sex sex;
 
-    @Column(nullable = false)
-    private Integer status = 1;
-    // 1 = New Dude; 2 = Experienced Dude; 3 = Ancient Dude
-
     @Column(nullable = false, name = "self_assessment")
     private Integer selfAssessment;
     // 1 = Beginner; 2 = Advanced; 3 = Pro
@@ -121,14 +117,6 @@ public class Dude {
         this.sex = sex;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Integer getSelfAssessment() {
         return selfAssessment;
     }
@@ -214,7 +202,6 @@ public class Dude {
             ", description='" + description + '\'' +
             ", email='" + email + '\'' +
             ", sex=" + sex +
-            ", status=" + status +
             ", selfAssessment=" + selfAssessment +
             ", birthday=" + birthday +
             ", height=" + height +
@@ -240,7 +227,6 @@ public class Dude {
         if (description != null ? !description.equals(dude.description) : dude.description != null) return false;
         if (email != null ? !email.equals(dude.email) : dude.email != null) return false;
         if (sex != dude.sex) return false;
-        if (status != null ? !status.equals(dude.status) : dude.status != null) return false;
         if (selfAssessment != null ? !selfAssessment.equals(dude.selfAssessment) : dude.selfAssessment != null)
             return false;
         if (birthday != null ? !birthday.equals(dude.birthday) : dude.birthday != null) return false;
@@ -262,7 +248,6 @@ public class Dude {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (selfAssessment != null ? selfAssessment.hashCode() : 0);
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
@@ -282,7 +267,6 @@ public class Dude {
         private String description;
         private String email;
         private Sex sex;
-        private Integer status;
         private Integer selfAssessment;
         private LocalDate birthday;
         private Double height;
@@ -323,11 +307,6 @@ public class Dude {
 
         public DudeBuilder sex(Sex sex) {
             this.sex = sex;
-            return this;
-        }
-
-        public DudeBuilder status(Integer status) {
-            this.status = status;
             return this;
         }
 
@@ -384,7 +363,6 @@ public class Dude {
             dude.setDescription(description);
             dude.setEmail(email);
             dude.setSex(sex);
-            dude.setStatus(status);
             dude.setSelfAssessment(selfAssessment);
             dude.setBirthday(birthday);
             dude.setHeight(height);

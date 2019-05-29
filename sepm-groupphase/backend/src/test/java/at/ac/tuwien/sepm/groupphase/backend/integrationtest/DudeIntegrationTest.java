@@ -47,7 +47,6 @@ public class DudeIntegrationTest  {
         testDude1.setDescription("Description 1");
         testDude1.setBirthday(LocalDate.of(1982,1,1));
         testDude1.setSex(Sex.Male);
-        testDude1.setStatus(1);
         testDude1.setSelfAssessment(1);
         testDude1.setHeight(185.0);
         testDude1.setWeight(85.0);
@@ -59,7 +58,6 @@ public class DudeIntegrationTest  {
         testDude2.setDescription("Description 2");
         testDude2.setBirthday(LocalDate.of(1988,10,10));
         testDude2.setSex(Sex.Female);
-        testDude2.setStatus(1);
         testDude2.setSelfAssessment(2);
         testDude2.setHeight(172.0);
         testDude2.setWeight(68.0);
@@ -75,7 +73,6 @@ public class DudeIntegrationTest  {
         dude.setDescription(d.getDescription());
         dude.setBirthday(d.getBirthday());
         dude.setSex(d.getSex());
-        dude.setStatus(d.getStatus());
         dude.setSelfAssessment(d.getSelfAssessment());
         dude.setHeight(d.getHeight());
         dude.setWeight(d.getWeight());

@@ -6,7 +6,6 @@ export class Dude {
     public description: string,
     public email:  string,
     public sex: any,
-    public status: number,
     public selfAssessment: number,
     public birthday: Date,
     public height: number,

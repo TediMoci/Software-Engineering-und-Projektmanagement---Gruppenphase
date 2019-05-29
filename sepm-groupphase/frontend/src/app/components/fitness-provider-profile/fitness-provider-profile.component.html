@@ -20,16 +20,29 @@
           <p>E-Mail: {{email}}</p>
           <p>Phone: {{phoneNumber}}</p>
           <p>Website: {{website}}</p>
-          <p>Follower: {{numOfFollowers}}, <a [routerLink]="['/follower']" class="btn2 btn-link">Follower</a></p>
-          <p>Courses: {{courses}} </p>
-        </div>
+          <div  *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'">
+            <p>Follower: {{numOfFollowers}}</p>
+          </div>
+          <div  *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'">
+            <p>Follower: {{numOfFollowers}}, <a [routerLink]="['/follower']" class="btn2 btn-link">Follower</a></p>
+          </div>
+         </div>
         <div class="row-sm-1">
-          <a [routerLink]="['/edit-fitnessProvider']" class="btn btn-link">Edit Profile</a>
+          <div  *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'">
+            <a [routerLink]="['/edit-fitnessProvider']" class="btn btn-link">Edit Profile</a>
+          </div>
         </div>
       </div>
       <div class="col-sm-9">
         <h1>About {{userName}}</h1>
         <p>{{description}}</p>
+        <h3>Our Courses</h3>
+        <p>Click the course name to find out more!</p>
+        <ul>
+          <li *ngFor='let element of courses'>
+          <a [routerLink]="['/course']" (click)="setChosenCourse(element)">{{element.name}}</a>
+          </li>
+        </ul>
       </div>
 
     </div>

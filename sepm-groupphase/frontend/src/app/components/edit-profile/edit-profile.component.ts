@@ -85,7 +85,6 @@ export class EditProfileComponent implements OnInit {
       this.editForm.controls.description.value,
       this.editForm.controls.email.value,
       this.editForm.controls.sex.value,
-      this.oldDude.status,
       this.editForm.controls.selfAssessment.value,
       this.editForm.controls.birthday.value,
       this.editForm.controls.height.value,
