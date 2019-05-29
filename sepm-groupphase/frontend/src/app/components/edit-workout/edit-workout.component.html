@@ -23,7 +23,7 @@
             <h1>Edit Workout</h1>
 
             <div class="form-group">
-              <label for="nameForEditWorkout">Name</label>
+              <label for="nameForEditWorkout">Name*</label>
               <input type="text" name="nameForEditWorkout" maxlength="50" class="form-control" id="nameForEditWorkout" formControlName="nameForEditWorkout"
                      aria-describedby="nameForEditWorkoutHelp" ngModel="{{name}}">
               <div *ngIf="submitted && !!editWorkoutForm.controls.nameForEditWorkout.errors" class="error">
@@ -34,9 +34,10 @@
             </div>
 
             <div class="form-group">
-              <label for="descriptionForEditWorkout">Description</label>
-              <input type="text" name="descriptionForEditWorkout" class="form-control" id="descriptionForEditWorkout" formControlName="descriptionForEditWorkout"
-                     aria-describedby="descriptionForEditWorkout" ngModel="{{description}}">
+              <label for="descriptionForEditWorkout">Description*</label>
+              <textarea type="text" name="descriptionForEditWorkout" class="form-control" id="descriptionForEditWorkout" formControlName="descriptionForEditWorkout"
+                     aria-describedby="descriptionForEditWorkout" ngModel="{{description}}" maxlength="3000"></textarea>
+              <span>{{3000 - editWorkoutForm.controls.descriptionForEditWorkout.value.length}} left</span>
               <div *ngIf="submitted && !!editWorkoutForm.controls.descriptionForEditWorkout.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!editWorkoutForm.controls.descriptionForEditWorkout.errors.required">Description is
                   required!
@@ -45,7 +46,7 @@
             </div>
 
             <div class="form-group">
-              <span class="difficultyLevelEditWorkout">Difficulty Level</span>
+              <span class="difficultyLevelEditWorkout">Difficulty Level*</span>
               <div class="gap_space">
                 <div class= "custom-control custom-radio custom-control-inline">
                   <input id="beginner" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditWorkout" formControlName="difficultyLevelEditWorkout">
@@ -70,8 +71,8 @@
             </div>
 
             <div class="form-group">
-              <label for="calorieConsumptionEditWorkout">Calorie consumption</label>
-              <input knifeOnlyNumbers type="text" name="calorieConsumptionEditWorkout" class="form-control" id="calorieConsumptionEditWorkout" formControlName="calorieConsumptionEditWorkout"
+              <label for="calorieConsumptionEditWorkout">Calorie consumption*</label>
+              <input knifeOnlyNumbers type="text" maxlength="4" name="calorieConsumptionEditWorkout" class="form-control" id="calorieConsumptionEditWorkout" formControlName="calorieConsumptionEditWorkout"
                      aria-describedby="calorieConsumptionEditWorkoutHelp" ngModel="{{calorie}}">
               <div *ngIf="submitted && !!editWorkoutForm.controls.calorieConsumptionEditWorkout.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!editWorkoutForm.controls.calorieConsumptionEditWorkout.errors.required">Calorie consumption is
@@ -85,6 +86,7 @@
         </div>
         <button type="button" (click)="editWorkout()" class="btn btn-success float-right">Edit</button>
         <a (click)="backToCreateWorkout()" class="btn btn-link">Cancel</a>
+        <p><small>Fields marked with * are mandatory!</small></p>
       </div>
     </div>
   </div>
