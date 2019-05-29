@@ -73,6 +73,9 @@ public class Dude {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
     private List<Workout> workouts;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
+    private List<TrainingSchedule> trainingSchedules;
+
     public Long getId() {
         return id;
     }
@@ -189,6 +192,14 @@ public class Dude {
         this.workouts = workouts;
     }
 
+    public List<TrainingSchedule> getTrainingSchedules() {
+        return trainingSchedules;
+    }
+
+    public void setTrainingSchedules(List<TrainingSchedule> trainingSchedules) {
+        this.trainingSchedules = trainingSchedules;
+    }
+
     public static DudeBuilder builder() {
         return new DudeBuilder();
     }
@@ -211,6 +222,7 @@ public class Dude {
             ", courses=" + courses +
             ", exercises=" + exercises +
             ", workouts=" + workouts +
+            ", trainingSchedules=" + trainingSchedules +
             '}';
     }
 
@@ -237,7 +249,9 @@ public class Dude {
             return false;
         if (courses != null ? !courses.equals(dude.courses) : dude.courses != null) return false;
         if (exercises != null ? !exercises.equals(dude.exercises) : dude.exercises != null) return false;
-        return workouts != null ? workouts.equals(dude.workouts) : dude.workouts == null;
+        if (workouts != null ? !workouts.equals(dude.workouts) : dude.workouts != null) return false;
+        return trainingSchedules != null ? trainingSchedules.equals(dude.trainingSchedules) : dude.trainingSchedules == null;
+
     }
 
     @Override
@@ -257,6 +271,7 @@ public class Dude {
         result = 31 * result + (courses != null ? courses.hashCode() : 0);
         result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
+        result = 31 * result + (trainingSchedules != null ? trainingSchedules.hashCode() : 0);
         return result;
     }
 
@@ -276,6 +291,7 @@ public class Dude {
         private List<Course> courses;
         private List<Exercise> exercises;
         private List<Workout> workouts;
+        private List<TrainingSchedule> trainingSchedules;
 
         public DudeBuilder() {
         }
@@ -355,6 +371,11 @@ public class Dude {
             return this;
         }
 
+        public DudeBuilder trainingSchedules(List<TrainingSchedule> trainingSchedules) {
+            this.trainingSchedules = trainingSchedules;
+            return this;
+        }
+
         public Dude build() {
             Dude dude = new Dude();
             dude.setId(id);
@@ -372,6 +393,7 @@ public class Dude {
             dude.setCourses(courses);
             dude.setExercises(exercises);
             dude.setWorkouts(workouts);
+            dude.setTrainingSchedules(trainingSchedules);
             return dude;
         }
     }
