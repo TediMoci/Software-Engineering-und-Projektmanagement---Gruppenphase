@@ -1,0 +1,213 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<!-- start of first view -->
+
+<div *ngIf="generalTSData" class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <div class="row-sm-1">
+          <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <h1>Create Training Schedule</h1>
+        <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Add Workouts</button>
+
+        <button type="button" (click)="createTrainingSchedule()" class="btn btn-success float-right">Create</button>
+        <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- end of first view -->
+<!-- --------------------------------------------------------------------------------------------- -->
+<!-- start of second view -->
+
+<div *ngIf="!generalTSData" class="container-fluid">
+
+  <div class="container-tsPlanning">
+    <div class="row-workoutPlanning">
+      <div class="col-waPlanning">
+        <div class="row-info">
+          <h1>Add Workouts to your Training Schedule</h1>
+        </div>
+        <div class="row-search">
+          <h4>Find Workouts</h4>
+          <p>TODO: searchbar</p>
+        </div>
+        <div class="row-searchResults">
+          <h4>Search results</h4>
+          <p>TODO: show search results in accordeon</p>
+
+          <div
+            cdkDropList
+            #searchResults="cdkDropList"
+            [cdkDropListData]="searchRes"
+            [cdkDropListConnectedTo]="[day1, day2, day3, day4, day5, day6, day7]"
+            class="example-list"
+            (cdkDropListDropped)="drop($event)">
+            <div class="example-box" *ngFor="let item of searchRes" cdkDrag>{{item}}</div>
+          </div>
+
+          <ul>
+            List content
+            <li *ngFor="let element of searchRes">
+              <p>{{element}}</p>
+            </li>
+          </ul>
+
+        </div>
+        <div class="row-intervals">
+          <h4>My Training Schedule</h4>
+          <div class="row">
+            <div class="col-day">
+              <h6>Day 1</h6>
+
+              <div
+                cdkDropList
+                #day1="cdkDropList"
+                [cdkDropListData]="d1"
+                [cdkDropListConnectedTo]="[searchResults, day2, day3, day4, day5, day6, day7]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of d1" cdkDrag>{{item}}</div>
+              </div>
+
+              <ul>
+                List content
+                <li *ngFor="let element of d1">
+                  <p>{{element}}</p>
+                </li>
+              </ul>
+
+            </div>
+            <div class="col-day">
+              <h6>Day 2</h6>
+
+              <div
+                cdkDropList
+                #day2="cdkDropList"
+                [cdkDropListData]="d2"
+                [cdkDropListConnectedTo]="[searchResults, day1, day3, day4, day5, day6, day7]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of d2" cdkDrag>{{item}}</div>
+              </div>
+
+              <ul>
+                List content
+                <li *ngFor="let element of d2">
+                  <p>{{element}}</p>
+                </li>
+              </ul>
+
+            </div>
+            <div class="col-day">
+              <h6>Day 3</h6>
+
+              <div
+                cdkDropList
+                #day3="cdkDropList"
+                [cdkDropListData]="d3"
+                [cdkDropListConnectedTo]="[searchResults, day1, day2, day4, day5, day6, day7]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of d3" cdkDrag>{{item}}</div>
+              </div>
+
+            </div>
+            <div class="col-day">
+              <h6>Day 4</h6>
+
+              <div
+                cdkDropList
+                #day4="cdkDropList"
+                [cdkDropListData]="d4"
+                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day5, day6, day7]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of d4" cdkDrag>{{item}}</div>
+              </div>
+
+            </div>
+            <div class="col-day">
+              <h6>Day 5</h6>
+
+              <div
+                cdkDropList
+                #day5="cdkDropList"
+                [cdkDropListData]="d5"
+                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day6, day7]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of d5" cdkDrag>{{item}}</div>
+              </div>
+
+            </div>
+            <div class="col-day">
+              <h6>Day 6</h6>
+
+              <div
+                cdkDropList
+                #day6="cdkDropList"
+                [cdkDropListData]="d6"
+                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day5, day7]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of d6" cdkDrag>{{item}}</div>
+              </div>
+
+            </div>
+            <div class="col-day">
+              <h6>Day 7</h6>
+
+              <div
+                cdkDropList
+                #day7="cdkDropList"
+                [cdkDropListData]="d7"
+                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day5, day6]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of d7" cdkDrag>{{item}}</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <button type="button" (click)="addWorkouts(); changeView()" class="btn btn-success float-right">Add</button>
+        <button (click)="changeView()" class="btn btn-link">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- end of second view -->
+
+<!-- modal for showing workout details -->
+<div class="modal" id="workoutDetails">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{selectedWorkout}}</h4>
+        <p>TODO: get workout data</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

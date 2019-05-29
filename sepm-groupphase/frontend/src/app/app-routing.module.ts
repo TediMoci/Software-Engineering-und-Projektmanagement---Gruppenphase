@@ -38,6 +38,7 @@ import {CreateWorkoutComponent} from './components/create-workout/create-workout
 import {WorkoutExercisesComponent} from './components/workout-exercises/workout-exercises.component';
 import {CreateExercisesForWorkoutComponent} from './components/create-exercises-for-workout/create-exercises-for-workout.component';
 import {EditWorkoutExercisesComponent} from './components/edit-workout-exercises/edit-workout-exercises.component';
+import {CreateTrainingScheduleManuallyComponent} from './components/create-training-schedule-manually/create-training-schedule-manually.component';
 
 const routes: Routes = [
 
@@ -54,6 +55,7 @@ const routes: Routes = [
   {path: 'create-exercise-for-workout', canActivate: [RoleGuard], component: CreateExercisesForWorkoutComponent},
   {path: 'create-course', canActivate: [FitnessProviderRoleGuard], component: CreateCourseComponent},
   {path: 'create-workout', canActivate: [RoleGuard], component: CreateWorkoutComponent},
+  {path: 'create-trainingSchedule-m', canActivate: [RoleGuard], component: CreateTrainingScheduleManuallyComponent},
   {path: 'workout-exercises', canActivate: [RoleGuard], component: WorkoutExercisesComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
