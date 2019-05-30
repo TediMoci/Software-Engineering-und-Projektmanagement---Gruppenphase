@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.Exerc
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
+import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
@@ -112,6 +113,19 @@ public class DudeEndpoint {
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(value = "/{dudeId}/follow/{fitnessProviderId}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Follow fitness provider with given id", authorizations = {@Authorization(value = "apiKey")})
+    public Boolean followFitnessProvider(@PathVariable Long dudeId, @PathVariable Long fitnessProviderId) {
+        LOGGER.info("Entering followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
+        try {
+            iDudeService.followFitnessProvider(dudeId, fitnessProviderId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        return true;
     }
 
     @RequestMapping(value = "/{id}/exercises", method = RequestMethod.GET)

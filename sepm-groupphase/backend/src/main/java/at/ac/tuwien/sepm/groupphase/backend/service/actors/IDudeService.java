@@ -54,4 +54,11 @@ public interface IDudeService {
      */
     Dude update(String name, Dude newDude) throws ServiceException;
 
+    /**
+     * @param dudeId of the Dude
+     * @param fitnessProviderId of the FitnessProvider that the Dude wants to follow
+     * @throws ServiceException if an error occurred while trying to follow the FitnessProvider
+     */
+    void followFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException;
+
 }
