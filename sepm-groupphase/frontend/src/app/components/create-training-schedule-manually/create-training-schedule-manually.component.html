@@ -19,14 +19,25 @@
       </div>
       <div class="col-sm-9">
         <h1>Create Training Schedule</h1>
-        <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Add Workouts</button>
+
+        <!--start dropdown-->
+        <mat-form-field>
+          <mat-label>Interval</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let days of intervalDays" [value]="days" (click)="setChosenInterval(days)">
+              {{days}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!--end dropdown-->
 
         <button type="button" (click)="createTrainingSchedule()" class="btn btn-success float-right">Create</button>
         <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+
+        <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Add Workouts</button>
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- end of first view -->
@@ -59,13 +70,6 @@
             <div class="example-box" *ngFor="let item of searchRes" cdkDrag>{{item}}</div>
           </div>
 
-          <ul>
-            List content
-            <li *ngFor="let element of searchRes">
-              <p>{{element}}</p>
-            </li>
-          </ul>
-
         </div>
         <div class="row-intervals">
           <h4>My Training Schedule</h4>
@@ -78,17 +82,10 @@
                 #day1="cdkDropList"
                 [cdkDropListData]="d1"
                 [cdkDropListConnectedTo]="[searchResults, day2, day3, day4, day5, day6, day7]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
+                (cdkDropListDropped)="drop($event)"
+                class="example-list">
                 <div class="example-box" *ngFor="let item of d1" cdkDrag>{{item}}</div>
               </div>
-
-              <ul>
-                List content
-                <li *ngFor="let element of d1">
-                  <p>{{element}}</p>
-                </li>
-              </ul>
 
             </div>
             <div class="col-day">
@@ -103,13 +100,6 @@
                 (cdkDropListDropped)="drop($event)">
                 <div class="example-box" *ngFor="let item of d2" cdkDrag>{{item}}</div>
               </div>
-
-              <ul>
-                List content
-                <li *ngFor="let element of d2">
-                  <p>{{element}}</p>
-                </li>
-              </ul>
 
             </div>
             <div class="col-day">

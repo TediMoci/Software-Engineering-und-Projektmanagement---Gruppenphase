@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem} from '@angular/cdk/drag-drop';
 import {Workout} from '../../dtos/workout';
 
 @Component({
@@ -15,6 +15,16 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
   dude: Dude;
   generalTSData: boolean;
   selectedWorkout: Workout;
+  interval: number = 1;
+  intervalDays: string[] = [
+    '1 Day',
+    '2 Days',
+    '3 Days',
+    '4 Days',
+    '5 Days',
+    '6 Days',
+    '7 Days'
+  ];
 
   searchRes = [
     'Get to work',
@@ -86,13 +96,53 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    console.log('standard drop method call');
+    if(event.isPointerOverContainer) {
+      if (event.previousContainer === event.container) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        if (event.previousContainer.id === 'cdk-drop-list-0'){
+          // copy items taken from search results list
+          copyArrayItem(event.previousContainer.data,
+            event.container.data,
+            event.previousIndex,
+            event.currentIndex);
+        } else {
+          transferArrayItem(event.previousContainer.data,
+            event.container.data,
+            event.previousIndex,
+            event.currentIndex);
+        }
+      }
     } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
+      // remove item when dragged outside of the dragging areas
+      event.previousContainer.data.splice(event.previousIndex, 1);
+    }
+  }
+
+  setChosenInterval(days: string) {
+    switch (days) {
+      case '1 Day':
+        this.interval = 1;
+        break;
+      case '2 Days':
+        this.interval = 2;
+        break;
+      case '3 Days':
+        this.interval = 3;
+        break;
+      case '4 Days':
+        this.interval = 4;
+        break;
+      case '5 Days':
+        this.interval = 5;
+        break;
+      case '6 Days':
+        this.interval = 6;
+        break;
+      case '7 Days':
+        this.interval = 7;
+        break;
     }
   }
 
