@@ -13,7 +13,7 @@
           <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
 
   <div class="form-group">
-    <label for="name">Username</label>
+    <label for="name">Username*</label>
     <input type="text" name="name" maxlength="50" formControlName="name" class="form-control" id="name"
            aria-describedby="nameHelp" placeholder="Enter username">
     <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
@@ -27,7 +27,7 @@
   </div>
 
   <div class="form-group">
-    <label for="password">Password</label>
+    <label for="password">Password*</label>
     <input knifeNoSpaces type="password" name="password" formControlName="password" class="form-control" id="password"
            placeholder="Enter password">
     <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
@@ -41,7 +41,7 @@
   </div>
 
   <div class="form-group">
-    <label for="passwordConfirmed">Password Confirmed</label>
+    <label for="passwordConfirmed">Password Confirmed*</label>
     <input knifeNoSpaces  type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
            placeholder="Enter password">
     <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
@@ -54,7 +54,7 @@
   </div>
 
   <div class="form-group">
-    <label for="email">Email</label>
+    <label for="email">Email*</label>
     <input type="text" name="email" formControlName="email" class="form-control" id="email"
            aria-describedby="emailHelp" placeholder="Enter email">
     <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
@@ -68,7 +68,7 @@
   </div>
 
   <div class="form-group">
-    <span class="sex">Gender</span>
+    <span class="sex">Gender*</span>
     <div class="gap_space">
     <div class= "custom-control custom-radio custom-control-inline">
       <input id="male" type="radio" class="custom-control-input" value= "Male" name="sex" formControlName="sex">
@@ -94,7 +94,7 @@
   </div>
 
   <div class="form-group">
-    <span class="selfAssessment">Self-assessment</span>
+    <span class="selfAssessment">Self-assessment*</span>
     <div class="gap_space">
     <div class= "custom-control custom-radio custom-control-inline">
       <input id="beginner" type="radio" class="custom-control-input" value= 1 name="selfAssessment" formControlName="selfAssessment">
@@ -119,7 +119,7 @@
   </div>
 
   <div class="form-group">
-    <label for="birthday">Birthday</label>
+    <label for="birthday">Birthday*</label>
     <input type="date" name="birthday" formControlName="birthday" class="form-control" id="birthday"
            aria-describedby="birthdayHelp" placeholder="yyyy-MM-dd">
     <div *ngIf="submitted && !!registerForm.controls.birthday.errors" class="error">
@@ -130,7 +130,7 @@
   </div>
 
             <div class="form-group">
-              <label for="height">Height in cm</label>
+              <label for="height">Height in cm*</label>
               <input knifeOnlyNumbers type="text" maxlength="3" name="height" formControlName="height" class="form-control" id="height"
                      aria-describedby="heightHelp" placeholder="Enter height">
               <div *ngIf="submitted && !!registerForm.controls.height.errors" class="error">
@@ -141,7 +141,7 @@
             </div>
 
   <div class="form-group">
-    <label for="weight">Weight in kg</label>
+    <label for="weight">Weight in kg*</label>
     <input knifeOnlyNumbers type="text" maxlength="3" name="weight" formControlName="weight" class="form-control" id="weight"
            aria-describedby="weightHelp" placeholder="Enter weight">
     <div *ngIf="submitted && !!registerForm.controls.weight.errors" class="error">
@@ -155,7 +155,7 @@
   <button type="button" (click)="registerUser()" class="btn btn-success float-right">Submit</button>
             <a [routerLink]="['']" class="btn btn-link">Cancel</a>
           </form>
-
+        <p><small>Fields marked with * are mandatory!</small></p>
       </div>
     </div>
   </div>
