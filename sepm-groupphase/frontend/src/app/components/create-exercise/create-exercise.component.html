@@ -15,7 +15,7 @@
         <div class="row-sm-1"></div>
         <div class="row-sm-10">
           <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
-          <img class="img-exercise" src="{{imagePathExercise}}" alt="exercise image">
+          <img class="img-exercise" [src]="imgURL" height="200" *ngIf="imgURL" alt="exercise image" >
         </div>
       </div>
       <div class="col-sm-9">
@@ -86,9 +86,39 @@
               </div>
           </form>
 
-            <button type="button" (click)="addExercise()" class="btn btn-success float-right">Add</button>
-            <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+          <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal" (change)="fileChangeEvent($event)" />
+          <div class="modal" id="cropModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+
+                <div class="modal-header">
+                  <h4 class="modal-title">Select a picture to upload for the exercise</h4>
+                </div>
+                <span  style="color:orange;  position: center; margin-left: auto; margin-right: auto; " *ngIf="message && crop">{{message}}</span>
+                <image-cropper
+                  [imageChangedEvent]="imageChangedEvent"
+                  [maintainAspectRatio]="false"
+                  [resizeToWidth]="0"
+                  format="jpeg"
+                  (imageCropped)="imageCropped($event)"
+                  (imageLoaded)="imageLoaded()"
+                  (loadImageFailed)="loadImageFailed()"
+                ></image-cropper>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  <button (click)= "cropPicture()" class="btn btn-success" data-dismiss="modal" >Crop </button>
+                </div>
+              </div>
+            </div>
           </div>
+
+        <div>
+          <button class="btn btn-upload" (click)="file.click()">Upload Picture</button>
+        </div>
+
+          <button type="button" (click)="addExercise()" class="btn btn-success float-right">Add</button>
+            <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+        </div>
         <p><small>Fields marked with * are mandatory!</small></p>
         </div>
     </div>

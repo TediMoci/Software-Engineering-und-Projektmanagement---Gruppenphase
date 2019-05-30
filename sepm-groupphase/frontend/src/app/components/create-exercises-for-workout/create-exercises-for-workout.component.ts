@@ -23,7 +23,11 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   submitted: boolean = false;
   dude: Dude;
   currentChosenExercises: WorkoutEx[];
+  message: string;
 
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
@@ -109,6 +113,35 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
 
   vanishError() {
     this.error = false;
+  }
+
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imagePathExercise = files.base64;
+    console.log(this.imagePathExercise);
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
   }
 
 }

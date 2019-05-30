@@ -28,6 +28,11 @@ export class EditExerciseComponent implements OnInit {
   description: string;
   muscleGroup: string;
 
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
+
   constructor(private editExerciseService: EditExerciseService , private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {
@@ -93,4 +98,31 @@ export class EditExerciseComponent implements OnInit {
     this.error = false;
   }
 
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imagePath2 = files.base64;
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
+  }
 }

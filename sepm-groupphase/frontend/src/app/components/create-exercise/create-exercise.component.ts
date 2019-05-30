@@ -12,12 +12,15 @@ import {CreateExerciseService} from '../../services/create-exercise.service';
 export class CreateExerciseComponent implements OnInit {
   error: any;
   imagePath: string = 'assets/img/kugelfisch.jpg';
-  imagePathExercise: string = 'assets/img/exercise.png';
+  imgURL: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
-
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
@@ -64,7 +67,36 @@ export class CreateExerciseComponent implements OnInit {
     );
   }
 
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imgURL = files.base64;
+    console.log(this.imgURL);
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
   vanishError() {
     this.error = false;
   }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
+  }
+
 }

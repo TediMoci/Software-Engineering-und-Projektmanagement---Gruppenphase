@@ -23,6 +23,11 @@ export class EditCourseComponent implements OnInit {
   oldCourse: Course;
   editCourseForm: FormGroup;
   fitnessProvider: FitnessProvider;
+
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private editCourseService: EditCourseService, private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {
@@ -66,10 +71,36 @@ export class EditCourseComponent implements OnInit {
       }
     );
   }
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
 
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imagePath2= files.base64;
+    console.log(this.imagePath2);
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
   vanishError() {
     this.error = false;
   }
-
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
+  }
 }
 
