@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem} from '@angular/cdk/drag-drop';
 import {Workout} from '../../dtos/workout';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-training-schedule-manually',
@@ -15,6 +16,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
   dude: Dude;
   generalTSData: boolean;
   selectedWorkout: Workout;
+  //searchRes: Workout[];
   interval: number = 1;
   intervalDays: string[] = [
     '1 Day',
@@ -78,7 +80,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     'Walk dog'
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
 
@@ -97,11 +99,13 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>) {
     console.log('standard drop method call');
+    console.log(event.previousContainer.id);
+
     if(event.isPointerOverContainer) {
       if (event.previousContainer === event.container) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       } else {
-        if (event.previousContainer.id === 'cdk-drop-list-0'){
+        if (event.previousContainer.id === 'cdk-drop-list-0') {
           // copy items taken from search results list
           copyArrayItem(event.previousContainer.data,
             event.container.data,
