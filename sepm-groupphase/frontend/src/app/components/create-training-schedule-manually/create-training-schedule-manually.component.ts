@@ -98,14 +98,19 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    console.log('standard drop method call');
-    console.log(event.previousContainer.id);
 
     if(event.isPointerOverContainer) {
       if (event.previousContainer === event.container) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       } else {
-        if (event.previousContainer.id === 'cdk-drop-list-0') {
+        if (event.previousContainer.id === 'searchRes1' ||
+          event.previousContainer.id === 'searchRes2' ||
+          event.previousContainer.id === 'searchRes3' ||
+          event.previousContainer.id === 'searchRes4' ||
+          event.previousContainer.id === 'searchRes5' ||
+          event.previousContainer.id === 'searchRes6' ||
+          event.previousContainer.id === 'searchRes7'
+        ) {
           // copy items taken from search results list
           copyArrayItem(event.previousContainer.data,
             event.container.data,
