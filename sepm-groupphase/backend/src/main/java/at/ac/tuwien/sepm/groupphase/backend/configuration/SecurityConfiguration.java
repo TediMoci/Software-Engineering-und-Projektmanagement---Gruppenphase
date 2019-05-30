@@ -107,6 +107,7 @@ public class SecurityConfiguration {
                     "/fitnessProvider",
                     "/fitnessProvider/{id}",
                     "/fitnessProvider/{id}/courses",
+                    "/fitnessProvider/{id}/allFollowers",
                     "/fitnessProvider/all",
                     "/fitnessProvider/{name}/followers",
                     "/course",

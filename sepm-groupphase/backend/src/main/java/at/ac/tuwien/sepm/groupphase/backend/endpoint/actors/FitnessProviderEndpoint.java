@@ -1,10 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CourseDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.ICourseMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IFitnessProviderService;
@@ -30,12 +33,14 @@ public class FitnessProviderEndpoint {
     private final IFitnessProviderService iFitnessProviderService;
     private final IFitnessProviderMapper fitnessProviderMapper;
     private final ICourseMapper courseMapper;
+    private final IDudeMapper dudeMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(FitnessProviderEndpoint.class);
 
-    public FitnessProviderEndpoint(IFitnessProviderService iFitnessProviderService, IFitnessProviderMapper fitnessProviderMapper, ICourseMapper courseMapper) {
+    public FitnessProviderEndpoint(IFitnessProviderService iFitnessProviderService, IFitnessProviderMapper fitnessProviderMapper, ICourseMapper courseMapper, IDudeMapper dudeMapper) {
         this.iFitnessProviderService = iFitnessProviderService;
         this.fitnessProviderMapper = fitnessProviderMapper;
         this.courseMapper = courseMapper;
+        this.dudeMapper = dudeMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -73,16 +78,6 @@ public class FitnessProviderEndpoint {
         }
     }
 
-    @RequestMapping(value = "/{name}/followers", method = RequestMethod.GET)
-    @ApiOperation(value = "Get the number of followers of the fitness provider with the given name", authorizations ={ @Authorization(value = "apiKey")})
-    public Integer getNumberOfFollowers(@PathVariable String name) {
-        try {
-            return iFitnessProviderService.getNumberOfFollowers(name);
-        } catch (ServiceException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-    }
-
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ApiOperation(value = "Get all fitness providers", authorizations = {@Authorization(value = "apiKey")})
     public List<FitnessProviderDto> findAll() {
@@ -106,6 +101,35 @@ public class FitnessProviderEndpoint {
         } catch (ServiceException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(value = "/{name}/followers", method = RequestMethod.GET)
+    @ApiOperation(value = "Get the number of followers of the fitness provider with the given name", authorizations ={ @Authorization(value = "apiKey")})
+    public Integer getNumberOfFollowers(@PathVariable String name) {
+        try {
+            return iFitnessProviderService.getNumberOfFollowers(name);
+        } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}/allFollowers", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all followers of the fitness provider with the given id", authorizations ={ @Authorization(value = "apiKey")})
+    public DudeDto[] getDudesFollowingFitnessProvider(@PathVariable Long id) {
+        LOGGER.info("Entering getDudesFollowingFitnessProvider with id: " + id);
+        List<Dude> dudes;
+        try {
+            dudes = iFitnessProviderService.findById(id).getDudes();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getDudesFollowingFitnessProvider with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        DudeDto[] dudeDtos = new DudeDto[dudes.size()];
+        for (int i = 0; i < dudes.size(); i++) {
+            dudeDtos[i] = dudeMapper.dudeToDudeDto(dudes.get(i));
+            dudeDtos[i].setPassword("Not available");
+        }
+        return dudeDtos;
     }
 
     @RequestMapping(value = "/{id}/courses", method = RequestMethod.GET)
