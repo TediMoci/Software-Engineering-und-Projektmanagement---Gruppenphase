@@ -13,7 +13,7 @@
       <form [formGroup]="editFPForm" (ngSubmit)="editFitnessProvider()">
 
         <div class="form-group">
-          <label for="editFPName">Name</label>
+          <label for="editFPName">Username*</label>
           <input ngModel = "{{userName}}" formControlName="name" type="text" name="name" maxlength="50" class="form-control" id="editFPName"
                  aria-describedby="editFPNameHelp">
           <div *ngIf="submitted && !!editFPForm.controls.name.errors" class="error">
@@ -24,7 +24,7 @@
         </div>
 
         <div class="form-group">
-          <label for="editFPPassword">Password</label>
+          <label for="editFPPassword">Password*</label>
           <input ngModel="{{password}}" formControlName="password" knifeNoSpaces type="password" name="password" class="form-control" id="editFPPassword">
           <div *ngIf="submitted && !!editFPForm.controls.password.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editFPForm.controls.password.errors.required">Your password is
@@ -37,7 +37,7 @@
         </div>
 
         <div class="form-group">
-          <label for="editFPPasswordConfirmed">Password Confirmed</label>
+          <label for="editFPPasswordConfirmed">Password Confirmed*</label>
           <input ngModel="{{password}}" formControlName="passwordConfirmed" knifeNoSpaces type="password" name="passwordConfirmed" class="form-control" id="editFPPasswordConfirmed">
           <div *ngIf="submitted && !!editFPForm.controls.passwordConfirmed.errors" class="error">
             <small class="form-text text-warning" *ngIf=" !!editFPForm.controls.passwordConfirmed.errors.required">Your password is
@@ -50,12 +50,13 @@
 
         <div class="form-group">
           <label for="editFPDescription">Description</label>
-          <input ngModel = "{{description}}" formControlName="description" type="text" name="description" maxlength="1000" class="form-control" id="editFPDescription"
-                 aria-describedby="editFPDescriptionHelp">
+          <textarea ngModel = "{{description}}" formControlName="description" type="text" name="description" class="form-control" id="editFPDescription"
+                 aria-describedby="editFPDescriptionHelp" maxlength="3000"></textarea>
+          <span>{{3000 - editFPForm.controls.description.value.length}} left</span>
         </div>
 
         <div class="form-group">
-          <label for="editFPEmail">Email</label>
+          <label for="editFPEmail">Email*</label>
           <input ngModel="{{email}}" formControlName="email" type="text" name="email" class="form-control" id="editFPEmail"
                  aria-describedby="editEmailHelp">
           <div *ngIf="submitted && !!editFPForm.controls.email.errors" class="error">
@@ -69,7 +70,7 @@
         </div>
 
         <div class="form-group">
-          <label for="editFPAddress">Address</label>
+          <label for="editFPAddress">Address*</label>
           <input ngModel="{{address}}" formControlName="address" type="text" name="address" class="form-control" id="editFPAddress"
                  aria-describedby="editAddressHelp">
           <div *ngIf="submitted && !!editFPForm.controls.address.errors" class="error">
@@ -94,7 +95,7 @@
         <button type="button" (click)="editFitnessProvider()" class="btn btn-success float-right">Submit</button>
         <a [routerLink]="['/fitnessProvider-profile']" class="btn btn-link">Cancel</a>
       </form>
-
+      <p><small>Fields marked with * are mandatory!</small></p>
     </div>
   </div>
 </div>

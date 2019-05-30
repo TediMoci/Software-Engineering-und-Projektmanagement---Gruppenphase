@@ -25,7 +25,7 @@
             <h1>Edit Exercise</h1>
 
             <div class="form-group">
-              <label for="editExName">Name</label>
+              <label for="editExName">Name*</label>
               <input ngModel="{{name}}" type="text" name="name" maxlength="50" class="form-control" id="editExName" formControlName="name"
                      aria-describedby="editExNameHelp">
               <div *ngIf="submitted && !!editExForm.controls.name.errors" class="error">
@@ -42,7 +42,7 @@
             </div>
 
             <div class="form-group">
-              <span class="editExcategory">Category</span>
+              <span class="editExcategory">Category*</span>
               <div class="gap_space">
                 <div class= "custom-control custom-radio custom-control-inline">
                   <input id="endurance" type="radio" class="custom-control-input" value= "Endurance" name="category" formControlName="category" [checked]="endurance">
@@ -68,9 +68,10 @@
             </div>
 
             <div class="form-group">
-              <label for="editExDescription">Description</label>
-              <input ngModel="{{description}}" type="text" name="description" class="form-control" id="editExDescription" formControlName="description"
-                     aria-describedby="editExDescriptionHelp">
+              <label for="editExDescription">Description*</label>
+              <textarea ngModel="{{description}}" type="text" name="description" class="form-control" id="editExDescription" formControlName="description"
+                     aria-describedby="editExDescriptionHelp" maxlength="3000"></textarea>
+              <span>{{3000 - editExForm.controls.description.value.length}} left</span>
               <div *ngIf="submitted && !!editExForm.controls.description.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!editExForm.controls.description.errors.required">Description is
                   required!
@@ -88,6 +89,7 @@
           <button type="button" (click)="editExercise()" class="btn btn-success float-right">Edit</button>
           <a [routerLink]="['/myExercises']" class="btn btn-link">Cancel</a>
         </div>
+        <p><small>Fields marked with * are mandatory!</small></p>
       </div>
     </div>
   </div>
