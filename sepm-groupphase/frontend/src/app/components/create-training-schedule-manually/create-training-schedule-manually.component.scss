@@ -45,6 +45,10 @@
 
 .col-sm-9 {
   padding: 40px;
+  .row {
+    margin-left: 10px;
+    margin-top: 20px;
+  }
 }
 
 .example-list {
@@ -66,7 +70,7 @@
   justify-content: space-between;
   box-sizing: border-box;
   cursor: move;
-  background: white;
+  background: aliceblue;
   font-size: 14px;
 }
 
@@ -95,5 +99,16 @@
 }
 
 h4 {
+  margin-top: 20px;
+  padding-top: 20px;
   color: lightskyblue;
+}
+
+.dropdown-filter {
+  .dropdown {
+    margin-left: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }

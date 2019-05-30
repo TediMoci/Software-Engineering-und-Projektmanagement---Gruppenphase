@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem} from '@angular/cdk/drag-drop';
 import {Workout} from '../../dtos/workout';
 import {Router} from '@angular/router';
+import {FindService} from '../../services/find.service';
+import {WorkoutService} from '../../services/workout.service';
+import {WorkoutFilter} from '../../dtos/workout-filter';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-create-training-schedule-manually',
@@ -14,10 +18,36 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   dude: Dude;
+  error: any;
+
+  submitted: boolean = false;
+  tsForm: FormGroup;
+
   generalTSData: boolean;
   selectedWorkout: Workout;
-  //searchRes: Workout[];
   interval: number = 1;
+
+  inputText: any;
+  public filterWorkoutDifficulty: string = 'None';
+  public filterWorkoutCaloriesMin: string = '';
+  public filterWorkoutCaloriesMax: string = '';
+  public inputTextActual: any;
+  public filterWorkoutDifficultyActual: string = 'None';
+  public filterWorkoutCaloriesMinActual: string = '';
+  public filterWorkoutCaloriesMaxActual: string = '';
+
+  searchRes: any;
+  exercisesForWorkouts: any;
+  workoutFilter: WorkoutFilter;
+
+  d1: any = [];
+  d2: any = [];
+  d3: any = [];
+  d4: any = [];
+  d5: any = [];
+  d6: any = [];
+  d7: any = [];
+
   intervalDays: string[] = [
     '1 Day',
     '2 Days',
@@ -28,78 +58,29 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     '7 Days'
   ];
 
-  searchRes = [
-    'Get to work',
-    'Pick up groceries',
-    'Go home',
-    'Fall asleep'
-  ];
-
-  d1 = [
-    'test',
-    'test2',
-    'test3',
-    'test4'
-  ];
-
-  d2 = [
-    'a',
-    'b',
-    'c',
-    'd'
-  ];
-
-  d3 = [
-    '1',
-    '2',
-    '3',
-    '4'
-  ];
-
-  d4 = [
-    'Hallo',
-    'Hi'
-  ];
-  d5 = [
-    'Grinzing',
-    'Penzing',
-    'Hitzing'
-  ];
-
-  d6 = [
-    'orange',
-    'purple',
-    'yellow'
-  ];
-
-  d7 = [
-    'Get up',
-    'Brush teeth',
-    'Take a shower',
-    'Check e-mail',
-    'Walk dog'
-  ];
-
-  constructor(private router: Router) { }
+  constructor(private router: Router, private findService: FindService, private formBuilder: FormBuilder, private workoutService: WorkoutService) {
+  }
 
   ngOnInit() {
-
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.generalTSData = true;
+
+    this.tsForm = this.formBuilder.group({
+      tsName: ['', [Validators.required]],
+      tsDifficulty: ['', [Validators.required]],
+      tsDescription: ['', [Validators.required]]
+    });
   }
 
   changeView() {
+    this.resetResults();
     this.generalTSData = !this.generalTSData;
-  }
-
-  setSelectedWorkout(element: Workout){
-    this.selectedWorkout = element;
   }
 
   drop(event: CdkDragDrop<string[]>) {
 
-    if(event.isPointerOverContainer) {
+    if (event.isPointerOverContainer) {
       if (event.previousContainer === event.container) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       } else {
@@ -125,6 +106,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
       }
     } else {
       // remove item when dragged outside of the dragging areas
+      console.log('delete entry');
       event.previousContainer.data.splice(event.previousIndex, 1);
     }
   }
@@ -155,4 +137,134 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     }
   }
 
+  search() {
+    if (this.inputText === undefined) {
+      this.inputTextActual = null;
+    } else {
+      this.inputTextActual = this.inputText;
+    }
+
+    switch (this.filterWorkoutDifficulty) {
+      case 'None':
+        this.filterWorkoutDifficultyActual = null;
+        break;
+      case  'Beginner':
+        this.filterWorkoutDifficultyActual = '1';
+        break;
+      case  'Advanced':
+        this.filterWorkoutDifficultyActual = '2';
+        break;
+      case  'Pro':
+        this.filterWorkoutDifficultyActual = '3';
+        break;
+    }
+
+    if (this.filterWorkoutCaloriesMin == '') {
+      this.filterWorkoutCaloriesMinActual = null;
+    } else {
+      this.filterWorkoutCaloriesMinActual = this.filterWorkoutCaloriesMin;
+    }
+
+    if (this.filterWorkoutCaloriesMax == '') {
+      this.filterWorkoutCaloriesMaxActual = null;
+    } else {
+      this.filterWorkoutCaloriesMaxActual = this.filterWorkoutCaloriesMax;
+    }
+
+    this.workoutFilter = new WorkoutFilter(
+      this.inputTextActual,
+      this.filterWorkoutDifficultyActual,
+      this.filterWorkoutCaloriesMinActual,
+      this.filterWorkoutCaloriesMaxActual);
+
+    this.findService.getAllWorkoutsFilterd(this.workoutFilter).subscribe(
+      (data) => {
+        this.searchRes = data.sort(function (a, b) { // sort data alphabetically
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+      },
+      error => {
+        this.error = error;
+      }
+    );
+  }
+
+  getSelectedWorkoutExercises(workout: Workout) {
+    this.workoutService.getExercisesOfWorkoutById(workout.id, workout.version).subscribe(
+      (data) => {
+        console.log('get all exercises of workout ' + workout.name);
+        this.exercisesForWorkouts = data.sort(function (a, b) { // sort data alphabetically
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+        console.log(this.exercisesForWorkouts.toString().toString());
+      },
+      error => {
+        this.error = error;
+      }
+    );
+  }
+
+  convertDifficulty(element: any) {
+    switch (element) {
+      case 1:
+        return 'Beginner';
+      case 2:
+        return 'Advanced';
+      case 3:
+        return 'Pro';
+    }
+  }
+
+  resetResults() {
+    this.searchRes = [];
+  }
+
+  createTrainingSchedule() {
+    this.submitted = true;
+
+    switch (this.interval) {
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        break;
+      case 7:
+        break;
+    }
+  }
+
+  vanishError() {
+    this.error = false;
+  }
+
+  cancelWorkoutAllocation() {
+    this.d1 = [];
+    this.d2 = [];
+    this.d3 = [];
+    this.d4 = [];
+    this.d5 = [];
+    this.d6 = [];
+    this.d7 = [];
+    this.resetResults();
+    this.generalTSData = !this.generalTSData;
+  }
 }
