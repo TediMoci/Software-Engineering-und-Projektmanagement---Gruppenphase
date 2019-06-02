@@ -25,7 +25,7 @@
             <h1>Create Exercise</h1>
 
           <div class="form-group">
-            <label for="nameForExercise">Name</label>
+            <label for="nameForExercise">Name*</label>
             <input type="text" name="nameForExercise" maxlength="50" class="form-control" id="nameForExercise" formControlName="nameForExercise"
                    aria-describedby="nameForExerciseHelp" placeholder="Enter name">
             <div *ngIf="submitted && !!registerForm.controls.nameForExercise.errors" class="error">
@@ -42,7 +42,7 @@
           </div>
 
           <div class="form-group">
-            <span class="categoryExercise">Category</span>
+            <span class="categoryExercise">Category*</span>
             <div class="gap_space">
               <div class= "custom-control custom-radio custom-control-inline">
                 <input id="endurance" type="radio" class="custom-control-input" value= "Endurance" name="categoryExercise" formControlName="categoryExercise">
@@ -68,9 +68,10 @@
           </div>
 
               <div class="form-group">
-                <label for="descriptionForExercise">Description</label>
-                <input type="text" name="descriptionForExercise" class="form-control" id="descriptionForExercise" formControlName="descriptionForExercise"
-                       aria-describedby="descriptionForExerciseHelp" placeholder="Enter description">
+                <label for="descriptionForExercise">Description*</label>
+                <textarea type="text" name="descriptionForExercise" class="form-control" id="descriptionForExercise" formControlName="descriptionForExercise"
+                       aria-describedby="descriptionForExerciseHelp" placeholder="Enter description" maxlength="3000" > </textarea>
+                <span>{{3000 - registerForm.controls.descriptionForExercise.value.length}} left</span>
                 <div *ngIf="submitted && !!registerForm.controls.descriptionForExercise.errors" class="error">
                   <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForExercise.errors.required">Description is
                     required!
@@ -88,6 +89,7 @@
             <button type="button" (click)="addExercise()" class="btn btn-success float-right">Add</button>
             <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
           </div>
+        <p><small>Fields marked with * are mandatory!</small></p>
         </div>
     </div>
   </div>

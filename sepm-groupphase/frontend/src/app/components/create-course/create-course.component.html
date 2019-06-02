@@ -25,7 +25,7 @@
             <h1>Create Course</h1>
 
             <div class="form-group">
-              <label for="nameForCourse">Name</label>
+              <label for="nameForCourse">Name*</label>
               <input type="text" name="nameForCourse" maxlength="50" class="form-control" id="nameForCourse" formControlName="nameForCourse"
                      aria-describedby="nameForCourseHelp" placeholder="Enter name">
               <div *ngIf="submitted && !!registerForm.controls.nameForCourse.errors" class="error">
@@ -36,9 +36,10 @@
             </div>
 
             <div class="form-group">
-              <label for="descriptionForCourse">Description</label>
-              <input type="text" name="descriptionForCourse" class="form-control" id="descriptionForCourse" formControlName="descriptionForCourse"
-                     aria-describedby="descriptionForCourseHelp" placeholder="Enter description">
+              <label for="descriptionForCourse">Description*</label>
+              <textarea type="text" name="descriptionForCourse" class="form-control" id="descriptionForCourse" formControlName="descriptionForCourse"
+                     aria-describedby="descriptionForCourseHelp" placeholder="Enter description" maxlength="3000" > </textarea>
+              <span>{{3000 - registerForm.controls.descriptionForCourse.value.length}} left</span>
               <div *ngIf="submitted && !!registerForm.controls.descriptionForCourse.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForCourse.errors.required">Description is
                   required!
@@ -49,7 +50,8 @@
           <button type="button" (click)="addCourse()" class="btn btn-success float-right">Add</button>
           <a [routerLink]="['/create-for-FP']" class="btn btn-link">Cancel</a>
       </div>
-    </div>
+        <p><small>Fields marked with * are mandatory!</small></p>
+      </div>
   </div>
   </div>
 </div>

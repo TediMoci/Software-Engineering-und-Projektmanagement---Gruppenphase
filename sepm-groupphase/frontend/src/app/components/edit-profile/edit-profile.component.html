@@ -12,7 +12,7 @@
       <span class="anchor" id="formEditDude"></span>
       <form [formGroup]="editForm" (ngSubmit)="editUser()">
         <div class="form-group">
-          <label for="nameEdit">Name</label>
+          <label for="nameEdit">Username*</label>
           <input ngModel = "{{userName}}" type="text" name="name" maxlength="50" formControlName="name" class="form-control" id="nameEdit"
                  aria-describedby="nameEditHelp">
           <div *ngIf="submitted && !!editForm.controls.name.errors" class="error">
@@ -26,7 +26,7 @@
         </div>
 
         <div class="form-group">
-          <label for="passwordEdit">Password</label>
+          <label for="passwordEdit">Password*</label>
           <input ngModel="{{password}}" knifeNoSpaces type="password" formControlName="password" name="password" class="form-control" id="passwordEdit">
           <div *ngIf="submitted && !!editForm.controls.password.errors" class="error">
             <small class="form-text text-warning" *ngIf="!!editForm.controls.password.errors.required">Your password is
@@ -39,7 +39,7 @@
         </div>
 
         <div class="form-group">
-          <label for="passwordConfirmedEdit">Password Confirmed</label>
+          <label for="passwordConfirmedEdit">Password Confirmed*</label>
           <input ngModel="{{password}}" knifeNoSpaces  type="password" formControlName="passwordConfirmed" name="passwordConfirmed" class="form-control" id="passwordConfirmedEdit">
           <div *ngIf="submitted && !!editForm.controls.passwordConfirmed.errors" class="error">
             <small class="form-text text-warning" *ngIf=" !!editForm.controls.passwordConfirmed.errors.required">Your password is
@@ -52,12 +52,13 @@
 
         <div class="form-group">
           <label for="description">Description</label>
-            <input type="text" name="description" formControlName="description" class="form-control" id="description"
-                   ngModel="{{description}}">
+            <textarea type="text" name="description" formControlName="description" class="form-control" id="description"
+                   ngModel="{{description}}" maxlength="3000"></textarea>
+          <span>{{3000 - editForm.controls.description.value.length}} left</span>
         </div>
 
         <div class="form-group">
-          <label for="emailEdit">Email</label>
+          <label for="emailEdit">Email*</label>
           <input ngModel="{{email}}" type="text" name="email" class="form-control" id="emailEdit" formControlName="email"
                  aria-describedby="emailHelp">
           <div *ngIf="submitted && !!editForm.controls.email.errors" class="error">
@@ -71,7 +72,7 @@
         </div>
 
         <div class="form-group">
-          <span class="sex">Gender</span>
+          <span class="sex">Gender*</span>
           <div class="gap_space">
             <div class= "custom-control custom-radio custom-control-inline">
               <input id="maleEdit" type="radio" class="custom-control-input" value= "Male" name="sex" formControlName="sex" [checked]="male">
@@ -97,7 +98,7 @@
         </div>
 
         <div class="form-group">
-          <span class="selfAssessment">Self-assessment</span>
+          <span class="selfAssessment">Self-assessment*</span>
           <div class="gap_space">
             <div class= "custom-control custom-radio custom-control-inline">
               <input id="beginnerEdit" type="radio" class="custom-control-input" value= 1 name="selfAssessment" formControlName="selfAssessment" [checked]="beginner">
@@ -122,7 +123,7 @@
         </div>
 
         <div class="form-group">
-          <label for="birthdayEdit">Birthday</label>
+          <label for="birthdayEdit">Birthday*</label>
           <input ngModel="{{birthday}}" type="date" name="birthday" class="form-control" formControlName="birthday" id="birthdayEdit"
                  aria-describedby="birthdayHelp">
           <div *ngIf="submitted && !!editForm.controls.birthday.errors" class="error">
@@ -133,7 +134,7 @@
         </div>
 
         <div class="form-group">
-          <label for="heightEdit">Height in cm</label>
+          <label for="heightEdit">Height in cm*</label>
           <input ngModel="{{height}}" knifeOnlyNumbers type="text" maxlength="3" class="form-control" formControlName="height" id="heightEdit"
                  aria-describedby="heightHelp">
           <div *ngIf="submitted && !!editForm.controls.height.errors" class="error">
@@ -144,7 +145,7 @@
         </div>
 
         <div class="form-group">
-          <label for="weightEdit">Weight in kg</label>
+          <label for="weightEdit">Weight in kg*</label>
           <input ngModel="{{weight}}" knifeOnlyNumbers type="text" maxlength="3" name="weight" formControlName="weight" class="form-control" id="weightEdit"
                  aria-describedby="weightHelp">
           <div *ngIf="submitted && !!editForm.controls.weight.errors" class="error">
@@ -153,12 +154,10 @@
             </small>
           </div>
         </div>
-
-
         <button type="button" (click)="editUser()" class="btn btn-success float-right">Submit</button>
         <a [routerLink]="['/dude-profile']" class="btn btn-link">Cancel</a>
       </form>
-
+      <p><small>Fields marked with * are mandatory!</small></p>
     </div>
   </div>
 </div>
