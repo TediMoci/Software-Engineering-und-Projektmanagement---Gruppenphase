@@ -25,7 +25,7 @@
             <h1>Edit Course</h1>
 
             <div class="form-group">
-              <label for="editCourseName">Name</label>
+              <label for="editCourseName">Name*</label>
               <input ngModel="{{courseName}}" type="text" name="name" maxlength="50" class="form-control" id="editCourseName" formControlName="name"
                      aria-describedby="editCourseNameHelp">
               <div *ngIf="submitted && !!editCourseForm.controls.name.errors" class="error">
@@ -36,9 +36,10 @@
             </div>
 
             <div class="form-group">
-              <label for="editCourseDescription">Description</label>
-              <input ngModel="{{description}}" type="text" name="description" class="form-control" id="editCourseDescription" formControlName="description"
-                     aria-describedby="editCourseDescriptionHelp">
+              <label for="editCourseDescription">Description*</label>
+              <textarea ngModel="{{description}}" type="text" name="description" class="form-control" id="editCourseDescription" formControlName="description"
+                     aria-describedby="editCourseDescriptionHelp" maxlength="3000"></textarea>
+              <span>{{3000 - editCourseForm.controls.description.value.length}} left</span>
               <div *ngIf="submitted && !!editCourseForm.controls.description.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!editCourseForm.controls.description.errors.required">Description is
                   required!
@@ -49,6 +50,7 @@
           <button type="button" (click)="editCourse()" class="btn btn-success float-right">Edit</button>
           <a [routerLink]="['/create-for-FP']" class="btn btn-link">Cancel</a>
         </div>
+        <p><small>Fields marked with * are mandatory!</small></p>
       </div>
     </div>
   </div>

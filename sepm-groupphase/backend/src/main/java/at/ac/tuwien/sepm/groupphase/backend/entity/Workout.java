@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutKey;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 
 import javax.persistence.*;
@@ -39,6 +40,9 @@ public class Workout {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workout")
     private List<WorkoutExercise> exercises;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "workout")
+    private List<TrainingScheduleWorkout> trainingSchedules;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dude_id")
@@ -116,6 +120,14 @@ public class Workout {
         this.exercises = exercises;
     }
 
+    public List<TrainingScheduleWorkout> getTrainingSchedules() {
+        return trainingSchedules;
+    }
+
+    public void setTrainingSchedules(List<TrainingScheduleWorkout> trainingSchedules) {
+        this.trainingSchedules = trainingSchedules;
+    }
+
     public Dude getCreator() {
         return creator;
     }
@@ -140,6 +152,7 @@ public class Workout {
             ", rating=" + rating +
             ", isHistory=" + isHistory +
             ", exercises=" + exercises +
+            ", trainingSchedules=" + trainingSchedules +
             ", creator=" + creator +
             '}';
     }
@@ -161,6 +174,8 @@ public class Workout {
         if (rating != null ? !rating.equals(workout.rating) : workout.rating != null) return false;
         if (isHistory != null ? !isHistory.equals(workout.isHistory) : workout.isHistory != null) return false;
         if (exercises != null ? !exercises.equals(workout.exercises) : workout.exercises != null) return false;
+        if (trainingSchedules != null ? !trainingSchedules.equals(workout.trainingSchedules) : workout.trainingSchedules != null)
+            return false;
         return creator != null ? creator.equals(workout.creator) : workout.creator == null;
 
     }
@@ -176,6 +191,7 @@ public class Workout {
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
         result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
+        result = 31 * result + (trainingSchedules != null ? trainingSchedules.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
     }
@@ -190,6 +206,7 @@ public class Workout {
         private Double rating;
         private Boolean isHistory;
         private List<WorkoutExercise> exercises;
+        private List<TrainingScheduleWorkout> trainingSchedules;
         private Dude creator;
 
         public WorkoutBuilder() {
@@ -240,6 +257,11 @@ public class Workout {
             return this;
         }
 
+        public WorkoutBuilder trainingSchedules(List<TrainingScheduleWorkout> trainingSchedules) {
+            this.trainingSchedules = trainingSchedules;
+            return this;
+        }
+
         public WorkoutBuilder creator(Dude creator) {
             this.creator = creator;
             return this;
@@ -256,6 +278,7 @@ public class Workout {
             workout.setRating(rating);
             workout.setHistory(isHistory);
             workout.setExercises(exercises);
+            workout.setTrainingSchedules(trainingSchedules);
             workout.setCreator(creator);
             return workout;
         }
