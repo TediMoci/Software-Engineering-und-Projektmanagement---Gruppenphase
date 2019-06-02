@@ -32,10 +32,6 @@ public class ActiveTrainingSchedule {
     @Column(nullable = false, name = "interval_repetitions")
     private Integer intervalRepetitions;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "exercise_done")
-    private Map<ActiveTrainingScheduleDoneKey, Boolean> done;
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @MapsId("dude_id")
     @JoinColumn(name = "dude_id", referencedColumnName = "id")
@@ -89,14 +85,6 @@ public class ActiveTrainingSchedule {
         this.intervalRepetitions = intervalRepetitions;
     }
 
-    public Map<ActiveTrainingScheduleDoneKey, Boolean> getDone() {
-        return done;
-    }
-
-    public void setDone(Map<ActiveTrainingScheduleDoneKey, Boolean> done) {
-        this.done = done;
-    }
-
     public Dude getDude() {
         return dude;
     }
@@ -125,7 +113,6 @@ public class ActiveTrainingSchedule {
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", startDate=" + startDate +
             ", intervalRepetitions=" + intervalRepetitions +
-            ", done=" + done +
             ", dude=" + dude +
             ", trainingSchedule=" + trainingSchedule +
             '}';
@@ -146,7 +133,6 @@ public class ActiveTrainingSchedule {
         if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
         if (intervalRepetitions != null ? !intervalRepetitions.equals(that.intervalRepetitions) : that.intervalRepetitions != null)
             return false;
-        if (done != null ? !done.equals(that.done) : that.done != null) return false;
         if (dude != null ? !dude.equals(that.dude) : that.dude != null) return false;
         return trainingSchedule != null ? trainingSchedule.equals(that.trainingSchedule) : that.trainingSchedule == null;
 
@@ -159,7 +145,6 @@ public class ActiveTrainingSchedule {
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (intervalRepetitions != null ? intervalRepetitions.hashCode() : 0);
-        result = 31 * result + (done != null ? done.hashCode() : 0);
         result = 31 * result + (dude != null ? dude.hashCode() : 0);
         result = 31 * result + (trainingSchedule != null ? trainingSchedule.hashCode() : 0);
         return result;
@@ -171,7 +156,6 @@ public class ActiveTrainingSchedule {
         private Integer trainingScheduleVersion;
         private LocalDate startDate;
         private Integer intervalRepetitions;
-        private Map<ActiveTrainingScheduleDoneKey, Boolean> done;
         private Dude dude;
         private TrainingSchedule trainingSchedule;
 
@@ -203,11 +187,6 @@ public class ActiveTrainingSchedule {
             return this;
         }
 
-        public ActiveTrainingScheduleBuilder done(Map<ActiveTrainingScheduleDoneKey, Boolean> done) {
-            this.done = done;
-            return this;
-        }
-
         public ActiveTrainingScheduleBuilder dude(Dude dude) {
             this.dude = dude;
             return this;
@@ -225,7 +204,6 @@ public class ActiveTrainingSchedule {
             activeTrainingScheduleBuilder.trainingScheduleVersion(trainingScheduleVersion);
             activeTrainingScheduleBuilder.startDate(startDate);
             activeTrainingScheduleBuilder.intervalRepetitions(intervalRepetitions);
-            activeTrainingScheduleBuilder.done(done);
             activeTrainingScheduleBuilder.dude(dude);
             activeTrainingScheduleBuilder.trainingSchedule(trainingSchedule);
             return activeTrainingScheduleBuilder;
