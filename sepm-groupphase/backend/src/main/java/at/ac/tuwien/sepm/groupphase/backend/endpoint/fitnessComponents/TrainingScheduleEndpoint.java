@@ -46,4 +46,28 @@ public class TrainingScheduleEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete a Training Schedule", authorizations = {@Authorization(value = "apiKey")})
+    public void delete(@PathVariable("id") long id) {
+        LOGGER.info("Deleting Training Schedule with id " + id);
+        try {
+            iTrainingScheduleService.delete(id);
+        } catch (ServiceException e){
+            LOGGER.error("Could not delete Training Schedule with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Training Schedule", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleDto update(@PathVariable("id") long id, @RequestBody TrainingScheduleDto newTrainingSchedule) {
+        LOGGER.info("Updating workout with id: " + id);
+        try {
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.update(id, trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(newTrainingSchedule)));
+        } catch (ServiceException e){
+            LOGGER.error("Could not update Training Schedule with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 }

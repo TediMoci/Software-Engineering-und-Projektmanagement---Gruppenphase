@@ -3,19 +3,18 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleWorkoutRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
+import at.ac.tuwien.sepm.groupphase.backend.validators.actors.TrainingScheduleWorkoutValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TrainingScheduleService implements ITrainingScheduleService {
@@ -23,16 +22,18 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private final ITrainingScheduleRepository iTrainingScheduleRepository;
     private final IWorkoutRepository iWorkoutRepository;
     private final ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository;
+    private final TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleService.class);
 
     private static Map<Integer, List<Workout>> finalList = new HashMap<Integer, List<Workout>>();
     private static Integer listPosition = 0;
 
 
-    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, IWorkoutRepository iWorkoutRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository) {
+    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, IWorkoutRepository iWorkoutRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iWorkoutRepository = iWorkoutRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
+        this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
     }
 
     @Override
@@ -49,13 +50,88 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
-        saveTrainingScheduleWorkout(days, finalList, savedTrainingSchedule);
+        saveRandomTrainingScheduleWorkout(days, finalList, savedTrainingSchedule);
         finalList.clear();
         listPosition = 0;
         return savedTrainingSchedule;
     }
 
-    private void saveTrainingScheduleWorkout(int days,  Map<Integer, List<Workout>> list, TrainingSchedule savedTrainingSchedule) throws ServiceException {
+    @Override
+    public TrainingSchedule findById(long id) throws ServiceException {
+        LOGGER.info("Entering findById with id: " + id);
+        try {
+            TrainingSchedule trainingSchedule = iTrainingScheduleRepository.findById(id);
+            if (trainingSchedule == null) throw new ServiceException("Could not find Training Schedule with id: " + id);
+            return trainingSchedule;
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void delete(long id) throws ServiceException {
+        LOGGER.info("Deleting training schedule with id: " + id);
+        try {
+            TrainingSchedule trainingSchedule = iTrainingScheduleRepository.findById(id);
+            if (trainingSchedule == null) throw new ServiceException("Could not find Training Schedule with id: " + id);
+            iTrainingScheduleRepository.delete(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException {
+        LOGGER.info("Updating training schedule with id: " + id);
+        try {
+            TrainingSchedule oldTraining = iTrainingScheduleRepository.findById(id);
+            if (oldTraining == null) throw new ServiceException("Could not find training schedule with id: " + id);
+            newTraining.setId(id);
+            newTraining.setVersion(1+oldTraining.getVersion());
+            iTrainingScheduleRepository.delete(id);
+
+            List<TrainingScheduleWorkout> trainingWorkouts = newTraining.getWorkouts();
+            newTraining.setWorkouts(null);
+            validateTrainingScheduleWorkouts(trainingWorkouts);
+
+            Long dbId = iTrainingScheduleRepository.save(newTraining).getId();
+            iTrainingScheduleRepository.updateNew(newTraining.getId(), dbId);
+            saveTrainingScheduleWorkouts(trainingWorkouts, newTraining);
+
+            return newTraining;
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    private void validateTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts) throws ServiceException {
+        for (TrainingScheduleWorkout trainingScheduleWorkout : trainingScheduleWorkouts) {
+            try {
+                trainingScheduleWorkoutValidator.validateTrainingScheduleWorkout(trainingScheduleWorkout);
+                if (iWorkoutRepository.findByIdAndVersion(trainingScheduleWorkout.getWorkoutId(), trainingScheduleWorkout.getWorkoutVersion()).isEmpty()) {
+                    throw new NoSuchElementException();
+                }
+            } catch (NoSuchElementException e) {
+                throw new ServiceException("Workout with id: " + trainingScheduleWorkout.getWorkout() + " and version: " + trainingScheduleWorkout.getWorkoutVersion() + " does not exist");
+            } catch (ValidationException e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
+    }
+
+    private void saveTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingWorkouts, TrainingSchedule savedTraining) throws ServiceException {
+        for (int i = 0; i < trainingWorkouts.size(); i++) {
+            trainingWorkouts.get(i).setWorkoutId(savedTraining.getId());
+            trainingWorkouts.get(i).setWorkoutVersion(savedTraining.getVersion());
+            try {
+                iTrainingScheduleWorkoutRepository.save(trainingWorkouts.get(i));
+            } catch (DataAccessException e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
+    }
+
+    private void saveRandomTrainingScheduleWorkout(int days,  Map<Integer, List<Workout>> list, TrainingSchedule savedTrainingSchedule) throws ServiceException {
         if (list.isEmpty()) throw new ServiceException("List is empty");
 
         for (int a=1; a<=days; a++) {
@@ -77,6 +153,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             }
         }
     }
+
     private static void sum_up(List<Workout> numbers, double minTarget, double maxTarget, int days) throws ServiceException {
         if (days<1 || days>7){
             throw new ServiceException("Please give a valid number of days per week");

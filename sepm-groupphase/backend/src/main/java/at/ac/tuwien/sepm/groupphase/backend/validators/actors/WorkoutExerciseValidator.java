@@ -21,6 +21,5 @@ public class WorkoutExerciseValidator {
         if (workoutExercise.getSets() < 1) {
             throw new ValidationException(invalid_sets);
         }
-
     }
 }
