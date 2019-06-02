@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="12" failures="2" name="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" time="0.484" errors="1" skipped="0">
+  <properties>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="java.vm.version" value="11.0.2+9"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-11.0.2\bin"/>
+    <property name="maven.multiModuleProjectDirectory" value="C:\Studium\SEPM-PR\Gruppenphase\ss19_sepm_qse_13\sepm-groupphase\backend"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="path.separator" value=";"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="AT"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="C:\Studium\SEPM-PR\Gruppenphase\ss19_sepm_qse_13\sepm-groupphase\backend"/>
+    <property name="java.vm.compressedOopsMode" value="32-bit"/>
+    <property name="java.runtime.version" value="11.0.2+9"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\aronb\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="classworlds.conf" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1\plugins\maven\lib\maven3\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-11.0.2\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\PuTTY\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\Java\jdk-11.0.2\bin;C:\Program Files\nodejs\;C:\Program Files\MiKTeX 2.9\miktex\bin\x64\;C:\Users\aronb\AppData\Local\Microsoft\WindowsApps;C:\Users\aronb\AppData\Roaming\npm;."/>
+    <property name="jdk.debug" value="release"/>
+    <property name="java.class.version" value="55.0"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.0"/>
+    <property name="user.home" value="C:\Users\aronb"/>
+    <property name="user.timezone" value="Europe/Berlin"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="11"/>
+    <property name="user.name" value="aronb"/>
+    <property name="java.class.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1\plugins\maven\lib\maven3\boot\plexus-classworlds-2.5.2.jar"/>
+    <property name="java.vm.specification.version" value="11"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version2019.1 test"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-11.0.2"/>
+    <property name="user.language" value="de"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="11.0.2"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1\plugins\maven\lib\maven3"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.version.date" value="2019-01-15"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.java.com/bugreport/"/>
+    <property name="idea.version2019.1" value="true"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="java.vendor.version" value="18.9"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestSaveDude_invalidName" time="0.125">
+    <failure message="Expected exception: at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException" type="java.lang.AssertionError">java.lang.AssertionError: Expected exception: at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException
+	at org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:75)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:86)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:84)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:251)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+</failure>
+    <system-out>2019-05-25 12:22:01.540  INFO 4724 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest], using SpringBootContextLoader
+2019-05-25 12:22:01.540  INFO 4724 --- [           main] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2019-05-25 12:22:01.540  INFO 4724 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest]: DudeServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2019-05-25 12:22:01.587  INFO 4724 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration at.ac.tuwien.sepm.groupphase.backend.BackendApplication for test class at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest
+2019-05-25 12:22:01.587  INFO 4724 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+2019-05-25 12:22:01.587  INFO 4724 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@2d0a7a6, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@108a77d6, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@341b0573, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@4a6a4f20, org.springframework.test.context.support.DirtiesContextTestExecutionListener@4d002c5c, org.springframework.test.context.transaction.TransactionalTestExecutionListener@e77d6ed, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@62ab7acd, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@7a203af7, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@360e9b23, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@67ee3b1, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@3fba9ca1, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@4436ee23]
+2019-05-25 12:22:01.619 ERROR 4724 --- [           main] o.s.b.c.l.LoggingApplicationListener     : Cannot set level &apos;ALL&apos; for &apos;at.ac.tuwien.sepm.groupphase.backend&apos;
+
+  .   ____          _            __ _ _
+ /\\ / ___&apos;_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | &apos;_ | &apos;_| | &apos;_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  &apos;  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.1.2.RELEASE)
+
+2019-05-25 12:22:01.619  INFO 4724 --- [           main] a.a.t.s.g.b.u.service.DudeServiceTest    : Starting DudeServiceTest on DESKTOP-OSQNSGL with PID 4724 (started by aronb in C:\Studium\SEPM-PR\Gruppenphase\ss19_sepm_qse_13\sepm-groupphase\backend)
+2019-05-25 12:22:01.619  INFO 4724 --- [           main] a.a.t.s.g.b.u.service.DudeServiceTest    : The following profiles are active: integration-test
+2019-05-25 12:22:02.587  INFO 4724 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-05-25 12:22:02.665  INFO 4724 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 78ms. Found 8 repository interfaces.
+2019-05-25 12:22:02.743  INFO 4724 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean &apos;org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration&apos; of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$4b222b6a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-05-25 12:22:02.759  INFO 4724 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean &apos;org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration&apos; of type [org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration$$EnhancerBySpringCGLIB$$e3cff3a4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-05-25 12:22:02.759  INFO 4724 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean &apos;objectPostProcessor&apos; of type [org.springframework.security.config.annotation.configuration.AutowireBeanFactoryObjectPostProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-05-25 12:22:02.759  INFO 4724 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean &apos;org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@3155bf8c&apos; of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-05-25 12:22:02.759  INFO 4724 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean &apos;org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration&apos; of type [org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration$$EnhancerBySpringCGLIB$$8a49656] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-05-25 12:22:02.759  INFO 4724 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean &apos;methodSecurityMetadataSource&apos; of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-05-25 12:22:02.853  INFO 4724 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2019-05-25 12:22:02.853  INFO 4724 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2019-05-25 12:22:02.899  INFO 4724 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2019-05-25 12:22:02.931  INFO 4724 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2019-05-25 12:22:03.165  INFO 4724 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit &apos;default&apos;
+2019-05-25 12:22:03.492  INFO 4724 --- [           main] o.h.h.i.QueryTranslatorFactoryInitiator  : HHH000397: Using ASTQueryTranslatorFactory
+2019-05-25 12:22:03.820  WARN 4724 --- [           main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-05-25 12:22:04.070  INFO 4724 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path &apos;/actuator&apos;
+2019-05-25 12:22:04.241  INFO 4724 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@73d9f2b2, org.springframework.security.web.context.SecurityContextPersistenceFilter@6c5a2034, org.springframework.security.web.header.HeaderWriterFilter@50912319, org.springframework.security.web.authentication.logout.LogoutFilter@7e2c3f31, at.ac.tuwien.sepm.groupphase.backend.security.HeaderTokenAuthenticationFilter@335c77fe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5346038, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5c64026c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@272f0840, org.springframework.security.web.session.SessionManagementFilter@73ca241d, org.springframework.security.web.access.ExceptionTranslationFilter@601122cd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@c792044]
+2019-05-25 12:22:04.288  INFO 4724 --- [           main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity&lt;springfox.documentation.spring.web.json.Json&gt; springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2019-05-25 12:22:04.429  INFO 4724 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService &apos;applicationTaskExecutor&apos;
+2019-05-25 12:22:04.757  INFO 4724 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2019-05-25 12:22:04.757  INFO 4724 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2019-05-25 12:22:04.773  INFO 4724 --- [           main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2019-05-25 12:22:04.835  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_1
+2019-05-25 12:22:04.851  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_2
+2019-05-25 12:22:04.851  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByFilterUsingGET_1
+2019-05-25 12:22:04.866  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByNameUsingGET_1
+2019-05-25 12:22:04.866  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: saveUsingPOST_1
+2019-05-25 12:22:04.866  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_3
+2019-05-25 12:22:04.866  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_1
+2019-05-25 12:22:04.866  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByNameUsingGET_2
+2019-05-25 12:22:04.898  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_4
+2019-05-25 12:22:04.898  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_5
+2019-05-25 12:22:04.913  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByFilterUsingGET_2
+2019-05-25 12:22:04.913  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdAndVersionUsingGET_1
+2019-05-25 12:22:04.913  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByNameUsingGET_3
+2019-05-25 12:22:04.913  INFO 4724 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: saveUsingPOST_2
+2019-05-25 12:22:04.929  INFO 4724 --- [           main] a.a.t.s.g.b.u.service.DudeServiceTest    : Started DudeServiceTest in 3.326 seconds (JVM running for 28.199)
+Hibernate: select fitnesspro0_.id as id1_6_, fitnesspro0_.address as address2_6_, fitnesspro0_.description as descript3_6_, fitnesspro0_.email as email4_6_, fitnesspro0_.name as name5_6_, fitnesspro0_.password as password6_6_, fitnesspro0_.phone_number as phone_nu7_6_, fitnesspro0_.website as website8_6_ from fitness_provider fitnesspro0_ where fitnesspro0_.name=?
+</system-out>
+  </testcase>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestFindByName" time="0"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestFindAll_afterUpdate_sameSize" time="0.093"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestSaveDude" time="0.078"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestUpdate_newUserInvalid" time="0.016"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestUpdate" time="0.078"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestSaveDude_invalidHeight" time="0.078">
+    <failure message="Expected exception: at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException" type="java.lang.AssertionError">java.lang.AssertionError: Expected exception: at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException
+	at org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:75)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:86)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:84)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:251)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+</failure>
+    <system-out>Hibernate: select fitnesspro0_.id as id1_6_, fitnesspro0_.address as address2_6_, fitnesspro0_.description as descript3_6_, fitnesspro0_.email as email4_6_, fitnesspro0_.name as name5_6_, fitnesspro0_.password as password6_6_, fitnesspro0_.phone_number as phone_nu7_6_, fitnesspro0_.website as website8_6_ from fitness_provider fitnesspro0_ where fitnesspro0_.name=?
+</system-out>
+  </testcase>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestFindByName_ifNameNotFound_thenNull" time="0.016">
+    <error message="Could not find dude with name: name not in database" type="at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException">at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException: Could not find dude with name: name not in database
+	at at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors.DudeService.findByName(DudeService.java:87)
+	at at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest.TestFindByName_ifNameNotFound_thenNull(DudeServiceTest.java:113)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestExecutionCallbacks.evaluate(RunBeforeTestExecutionCallbacks.java:74)
+	at org.springframework.test.context.junit4.statements.RunAfterTestExecutionCallbacks.evaluate(RunAfterTestExecutionCallbacks.java:84)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:75)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:86)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:84)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:251)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+</error>
+  </testcase>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestAge" time="0"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestBMI" time="0"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestFindAll" time="0"/>
+  <testcase classname="at.ac.tuwien.sepm.groupphase.backend.unit.service.DudeServiceTest" name="TestUpdate_oldUserNotFound" time="0"/>
+</testsuite>
