@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -51,8 +52,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     private void saveTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts, TrainingSchedule savedTrainingSchedule) throws ServiceException {
         for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
-            trainingScheduleWorkouts.get(i).setWorkoutId(savedTrainingSchedule.getId());
-            trainingScheduleWorkouts.get(i).setWorkoutVersion(savedTrainingSchedule.getVersion());
+            trainingScheduleWorkouts.get(i).setTrainingScheduleId(savedTrainingSchedule.getId());
+            trainingScheduleWorkouts.get(i).setTrainingScheduleVersion(savedTrainingSchedule.getVersion());
             try {
                 iTrainingScheduleWorkoutRepository.save(trainingScheduleWorkouts.get(i));
             } catch (DataAccessException e) {
