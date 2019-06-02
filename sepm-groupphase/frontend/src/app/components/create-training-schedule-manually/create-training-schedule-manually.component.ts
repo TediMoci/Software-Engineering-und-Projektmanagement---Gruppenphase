@@ -7,6 +7,10 @@ import {FindService} from '../../services/find.service';
 import {WorkoutService} from '../../services/workout.service';
 import {WorkoutFilter} from '../../dtos/workout-filter';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CreateTrainingSchedule} from '../../dtos/create-trainingSchedule';
+import {CreateTrainingScheduleService} from '../../services/create-training-schedule.service';
+import {TrainingScheduleWorkoutDtoIn} from '../../dtos/trainingScheduleWorkoutDtoIn';
+import {TrainingSchedule} from '../../dtos/trainingSchedule';
 
 @Component({
   selector: 'app-create-training-schedule-manually',
@@ -19,6 +23,9 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
   userName: string;
   dude: Dude;
   error: any;
+
+  trainingSchedule: CreateTrainingSchedule;
+  trainingScheduleWorkouts: TrainingScheduleWorkoutDtoIn[] = [];
 
   submitted: boolean = false;
   tsForm: FormGroup;
@@ -58,7 +65,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     '7 Days'
   ];
 
-  constructor(private router: Router, private findService: FindService, private formBuilder: FormBuilder, private workoutService: WorkoutService) {
+  constructor(private router: Router, private findService: FindService, private formBuilder: FormBuilder, private workoutService: WorkoutService, private createTrainingScheduleService: CreateTrainingScheduleService) {
   }
 
   ngOnInit() {
@@ -159,13 +166,13 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
         break;
     }
 
-    if (this.filterWorkoutCaloriesMin == '') {
+    if (this.filterWorkoutCaloriesMin === '') {
       this.filterWorkoutCaloriesMinActual = null;
     } else {
       this.filterWorkoutCaloriesMinActual = this.filterWorkoutCaloriesMin;
     }
 
-    if (this.filterWorkoutCaloriesMax == '') {
+    if (this.filterWorkoutCaloriesMax === '') {
       this.filterWorkoutCaloriesMaxActual = null;
     } else {
       this.filterWorkoutCaloriesMaxActual = this.filterWorkoutCaloriesMax;
@@ -236,20 +243,289 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
 
     switch (this.interval) {
       case 1:
+        if (this.d1 !== null) {
+          for (let counter = 0; counter < this.d1.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d1[counter].id,
+              this.d1[counter].version,
+              1
+            ));
+          }
+        }
         break;
       case 2:
+        if (this.d1 !== null) {
+          for (let counter = 0; counter < this.d1.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d1[counter].id,
+              this.d1[counter].version,
+              1
+            ));
+          }
+        }
+        if (this.d2 !== null) {
+          for (let counter = 0; counter < this.d2.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d2[counter].id,
+              this.d2[counter].version,
+              2
+            ));
+          }
+        }
         break;
       case 3:
+        if (this.d1 !== null) {
+          for (let counter = 0; counter < this.d1.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d1[counter].id,
+              this.d1[counter].version,
+              1
+            ));
+          }
+        }
+        if (this.d2 !== null) {
+          for (let counter = 0; counter < this.d2.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d2[counter].id,
+              this.d2[counter].version,
+              2
+            ));
+          }
+        }
+        if (this.d3 !== null) {
+          for (let counter = 0; counter < this.d3.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d3[counter].id,
+              this.d3[counter].version,
+              3
+            ));
+          }
+        }
         break;
       case 4:
+        if (this.d1 !== null) {
+          for (let counter = 0; counter < this.d1.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d1[counter].id,
+              this.d1[counter].version,
+              1
+            ));
+          }
+        }
+        if (this.d2 !== null) {
+          for (let counter = 0; counter < this.d2.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d2[counter].id,
+              this.d2[counter].version,
+              2
+            ));
+          }
+        }
+        if (this.d3 !== null) {
+          for (let counter = 0; counter < this.d3.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d3[counter].id,
+              this.d3[counter].version,
+              3
+            ));
+          }
+        }
+        if (this.d4 !== null) {
+          for (let counter = 0; counter < this.d4.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d4[counter].id,
+              this.d4[counter].version,
+              4
+            ));
+          }
+        }
         break;
       case 5:
+        if (this.d1 !== null) {
+          for (let counter = 0; counter < this.d1.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d1[counter].id,
+              this.d1[counter].version,
+              1
+            ));
+          }
+        }
+        if (this.d2 !== null) {
+          for (let counter = 0; counter < this.d2.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d2[counter].id,
+              this.d2[counter].version,
+              2
+            ));
+          }
+        }
+        if (this.d3 !== null) {
+          for (let counter = 0; counter < this.d3.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d3[counter].id,
+              this.d3[counter].version,
+              3
+            ));
+          }
+        }
+        if (this.d4 !== null) {
+          for (let counter = 0; counter < this.d4.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d4[counter].id,
+              this.d4[counter].version,
+              4
+            ));
+          }
+        }
+        if (this.d5 !== null) {
+          for (let counter = 0; counter < this.d5.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d5[counter].id,
+              this.d5[counter].version,
+              5
+            ));
+          }
+        }
         break;
       case 6:
+        if (this.d1 !== null) {
+          for (let counter = 0; counter < this.d1.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d1[counter].id,
+              this.d1[counter].version,
+              1
+            ));
+          }
+        }
+        if (this.d2 !== null) {
+          for (let counter = 0; counter < this.d2.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d2[counter].id,
+              this.d2[counter].version,
+              2
+            ));
+          }
+        }
+        if (this.d3 !== null) {
+          for (let counter = 0; counter < this.d3.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d3[counter].id,
+              this.d3[counter].version,
+              3
+            ));
+          }
+        }
+        if (this.d4 !== null) {
+          for (let counter = 0; counter < this.d4.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d4[counter].id,
+              this.d4[counter].version,
+              4
+            ));
+          }
+        }
+        if (this.d5 !== null) {
+          for (let counter = 0; counter < this.d5.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d5[counter].id,
+              this.d5[counter].version,
+              5
+            ));
+          }
+        }
+        if (this.d6 !== null) {
+          for (let counter = 0; counter < this.d6.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d6[counter].id,
+              this.d6[counter].version,
+              6
+            ));
+          }
+        }
         break;
       case 7:
+        if (this.d1 !== null) {
+          for (let counter = 0; counter < this.d1.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d1[counter].id,
+              this.d1[counter].version,
+              1
+            ));
+          }
+        }
+        if (this.d2 !== null) {
+          for (let counter = 0; counter < this.d2.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d2[counter].id,
+              this.d2[counter].version,
+              2
+            ));
+          }
+        }
+        if (this.d3 !== null) {
+          for (let counter = 0; counter < this.d3.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d3[counter].id,
+              this.d3[counter].version,
+              3
+            ));
+          }
+        }
+        if (this.d4 !== null) {
+          for (let counter = 0; counter < this.d4.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d4[counter].id,
+              this.d4[counter].version,
+              4
+            ));
+          }
+        }
+        if (this.d5 !== null) {
+          for (let counter = 0; counter < this.d5.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d5[counter].id,
+              this.d5[counter].version,
+              5
+            ));
+          }
+        }
+        if (this.d6 !== null) {
+          for (let counter = 0; counter < this.d6.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d6[counter].id,
+              this.d6[counter].version,
+              6
+            ));
+          }
+        }
+        if (this.d7 !== null) {
+          for (let counter = 0; counter < this.d7.length; counter++) {
+            this.trainingScheduleWorkouts.push(new TrainingScheduleWorkoutDtoIn(
+              this.d7[counter].id,
+              this.d7[counter].version,
+              7
+            ));
+          }
+        }
         break;
     }
+
+    this.trainingSchedule = new CreateTrainingSchedule(
+      this.tsForm.controls.tsName.value,
+      this.tsForm.controls.tsDescription.value,
+      this.tsForm.controls.tsDifficulty.value,
+      this.trainingScheduleWorkouts,
+      this.dude.id
+    );
+    this.createTrainingScheduleService.addTrainingSchedule(this.trainingSchedule).subscribe(
+      () => {
+        console.log(this.trainingSchedule);
+        this.router.navigate(['create']);
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
 
   vanishError() {
