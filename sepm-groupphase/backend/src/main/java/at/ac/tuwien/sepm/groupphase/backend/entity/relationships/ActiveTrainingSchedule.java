@@ -2,13 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.entity.relationships;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
-import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleDoneKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Entity
 @Table(name = "active_training_schedule")
@@ -33,9 +31,8 @@ public class ActiveTrainingSchedule {
     @Column(nullable = false, name = "interval_repetitions")
     private Integer intervalRepetitions;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "exercise_done")
-    private Map<ActiveTrainingScheduleDoneKey, Boolean> done = new HashMap<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "activeTrainingSchedule")
+    private List<ExerciseDone> done;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @MapsId("dude_id")
@@ -90,11 +87,11 @@ public class ActiveTrainingSchedule {
         this.intervalRepetitions = intervalRepetitions;
     }
 
-    public Map<ActiveTrainingScheduleDoneKey, Boolean> getDone() {
+    public List<ExerciseDone> getDone() {
         return done;
     }
 
-    public void setDone(Map<ActiveTrainingScheduleDoneKey, Boolean> done) {
+    public void setDone(List<ExerciseDone> done) {
         this.done = done;
     }
 
@@ -172,7 +169,7 @@ public class ActiveTrainingSchedule {
         private Integer trainingScheduleVersion;
         private LocalDate startDate;
         private Integer intervalRepetitions;
-        private Map<ActiveTrainingScheduleDoneKey, Boolean> done;
+        private List<ExerciseDone> done;
         private Dude dude;
         private TrainingSchedule trainingSchedule;
 
@@ -204,7 +201,7 @@ public class ActiveTrainingSchedule {
             return this;
         }
 
-        public ActiveTrainingScheduleBuilder done(Map<ActiveTrainingScheduleDoneKey, Boolean> done) {
+        public ActiveTrainingScheduleBuilder done(List<ExerciseDone> done) {
             this.done = done;
             return this;
         }
