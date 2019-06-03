@@ -4,7 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.TrainingSchedul
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+//
 public interface ITrainingScheduleWorkoutRepository extends JpaRepository<TrainingScheduleWorkout, TrainingScheduleWorkoutKey> {
     /**
      * @param trainingScheduleWorkout to be saved in the database
