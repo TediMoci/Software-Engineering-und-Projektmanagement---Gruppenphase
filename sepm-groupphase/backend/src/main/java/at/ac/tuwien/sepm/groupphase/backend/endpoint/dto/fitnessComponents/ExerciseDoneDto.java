@@ -3,28 +3,37 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
+
 @ApiModel(value = "ExerciseDoneDto", description = "A dto for exercise-done entries in active training schedule via rest")
 public class ExerciseDoneDto {
 
     @ApiModelProperty(required = true, name = "Id of Dude")
+    @NotNull(message = "dudeId must be given")
     private Long dudeId;
 
     @ApiModelProperty(required = true, name = "Id of Exercise")
+    @NotNull(message = "exerciseId must be given")
     private Long exerciseId;
 
     @ApiModelProperty(required = true, name = "Version of Exercise")
+    @NotNull(message = "exerciseVersion must be given")
     private Integer exerciseVersion;
 
     @ApiModelProperty(required = true, name = "Id of Workout")
+    @NotNull(message = "workoutId must be given")
     private Long workoutId;
 
     @ApiModelProperty(required = true, name = "Version of Workout")
+    @NotNull(message = "workoutVersion must be given")
     private Integer workoutVersion;
 
     @ApiModelProperty(required = true, name = "Day in TrainingSchedule")
+    @NotNull(message = "day must be given")
     private Integer day;
 
     @ApiModelProperty(required = true, name = "Exercise done or not")
+    @NotNull(message = "done must be given")
     private Boolean done;
 
     public Long getDudeId() {
