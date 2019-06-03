@@ -6,7 +6,6 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleWorkoutRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleWorkoutRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.TrainingScheduleWorkoutValidator;
@@ -22,18 +21,19 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     private final ITrainingScheduleRepository iTrainingScheduleRepository;
     private final ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository;
+    private final IWorkoutRepository iWorkoutRepository;
     private final TrainingScheduleValidator trainingScheduleValidator;
     private final TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator;
-    private final IWorkoutRepository iWorkoutRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleService.class);
     private static Map<Integer, List<Workout>> finalList = new HashMap<Integer, List<Workout>>();
     private static Integer listPosition = 0;
 
-
-    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, IWorkoutRepository iWorkoutRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, IWorkoutRepository iWorkoutRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator, TrainingScheduleValidator trainingScheduleValidator) {
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
         this.trainingScheduleValidator = trainingScheduleValidator;
+        this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
+        this.iWorkoutRepository = iWorkoutRepository;
     }
 
     @Override
@@ -147,18 +147,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             } catch (NoSuchElementException e) {
                 throw new ServiceException("Workout with id: " + trainingScheduleWorkout.getWorkout() + " and version: " + trainingScheduleWorkout.getWorkoutVersion() + " does not exist");
             } catch (ValidationException e) {
-                throw new ServiceException(e.getMessage());
-            }
-        }
-    }
-
-    private void saveTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingWorkouts, TrainingSchedule savedTraining) throws ServiceException {
-        for (int i = 0; i < trainingWorkouts.size(); i++) {
-            trainingWorkouts.get(i).setWorkoutId(savedTraining.getId());
-            trainingWorkouts.get(i).setWorkoutVersion(savedTraining.getVersion());
-            try {
-                iTrainingScheduleWorkoutRepository.save(trainingWorkouts.get(i));
-            } catch (DataAccessException e) {
                 throw new ServiceException(e.getMessage());
             }
         }
