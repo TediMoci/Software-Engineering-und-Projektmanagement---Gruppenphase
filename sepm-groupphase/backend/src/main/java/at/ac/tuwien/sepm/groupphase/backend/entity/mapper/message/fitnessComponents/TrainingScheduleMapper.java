@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDoneDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleWorkoutDtoOut;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import org.springframework.stereotype.Component;
 
@@ -74,6 +76,21 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.rating(trainingScheduleWorkout.getWorkout().getRating());
         builder.creatorName(trainingScheduleWorkout.getWorkout().getCreator().getName());
         builder.day(trainingScheduleWorkout.getDay());
+
+        return builder.build();
+    }
+
+    @Override
+    public ExerciseDone exerciseDoneDtoToExerciseDone(ExerciseDoneDto exerciseDoneDto) {
+        ExerciseDone.ExerciseDoneBuilder builder = new ExerciseDone.ExerciseDoneBuilder();
+
+        builder.dudeId(exerciseDoneDto.getDudeId());
+        builder.exerciseId(exerciseDoneDto.getExerciseId());
+        builder.exerciseVersion(exerciseDoneDto.getExerciseVersion());
+        builder.workoutId(exerciseDoneDto.getWorkoutId());
+        builder.workoutVersion(exerciseDoneDto.getWorkoutVersion());
+        builder.day(exerciseDoneDto.getDay());
+        builder.done(exerciseDoneDto.getDone());
 
         return builder.build();
     }

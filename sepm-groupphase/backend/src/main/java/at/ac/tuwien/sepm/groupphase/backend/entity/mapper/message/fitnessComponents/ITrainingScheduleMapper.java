@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDoneDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleWorkoutDtoOut;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import org.mapstruct.Mapper;
 
@@ -26,5 +28,11 @@ public interface ITrainingScheduleMapper {
      * @return TrainingScheduleWorkout-DTO-out mapped from given TrainingScheduleWorkout-entity
      */
     TrainingScheduleWorkoutDtoOut trainingScheduleWorkoutToTrainingScheduleWorkoutDtoOut(TrainingScheduleWorkout trainingScheduleWorkout);
+
+    /**
+     * @param exerciseDoneDto to be mapped to an entity
+     * @return ExerciseDoneDto-entity mapped from given ExerciseDoneDto-DTO
+     */
+    ExerciseDone exerciseDoneDtoToExerciseDone(ExerciseDoneDto exerciseDoneDto);
 
 }
