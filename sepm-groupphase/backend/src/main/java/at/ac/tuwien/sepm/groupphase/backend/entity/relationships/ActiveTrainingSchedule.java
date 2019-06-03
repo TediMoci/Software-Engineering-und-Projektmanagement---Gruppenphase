@@ -216,17 +216,17 @@ public class ActiveTrainingSchedule {
             return this;
         }
 
-        public ActiveTrainingScheduleBuilder build() {
-            ActiveTrainingScheduleBuilder activeTrainingScheduleBuilder = new ActiveTrainingScheduleBuilder();
-            activeTrainingScheduleBuilder.dudeId(dudeId);
-            activeTrainingScheduleBuilder.trainingScheduleId(trainingScheduleId);
-            activeTrainingScheduleBuilder.trainingScheduleVersion(trainingScheduleVersion);
-            activeTrainingScheduleBuilder.startDate(startDate);
-            activeTrainingScheduleBuilder.intervalRepetitions(intervalRepetitions);
-            activeTrainingScheduleBuilder.done(done);
-            activeTrainingScheduleBuilder.dude(dude);
-            activeTrainingScheduleBuilder.trainingSchedule(trainingSchedule);
-            return activeTrainingScheduleBuilder;
+        public ActiveTrainingSchedule build() {
+            ActiveTrainingSchedule activeTrainingSchedule = new ActiveTrainingSchedule();
+            activeTrainingSchedule.setDudeId(dudeId);
+            activeTrainingSchedule.setTrainingScheduleId(trainingScheduleId);
+            activeTrainingSchedule.setTrainingScheduleVersion(trainingScheduleVersion);
+            activeTrainingSchedule.setStartDate(startDate);
+            activeTrainingSchedule.setIntervalRepetitions(intervalRepetitions);
+            activeTrainingSchedule.setDone(done);
+            activeTrainingSchedule.setDude(dude);
+            activeTrainingSchedule.setTrainingSchedule(trainingSchedule);
+            return activeTrainingSchedule;
         }
     }
 }

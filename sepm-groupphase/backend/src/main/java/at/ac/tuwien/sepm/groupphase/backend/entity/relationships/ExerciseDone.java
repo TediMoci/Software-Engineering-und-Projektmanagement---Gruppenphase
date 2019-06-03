@@ -283,20 +283,20 @@ public class ExerciseDone {
             return this;
         }
 
-        public ExerciseDoneBuilder build() {
-            ExerciseDoneBuilder exerciseDoneBuilder = new ExerciseDoneBuilder();
-            exerciseDoneBuilder.dudeId(dudeId);
-            exerciseDoneBuilder.trainingScheduleId(trainingScheduleId);
-            exerciseDoneBuilder.trainingScheduleVersion(trainingScheduleVersion);
-            exerciseDoneBuilder.activeTrainingSchedule(activeTrainingSchedule);
-            exerciseDoneBuilder.exerciseId(exerciseId);
-            exerciseDoneBuilder.exerciseVersion(exerciseVersion);
-            exerciseDoneBuilder.workoutId(workoutId);
-            exerciseDoneBuilder.workoutVersion(workoutVersion);
-            exerciseDoneBuilder.workout(workout);
-            exerciseDoneBuilder.day(day);
-            exerciseDoneBuilder.done(done);
-            return exerciseDoneBuilder;
+        public ExerciseDone build() {
+            ExerciseDone exerciseDone = new ExerciseDone();
+            exerciseDone.setDudeId(dudeId);
+            exerciseDone.setTrainingScheduleId(trainingScheduleId);
+            exerciseDone.setTrainingScheduleVersion(trainingScheduleVersion);
+            exerciseDone.setActiveTrainingSchedule(activeTrainingSchedule);
+            exerciseDone.setExerciseId(exerciseId);
+            exerciseDone.setExerciseVersion(exerciseVersion);
+            exerciseDone.setWorkoutId(workoutId);
+            exerciseDone.setWorkoutVersion(workoutVersion);
+            exerciseDone.setWorkout(workout);
+            exerciseDone.setDay(day);
+            exerciseDone.setDone(done);
+            return exerciseDone;
         }
     }
 }

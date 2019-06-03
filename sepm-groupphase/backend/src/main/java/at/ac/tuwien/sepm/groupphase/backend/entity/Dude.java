@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.FinishedTrainingScheduleStats;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -79,6 +80,9 @@ public class Dude {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "dude")
     private ActiveTrainingSchedule activeTrainingSchedule;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "dude")
+    private List<FinishedTrainingScheduleStats> finishedTrainingScheduleStats;
 
     public Long getId() {
         return id;
@@ -212,6 +216,14 @@ public class Dude {
         this.activeTrainingSchedule = activeTrainingSchedule;
     }
 
+    public List<FinishedTrainingScheduleStats> getFinishedTrainingScheduleStats() {
+        return finishedTrainingScheduleStats;
+    }
+
+    public void setFinishedTrainingScheduleStats(List<FinishedTrainingScheduleStats> finishedTrainingScheduleStats) {
+        this.finishedTrainingScheduleStats = finishedTrainingScheduleStats;
+    }
+
     public static DudeBuilder builder() {
         return new DudeBuilder();
     }
@@ -236,6 +248,7 @@ public class Dude {
             ", workouts=" + workouts +
             ", trainingSchedules=" + trainingSchedules +
             ", activeTrainingSchedule=" + activeTrainingSchedule +
+            ", finishedTrainingScheduleStats=" + finishedTrainingScheduleStats +
             '}';
     }
 
@@ -265,7 +278,9 @@ public class Dude {
         if (workouts != null ? !workouts.equals(dude.workouts) : dude.workouts != null) return false;
         if (trainingSchedules != null ? !trainingSchedules.equals(dude.trainingSchedules) : dude.trainingSchedules != null)
             return false;
-        return activeTrainingSchedule != null ? activeTrainingSchedule.equals(dude.activeTrainingSchedule) : dude.activeTrainingSchedule == null;
+        if (activeTrainingSchedule != null ? !activeTrainingSchedule.equals(dude.activeTrainingSchedule) : dude.activeTrainingSchedule != null)
+            return false;
+        return finishedTrainingScheduleStats != null ? finishedTrainingScheduleStats.equals(dude.finishedTrainingScheduleStats) : dude.finishedTrainingScheduleStats == null;
 
     }
 
@@ -288,6 +303,7 @@ public class Dude {
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
         result = 31 * result + (trainingSchedules != null ? trainingSchedules.hashCode() : 0);
         result = 31 * result + (activeTrainingSchedule != null ? activeTrainingSchedule.hashCode() : 0);
+        result = 31 * result + (finishedTrainingScheduleStats != null ? finishedTrainingScheduleStats.hashCode() : 0);
         return result;
     }
 
@@ -309,6 +325,7 @@ public class Dude {
         private List<Workout> workouts;
         private List<TrainingSchedule> trainingSchedules;
         private ActiveTrainingSchedule activeTrainingSchedule;
+        private List<FinishedTrainingScheduleStats> finishedTrainingScheduleStats;
 
         public DudeBuilder() {
         }
@@ -398,6 +415,11 @@ public class Dude {
             return this;
         }
 
+        public DudeBuilder finishedTrainingScheduleStats(List<FinishedTrainingScheduleStats> finishedTrainingScheduleStats) {
+            this.finishedTrainingScheduleStats = finishedTrainingScheduleStats;
+            return this;
+        }
+
         public Dude build() {
             Dude dude = new Dude();
             dude.setId(id);
@@ -417,6 +439,7 @@ public class Dude {
             dude.setWorkouts(workouts);
             dude.setTrainingSchedules(trainingSchedules);
             dude.setActiveTrainingSchedule(activeTrainingSchedule);
+            dude.setFinishedTrainingScheduleStats(finishedTrainingScheduleStats);
             return dude;
         }
     }
