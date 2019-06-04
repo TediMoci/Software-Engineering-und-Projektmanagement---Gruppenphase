@@ -29,7 +29,7 @@
               <span class="anchor" id="formRegister"></span>
 
               <div class="form-group">
-                <label for="tsName">Name</label>
+                <label for="tsName">Name*</label>
                 <input type="text" name="tsName" maxlength="50" class="form-control" id="tsName"
                        formControlName="tsName"
                        aria-describedby="tsNameHelp" placeholder="Enter name">
@@ -41,7 +41,7 @@
               </div>
 
               <div class="form-group">
-                <span class="tsDifficulty">Difficulty</span>
+                <span class="tsDifficulty">Difficulty*</span>
                 <div class="gap_space">
                   <div class="custom-control custom-radio custom-control-inline">
                     <input id="beginner" type="radio" class="custom-control-input" value=1 name="tsDifficulty"
@@ -70,12 +70,13 @@
               </div>
 
               <div class="form-group">
-                <label for="tsDescription">Description</label>
+                <label for="tsDescription">Description*</label>
                 <textarea type="text" name="tsDescription" class="form-control" id="tsDescription"
                        formControlName="tsDescription"
                        aria-describedby="tsDescriptionHelp" placeholder="Enter description"></textarea>
+                <span>{{3000 - tsForm.controls.tsDescription.value.length}} left</span>
                 <div *ngIf="submitted && !!tsForm.controls.tsDescription.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!tsForm.controls.v.errors.required">Description is
+                  <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDescription.errors.required">Description is
                     required!
                   </small>
                 </div>
@@ -83,10 +84,11 @@
             </form>
         </div>
 
+        <mat-label>Interval*</mat-label>
         <div class="row">
           <!--start dropdown-->
           <mat-form-field>
-            <mat-label>Interval</mat-label>
+            <mat-label>{{showCurrentDays()}}</mat-label>
             <mat-select>
               <mat-option *ngFor="let days of intervalDays" [value]="days" (click)="setChosenInterval(days)">
                 {{days}}
@@ -97,13 +99,15 @@
         </div>
 
         <div class="row">
+          <div class="addWA">
           <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Add Workouts</button>
-
+          </div>
         </div>
 
-        <div class="row">
+        <div class="row-buttons">
           <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
           <button type="button" (click)="createTrainingSchedule()" class="btn btn-success float-right">Create</button>
+          <p><small>Fields marked with * are mandatory!</small></p>
         </div>
       </div>
     </div>
@@ -1709,6 +1713,7 @@
 
                   </div>
                 </div>
+              </div>
 
                 <div class="col-day">
                   <h6>Day 6</h6>
@@ -1765,7 +1770,6 @@
                   </div>
                 </div>
 
-              </div>
             </div>
 
           </div>
