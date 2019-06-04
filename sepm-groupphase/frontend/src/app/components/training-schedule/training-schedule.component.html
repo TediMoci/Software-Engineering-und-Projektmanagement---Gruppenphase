@@ -19,11 +19,11 @@
         <h1>{{tsName}}</h1>
 
         <p>Difficulty: {{trainingSchedule.difficulty}}</p>
-        <p>{{trainingSchedule.description}}</p>
+        <p>"{{trainingSchedule.description}}"</p>
         <div>
           <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="selected.value($event)">
 
-            <mat-tab  *ngFor="let element of tabs" [label]="'Day ' + [selected.value +1]">
+            <mat-tab  *ngFor="let element of tabs" [label]="element">
               <ul style="list-style-type: none;" >
                 <li  *ngFor='let element of tabContent' >
                   <mat-accordion>

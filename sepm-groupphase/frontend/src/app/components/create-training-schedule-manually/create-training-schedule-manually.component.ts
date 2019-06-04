@@ -142,6 +142,33 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
         this.interval = 7;
         break;
     }
+    this.d1 = [];
+    this.d2 = [];
+    this.d3 = [];
+    this.d4 = [];
+    this.d5 = [];
+    this.d6 = [];
+    this.d7 = [];
+    this.resetResults();
+  }
+
+  showCurrentDays(): string {
+    switch (this.interval) {
+      case 1:
+        return '1 Day';
+      case 2:
+        return '2 Days';
+      case 3:
+        return '3 Days';
+      case 4:
+        return '4 Days';
+      case 5:
+        return '5 Days';
+      case 6:
+        return '6 Days';
+      case 7:
+        return '7 Days';
+    }
   }
 
   search() {
@@ -514,6 +541,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
       this.tsForm.controls.tsName.value,
       this.tsForm.controls.tsDescription.value,
       this.tsForm.controls.tsDifficulty.value,
+      this.interval,
       this.trainingScheduleWorkouts,
       this.dude.id
     );
