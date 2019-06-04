@@ -30,6 +30,11 @@ public class TrainingScheduleDto {
     @Min(value = 1, message = "Min difficulty value is 1") @Max(value = 3, message = "Max difficulty value is 3")
     private Integer difficulty;
 
+    @ApiModelProperty(required = true, name = "Length of Interval of TrainingSchedule")
+    @NotNull(message = "intervalLength must be given")
+    @Min(value = 1, message = "Min intervalLength value is 1") @Max(value = 7, message = "Max intervalLength value is 7")
+    private Integer intervalLength;
+
     @ApiModelProperty(name = "Rating of TrainingSchedule")
     @Min(1) @Max(5)
     private Double rating = 1.0;
@@ -80,6 +85,14 @@ public class TrainingScheduleDto {
         this.difficulty = difficulty;
     }
 
+    public Integer getIntervalLength() {
+        return intervalLength;
+    }
+
+    public void setIntervalLength(Integer intervalLength) {
+        this.intervalLength = intervalLength;
+    }
+
     public Double getRating() {
         return rating;
     }
@@ -116,6 +129,7 @@ public class TrainingScheduleDto {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", difficulty=" + difficulty +
+            ", intervalLength=" + intervalLength +
             ", rating=" + rating +
             ", trainingScheduleWorkouts=" + Arrays.toString(trainingScheduleWorkouts) +
             ", creatorId=" + creatorId +
@@ -134,6 +148,8 @@ public class TrainingScheduleDto {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (difficulty != null ? !difficulty.equals(that.difficulty) : that.difficulty != null) return false;
+        if (intervalLength != null ? !intervalLength.equals(that.intervalLength) : that.intervalLength != null)
+            return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(trainingScheduleWorkouts, that.trainingScheduleWorkouts)) return false;
@@ -148,6 +164,7 @@ public class TrainingScheduleDto {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
+        result = 31 * result + (intervalLength != null ? intervalLength.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(trainingScheduleWorkouts);
         result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
@@ -160,6 +177,7 @@ public class TrainingScheduleDto {
         private String name;
         private String description;
         private Integer difficulty;
+        private Integer intervalLength;
         private Double rating;
         private TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts;
         private Long creatorId;
@@ -192,6 +210,11 @@ public class TrainingScheduleDto {
             return this;
         }
 
+        public TrainingScheduleDtoBuilder intervalLength(Integer intervalLength) {
+            this.intervalLength = intervalLength;
+            return this;
+        }
+
         public TrainingScheduleDtoBuilder rating(Double rating) {
             this.rating = rating;
             return this;
@@ -214,6 +237,7 @@ public class TrainingScheduleDto {
             trainingScheduleDto.setName(name);
             trainingScheduleDto.setDescription(description);
             trainingScheduleDto.setDifficulty(difficulty);
+            trainingScheduleDto.setIntervalLength(intervalLength);
             trainingScheduleDto.setRating(rating);
             trainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
             trainingScheduleDto.setCreatorId(creatorId);

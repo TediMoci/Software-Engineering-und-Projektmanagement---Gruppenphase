@@ -43,4 +43,10 @@ public interface ITrainingScheduleMapper {
      */
     ActiveTrainingSchedule activeTrainingScheduleDtoToActiveTrainingSchedule(ActiveTrainingScheduleDto activeTrainingScheduleDto);
 
+    /**
+     * @param activeTrainingSchedule to be mapped to a DTO
+     * @return ActiveTrainingSchedule-DTO mapped from given ActiveTrainingSchedule-entity
+     */
+    ActiveTrainingScheduleDto activeTrainingScheduleToActiveTrainingScheduleDto(ActiveTrainingSchedule activeTrainingSchedule);
+
 }

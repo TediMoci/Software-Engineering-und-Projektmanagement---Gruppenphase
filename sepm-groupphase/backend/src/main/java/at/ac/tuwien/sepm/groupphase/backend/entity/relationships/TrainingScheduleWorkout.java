@@ -38,7 +38,7 @@ public class TrainingScheduleWorkout {
     })
     private Workout workout;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @MapsId("training_schedule_id")
     @JoinColumns({
         @JoinColumn(name = "training_schedule_id", referencedColumnName = "id"),

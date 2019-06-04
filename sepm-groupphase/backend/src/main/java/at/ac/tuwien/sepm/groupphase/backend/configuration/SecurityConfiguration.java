@@ -103,6 +103,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}/exercises",
                     "/dudes/{id}/workouts",
                     "/dudes/{id}/trainingSchedules",
+                    "/dudes/{id}/activeTrainingSchedule",
                     "/{id}/{version}/exercises",
                     "/user",
                     "/fitnessProvider",
@@ -137,6 +138,7 @@ public class SecurityConfiguration {
             "/dudes/{name}",
                     "/exercise/{id}",
                     "/trainingSchedule/{id}",
+                    "/trainingSchedule/active/done",
                     "/course/{id}",
                     "/workout/{id}",
                     "/fitnessProvider/{name}").permitAll()

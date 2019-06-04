@@ -26,6 +26,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.name(trainingScheduleDto.getName());
         builder.description(trainingScheduleDto.getDescription());
         builder.difficulty(trainingScheduleDto.getDifficulty());
+        builder.intervalLength(trainingScheduleDto.getIntervalLength());
         builder.rating(trainingScheduleDto.getRating());
         builder.isHistory(false);
 
@@ -59,6 +60,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.name(trainingSchedule.getName());
         builder.description(trainingSchedule.getDescription());
         builder.difficulty(trainingSchedule.getDifficulty());
+        builder.intervalLength(trainingSchedule.getIntervalLength());
         builder.rating(trainingSchedule.getRating());
         builder.creatorId(trainingSchedule.getCreator().getId());
 
@@ -87,6 +89,8 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         ExerciseDone.ExerciseDoneBuilder builder = new ExerciseDone.ExerciseDoneBuilder();
 
         builder.dudeId(exerciseDoneDto.getDudeId());
+        builder.trainingScheduleId(exerciseDoneDto.getTrainingScheduleId());
+        builder.trainingScheduleVersion(exerciseDoneDto.getTrainingScheduleVersion());
         builder.exerciseId(exerciseDoneDto.getExerciseId());
         builder.exerciseVersion(exerciseDoneDto.getExerciseVersion());
         builder.workoutId(exerciseDoneDto.getWorkoutId());
@@ -105,6 +109,19 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.trainingScheduleId(activeTrainingScheduleDto.getTrainingScheduleId());
         builder.trainingScheduleVersion(activeTrainingScheduleDto.getTrainingScheduleVersion());
         builder.intervalRepetitions(activeTrainingScheduleDto.getIntervalRepetitions());
+
+        return builder.build();
+    }
+
+    @Override
+    public ActiveTrainingScheduleDto activeTrainingScheduleToActiveTrainingScheduleDto(ActiveTrainingSchedule activeTrainingSchedule) {
+        ActiveTrainingScheduleDto.ActiveTrainingScheduleDtoBuilder builder = new ActiveTrainingScheduleDto.ActiveTrainingScheduleDtoBuilder();
+
+        builder.dudeId(activeTrainingSchedule.getDudeId());
+        builder.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
+        builder.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
+        builder.startDate(activeTrainingSchedule.getStartDate());
+        builder.intervalRepetitions(activeTrainingSchedule.getIntervalRepetitions());
 
         return builder.build();
     }
