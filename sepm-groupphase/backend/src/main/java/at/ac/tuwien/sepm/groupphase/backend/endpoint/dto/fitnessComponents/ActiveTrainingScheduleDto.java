@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @ApiModel(value = "ActiveTrainingScheduleDto", description = "A dto for setting active training schedule via rest")
 public class ActiveTrainingScheduleDto {
@@ -20,6 +21,9 @@ public class ActiveTrainingScheduleDto {
     @ApiModelProperty(required = true, name = "Version of TrainingSchedule")
     @NotNull(message = "trainingScheduleVersion must be given")
     private Integer trainingScheduleVersion;
+
+    @ApiModelProperty(name = "StartDate of TrainingSchedule")
+    private LocalDate startDate;    // Only for output
 
     @ApiModelProperty(required = true, name = "Number of interval-repetitions")
     @NotNull(message = "intervalRepetitions must be given")
@@ -50,6 +54,14 @@ public class ActiveTrainingScheduleDto {
         this.trainingScheduleVersion = trainingScheduleVersion;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
     public Integer getIntervalRepetitions() {
         return intervalRepetitions;
     }
@@ -68,6 +80,7 @@ public class ActiveTrainingScheduleDto {
             "dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
+            ", startDate=" + startDate +
             ", intervalRepetitions=" + intervalRepetitions +
             '}';
     }
@@ -84,6 +97,7 @@ public class ActiveTrainingScheduleDto {
             return false;
         if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
             return false;
+        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
         return intervalRepetitions != null ? intervalRepetitions.equals(that.intervalRepetitions) : that.intervalRepetitions == null;
 
     }
@@ -93,6 +107,7 @@ public class ActiveTrainingScheduleDto {
         int result = dudeId != null ? dudeId.hashCode() : 0;
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
+        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (intervalRepetitions != null ? intervalRepetitions.hashCode() : 0);
         return result;
     }
@@ -101,6 +116,7 @@ public class ActiveTrainingScheduleDto {
         private Long dudeId;
         private Long trainingScheduleId;
         private Integer trainingScheduleVersion;
+        private LocalDate startDate;
         private Integer intervalRepetitions;
 
         public ActiveTrainingScheduleDtoBuilder() {
@@ -121,6 +137,11 @@ public class ActiveTrainingScheduleDto {
             return this;
         }
 
+        public ActiveTrainingScheduleDtoBuilder startDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
         public ActiveTrainingScheduleDtoBuilder intervalRepetitions(Integer intervalRepetitions) {
             this.intervalRepetitions = intervalRepetitions;
             return this;
@@ -131,6 +152,7 @@ public class ActiveTrainingScheduleDto {
             activeTrainingScheduleDto.setDudeId(dudeId);
             activeTrainingScheduleDto.setTrainingScheduleId(trainingScheduleId);
             activeTrainingScheduleDto.setTrainingScheduleVersion(trainingScheduleVersion);
+            activeTrainingScheduleDto.setStartDate(startDate);
             activeTrainingScheduleDto.setIntervalRepetitions(intervalRepetitions);
             return activeTrainingScheduleDto;
         }

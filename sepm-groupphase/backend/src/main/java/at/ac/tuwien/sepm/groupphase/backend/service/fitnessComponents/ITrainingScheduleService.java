@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 public interface ITrainingScheduleService {
@@ -8,10 +9,17 @@ public interface ITrainingScheduleService {
     /**
      *
      * @param trainingSchedule to be saved in the system
-     * @return the saved trainingSchedule
+     * @return the saved TrainingSchedule
      * @throws ServiceException if an error occurred while trying to save the TrainingSchedule in the system
      */
     TrainingSchedule save(TrainingSchedule trainingSchedule) throws ServiceException;
+
+    /**
+     * @param activeTrainingSchedule to be saved in the system
+     * @return the saved ActiveTrainingSchedule
+     * @throws ServiceException if an error occurred while trying to save the ActiveTrainingSchedule in the system
+     */
+    ActiveTrainingSchedule saveActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException;
 
     /**
      * @param days available to do workout

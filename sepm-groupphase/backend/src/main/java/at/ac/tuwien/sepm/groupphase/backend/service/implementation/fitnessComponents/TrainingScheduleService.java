@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IActiveTrainingScheduleRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleWorkoutRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutRepository;
@@ -14,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -22,18 +26,20 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private final ITrainingScheduleRepository iTrainingScheduleRepository;
     private final ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository;
     private final IWorkoutRepository iWorkoutRepository;
+    private final IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository;
     private final TrainingScheduleValidator trainingScheduleValidator;
     private final TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleService.class);
     private static Map<Integer, List<Workout>> finalList = new HashMap<Integer, List<Workout>>();
     private static Integer listPosition = 0;
 
-    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, IWorkoutRepository iWorkoutRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator, TrainingScheduleValidator trainingScheduleValidator) {
+    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
+        this.iWorkoutRepository = iWorkoutRepository;
+        this.iActiveTrainingScheduleRepository = iActiveTrainingScheduleRepository;
         this.trainingScheduleValidator = trainingScheduleValidator;
         this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
-        this.iWorkoutRepository = iWorkoutRepository;
     }
 
     @Override
@@ -55,6 +61,17 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
         saveTrainingScheduleWorkouts(trainingScheduleWorkouts, savedTrainingSchedule);
         return savedTrainingSchedule;
+    }
+
+    @Override
+    public ActiveTrainingSchedule saveActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException {
+        LOGGER.info("Entering saveActive for: " + activeTrainingSchedule);
+        activeTrainingSchedule.setStartDate(LocalDate.now());
+        try {
+            return iActiveTrainingScheduleRepository.save(activeTrainingSchedule);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
     }
 
     private void saveTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts, TrainingSchedule savedTrainingSchedule) throws ServiceException {

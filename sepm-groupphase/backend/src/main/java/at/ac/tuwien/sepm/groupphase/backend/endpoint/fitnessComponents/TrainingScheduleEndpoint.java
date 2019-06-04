@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import io.swagger.annotations.Api;
@@ -48,7 +50,7 @@ public class TrainingScheduleEndpoint {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Save a new Workout", authorizations = {@Authorization(value = "apiKey")})
+    @ApiOperation(value = "Save a new TrainingSchedule", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleDto save(@Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
@@ -60,6 +62,19 @@ public class TrainingScheduleEndpoint {
         }
     }
 
+    @RequestMapping(value = "/active", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Save a new ActiveTrainingSchedule", authorizations = {@Authorization(value = "apiKey")})
+    public ActiveTrainingScheduleDto saveActive(@Valid @RequestBody ActiveTrainingScheduleDto activeTrainingScheduleDto) {
+        LOGGER.info("Entering saveActive for: " + activeTrainingScheduleDto);
+        ActiveTrainingSchedule activeTrainingSchedule = trainingScheduleMapper.activeTrainingScheduleDtoToActiveTrainingSchedule(activeTrainingScheduleDto);
+        try {
+            return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.saveActive(activeTrainingSchedule));
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveActive for: " + activeTrainingScheduleDto);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ApiOperation(value = "Delete a Training Schedule", authorizations = {@Authorization(value = "apiKey")})

@@ -108,4 +108,17 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
 
         return builder.build();
     }
+
+    @Override
+    public ActiveTrainingScheduleDto activeTrainingScheduleToActiveTrainingScheduleDto(ActiveTrainingSchedule activeTrainingSchedule) {
+        ActiveTrainingScheduleDto.ActiveTrainingScheduleDtoBuilder builder = new ActiveTrainingScheduleDto.ActiveTrainingScheduleDtoBuilder();
+
+        builder.dudeId(activeTrainingSchedule.getDudeId());
+        builder.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
+        builder.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
+        builder.startDate(activeTrainingSchedule.getStartDate());
+        builder.intervalRepetitions(activeTrainingSchedule.getIntervalRepetitions());
+
+        return builder.build();
+    }
 }

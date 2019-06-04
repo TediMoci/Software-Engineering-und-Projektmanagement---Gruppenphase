@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutDto;
@@ -12,6 +13,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMa
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import io.swagger.annotations.Api;
@@ -196,6 +198,24 @@ public class DudeEndpoint {
             }
         }
         return trainingScheduleDtos;
+    }
+
+    @RequestMapping(value = "/{id}/activeTrainingSchedule", method = RequestMethod.GET)
+    @ApiOperation(value = "Get active training schedule of dude", authorizations = {@Authorization(value = "apiKey")})
+    public ActiveTrainingScheduleDto getActiveTrainingScheduleByDudeId(@PathVariable Long id) {
+        LOGGER.info("Entering getActiveTrainingScheduleByDudeId with id: " + id);
+        ActiveTrainingSchedule activeTrainingSchedule;
+        try {
+            activeTrainingSchedule = iDudeService.findDudeById(id).getActiveTrainingSchedule();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getActiveTrainingScheduleByDudeId with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        if (activeTrainingSchedule == null) {
+            LOGGER.debug("Dude with id: " + id + " does currently not have an ActiveTrainingSchedule");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You currently do not have an active training schedule.");
+        }
+        return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(activeTrainingSchedule);
     }
 }
 
