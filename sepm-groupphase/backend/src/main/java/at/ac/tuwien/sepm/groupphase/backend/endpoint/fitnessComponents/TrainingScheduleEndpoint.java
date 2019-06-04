@@ -49,7 +49,7 @@ public class TrainingScheduleEndpoint {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new Workout", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto save(@Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
+    public TrainingScheduleDto save(@RequestBody TrainingScheduleDto trainingScheduleDto) {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
         try {
