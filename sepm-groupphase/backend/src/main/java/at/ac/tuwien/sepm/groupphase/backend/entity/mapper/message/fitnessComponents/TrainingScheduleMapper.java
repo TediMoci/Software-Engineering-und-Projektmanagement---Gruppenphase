@@ -26,6 +26,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.name(trainingScheduleDto.getName());
         builder.description(trainingScheduleDto.getDescription());
         builder.difficulty(trainingScheduleDto.getDifficulty());
+        builder.intervalLength(trainingScheduleDto.getIntervalLength());
         builder.rating(trainingScheduleDto.getRating());
         builder.isHistory(false);
 
@@ -59,6 +60,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.name(trainingSchedule.getName());
         builder.description(trainingSchedule.getDescription());
         builder.difficulty(trainingSchedule.getDifficulty());
+        builder.intervalLength(trainingSchedule.getIntervalLength());
         builder.rating(trainingSchedule.getRating());
         builder.creatorId(trainingSchedule.getCreator().getId());
 

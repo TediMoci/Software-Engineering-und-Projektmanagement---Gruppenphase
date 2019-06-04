@@ -14,6 +14,8 @@ public class TrainingScheduleValidator {
     String description_too_long = "Description can only be 3000 characters long";
     String difficulty_is_null = "Difficulty must not be null!";
     String invalid_difficulty = "Invalid difficulty level!";
+    String interval_length_is_null = "Interval length must not be null!";
+    String invalid_interval_length = "Interval length must be between 1 and 7!";
 
     public void validateTrainingSchedule(TrainingSchedule trainingSchedule) throws ValidationException {
         if (trainingSchedule.getName() == null) {
@@ -30,6 +32,10 @@ public class TrainingScheduleValidator {
             throw new ValidationException(difficulty_is_null);
         } if (trainingSchedule.getDifficulty() < 1 || trainingSchedule.getDifficulty() > 3) {
             throw new ValidationException(invalid_difficulty);
+        } if (trainingSchedule.getIntervalLength() == null) {
+            throw new ValidationException(interval_length_is_null);
+        } if (trainingSchedule.getIntervalLength() < 1 || trainingSchedule.getIntervalLength() > 7) {
+            throw new ValidationException(invalid_interval_length);
         }
     }
 
