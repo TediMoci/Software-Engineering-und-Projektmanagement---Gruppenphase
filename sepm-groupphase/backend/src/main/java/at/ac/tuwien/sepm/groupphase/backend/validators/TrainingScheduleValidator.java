@@ -2,6 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.validators;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents.TrainingScheduleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,11 +19,14 @@ public class TrainingScheduleValidator {
     String invalid_difficulty = "Invalid difficulty level!";
     String interval_length_is_null = "Interval length must not be null!";
     String invalid_interval_length = "Interval length must be between 1 and 7!";
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleValidator.class);
 
     public void validateTrainingSchedule(TrainingSchedule trainingSchedule) throws ValidationException {
         if (trainingSchedule.getName() == null) {
+            LOGGER.error("Name must be set!");
             throw new ValidationException(name_is_null);
         } if(trainingSchedule.getName().isBlank()) {
+            LOGGER.error("Name must not be blank!");
             throw new ValidationException(name_is_blank);
         } if (trainingSchedule.getDescription() == null) {
             throw new ValidationException(description_is_null);
