@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDoneDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import io.swagger.annotations.Api;
@@ -72,6 +74,23 @@ public class TrainingScheduleEndpoint {
             return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.saveActive(activeTrainingSchedule));
         } catch (ServiceException e) {
             LOGGER.error("Could not saveActive for: " + activeTrainingScheduleDto);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/active/done", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Mark Exercises in ActiveTrainingSchedule as done", authorizations = {@Authorization(value = "apiKey")})
+    public void markExercisesAsDone(@RequestBody ExerciseDoneDto[] exerciseDoneDtos) {
+        LOGGER.info("Entering markExercisesAsDone for: " + exerciseDoneDtos);
+        ExerciseDone[] exerciseDones = new ExerciseDone[exerciseDoneDtos.length];
+        for (int i = 0; i < exerciseDoneDtos.length; i++) {
+            exerciseDones[i] = trainingScheduleMapper.exerciseDoneDtoToExerciseDone(exerciseDoneDtos[i]);
+        }
+        try {
+            iTrainingScheduleService.markExercisesAsDone(exerciseDones);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not markExercisesAsDone for: " + exerciseDoneDtos);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }

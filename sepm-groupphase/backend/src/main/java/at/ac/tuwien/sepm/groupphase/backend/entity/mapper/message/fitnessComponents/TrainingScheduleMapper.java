@@ -89,6 +89,8 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         ExerciseDone.ExerciseDoneBuilder builder = new ExerciseDone.ExerciseDoneBuilder();
 
         builder.dudeId(exerciseDoneDto.getDudeId());
+        builder.trainingScheduleId(exerciseDoneDto.getTrainingScheduleId());
+        builder.trainingScheduleVersion(exerciseDoneDto.getTrainingScheduleVersion());
         builder.exerciseId(exerciseDoneDto.getExerciseId());
         builder.exerciseVersion(exerciseDoneDto.getExerciseVersion());
         builder.workoutId(exerciseDoneDto.getWorkoutId());

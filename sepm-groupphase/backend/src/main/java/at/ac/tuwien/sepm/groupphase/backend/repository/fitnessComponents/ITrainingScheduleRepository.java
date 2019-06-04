@@ -10,6 +10,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Repository
 public interface ITrainingScheduleRepository extends JpaRepository<TrainingSchedule, TrainingScheduleKey> {
 
@@ -27,6 +30,14 @@ public interface ITrainingScheduleRepository extends JpaRepository<TrainingSched
      */
     @Query("SELECT t FROM TrainingSchedule t WHERE t.id=?1 AND t.isHistory=false")
     TrainingSchedule findById(long id) throws DataAccessException;
+
+    /**
+     * @param id of TrainingSchedule to be found
+     * @param version of TrainingSchedule to be found
+     * @return TrainingSchedule found with the given id and version
+     * @throws NoSuchElementException if an error occurred while trying to find the TrainingSchedule in the database
+     */
+    Optional<TrainingSchedule> findByIdAndVersion(Long id, Integer version) throws NoSuchElementException;
 
     /**
      * @param id of TrainingSchedule to be deleted
