@@ -55,7 +55,7 @@ public class TrainingScheduleEndpoint {
         try {
             return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.save(trainingSchedule));
         } catch (ServiceException e) {
-            LOGGER.error("Could not save: " + trainingScheduleDto);
+            LOGGER.error("Could not save: " + trainingScheduleDto + "because " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
