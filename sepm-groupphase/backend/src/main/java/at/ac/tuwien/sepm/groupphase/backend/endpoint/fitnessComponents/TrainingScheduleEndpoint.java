@@ -53,13 +53,13 @@ public class TrainingScheduleEndpoint {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new TrainingSchedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto save(@Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
+    public TrainingScheduleDto save(@RequestBody TrainingScheduleDto trainingScheduleDto) {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
         try {
             return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.save(trainingSchedule));
         } catch (ServiceException e) {
-            LOGGER.error("Could not save: " + trainingScheduleDto);
+            LOGGER.error("Could not save: " + trainingScheduleDto + "because " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
