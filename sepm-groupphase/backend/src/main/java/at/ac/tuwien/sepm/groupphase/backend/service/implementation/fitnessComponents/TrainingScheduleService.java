@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -14,6 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 
 @Service
@@ -212,5 +220,68 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             partial_rec.add(n);
             sum_up_recursive(remaining, minTarget, maxTarget, partial_rec, days);
         }
+    }
+
+    public int calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) {
+
+        LocalDate startDate = activeSchedule.getStartDate();
+        int intervalRepetitions = activeSchedule.getIntervalRepetitions();
+        int intervalLength = activeSchedule.getTrainingSchedule().getIntervalLength();
+        int selfAssessment = dude.getSelfAssessment();
+        double bmi = dude.getWeight()/Math.pow((dude.getHeight()/100), 2);
+        bmi = new BigDecimal(String.valueOf(bmi)).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        boolean strengthFocused = false;
+
+        int t = (Period.between(startDate, LocalDate.now()).getYears())/intervalLength;
+
+        double a; // percentage for the first repetition of the interval, initial change of x%, on average x% change per interval
+        if (selfAssessment == 1){
+            a = 1.5;
+        } else {
+            a = 3;
+        }
+
+        // TODO: if very strength focused make max 10%, 5% for beginners
+        double s; // maximum percentage for training schedule adaption
+        if (selfAssessment == 1){
+            if ((intervalRepetitions * a) > 10) {
+                s = 10;
+            } else {
+                s = (intervalRepetitions * a);
+            }
+        } else {
+            if ((intervalRepetitions * a) > 30) {
+                s = 30;
+            } else {
+                s = (intervalRepetitions * a);
+            }
+        }
+
+        if (strengthFocused) {
+            if (selfAssessment == 1){
+                if ((intervalRepetitions * a) > 5) {
+                    s = 5;
+                } else {
+                    s = (intervalRepetitions * a);
+                }
+            } else {
+                if ((intervalRepetitions * a) > 10) {
+                    s = 10;
+                } else {
+                    s = (intervalRepetitions * a);
+                }
+            }
+        }
+
+        double k = Math.log((a*s - (s-3)*a)/((s-3)*(s-a)))/-(s*(intervalRepetitions-1)); // growth constant, calculated for model according to other parameters
+        double bt = (a*s)/(a + (s-a)*Math.exp(-s*k*t)); // result: percentage of change in the t-th interval
+
+        List<TrainingScheduleWorkout> workouts = activeSchedule.getTrainingSchedule().getWorkouts();
+
+        // TODO: first repetition of interval gets default max percent (3/1.5%)
+        // TODO: find most common category for choosing percentage of change
+        // TODO: look for done (ExerciseDone), to see where adaptive change needs to be aplied
+
+        return 1;
     }
 }
