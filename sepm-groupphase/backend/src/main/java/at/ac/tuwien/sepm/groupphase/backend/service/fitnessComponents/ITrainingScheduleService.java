@@ -56,4 +56,6 @@ public interface ITrainingScheduleService {
      * @throws ServiceException if an error occurred while trying to find the Workout in the system
      */
     TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException;
+
+    TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException;
 }

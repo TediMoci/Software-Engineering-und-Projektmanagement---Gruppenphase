@@ -124,6 +124,8 @@ public class SecurityConfiguration {
                     "/workout/filtered",
                     "/workout/{id}/{version}",
                     "/workout/{id}/{version}/exercises",
+                    "/trainingSchedule/{id}/{version}",
+                    "/trainingSchedule/{id}/{version}/workouts",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",

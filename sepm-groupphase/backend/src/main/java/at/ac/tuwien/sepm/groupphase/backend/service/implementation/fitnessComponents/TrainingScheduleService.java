@@ -202,6 +202,16 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
+    @Override
+    public TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
+        try {
+            return iTrainingScheduleRepository.findByIdAndVersion(id, version).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
     private void validateTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts) throws ServiceException {
         for (TrainingScheduleWorkout trainingScheduleWorkout : trainingScheduleWorkouts) {
             try {
@@ -278,4 +288,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             sum_up_recursive(remaining, minTarget, maxTarget, partial_rec, days);
         }
     }
+
+
 }
