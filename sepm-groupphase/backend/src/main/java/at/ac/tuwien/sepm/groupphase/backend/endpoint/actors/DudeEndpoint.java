@@ -219,7 +219,7 @@ public class DudeEndpoint {
         }
         int totalDays = activeTrainingSchedule.getIntervalRepetitions() * activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
         LocalDate tempDate = LocalDate.from(activeTrainingSchedule.getStartDate());
-        if (tempDate.until(LocalDate.now(), ChronoUnit.DAYS) > totalDays) {
+        if (tempDate.until(LocalDate.now(), ChronoUnit.DAYS) >= totalDays) {
             LOGGER.debug("ActiveTrainingSchedule of Dude with id: " + id + " has expired");
             try {
                 iTrainingScheduleService.deleteActive(id);

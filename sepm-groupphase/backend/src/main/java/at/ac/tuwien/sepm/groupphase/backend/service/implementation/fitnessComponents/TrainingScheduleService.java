@@ -191,7 +191,15 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public void deleteActive(Long dudeId) throws ServiceException {
         LOGGER.info("Entering deleteActive with dudeId: " + dudeId);
-        // TODO: stat-calculations and -saving
+        ActiveTrainingSchedule activeTrainingSchedule;
+        try {
+            activeTrainingSchedule = iActiveTrainingScheduleRepository.findByDudeId(dudeId).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+
+        // TODO (Amir): stat-calculations and -saving for activeTrainingSchedule
+
         try {
             iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
         } catch (DataAccessException e) {
