@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
@@ -119,7 +120,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         trainingSchedule.setWorkouts(null);
 
         List<Workout> workouts = iWorkoutRepository.findAll();
-        sum_up(workouts,minTarget,maxTarget,days);
+        sum_up(workouts, minTarget, maxTarget, days);
 
         TrainingSchedule savedTrainingSchedule;
         try {
@@ -164,7 +165,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             TrainingSchedule oldTraining = iTrainingScheduleRepository.findById(id);
             if (oldTraining == null) throw new ServiceException("Could not find training schedule with id: " + id);
             newTraining.setId(id);
-            newTraining.setVersion(1+oldTraining.getVersion());
+            newTraining.setVersion(1 + oldTraining.getVersion());
             iTrainingScheduleRepository.delete(id);
 
             List<TrainingScheduleWorkout> trainingWorkouts = newTraining.getWorkouts();
@@ -196,12 +197,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
-    private void saveRandomTrainingScheduleWorkout(int days,  Map<Integer, List<Workout>> list, TrainingSchedule savedTrainingSchedule) throws ServiceException {
+    private void saveRandomTrainingScheduleWorkout(int days, Map<Integer, List<Workout>> list, TrainingSchedule savedTrainingSchedule) throws ServiceException {
         if (list.isEmpty()) throw new ServiceException("List is empty");
 
-        for (int a=1; a<=days; a++) {
-            int x = (a-1)%list.size();
-            for (int b=0; b<list.get(x).size();b++){
+        for (int a = 1; a <= days; a++) {
+            int x = (a - 1) % list.size();
+            for (int b = 0; b < list.get(x).size(); b++) {
                 Workout w = list.get(x).get(b);
                 TrainingScheduleWorkout tsW = new TrainingScheduleWorkout();
                 tsW.setTrainingScheduleId(savedTrainingSchedule.getId());
@@ -210,7 +211,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 tsW.setWorkoutVersion(w.getVersion());
                 tsW.setDay(a);
 
-                try{
+                try {
                     iTrainingScheduleWorkoutRepository.save(tsW);
                 } catch (DataAccessException e) {
                     throw new ServiceException(e.getMessage());
@@ -220,14 +221,15 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     private static void sum_up(List<Workout> numbers, double minTarget, double maxTarget, int days) throws ServiceException {
-        if (days<1 || days>7){
+        if (days < 1 || days > 7) {
             throw new ServiceException("Please give a valid number of days per week");
         }
-        if (minTarget>maxTarget){
+        if (minTarget > maxTarget) {
             throw new ServiceException("Please give the correct minimum and maximum values");
         }
-        sum_up_recursive(numbers,minTarget,maxTarget,new ArrayList<Workout>(),days);
-        if (finalList.isEmpty()) throw new ServiceException("Training schedule could not be formed with existing workouts");
+        sum_up_recursive(numbers, minTarget, maxTarget, new ArrayList<Workout>(), days);
+        if (finalList.isEmpty())
+            throw new ServiceException("Training schedule could not be formed with existing workouts");
     }
 
     private static void sum_up_recursive(List<Workout> numbers, double minTarget, double maxTarget, List<Workout> partial, int days) {
@@ -267,16 +269,16 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         int intervalLength = activeSchedule.getTrainingSchedule().getIntervalLength();
         int selfAssessment = dude.getSelfAssessment();
 
-        int t = (Period.between(startDate, LocalDate.now()).getDays())/intervalLength;
+        int t = (Period.between(startDate, LocalDate.now()).getDays()) / intervalLength;
         if (t == 1) {
             return;
         }
 
-        for (TrainingScheduleWorkout tsWa: workouts) {
+        for (TrainingScheduleWorkout tsWa : workouts) {
 
             switch (tsWa.getDay()) {
                 case 1:
-                   addToWorkoutAndExList(tsWa, workouts1, ex1, numOfExDay1);
+                    addToWorkoutAndExList(tsWa, workouts1, ex1, numOfExDay1);
                     break;
                 case 2:
                     addToWorkoutAndExList(tsWa, workouts2, ex2, numOfExDay2);
@@ -302,20 +304,20 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         boolean strengthFocused = false;
 
         if (totalEx != 0) {
-            if (categoryStrength/totalEx > 0.7){
+            if (categoryStrength / totalEx > 0.7) {
                 strengthFocused = true;
             }
         }
 
         double a; // percentage for the first repetition of the interval, initial change of x%, on average x% change per interval
-        if (selfAssessment == 1){
+        if (selfAssessment == 1) {
             a = 1.5;
         } else {
             a = 3;
         }
 
         double s; // maximum percentage for training schedule adaption
-        if (selfAssessment == 1){
+        if (selfAssessment == 1) {
             if ((intervalRepetitions * a) > 10) {
                 s = 10;
             } else {
@@ -330,7 +332,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
 
         if (strengthFocused) {
-            if (selfAssessment == 1){
+            if (selfAssessment == 1) {
                 if ((intervalRepetitions * a) > 5) {
                     s = 5;
                 } else {
@@ -345,16 +347,9 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             }
         }
 
-        double k = Math.log((a*s - (s-a)*a)/((s-a)*(s-a)))/-(s*(intervalRepetitions-1)); // growth constant, calculated for model according to other parameters
-        double bt = Math.floor((a*s)/(a + (s-a)*Math.exp(-s*k*(t-1)))); // result: percentage of change in the t-th interval
-
-        double totalChangePerDayInPercent = 0;
-
-        if (t == 2) {
-            totalChangePerDayInPercent = bt;
-        } else {
-            totalChangePerDayInPercent =  bt - (Math.floor((a*s)/(a + (s-a)*Math.exp(-s*k*(t-2)))));
-        }
+        // logistic growth function to generate percentage of change compared to the inital data
+        double k = Math.log((a * s - (s - a) * a) / ((s - a) * (s - a))) / -(s * (intervalRepetitions - 1)); // growth constant, calculated for model according to other parameters
+        double bt = Math.floor((a * s) / (a + (s - a) * Math.exp(-s * k * (t - 1)))); // result: percentage of change in the t-th interval
 
         /*
          * Percentage of change per interval is applied for each day containing workouts
@@ -366,23 +361,64 @@ public class TrainingScheduleService implements ITrainingScheduleService {
          *    if maximumRepetitions are reached, number of sets is altered and repetitions are set to default minimum
          */
 
-        // TODO: spread percentage of change (totalChangePerDayInPercent) equally on the days with workouts
+        double totalChangePerDayInPercent = 0;
+
+        if (t == 2) {
+            totalChangePerDayInPercent = bt;
+        } else {
+            totalChangePerDayInPercent = bt - (Math.floor((a * s) / (a + (s - a) * Math.exp(-s * k * (t - 2)))));
+        }
+
+        // spread percentage of change equally on all exercises per day
+        double percentPerExDay1 = (numOfExDay1 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay1));
+        double percentPerExDay2 = (numOfExDay2 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay2));
+        double percentPerExDay3 = (numOfExDay3 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay3));
+        double percentPerExDay4 = (numOfExDay4 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay4));
+        double percentPerExDay5 = (numOfExDay5 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay5));
+        double percentPerExDay6 = (numOfExDay6 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay6));
+        double percentPerExDay7 = (numOfExDay7 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay7));
 
         // TODO: look for done (ExerciseDone), to see where adaptive change needs to be aplied
         // TODO: editWorkoutExercises in Workout in TS: apply adaption
         // TODO: if adaptive mode is canceled, active trainingschedule is automatically deactivated/closed
     }
 
-    private void addToWorkoutAndExList(TrainingScheduleWorkout currentTsWorkout, List<TrainingScheduleWorkout> workouts, List<WorkoutExercise> exercises, int numOfExDay){
+    private void addToWorkoutAndExList(TrainingScheduleWorkout currentTsWorkout, List<TrainingScheduleWorkout> workouts, List<WorkoutExercise> exercises, int numOfExDay) {
         // dont change if repetition = 1 und sets = 1 und category= other oder, endurance
         workouts.add(currentTsWorkout);
         exercises.addAll(currentTsWorkout.getWorkout().getExercises());
-        for (WorkoutExercise e: currentTsWorkout.getWorkout().getExercises()) {
-            numOfExDay++;
+        for (WorkoutExercise e : currentTsWorkout.getWorkout().getExercises()) {
+            // only count exercise to number of toChange exercises, it is not of category Endurance or Other with only 1 set and repetition
+            if (!((e.getExercise().getCategory() == Category.Endurance || e.getExercise().getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1)) {
+                numOfExDay++;
+            }
             totalEx++;
             if (e.getExercise().getCategory() == Category.Strength) {
                 categoryStrength++;
             }
         }
+    }
+
+    // changes number of repetitions and sets for all given exercises
+    // (expects list of WorkoutExercises of one day and the percent of Change calculated for each exercise for this day)
+    private List<WorkoutExercise> applyAdaptiveChange(List<WorkoutExercise> ex, int percentPerExDay) {
+        int repsHelp;
+
+        for (WorkoutExercise e : ex) {
+            if (!((e.getExercise().getCategory() == Category.Endurance || e.getExercise().getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1)) {
+                // calculate new number of repetitions
+                repsHelp = (int) new BigDecimal(String.valueOf(e.getRepetitions() + (percentPerExDay * e.getRepetitions()))).setScale(0, RoundingMode.HALF_UP).doubleValue();
+                if (repsHelp > 100) {
+                    // if maximum number of repetitions is exceeded: set default number of repetitions to 5
+                    e.setRepetitions(5);
+                    if (e.getSets() < 15){
+                        e.setSets(e.getSets() + 1);
+                    }
+                } else {
+                    e.setRepetitions(repsHelp);
+                }
+            }
+        }
+        return ex;
     }
 }
