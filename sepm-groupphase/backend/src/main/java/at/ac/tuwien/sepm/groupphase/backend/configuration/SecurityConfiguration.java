@@ -104,6 +104,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}/workouts",
                     "/dudes/{id}/trainingSchedules",
                     "/dudes/{id}/activeTrainingSchedule",
+                    "/dudes/{id}/activeTrainingSchedule/done",
                     "/{id}/{version}/exercises",
                     "/user",
                     "/fitnessProvider",

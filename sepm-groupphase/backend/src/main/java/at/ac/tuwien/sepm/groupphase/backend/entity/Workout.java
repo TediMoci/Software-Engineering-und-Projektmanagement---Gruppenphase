@@ -151,9 +151,6 @@ public class Workout {
             ", calorieConsumption=" + calorieConsumption +
             ", rating=" + rating +
             ", isHistory=" + isHistory +
-            ", exercises=" + exercises +
-            ", trainingSchedules=" + trainingSchedules +
-            ", creator=" + creator +
             '}';
     }
 
@@ -172,11 +169,7 @@ public class Workout {
         if (calorieConsumption != null ? !calorieConsumption.equals(workout.calorieConsumption) : workout.calorieConsumption != null)
             return false;
         if (rating != null ? !rating.equals(workout.rating) : workout.rating != null) return false;
-        if (isHistory != null ? !isHistory.equals(workout.isHistory) : workout.isHistory != null) return false;
-        if (exercises != null ? !exercises.equals(workout.exercises) : workout.exercises != null) return false;
-        if (trainingSchedules != null ? !trainingSchedules.equals(workout.trainingSchedules) : workout.trainingSchedules != null)
-            return false;
-        return creator != null ? creator.equals(workout.creator) : workout.creator == null;
+        return isHistory != null ? isHistory.equals(workout.isHistory) : workout.isHistory == null;
 
     }
 
@@ -190,9 +183,6 @@ public class Workout {
         result = 31 * result + (calorieConsumption != null ? calorieConsumption.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
-        result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
-        result = 31 * result + (trainingSchedules != null ? trainingSchedules.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
     }
 

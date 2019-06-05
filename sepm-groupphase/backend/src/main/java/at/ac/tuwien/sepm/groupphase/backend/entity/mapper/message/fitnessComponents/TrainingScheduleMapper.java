@@ -102,6 +102,23 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
     }
 
     @Override
+    public ExerciseDoneDto exerciseDoneToExerciseDoneDto(ExerciseDone exerciseDone) {
+        ExerciseDoneDto.ExerciseDoneDtoBuilder builder = new ExerciseDoneDto.ExerciseDoneDtoBuilder();
+
+        builder.dudeId(exerciseDone.getDudeId());
+        builder.trainingScheduleId(exerciseDone.getTrainingScheduleId());
+        builder.trainingScheduleVersion(exerciseDone.getTrainingScheduleVersion());
+        builder.exerciseId(exerciseDone.getExerciseId());
+        builder.exerciseVersion(exerciseDone.getExerciseVersion());
+        builder.workoutId(exerciseDone.getWorkoutId());
+        builder.workoutVersion(exerciseDone.getWorkoutVersion());
+        builder.day(exerciseDone.getDay());
+        builder.done(exerciseDone.getDone());
+
+        return builder.build();
+    }
+
+    @Override
     public ActiveTrainingSchedule activeTrainingScheduleDtoToActiveTrainingSchedule(ActiveTrainingScheduleDto activeTrainingScheduleDto) {
         ActiveTrainingSchedule.ActiveTrainingScheduleBuilder builder = new ActiveTrainingSchedule.ActiveTrainingScheduleBuilder();
 

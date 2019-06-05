@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
@@ -173,6 +174,17 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             TrainingSchedule trainingSchedule = iTrainingScheduleRepository.findById(id);
             if (trainingSchedule == null) throw new ServiceException("Could not find Training Schedule with id: " + id);
             iTrainingScheduleRepository.delete(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteActive(Long dudeId) throws ServiceException {
+        LOGGER.info("Entering deleteActive with dudeId: " + dudeId);
+        // TODO: stat-calculations and -saving
+        try {
+            iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }

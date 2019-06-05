@@ -74,8 +74,6 @@ public class Course {
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
-            ", creator=" + creator +
-            ", dudes=" + dudes +
             '}';
     }
 
@@ -88,9 +86,7 @@ public class Course {
 
         if (id != null ? !id.equals(course.id) : course.id != null) return false;
         if (name != null ? !name.equals(course.name) : course.name != null) return false;
-        if (description != null ? !description.equals(course.description) : course.description != null) return false;
-        if (creator != null ? !creator.equals(course.creator) : course.creator != null) return false;
-        return dudes != null ? dudes.equals(course.dudes) : course.dudes == null;
+        return description != null ? description.equals(course.description) : course.description == null;
 
     }
 
@@ -99,8 +95,6 @@ public class Course {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
-        result = 31 * result + (dudes != null ? dudes.hashCode() : 0);
         return result;
     }
 

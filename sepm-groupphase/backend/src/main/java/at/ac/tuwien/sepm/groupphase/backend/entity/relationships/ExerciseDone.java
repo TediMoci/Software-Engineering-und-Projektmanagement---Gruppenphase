@@ -22,7 +22,7 @@ public class ExerciseDone {
     @Column(name = "training_schedule_version")
     private Integer trainingScheduleVersion;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("dude_id")
     @JoinColumns({
         @JoinColumn(name = "dude_id", referencedColumnName = "dude_id"),
@@ -47,7 +47,7 @@ public class ExerciseDone {
     @Column(name = "workout_version")
     private Integer workoutVersion;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("workout_id")
     @JoinColumns({
         @JoinColumn(name = "workout_id", referencedColumnName = "id"),
@@ -159,12 +159,10 @@ public class ExerciseDone {
             "dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
-            ", activeTrainingSchedule=" + activeTrainingSchedule +
             ", exerciseId=" + exerciseId +
             ", exerciseVersion=" + exerciseVersion +
             ", workoutId=" + workoutId +
             ", workoutVersion=" + workoutVersion +
-            ", workout=" + workout +
             ", day=" + day +
             ", done=" + done +
             '}';
@@ -182,15 +180,12 @@ public class ExerciseDone {
             return false;
         if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
             return false;
-        if (activeTrainingSchedule != null ? !activeTrainingSchedule.equals(that.activeTrainingSchedule) : that.activeTrainingSchedule != null)
-            return false;
         if (exerciseId != null ? !exerciseId.equals(that.exerciseId) : that.exerciseId != null) return false;
         if (exerciseVersion != null ? !exerciseVersion.equals(that.exerciseVersion) : that.exerciseVersion != null)
             return false;
         if (workoutId != null ? !workoutId.equals(that.workoutId) : that.workoutId != null) return false;
         if (workoutVersion != null ? !workoutVersion.equals(that.workoutVersion) : that.workoutVersion != null)
             return false;
-        if (workout != null ? !workout.equals(that.workout) : that.workout != null) return false;
         if (day != null ? !day.equals(that.day) : that.day != null) return false;
         return done != null ? done.equals(that.done) : that.done == null;
 
@@ -201,12 +196,10 @@ public class ExerciseDone {
         int result = dudeId != null ? dudeId.hashCode() : 0;
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
-        result = 31 * result + (activeTrainingSchedule != null ? activeTrainingSchedule.hashCode() : 0);
         result = 31 * result + (exerciseId != null ? exerciseId.hashCode() : 0);
         result = 31 * result + (exerciseVersion != null ? exerciseVersion.hashCode() : 0);
         result = 31 * result + (workoutId != null ? workoutId.hashCode() : 0);
         result = 31 * result + (workoutVersion != null ? workoutVersion.hashCode() : 0);
-        result = 31 * result + (workout != null ? workout.hashCode() : 0);
         result = 31 * result + (day != null ? day.hashCode() : 0);
         result = 31 * result + (done != null ? done.hashCode() : 0);
         return result;
