@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
@@ -68,6 +69,14 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public ActiveTrainingSchedule saveActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException {
         LOGGER.info("Entering saveActive for: " + activeTrainingSchedule);
+        try {
+            if (iActiveTrainingScheduleRepository.findByDudeId(activeTrainingSchedule.getDudeId()).isPresent()) {
+                throw new ServiceException("Dude already has an ActiveTrainingSchedule.");
+            }
+        } catch (NoSuchElementException e) {
+            LOGGER.debug("Dude has no ActiveTrainingSchedule");
+        }
+
         activeTrainingSchedule.setStartDate(LocalDate.now());
         ActiveTrainingSchedule savedActiveTrainingSchedule;
         try {

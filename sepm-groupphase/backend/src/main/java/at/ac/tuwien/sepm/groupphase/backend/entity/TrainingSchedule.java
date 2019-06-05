@@ -45,7 +45,7 @@ public class TrainingSchedule {
     @JoinColumn(name = "dude_id")
     private Dude creator;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainingSchedule")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "trainingSchedule")
     private List<ActiveTrainingSchedule> activeUsages;
 
     public Long getId() {

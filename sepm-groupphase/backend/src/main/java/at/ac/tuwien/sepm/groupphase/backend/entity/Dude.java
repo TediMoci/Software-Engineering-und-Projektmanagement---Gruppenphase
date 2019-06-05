@@ -78,7 +78,7 @@ public class Dude {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
     private List<TrainingSchedule> trainingSchedules;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "dude")
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "dude")
     private ActiveTrainingSchedule activeTrainingSchedule;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "dude")

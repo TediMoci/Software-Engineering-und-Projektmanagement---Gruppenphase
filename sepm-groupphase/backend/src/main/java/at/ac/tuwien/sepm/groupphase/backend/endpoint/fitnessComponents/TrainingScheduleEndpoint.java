@@ -74,6 +74,22 @@ public class TrainingScheduleEndpoint {
             return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.saveActive(activeTrainingSchedule));
         } catch (ServiceException e) {
             LOGGER.error("Could not saveActive for: " + activeTrainingScheduleDto);
+            if (e.getMessage().equals("Dude already has an ActiveTrainingSchedule.")) {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/active/{dudeId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete the current ActiveTrainingSchedule of Dude with given id", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteActive(@PathVariable Long dudeId) {
+        LOGGER.info("Entering deleteActive with dudeId: " + dudeId);
+        try {
+            iTrainingScheduleService.deleteActive(dudeId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteActive with dudeId: " + dudeId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
