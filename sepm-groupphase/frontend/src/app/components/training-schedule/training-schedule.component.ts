@@ -27,7 +27,7 @@ export class TrainingScheduleComponent implements OnInit {
   displayedWorkouts: Array<any>;
   exercisesForWorkouts: any;
 
-  constructor(private trainingScheduleService:TrainingScheduleService, private workoutService:WorkoutService) {debugger}
+  constructor(private trainingScheduleService:TrainingScheduleService, private workoutService:WorkoutService) {}
 
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
@@ -60,10 +60,6 @@ export class TrainingScheduleComponent implements OnInit {
         this.error = error;
       }
     );
-
-
-
-
   }
 
   getSelectedWorkoutExercises(workout: Workout){
@@ -94,8 +90,6 @@ export class TrainingScheduleComponent implements OnInit {
 
 
   getContent(selected:number){
-    debugger
-    //todo: not working cause day is undefined
     let array:Array<any> = [];
     console.log("Getting all workouts of day " + selected)
     for(let e of this.tsWorkouts){
