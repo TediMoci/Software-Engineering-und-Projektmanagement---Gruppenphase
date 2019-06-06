@@ -22,7 +22,7 @@
             <h3>Courses:</h3>
             <ul>
               <li *ngFor='let element of courses'>
-                <a [routerLink]="['/course']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
+                <a [routerLink]="['/course-dude-view']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
               </li>
             </ul>
           </div>
