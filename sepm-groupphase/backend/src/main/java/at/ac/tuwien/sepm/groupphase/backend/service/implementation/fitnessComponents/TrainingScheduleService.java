@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessCompo
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
-import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
@@ -81,7 +80,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         this.iExerciseDoneRepository = iExerciseDoneRepository;
         this.trainingScheduleValidator = trainingScheduleValidator;
         this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
-        this.iWorkoutRepository = iWorkoutRepository;
     }
 
     @Override
