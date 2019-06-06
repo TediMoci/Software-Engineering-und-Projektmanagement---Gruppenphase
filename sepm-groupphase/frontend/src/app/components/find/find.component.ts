@@ -12,6 +12,7 @@ import {Course} from "../../dtos/course";
 import {Workout} from "../../dtos/workout";
 import {WorkoutService} from "../../services/workout.service";
 import {FitnessProviderFilter} from "../../dtos/fitness-provider-filter";
+import {DudeFilter} from "../../dtos/dude-filter";
 
 @Component({
   selector: 'app-find',
@@ -30,6 +31,7 @@ export class FindComponent implements OnInit {
   public filterWorkoutDifficulty: string = "None";
   public filterWorkoutCaloriesMin: string = "";
   public filterWorkoutCaloriesMax: string = "";
+  public filterDudeSelfAssessment: string = "None";
 
   // Transfer Variables
   public inputTextActual: any;
@@ -37,6 +39,8 @@ export class FindComponent implements OnInit {
   public filterWorkoutDifficultyActual: string = "None";
   public filterWorkoutCaloriesMinActual: string = "";
   public filterWorkoutCaloriesMaxActual: string = "";
+  public filterDudeSelfAssessmentActual: string = "None";
+
 
   entries: any;
   exercisesForWorkouts: any;
@@ -52,6 +56,7 @@ export class FindComponent implements OnInit {
   exerciseFilter: ExerciseFilter;
   workoutFilter: WorkoutFilter;
   fitnessProviderFilter: FitnessProviderFilter;
+  dudeFilter: DudeFilter;
 
 
 
@@ -181,7 +186,36 @@ export class FindComponent implements OnInit {
           }
         );
         break;
-      case "Dudes": console.log("Dudes not implemented yet");
+      case "Dudes":
+
+        switch (this.filterDudeSelfAssessment) {
+          case "None": this.filterDudeSelfAssessmentActual = null; break;
+          case  "Beginner": this.filterDudeSelfAssessmentActual = "1"; break;
+          case  "Advanced": this.filterDudeSelfAssessmentActual = "2"; break;
+          case  "Pro": this.filterDudeSelfAssessmentActual = "3"; break;
+        }
+        this.dudeFilter = new DudeFilter(
+          this.inputTextActual,
+          this.filterDudeSelfAssessmentActual);
+
+        console.log("name: "+this.dudeFilter.filter);
+        this.findService.getAllDudesFiltered(this.dudeFilter).subscribe(
+          (data) => {
+            console.log('get all dudes');
+            this.entries = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
         break;
       case "Fitness Provider":
 

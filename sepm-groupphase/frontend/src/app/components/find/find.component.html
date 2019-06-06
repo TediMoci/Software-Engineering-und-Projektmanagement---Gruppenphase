@@ -27,7 +27,7 @@
                 <input ngbButton type="radio"(click)="resetResults()" value="Workout"> Workout
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()" disabled value="Dudes"> Dudes
+                <input ngbButton type="radio"(click)="resetResults()"  value="Dudes"> Dudes
               </label>
               <label ngbButtonLabel class="btn-secondary">
                 <input ngbButton type="radio"(click)="resetResults()"  value="Fitness Provider"> Fitness Provider
@@ -63,6 +63,21 @@
             </div>
 
             <div *ngSwitchCase="'Course'">
+            </div>
+
+            <div *ngSwitchCase="'Dudes'">
+              <p>Filter for Dudes</p>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonSelfAssessment" data-toggle="dropdown" [(ngModel)]="filterDudeSelfAssessment" ngDefaultControl>
+                  Category: {{filterDudeSelfAssessment}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='None'">None</a>
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Beginner'">Beginner</a>
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Advanced'">Advanced</a>
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Pro'">Pro</a>
+                </div>
+              </div>
             </div>
 
             <div *ngSwitchCase="'Workout'">
@@ -188,6 +203,27 @@
                         </mat-expansion-panel>
                       </mat-accordion>
                     </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </li>
+            </ul>
+            <!--end case-->
+            <!--start case-->
+            <ul *ngSwitchCase="'Dudes'" style="list-style-type: none;" >
+              <li  *ngFor='let element of entries' >
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Gender: {{element.sex}}</p>
+                    <hr>
+                    <p>Self Assessment: {{convertDifficulty(element.selfAssessment)}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
                   </mat-expansion-panel>
                 </mat-accordion>
               </li>

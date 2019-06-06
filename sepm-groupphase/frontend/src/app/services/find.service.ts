@@ -11,6 +11,7 @@ import {WorkoutFilter} from "../dtos/workout-filter";
 import {Workout} from "../dtos/workout";
 import {FitnessProvider} from "../dtos/fitness-provider";
 import {FitnessProviderFilter} from "../dtos/fitness-provider-filter";
+import {DudeFilter} from "../dtos/dude-filter";
 
 @Injectable({
   providedIn: 'root'
@@ -77,5 +78,19 @@ export class FindService {
     console.log('get all workouts with params: ' + params.toString());
 
     return this.httpClient.get<FitnessProvider[]>(this.BaseUri + '/fitnessProvider/filtered', {params: params});
+  }
+
+  getAllDudesFiltered(dudeFilter: DudeFilter): Observable<Dude[]>{
+    console.log('get all dudes filtered');
+    let params = new HttpParams();
+    if(dudeFilter.filter != null){
+      params = params.set("filter", dudeFilter.filter);
+    }
+    if(dudeFilter.selfAssessment != null){
+      params = params.set("selfAssessment", dudeFilter.selfAssessment);
+    }
+    console.log('get all dudes with params: ' + params.toString());
+
+    return this.httpClient.get<Dude[]>(this.BaseUri + '/dudes/filtered', {params: params});
   }
 }
