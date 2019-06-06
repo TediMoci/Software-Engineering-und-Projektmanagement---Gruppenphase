@@ -140,6 +140,7 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.PUT,
             "/dudes/{name}",
                     "/dudes/{dudeId}/follow/{fitnessProviderId}",
+                    "/dudes/{dudeId}/unfollow/{fitnessProviderId}",
                     "/exercise/{id}",
                     "/trainingSchedule/{id}",
                     "/trainingSchedule/active/done",

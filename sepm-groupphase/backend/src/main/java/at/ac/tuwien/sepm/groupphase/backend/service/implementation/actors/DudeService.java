@@ -159,4 +159,13 @@ public class DudeService implements IDudeService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public void unfollowFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
+        try {
+            followFitnessProviderRepository.unfollowFitnessProvider(dudeId, fitnessProviderId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
-import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
@@ -126,7 +125,7 @@ public class DudeEndpoint {
 
     @RequestMapping(value = "/{dudeId}/follow/{fitnessProviderId}", method = RequestMethod.PUT)
     @ApiOperation(value = "Follow fitness provider with given id", authorizations = {@Authorization(value = "apiKey")})
-    public Boolean followFitnessProvider(@PathVariable Long dudeId, @PathVariable Long fitnessProviderId) {
+    public void followFitnessProvider(@PathVariable Long dudeId, @PathVariable Long fitnessProviderId) {
         LOGGER.info("Entering followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
         try {
             iDudeService.followFitnessProvider(dudeId, fitnessProviderId);
@@ -134,7 +133,18 @@ public class DudeEndpoint {
             LOGGER.error("Could not followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        return true;
+    }
+
+    @RequestMapping(value = "/{dudeId}/unfollow/{fitnessProviderId}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Unfollow fitness provider with given id", authorizations = {@Authorization(value = "apiKey")})
+    public void unfollowFitnessProvider(@PathVariable Long dudeId, @PathVariable Long fitnessProviderId) {
+        LOGGER.info("Entering unfollowFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
+        try {
+            iDudeService.unfollowFitnessProvider(dudeId, fitnessProviderId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not unfollowFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 
     @RequestMapping(value = "/{id}/exercises", method = RequestMethod.GET)
