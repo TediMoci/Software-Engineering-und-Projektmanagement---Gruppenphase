@@ -78,7 +78,7 @@ public class Dude {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
     private List<TrainingSchedule> trainingSchedules;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "dude")
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "dude")
     private ActiveTrainingSchedule activeTrainingSchedule;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "dude")
@@ -241,14 +241,6 @@ public class Dude {
             ", birthday=" + birthday +
             ", height=" + height +
             ", weight=" + weight +
-            ", roles=" + roles +
-            ", fitnessProviders=" + fitnessProviders +
-            ", courses=" + courses +
-            ", exercises=" + exercises +
-            ", workouts=" + workouts +
-            ", trainingSchedules=" + trainingSchedules +
-            ", activeTrainingSchedule=" + activeTrainingSchedule +
-            ", finishedTrainingScheduleStats=" + finishedTrainingScheduleStats +
             '}';
     }
 
@@ -269,18 +261,7 @@ public class Dude {
             return false;
         if (birthday != null ? !birthday.equals(dude.birthday) : dude.birthday != null) return false;
         if (height != null ? !height.equals(dude.height) : dude.height != null) return false;
-        if (weight != null ? !weight.equals(dude.weight) : dude.weight != null) return false;
-        if (roles != null ? !roles.equals(dude.roles) : dude.roles != null) return false;
-        if (fitnessProviders != null ? !fitnessProviders.equals(dude.fitnessProviders) : dude.fitnessProviders != null)
-            return false;
-        if (courses != null ? !courses.equals(dude.courses) : dude.courses != null) return false;
-        if (exercises != null ? !exercises.equals(dude.exercises) : dude.exercises != null) return false;
-        if (workouts != null ? !workouts.equals(dude.workouts) : dude.workouts != null) return false;
-        if (trainingSchedules != null ? !trainingSchedules.equals(dude.trainingSchedules) : dude.trainingSchedules != null)
-            return false;
-        if (activeTrainingSchedule != null ? !activeTrainingSchedule.equals(dude.activeTrainingSchedule) : dude.activeTrainingSchedule != null)
-            return false;
-        return finishedTrainingScheduleStats != null ? finishedTrainingScheduleStats.equals(dude.finishedTrainingScheduleStats) : dude.finishedTrainingScheduleStats == null;
+        return weight != null ? weight.equals(dude.weight) : dude.weight == null;
 
     }
 
@@ -296,14 +277,6 @@ public class Dude {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
-        result = 31 * result + (roles != null ? roles.hashCode() : 0);
-        result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
-        result = 31 * result + (courses != null ? courses.hashCode() : 0);
-        result = 31 * result + (exercises != null ? exercises.hashCode() : 0);
-        result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
-        result = 31 * result + (trainingSchedules != null ? trainingSchedules.hashCode() : 0);
-        result = 31 * result + (activeTrainingSchedule != null ? activeTrainingSchedule.hashCode() : 0);
-        result = 31 * result + (finishedTrainingScheduleStats != null ? finishedTrainingScheduleStats.hashCode() : 0);
         return result;
     }
 

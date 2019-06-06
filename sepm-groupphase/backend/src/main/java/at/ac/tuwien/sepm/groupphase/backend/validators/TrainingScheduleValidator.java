@@ -17,9 +17,9 @@ public class TrainingScheduleValidator {
     String description_too_long = "Description can only be 3000 characters long";
     String difficulty_is_null = "Difficulty must not be null!";
     String invalid_difficulty = "Invalid difficulty level!";
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleValidator.class);
     String interval_length_is_null = "Interval length must not be null!";
     String invalid_interval_length = "Interval length must be between 1 and 7!";
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleValidator.class);
 
     public void validateTrainingSchedule(TrainingSchedule trainingSchedule) throws ValidationException {
         if (trainingSchedule.getName() == null) {

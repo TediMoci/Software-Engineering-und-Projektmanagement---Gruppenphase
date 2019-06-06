@@ -38,9 +38,21 @@ public interface ITrainingScheduleMapper {
     ExerciseDone exerciseDoneDtoToExerciseDone(ExerciseDoneDto exerciseDoneDto);
 
     /**
+     * @param exerciseDone to be mapped to a DTO
+     * @return ExerciseDone-DTO mapped from given ExerciseDone-entity
+     */
+    ExerciseDoneDto exerciseDoneToExerciseDoneDto(ExerciseDone exerciseDone);
+
+    /**
      * @param activeTrainingScheduleDto to be mapped to an entity
      * @return ActiveTrainingSchedule-entity mapped from given ActiveTrainingSchedule-DTO
      */
     ActiveTrainingSchedule activeTrainingScheduleDtoToActiveTrainingSchedule(ActiveTrainingScheduleDto activeTrainingScheduleDto);
+
+    /**
+     * @param activeTrainingSchedule to be mapped to a DTO
+     * @return ActiveTrainingSchedule-DTO mapped from given ActiveTrainingSchedule-entity
+     */
+    ActiveTrainingScheduleDto activeTrainingScheduleToActiveTrainingScheduleDto(ActiveTrainingSchedule activeTrainingSchedule);
 
 }
