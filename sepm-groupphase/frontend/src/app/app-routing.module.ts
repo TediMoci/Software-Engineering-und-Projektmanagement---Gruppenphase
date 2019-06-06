@@ -41,6 +41,7 @@ import {EditWorkoutExercisesComponent} from './components/edit-workout-exercises
 import {CreateTrainingScheduleManuallyComponent} from './components/create-training-schedule-manually/create-training-schedule-manually.component';
 import {TrainingScheduleComponent} from './components/training-schedule/training-schedule.component';
 import {EditTrainingScheduleComponent} from './components/edit-training-schedule/edit-training-schedule.component';
+import {FitnessProviderComponent} from './components/fitness-provider/fitness-provider.component';
 
 const routes: Routes = [
 
@@ -69,6 +70,7 @@ const routes: Routes = [
   {path: 'fitnessProvider-profile', canActivate: [AuthGuard], component: FitnessProviderProfileComponent},
   {path: 'follower', canActivate: [FitnessProviderRoleGuard], component: FollowerComponent},
   {path: 'fitnessProviders', canActivate: [RoleGuard], component: FitnessProvidersFollowedComponent},
+  {path: 'fitnessProvider', canActivate: [RoleGuard], component: FitnessProviderComponent},
   {path: 'myExercises', canActivate: [RoleGuard], component: OwnExercisesComponent},
   {path: 'myWorkouts', canActivate: [RoleGuard], component: OwnWorkoutsComponent},
   {path: 'myCourses', canActivate: [FitnessProviderRoleGuard], component: OwnCoursesComponent},

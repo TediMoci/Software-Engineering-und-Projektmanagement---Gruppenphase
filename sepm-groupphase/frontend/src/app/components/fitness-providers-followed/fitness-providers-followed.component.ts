@@ -3,7 +3,6 @@ import {Router} from '@angular/router';
 import {Dude} from '../../dtos/dude';
 import {FitnessProvider} from '../../dtos/fitness-provider';
 import {FitnessProvidersFollowedService} from '../../services/fitness-providers-followed.service';
-import {Exercise} from '../../dtos/exercise';
 
 @Component({
   selector: 'app-fitness-providers-followed',

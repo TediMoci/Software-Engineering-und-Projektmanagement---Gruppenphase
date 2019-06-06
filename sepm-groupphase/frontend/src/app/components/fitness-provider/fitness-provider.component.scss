@@ -1,0 +1,48 @@
+.container {
+  padding: 0px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  background: white;
+  min-height: 700px;
+}
+
+.img-fluid {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  width: 200px;
+  height: 200px;
+}
+
+.col-sm-3 {
+  background: lightskyblue;
+  min-height: 700px;
+}
+
+.row-sm-1 {
+  padding: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+  color: black;
+  line-height: 10px;
+}
+
+.col-sm-9 {
+  padding: 40px;
+  ul{
+    height: 700px;
+    line-height: 80px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    font-size: 30px;
+  }
+  .btn2 {
+    color: black;
+    font-size: 20px;
+    margin-right: 30px;
+  }
+  .btn2:hover{
+    color:lightskyblue;
+  }
+}
