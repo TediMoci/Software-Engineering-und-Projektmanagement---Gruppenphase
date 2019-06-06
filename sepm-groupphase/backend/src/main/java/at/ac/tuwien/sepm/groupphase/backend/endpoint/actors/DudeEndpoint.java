@@ -1,12 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
-import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
@@ -39,15 +38,17 @@ public class DudeEndpoint {
     private final IDudeService iDudeService;
     private final ITrainingScheduleService iTrainingScheduleService;
     private final IDudeMapper dudeMapper;
+    private final IFitnessProviderMapper fitnessProviderMapper;
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private final IExerciseMapper exerciseMapper;
     private final IWorkoutMapper workoutMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
+    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
         this.iDudeService = iDudeService;
         this.iTrainingScheduleService = iTrainingScheduleService;
         this.dudeMapper = dudeMapper;
+        this.fitnessProviderMapper = fitnessProviderMapper;
         this.trainingScheduleMapper = trainingScheduleMapper;
         this.exerciseMapper = exerciseMapper;
         this.workoutMapper = workoutMapper;
@@ -131,11 +132,15 @@ public class DudeEndpoint {
             iDudeService.followFitnessProvider(dudeId, fitnessProviderId);
         } catch (ServiceException e) {
             LOGGER.error("Could not followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            if (e.getMessage().equals("You already follow this fitness provider!")) {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            }
         }
     }
 
-    @RequestMapping(value = "/{dudeId}/unfollow/{fitnessProviderId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{dudeId}/follow/{fitnessProviderId}", method = RequestMethod.DELETE)
     @ApiOperation(value = "Unfollow fitness provider with given id", authorizations = {@Authorization(value = "apiKey")})
     public void unfollowFitnessProvider(@PathVariable Long dudeId, @PathVariable Long fitnessProviderId) {
         LOGGER.info("Entering unfollowFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
@@ -145,6 +150,25 @@ public class DudeEndpoint {
             LOGGER.error("Could not unfollowFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(value = "/{dudeId}/follow", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all followed fitness providers of dude", authorizations = {@Authorization(value = "apiKey")})
+    public FitnessProviderDto[] getFollowedFitnessProviders(@PathVariable Long dudeId) {
+        LOGGER.info("Entering getFollowedFitnessProviders with dudeId: " + dudeId);
+        List<FitnessProvider> fitnessProviders;
+        try {
+            fitnessProviders = iDudeService.findDudeById(dudeId).getFitnessProviders();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getFollowedFitnessProviders with dudeId: " + dudeId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        FitnessProviderDto[] fitnessProviderDtos = new FitnessProviderDto[fitnessProviders.size()];
+        for (int i = 0; i < fitnessProviders.size(); i++) {
+            fitnessProviderDtos[i] = fitnessProviderMapper.fitnessProviderToFitnessProviderDto(fitnessProviders.get(i));
+            fitnessProviderDtos[i].setPassword("Not available");
+        }
+        return fitnessProviderDtos;
     }
 
     @RequestMapping(value = "/{id}/exercises", method = RequestMethod.GET)

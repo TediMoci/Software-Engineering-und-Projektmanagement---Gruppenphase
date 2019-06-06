@@ -105,6 +105,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}/trainingSchedules",
                     "/dudes/{id}/activeTrainingSchedule",
                     "/dudes/{id}/activeTrainingSchedule/done",
+                    "/dudes/{dudeId}/follow",
                     "/{id}/{version}/exercises",
                     "/user",
                     "/fitnessProvider",
@@ -132,6 +133,7 @@ public class SecurityConfiguration {
                     "/swagger-ui.html")
                 .permitAll()
                 .antMatchers(HttpMethod.DELETE,
+                    "/dudes/{dudeId}/follow/{fitnessProviderId}",
                     "/exercise/{id}",
                     "/course/{id}",
                     "/trainingSchedule/{id}",
@@ -140,7 +142,6 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.PUT,
             "/dudes/{name}",
                     "/dudes/{dudeId}/follow/{fitnessProviderId}",
-                    "/dudes/{dudeId}/unfollow/{fitnessProviderId}",
                     "/exercise/{id}",
                     "/trainingSchedule/{id}",
                     "/trainingSchedule/active/done",

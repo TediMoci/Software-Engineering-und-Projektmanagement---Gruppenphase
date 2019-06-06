@@ -12,7 +12,14 @@ public class FollowFitnessProviderRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-
+    @Transactional
+    public int checkFollowedFitnessProvider(Long dudeId, Long fitnessProviderId) {
+        return entityManager.createNativeQuery("SELECT * FROM dude_fitness_provider_follows WHERE dude_id=? AND fitness_provider_id=?")
+            .setParameter(1, dudeId)
+            .setParameter(2, fitnessProviderId)
+            .getResultList()
+            .size();
+    }
 
     @Transactional
     public void followFitnessProvider(Long dudeId, Long fitnessProviderId) {

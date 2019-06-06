@@ -154,6 +154,13 @@ public class DudeService implements IDudeService {
             throw new ServiceException(e.getMessage());
         }
         try {
+            if (followFitnessProviderRepository.checkFollowedFitnessProvider(dudeId, fitnessProviderId) != 0) {
+                throw new ServiceException("You already follow this fitness provider!");
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
             followFitnessProviderRepository.followFitnessProvider(dudeId, fitnessProviderId);
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage());
