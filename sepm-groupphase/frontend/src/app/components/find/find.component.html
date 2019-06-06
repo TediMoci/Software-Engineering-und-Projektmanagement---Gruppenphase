@@ -54,10 +54,10 @@
                   Category: {{filterExerciseCategory}}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" (click)="filterExerciseCategory ='None'">None</a>
-                  <a class="dropdown-item" (click)="filterExerciseCategory ='Strength'">Strength</a>
-                  <a class="dropdown-item" (click)="filterExerciseCategory ='Endurance'">Endurance</a>
-                  <a class="dropdown-item" (click)="filterExerciseCategory ='Other'">Other</a>
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='None'; startSearch(category)">None</a>
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='Strength'; startSearch(category)">Strength</a>
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='Endurance'; startSearch(category)">Endurance</a>
+                  <a class="dropdown-item" (click)="filterExerciseCategory ='Other'; startSearch(category)">Other</a>
                 </div>
               </div>
             </div>
@@ -72,10 +72,10 @@
                   Category: {{filterDudeSelfAssessment}}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='None'">None</a>
-                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Beginner'">Beginner</a>
-                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Advanced'">Advanced</a>
-                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Pro'">Pro</a>
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='None' ; startSearch(category)">None</a>
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Beginner' ; startSearch(category)">Beginner</a>
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Advanced' ; startSearch(category)">Advanced</a>
+                  <a class="dropdown-item" (click)="filterDudeSelfAssessment ='Pro' ; startSearch(category)">Pro</a>
                 </div>
               </div>
             </div>
@@ -84,25 +84,25 @@
               <p>Filter for Workout</p>
               <!--start dropdown-->
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutDifficulty" data-toggle="dropdown" [(ngModel)]="filterWorkoutDifficulty" ngDefaultControl>
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutDifficulty" data-toggle="dropdown"  [(ngModel)]="filterWorkoutDifficulty" ngDefaultControl>
                   Difficulty: {{filterWorkoutDifficulty}}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='None'">None</a>
-                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Beginner'">Beginner</a>
-                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Advanced'">Advanced</a>
-                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Pro'">Pro</a>
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='None' ; startSearch(category)">None</a>
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Beginner' ; startSearch(category)">Beginner</a>
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Advanced' ; startSearch(category)">Advanced</a>
+                  <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Pro' ; startSearch(category)">Pro</a>
                 </div>
               </div>
               <!--end dropdown-->
               <!--start dropdown-->
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutCaloriesMin" data-toggle="dropdown" [(ngModel)]="filterWorkoutCaloriesMin" ngDefaultControl>
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutCaloriesMin" data-toggle="dropdown"  [(ngModel)]="filterWorkoutCaloriesMin" ngDefaultControl>
                   Min Calories: {{filterWorkoutCaloriesMin == '' || filterWorkoutCaloriesMin == undefined  ? 'None' : filterWorkoutCaloriesMin}}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" (click)="filterWorkoutCaloriesMin =''">None</a>
-                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMin" placeholder="Minimum Calories" [(ngModel)]="filterWorkoutCaloriesMin">
+                  <a class="dropdown-item" (click)="filterWorkoutCaloriesMin ='' ; startSearch(category)">None</a>
+                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMin" placeholder="Minimum Calories"  [(ngModel)]="filterWorkoutCaloriesMin">
                 </div>
               </div>
               <!--end dropdown-->
@@ -113,7 +113,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" (click)="filterWorkoutCaloriesMax =''">None</a>
-                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMax" placeholder="Maximum Calories" [(ngModel)]="filterWorkoutCaloriesMax">
+                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMax" placeholder="Maximum Calories"  [(ngModel)]="filterWorkoutCaloriesMax">
                 </div>
               </div>
               <!--end dropdown-->
