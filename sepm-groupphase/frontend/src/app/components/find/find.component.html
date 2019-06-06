@@ -30,7 +30,7 @@
                 <input ngbButton type="radio"(click)="resetResults()" disabled value="Dudes"> Dudes
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()" disabled value="Fitness Provider"> Fitness Provider
+                <input ngbButton type="radio"(click)="resetResults()"  value="Fitness Provider"> Fitness Provider
               </label>
             </div>
             <div class="card-body row no-gutters align-items-center">
@@ -149,9 +149,9 @@
             <!--end case-->
             <!--start case-->
             <ul *ngSwitchCase="'Workout'" style="list-style-type: none;">
-              <li *ngFor='let element of entries'>
+              <li>
                 <mat-accordion>
-                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)" *ngFor='let element of entries'>
                     <mat-expansion-panel-header>
                       <mat-panel-title style="font-size: large;">
                         {{element.name}}
@@ -188,6 +188,28 @@
                         </mat-expansion-panel>
                       </mat-accordion>
                     </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </li>
+            </ul>
+            <!--end case-->
+            <!--start case-->
+            <ul *ngSwitchCase="'Fitness Provider'" style="list-style-type: none;" >
+              <li *ngFor='let element of entries'>
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p>Email: {{element.email}}</p>
+                    <p>Adress: {{element.address}}</p>
+                    <p>Phone: {{element.phoneNumber}}</p>
+                    <hr>
                   </mat-expansion-panel>
                 </mat-accordion>
               </li>

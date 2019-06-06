@@ -11,6 +11,7 @@ import {WorkoutFilter} from "../../dtos/workout-filter";
 import {Course} from "../../dtos/course";
 import {Workout} from "../../dtos/workout";
 import {WorkoutService} from "../../services/workout.service";
+import {FitnessProviderFilter} from "../../dtos/fitness-provider-filter";
 
 @Component({
   selector: 'app-find',
@@ -50,6 +51,7 @@ export class FindComponent implements OnInit {
   fitnessProvider: FitnessProvider;
   exerciseFilter: ExerciseFilter;
   workoutFilter: WorkoutFilter;
+  fitnessProviderFilter: FitnessProviderFilter;
 
 
 
@@ -181,7 +183,29 @@ export class FindComponent implements OnInit {
         break;
       case "Dudes": console.log("Dudes not implemented yet");
         break;
-      case "Fitness Provider": console.log("Fitness Provider not implemented yet");
+      case "Fitness Provider":
+
+        this.fitnessProviderFilter = new FitnessProviderFilter(
+          this.inputTextActual);
+
+        console.log("name: "+this.fitnessProviderFilter.filter);
+        this.findService.getAllFitnessProviderFiltered(this.fitnessProviderFilter).subscribe(
+          (data) => {
+            console.log('get all courses');
+            this.entries = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
         break;
     }
   }
