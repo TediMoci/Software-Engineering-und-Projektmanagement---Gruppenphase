@@ -82,7 +82,7 @@
             </div>
 
           </form>
-          <a [routerLink]="['/workout-exercises']" (click)="addExercises()" class="btn2 btn-link">Add Exercises</a>
+          <button (click)="addExercises()" class="btn btn-secondary">Add Exercises</button>
         </div>
         <a [routerLink]="['/create']" (click)="removeFromLocalStorage()" class="btn btn-link">Cancel</a>
         <button type="button" (click)="addWorkout()" class="btn btn-success float-right">Create</button>

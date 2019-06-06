@@ -82,6 +82,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { CreateExercisesForWorkoutComponent } from './components/create-exercises-for-workout/create-exercises-for-workout.component';
 import { EditWorkoutExercisesComponent } from './components/edit-workout-exercises/edit-workout-exercises.component';
 import { CreateTrainingScheduleManuallyComponent } from './components/create-training-schedule-manually/create-training-schedule-manually.component';
+import { TrainingScheduleComponent } from './components/training-schedule/training-schedule.component';
+import { EditTrainingScheduleComponent } from './components/edit-training-schedule/edit-training-schedule.component';
 
 @NgModule({
   declarations: [
@@ -125,6 +127,8 @@ import { CreateTrainingScheduleManuallyComponent } from './components/create-tra
     CreateExercisesForWorkoutComponent,
     EditWorkoutExercisesComponent,
     CreateTrainingScheduleManuallyComponent,
+    TrainingScheduleComponent,
+    EditTrainingScheduleComponent,
   ],
   imports: [
     MatAutocompleteModule,

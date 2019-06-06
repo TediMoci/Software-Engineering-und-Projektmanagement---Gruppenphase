@@ -102,6 +102,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}",
                     "/dudes/{id}/exercises",
                     "/dudes/{id}/workouts",
+                    "/dudes/{id}/trainingSchedules",
                     "/{id}/{version}/exercises",
                     "/user",
                     "/fitnessProvider",
@@ -130,10 +131,12 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.DELETE,
                     "/exercise/{id}",
                     "/course/{id}",
+                    "/trainingSchedule/{id}",
                     "/workout/{id}").permitAll()
                 .antMatchers(HttpMethod.PUT,
             "/dudes/{name}",
                     "/exercise/{id}",
+                    "/trainingSchedule/{id}",
                     "/course/{id}",
                     "/workout/{id}",
                     "/fitnessProvider/{name}").permitAll()

@@ -1,8 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDoneDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleWorkoutDtoOut;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import org.mapstruct.Mapper;
 
@@ -26,5 +30,17 @@ public interface ITrainingScheduleMapper {
      * @return TrainingScheduleWorkout-DTO-out mapped from given TrainingScheduleWorkout-entity
      */
     TrainingScheduleWorkoutDtoOut trainingScheduleWorkoutToTrainingScheduleWorkoutDtoOut(TrainingScheduleWorkout trainingScheduleWorkout);
+
+    /**
+     * @param exerciseDoneDto to be mapped to an entity
+     * @return ExerciseDone-entity mapped from given ExerciseDone-DTO
+     */
+    ExerciseDone exerciseDoneDtoToExerciseDone(ExerciseDoneDto exerciseDoneDto);
+
+    /**
+     * @param activeTrainingScheduleDto to be mapped to an entity
+     * @return ActiveTrainingSchedule-entity mapped from given ActiveTrainingSchedule-DTO
+     */
+    ActiveTrainingSchedule activeTrainingScheduleDtoToActiveTrainingSchedule(ActiveTrainingScheduleDto activeTrainingScheduleDto);
 
 }

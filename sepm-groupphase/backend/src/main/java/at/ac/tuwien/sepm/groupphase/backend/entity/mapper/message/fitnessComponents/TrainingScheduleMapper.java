@@ -1,9 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDoneDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleWorkoutDtoOut;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +26,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.name(trainingScheduleDto.getName());
         builder.description(trainingScheduleDto.getDescription());
         builder.difficulty(trainingScheduleDto.getDifficulty());
+        builder.intervalLength(trainingScheduleDto.getIntervalLength());
         builder.rating(trainingScheduleDto.getRating());
         builder.isHistory(false);
 
@@ -55,6 +60,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.name(trainingSchedule.getName());
         builder.description(trainingSchedule.getDescription());
         builder.difficulty(trainingSchedule.getDifficulty());
+        builder.intervalLength(trainingSchedule.getIntervalLength());
         builder.rating(trainingSchedule.getRating());
         builder.creatorId(trainingSchedule.getCreator().getId());
 
@@ -74,6 +80,33 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.rating(trainingScheduleWorkout.getWorkout().getRating());
         builder.creatorName(trainingScheduleWorkout.getWorkout().getCreator().getName());
         builder.day(trainingScheduleWorkout.getDay());
+
+        return builder.build();
+    }
+
+    @Override
+    public ExerciseDone exerciseDoneDtoToExerciseDone(ExerciseDoneDto exerciseDoneDto) {
+        ExerciseDone.ExerciseDoneBuilder builder = new ExerciseDone.ExerciseDoneBuilder();
+
+        builder.dudeId(exerciseDoneDto.getDudeId());
+        builder.exerciseId(exerciseDoneDto.getExerciseId());
+        builder.exerciseVersion(exerciseDoneDto.getExerciseVersion());
+        builder.workoutId(exerciseDoneDto.getWorkoutId());
+        builder.workoutVersion(exerciseDoneDto.getWorkoutVersion());
+        builder.day(exerciseDoneDto.getDay());
+        builder.done(exerciseDoneDto.getDone());
+
+        return builder.build();
+    }
+
+    @Override
+    public ActiveTrainingSchedule activeTrainingScheduleDtoToActiveTrainingSchedule(ActiveTrainingScheduleDto activeTrainingScheduleDto) {
+        ActiveTrainingSchedule.ActiveTrainingScheduleBuilder builder = new ActiveTrainingSchedule.ActiveTrainingScheduleBuilder();
+
+        builder.dudeId(activeTrainingScheduleDto.getDudeId());
+        builder.trainingScheduleId(activeTrainingScheduleDto.getTrainingScheduleId());
+        builder.trainingScheduleVersion(activeTrainingScheduleDto.getTrainingScheduleVersion());
+        builder.intervalRepetitions(activeTrainingScheduleDto.getIntervalRepetitions());
 
         return builder.build();
     }
