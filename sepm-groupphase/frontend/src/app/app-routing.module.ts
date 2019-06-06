@@ -38,6 +38,9 @@ import {CreateWorkoutComponent} from './components/create-workout/create-workout
 import {WorkoutExercisesComponent} from './components/workout-exercises/workout-exercises.component';
 import {CreateExercisesForWorkoutComponent} from './components/create-exercises-for-workout/create-exercises-for-workout.component';
 import {EditWorkoutExercisesComponent} from './components/edit-workout-exercises/edit-workout-exercises.component';
+import {CreateTrainingScheduleManuallyComponent} from './components/create-training-schedule-manually/create-training-schedule-manually.component';
+import {TrainingScheduleComponent} from './components/training-schedule/training-schedule.component';
+import {EditTrainingScheduleComponent} from './components/edit-training-schedule/edit-training-schedule.component';
 
 const routes: Routes = [
 
@@ -54,6 +57,7 @@ const routes: Routes = [
   {path: 'create-exercise-for-workout', canActivate: [RoleGuard], component: CreateExercisesForWorkoutComponent},
   {path: 'create-course', canActivate: [FitnessProviderRoleGuard], component: CreateCourseComponent},
   {path: 'create-workout', canActivate: [RoleGuard], component: CreateWorkoutComponent},
+  {path: 'create-trainingSchedule-m', canActivate: [RoleGuard], component: CreateTrainingScheduleManuallyComponent},
   {path: 'workout-exercises', canActivate: [RoleGuard], component: WorkoutExercisesComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
@@ -76,7 +80,9 @@ const routes: Routes = [
   {path: 'edit-workout', canActivate: [RoleGuard], component: EditWorkoutComponent},
   {path: 'course', canActivate: [AuthGuard], component: CourseComponent},
   {path: 'edit-workout-exercises', canActivate: [RoleGuard], component: EditWorkoutExercisesComponent},
-  {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent}
+  {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent},
+  {path: 'trainingSchedule', canActivate: [AuthGuard], component: TrainingScheduleComponent},
+  {path: 'edit-training-schedule', canActivate:[RoleGuard], component: EditTrainingScheduleComponent}
 ];
 
 @NgModule({

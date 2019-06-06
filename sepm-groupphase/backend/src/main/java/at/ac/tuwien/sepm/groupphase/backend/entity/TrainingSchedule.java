@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.TrainingScheduleKey;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 
 import javax.persistence.*;
@@ -28,18 +29,24 @@ public class TrainingSchedule {
     @Column(nullable = false)
     private Integer difficulty;
 
+    @Column(nullable = false, name = "interval_length")
+    private Integer intervalLength;
+
     @Column(nullable = false)
     private Double rating = 1.0;
 
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "trainingSchedule")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "trainingSchedule")
     private List<TrainingScheduleWorkout> workouts;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dude_id")
     private Dude creator;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "trainingSchedule")
+    private List<ActiveTrainingSchedule> activeUsages;
 
     public Long getId() {
         return id;
@@ -81,6 +88,14 @@ public class TrainingSchedule {
         this.difficulty = difficulty;
     }
 
+    public Integer getIntervalLength() {
+        return intervalLength;
+    }
+
+    public void setIntervalLength(Integer intervalLength) {
+        this.intervalLength = intervalLength;
+    }
+
     public Double getRating() {
         return rating;
     }
@@ -113,6 +128,14 @@ public class TrainingSchedule {
         this.creator = creator;
     }
 
+    public List<ActiveTrainingSchedule> getActiveUsages() {
+        return activeUsages;
+    }
+
+    public void setActiveUsages(List<ActiveTrainingSchedule> activeUsages) {
+        this.activeUsages = activeUsages;
+    }
+
     public static TrainingScheduleBuilder builder() {
         return new TrainingScheduleBuilder();
     }
@@ -125,10 +148,9 @@ public class TrainingSchedule {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", difficulty=" + difficulty +
+            ", intervalLength=" + intervalLength +
             ", rating=" + rating +
             ", isHistory=" + isHistory +
-            ", workouts=" + workouts +
-            ", creator=" + creator +
             '}';
     }
 
@@ -144,10 +166,10 @@ public class TrainingSchedule {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (difficulty != null ? !difficulty.equals(that.difficulty) : that.difficulty != null) return false;
+        if (intervalLength != null ? !intervalLength.equals(that.intervalLength) : that.intervalLength != null)
+            return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
-        if (isHistory != null ? !isHistory.equals(that.isHistory) : that.isHistory != null) return false;
-        if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
-        return creator != null ? creator.equals(that.creator) : that.creator == null;
+        return isHistory != null ? isHistory.equals(that.isHistory) : that.isHistory == null;
 
     }
 
@@ -158,10 +180,9 @@ public class TrainingSchedule {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
+        result = 31 * result + (intervalLength != null ? intervalLength.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
-        result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
     }
 
@@ -171,10 +192,12 @@ public class TrainingSchedule {
         private String name;
         private String description;
         private Integer difficulty;
+        private Integer intervalLength;
         private Double rating;
         private Boolean isHistory;
         private List<TrainingScheduleWorkout> workouts;
         private Dude creator;
+        private List<ActiveTrainingSchedule> activeUsages;
 
         public TrainingScheduleBuilder() {
         }
@@ -204,6 +227,11 @@ public class TrainingSchedule {
             return this;
         }
 
+        public TrainingScheduleBuilder intervalLength(Integer intervalLength) {
+            this.intervalLength = intervalLength;
+            return this;
+        }
+
         public TrainingScheduleBuilder rating(Double rating) {
             this.rating = rating;
             return this;
@@ -224,16 +252,23 @@ public class TrainingSchedule {
             return this;
         }
 
+        public TrainingScheduleBuilder activeUsages(List<ActiveTrainingSchedule> activeUsages) {
+            this.activeUsages = activeUsages;
+            return this;
+        }
+
         public TrainingSchedule build() {
             TrainingSchedule trainingSchedule = new TrainingSchedule();
             trainingSchedule.setId(id);
             trainingSchedule.setName(name);
             trainingSchedule.setDescription(description);
             trainingSchedule.setDifficulty(difficulty);
+            trainingSchedule.setIntervalLength(intervalLength);
             trainingSchedule.setRating(rating);
             trainingSchedule.setHistory(isHistory);
             trainingSchedule.setWorkouts(workouts);
             trainingSchedule.setCreator(creator);
+            trainingSchedule.setActiveUsages(activeUsages);
             return trainingSchedule;
         }
     }
