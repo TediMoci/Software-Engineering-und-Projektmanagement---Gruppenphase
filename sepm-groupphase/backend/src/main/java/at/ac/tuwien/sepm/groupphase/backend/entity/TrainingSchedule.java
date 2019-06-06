@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingS
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity

@@ -12,6 +12,14 @@ public class ExerciseDoneDto {
     @NotNull(message = "dudeId must be given")
     private Long dudeId;
 
+    @ApiModelProperty(required = true, name = "Id of TrainingSchedule")
+    @NotNull(message = "trainingScheduleId must be given")
+    private Long trainingScheduleId;
+
+    @ApiModelProperty(required = true, name = "Version of TrainingSchedule")
+    @NotNull(message = "trainingScheduleVersion must be given")
+    private Integer trainingScheduleVersion;
+
     @ApiModelProperty(required = true, name = "Id of Exercise")
     @NotNull(message = "exerciseId must be given")
     private Long exerciseId;
@@ -42,6 +50,22 @@ public class ExerciseDoneDto {
 
     public void setDudeId(Long dudeId) {
         this.dudeId = dudeId;
+    }
+
+    public Long getTrainingScheduleId() {
+        return trainingScheduleId;
+    }
+
+    public void setTrainingScheduleId(Long trainingScheduleId) {
+        this.trainingScheduleId = trainingScheduleId;
+    }
+
+    public Integer getTrainingScheduleVersion() {
+        return trainingScheduleVersion;
+    }
+
+    public void setTrainingScheduleVersion(Integer trainingScheduleVersion) {
+        this.trainingScheduleVersion = trainingScheduleVersion;
     }
 
     public Long getExerciseId() {
@@ -100,6 +124,8 @@ public class ExerciseDoneDto {
     public String toString() {
         return "ExerciseDoneDto{" +
             "dudeId=" + dudeId +
+            ", trainingScheduleId=" + trainingScheduleId +
+            ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", exerciseId=" + exerciseId +
             ", exerciseVersion=" + exerciseVersion +
             ", workoutId=" + workoutId +
@@ -117,6 +143,10 @@ public class ExerciseDoneDto {
         ExerciseDoneDto that = (ExerciseDoneDto) o;
 
         if (dudeId != null ? !dudeId.equals(that.dudeId) : that.dudeId != null) return false;
+        if (trainingScheduleId != null ? !trainingScheduleId.equals(that.trainingScheduleId) : that.trainingScheduleId != null)
+            return false;
+        if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
+            return false;
         if (exerciseId != null ? !exerciseId.equals(that.exerciseId) : that.exerciseId != null) return false;
         if (exerciseVersion != null ? !exerciseVersion.equals(that.exerciseVersion) : that.exerciseVersion != null)
             return false;
@@ -131,6 +161,8 @@ public class ExerciseDoneDto {
     @Override
     public int hashCode() {
         int result = dudeId != null ? dudeId.hashCode() : 0;
+        result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
+        result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (exerciseId != null ? exerciseId.hashCode() : 0);
         result = 31 * result + (exerciseVersion != null ? exerciseVersion.hashCode() : 0);
         result = 31 * result + (workoutId != null ? workoutId.hashCode() : 0);
@@ -142,6 +174,8 @@ public class ExerciseDoneDto {
 
     public static final class ExerciseDoneDtoBuilder {
         private Long dudeId;
+        private Long trainingScheduleId;
+        private Integer trainingScheduleVersion;
         private Long exerciseId;
         private Integer exerciseVersion;
         private Long workoutId;
@@ -154,6 +188,16 @@ public class ExerciseDoneDto {
 
         public ExerciseDoneDtoBuilder dudeId(Long dudeId) {
             this.dudeId = dudeId;
+            return this;
+        }
+
+        public ExerciseDoneDtoBuilder trainingScheduleId(Long trainingScheduleId) {
+            this.trainingScheduleId = trainingScheduleId;
+            return this;
+        }
+
+        public ExerciseDoneDtoBuilder trainingScheduleVersion(Integer trainingScheduleVersion) {
+            this.trainingScheduleVersion = trainingScheduleVersion;
             return this;
         }
 
@@ -190,6 +234,8 @@ public class ExerciseDoneDto {
         public ExerciseDoneDto build() {
             ExerciseDoneDto exerciseDoneDto = new ExerciseDoneDto();
             exerciseDoneDto.setDudeId(dudeId);
+            exerciseDoneDto.setTrainingScheduleId(trainingScheduleId);
+            exerciseDoneDto.setTrainingScheduleVersion(trainingScheduleVersion);
             exerciseDoneDto.setExerciseId(exerciseId);
             exerciseDoneDto.setExerciseVersion(exerciseVersion);
             exerciseDoneDto.setWorkoutId(workoutId);
