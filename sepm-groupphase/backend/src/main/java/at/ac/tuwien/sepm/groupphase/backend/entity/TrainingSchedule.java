@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingS
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -46,7 +45,7 @@ public class TrainingSchedule {
     @JoinColumn(name = "dude_id")
     private Dude creator;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "trainingSchedule")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "trainingSchedule")
     private List<ActiveTrainingSchedule> activeUsages;
 
     public Long getId() {
@@ -152,9 +151,6 @@ public class TrainingSchedule {
             ", intervalLength=" + intervalLength +
             ", rating=" + rating +
             ", isHistory=" + isHistory +
-            ", workouts=" + workouts +
-            ", creator=" + creator +
-            ", activeUsages=" + activeUsages +
             '}';
     }
 
@@ -173,10 +169,7 @@ public class TrainingSchedule {
         if (intervalLength != null ? !intervalLength.equals(that.intervalLength) : that.intervalLength != null)
             return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
-        if (isHistory != null ? !isHistory.equals(that.isHistory) : that.isHistory != null) return false;
-        if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
-        if (creator != null ? !creator.equals(that.creator) : that.creator != null) return false;
-        return activeUsages != null ? activeUsages.equals(that.activeUsages) : that.activeUsages == null;
+        return isHistory != null ? isHistory.equals(that.isHistory) : that.isHistory == null;
 
     }
 
@@ -190,9 +183,6 @@ public class TrainingSchedule {
         result = 31 * result + (intervalLength != null ? intervalLength.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
-        result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
-        result = 31 * result + (activeUsages != null ? activeUsages.hashCode() : 0);
         return result;
     }
 

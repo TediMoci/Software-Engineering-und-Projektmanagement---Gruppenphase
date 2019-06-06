@@ -34,12 +34,12 @@ public class ActiveTrainingSchedule {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "activeTrainingSchedule")
     private List<ExerciseDone> done;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("dude_id")
     @JoinColumn(name = "dude_id", referencedColumnName = "id")
     private Dude dude;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("training_schedule_id")
     @JoinColumns({
         @JoinColumn(name = "training_schedule_id", referencedColumnName = "id"),
@@ -123,9 +123,6 @@ public class ActiveTrainingSchedule {
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", startDate=" + startDate +
             ", intervalRepetitions=" + intervalRepetitions +
-            ", done=" + done +
-            ", dude=" + dude +
-            ", trainingSchedule=" + trainingSchedule +
             '}';
     }
 
@@ -142,11 +139,7 @@ public class ActiveTrainingSchedule {
         if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
             return false;
         if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
-        if (intervalRepetitions != null ? !intervalRepetitions.equals(that.intervalRepetitions) : that.intervalRepetitions != null)
-            return false;
-        if (done != null ? !done.equals(that.done) : that.done != null) return false;
-        if (dude != null ? !dude.equals(that.dude) : that.dude != null) return false;
-        return trainingSchedule != null ? trainingSchedule.equals(that.trainingSchedule) : that.trainingSchedule == null;
+        return intervalRepetitions != null ? intervalRepetitions.equals(that.intervalRepetitions) : that.intervalRepetitions == null;
 
     }
 
@@ -157,9 +150,6 @@ public class ActiveTrainingSchedule {
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (intervalRepetitions != null ? intervalRepetitions.hashCode() : 0);
-        result = 31 * result + (done != null ? done.hashCode() : 0);
-        result = 31 * result + (dude != null ? dude.hashCode() : 0);
-        result = 31 * result + (trainingSchedule != null ? trainingSchedule.hashCode() : 0);
         return result;
     }
 

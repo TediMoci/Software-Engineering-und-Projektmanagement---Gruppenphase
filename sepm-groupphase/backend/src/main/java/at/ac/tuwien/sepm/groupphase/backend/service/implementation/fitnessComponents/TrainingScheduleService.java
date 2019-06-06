@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
@@ -67,6 +69,14 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public ActiveTrainingSchedule saveActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException {
         LOGGER.info("Entering saveActive for: " + activeTrainingSchedule);
+        try {
+            if (iActiveTrainingScheduleRepository.findByDudeId(activeTrainingSchedule.getDudeId()).isPresent()) {
+                throw new ServiceException("Dude already has an ActiveTrainingSchedule.");
+            }
+        } catch (NoSuchElementException e) {
+            LOGGER.debug("Dude has no ActiveTrainingSchedule");
+        }
+
         activeTrainingSchedule.setStartDate(LocalDate.now());
         ActiveTrainingSchedule savedActiveTrainingSchedule;
         try {
@@ -173,6 +183,25 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             TrainingSchedule trainingSchedule = iTrainingScheduleRepository.findById(id);
             if (trainingSchedule == null) throw new ServiceException("Could not find Training Schedule with id: " + id);
             iTrainingScheduleRepository.delete(id);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteActive(Long dudeId) throws ServiceException {
+        LOGGER.info("Entering deleteActive with dudeId: " + dudeId);
+        ActiveTrainingSchedule activeTrainingSchedule;
+        try {
+            activeTrainingSchedule = iActiveTrainingScheduleRepository.findByDudeId(dudeId).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+
+        // TODO (Amir): stat-calculations and -saving for activeTrainingSchedule
+
+        try {
+            iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }

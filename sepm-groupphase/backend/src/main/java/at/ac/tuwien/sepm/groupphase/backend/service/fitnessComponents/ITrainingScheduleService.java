@@ -50,6 +50,12 @@ public interface ITrainingScheduleService {
     void delete(long id) throws ServiceException;
 
     /**
+     * @param dudeId of the ActiveTrainingSchedule to be deleted from the system
+     * @throws ServiceException if an error occurred while trying to delete the ActiveTrainingSchedule from the system
+     */
+    void deleteActive(Long dudeId) throws ServiceException;
+
+    /**
      * @param id of TrainingSchedule to be found
      * @param newTraining that will be updated
      * @return updated TrainingSchedule
