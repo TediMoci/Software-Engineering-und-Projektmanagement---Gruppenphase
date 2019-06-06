@@ -126,4 +126,22 @@ public class FitnessProviderEndpoint {
         return courseDtos;
     }
 
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Fitness Provider by filters", authorizations = {@Authorization(value = "apiKey")})
+    public FitnessProviderDto[] findByFilter(@RequestParam(defaultValue = "") String filter) {
+        LOGGER.info("Entering findByFilter with filter: " + filter);
+        List<FitnessProvider> fitnessProviders;
+        try {
+            fitnessProviders = iFitnessProviderService.findByFilter(filter);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        FitnessProviderDto[] fitnessProviderDtos = new FitnessProviderDto[fitnessProviders.size()];
+        for (int i = 0; i < fitnessProviders.size(); i++) {
+            fitnessProviderDtos[i] = fitnessProviderMapper.fitnessProviderToFitnessProviderDto(fitnessProviders.get(i));
+        }
+        return fitnessProviderDtos;
+    }
+
 }
