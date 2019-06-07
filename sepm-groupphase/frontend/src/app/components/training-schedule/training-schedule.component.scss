@@ -28,6 +28,21 @@
   line-height: 10px;
 }
 
+.scrolling-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  .card {
+    display: inline-flex;
+    min-height: 200px;
+    min-width: 200px;
+    padding: 5px;
+  }
+}
+
+
+
 .col-sm-9 {
   padding: 40px;
 }

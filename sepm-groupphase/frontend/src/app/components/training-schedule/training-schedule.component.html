@@ -21,6 +21,17 @@
         <p>Difficulty: {{trainingSchedule.difficulty}}</p>
         <p>"{{trainingSchedule.description}}"</p>
         <div>
+
+          <div class="scrolling-wrapper">
+            <div class="card" *ngFor="let element of tabs" (click)="dummy()" >
+              <h2 style="align-content: center">{{element}}</h2>
+              <p *ngIf="workoutsPerDay[tabs.indexOf(element)]!= undefined && workoutsPerDay[tabs.indexOf(element)].length == 0">No Workouts for {{element}}</p>
+              <mat-card class="card-in-card" *ngFor='let element of workoutsPerDay[tabs.indexOf(element)]'>
+                <p>{{element.name}}</p>
+              </mat-card>
+            </div>
+          </div>
+
           <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="selected = $event; tabContent = getContent(selected)" animationDuration="0">
             <mat-tab  *ngFor="let element of tabs" [label]="element">
               <p *ngIf="tabContent != undefined && tabContent.length == 0"> No workouts scheduled for Day {{selected +1}}</p>

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Directive, OnInit} from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {FormControl} from '@angular/forms';
 import {TrainingScheduleService} from "../../services/training-schedule.service";
 import {Workout} from "../../dtos/workout";
 import {WorkoutService} from "../../services/workout.service";
+import {element} from "protractor";
 
 @Component({
   selector: 'app-training-schedule',
@@ -26,6 +27,10 @@ export class TrainingScheduleComponent implements OnInit {
   error: any;
   displayedWorkouts: Array<any>;
   exercisesForWorkouts: any;
+  hover:boolean;
+  buttonDown: any;
+
+  workoutsPerDay: Array<any> = [];
 
   constructor(private trainingScheduleService:TrainingScheduleService, private workoutService:WorkoutService) {}
 
@@ -34,6 +39,8 @@ export class TrainingScheduleComponent implements OnInit {
     this.trainingSchedule = JSON.parse(localStorage.getItem('selectedTrainingSchedule'));
     this.tsName = this.trainingSchedule.name;
     this.userName = this.dude.name;
+
+
 
     this.tabs = this.initTabs(this.trainingSchedule.intervalLength);
     console.log(this.trainingSchedule.trainingScheduleWorkouts)
@@ -55,6 +62,7 @@ export class TrainingScheduleComponent implements OnInit {
         });
         console.log('loaded ' + JSON.stringify(this.tsWorkouts))
         this.tabContent = this.getContent(this.selected.value);
+        this.intOverview();
       },
       error => {
         this.error = error;
@@ -77,6 +85,21 @@ export class TrainingScheduleComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+  intOverview(){
+    let elemsForDay: Array<Workout> = [];
+    for (let i = 0; i < this.trainingSchedule.intervalLength; i++){
+      for(let element of this.tsWorkouts){
+        if(i+1 == element.day){
+          console.log("Day "+ (i+1) + ": " + element.name)
+          elemsForDay.push(element)
+        }
+      }
+      this.workoutsPerDay[i] = elemsForDay;
+      elemsForDay = [];
+    }
+
   }
 
   initTabs(days: number){
@@ -106,6 +129,9 @@ export class TrainingScheduleComponent implements OnInit {
       case 2:return "Advanced";
       case 3:return "Pro";
     }
+  }
+  dummy(){
+    console.log("works")
   }
 
 
