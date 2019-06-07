@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.relationships;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ExerciseDoneKey;
 
@@ -9,6 +11,15 @@ import javax.persistence.*;
 @Table(name = "exercise_done")
 @IdClass(ExerciseDoneKey.class)
 public class ExerciseDone {
+
+    @Id
+    @Column(name = "active_training_schedule_id")
+    private Long activeTrainingScheduleId;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @MapsId("active_training_schedule_id")
+    @JoinColumn(name = "active_training_schedule_id", referencedColumnName = "id")
+    private ActiveTrainingSchedule activeTrainingSchedule;
 
     @Id
     @Column(name = "dude_id")
@@ -22,14 +33,13 @@ public class ExerciseDone {
     @Column(name = "training_schedule_version")
     private Integer trainingScheduleVersion;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @MapsId("dude_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("training_schedule_id")
     @JoinColumns({
-        @JoinColumn(name = "dude_id", referencedColumnName = "dude_id"),
-        @JoinColumn(name = "training_schedule_id", referencedColumnName = "training_schedule_id"),
-        @JoinColumn(name = "training_schedule_version", referencedColumnName = "training_schedule_version")
+        @JoinColumn(name = "training_schedule_id", referencedColumnName = "id"),
+        @JoinColumn(name = "training_schedule_version", referencedColumnName = "version")
     })
-    private ActiveTrainingSchedule activeTrainingSchedule;
+    private TrainingSchedule trainingSchedule;
 
     @Id
     @Column(name = "exercise_id")
@@ -55,11 +65,45 @@ public class ExerciseDone {
     })
     private Workout workout;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("exercise_id")
+    @JoinColumns({
+        @JoinColumn(name = "exercise_id", referencedColumnName = "id"),
+        @JoinColumn(name = "exercise_version", referencedColumnName = "version")
+    })
+    private Exercise exercise;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("exercise_id")
+    @JoinColumns({
+        @JoinColumn(name = "workout_id", referencedColumnName = "workout_id"),
+        @JoinColumn(name = "workout_version", referencedColumnName = "workout_version"),
+        @JoinColumn(name = "exercise_id", referencedColumnName = "exercise_id"),
+        @JoinColumn(name = "exercise_version", referencedColumnName = "exercise_version")
+    })
+    private WorkoutExercise workoutExercise;
+
     @Id
     private Integer day;
 
     @Column(nullable = false)
     private Boolean done;
+
+    public Long getActiveTrainingScheduleId() {
+        return activeTrainingScheduleId;
+    }
+
+    public void setActiveTrainingScheduleId(Long activeTrainingScheduleId) {
+        this.activeTrainingScheduleId = activeTrainingScheduleId;
+    }
+
+    public ActiveTrainingSchedule getActiveTrainingSchedule() {
+        return activeTrainingSchedule;
+    }
+
+    public void setActiveTrainingSchedule(ActiveTrainingSchedule activeTrainingSchedule) {
+        this.activeTrainingSchedule = activeTrainingSchedule;
+    }
 
     public Long getDudeId() {
         return dudeId;
@@ -85,12 +129,12 @@ public class ExerciseDone {
         this.trainingScheduleVersion = trainingScheduleVersion;
     }
 
-    public ActiveTrainingSchedule getActiveTrainingSchedule() {
-        return activeTrainingSchedule;
+    public TrainingSchedule getTrainingSchedule() {
+        return trainingSchedule;
     }
 
-    public void setActiveTrainingSchedule(ActiveTrainingSchedule activeTrainingSchedule) {
-        this.activeTrainingSchedule = activeTrainingSchedule;
+    public void setTrainingSchedule(TrainingSchedule trainingSchedule) {
+        this.trainingSchedule = trainingSchedule;
     }
 
     public Long getExerciseId() {
@@ -133,6 +177,22 @@ public class ExerciseDone {
         this.workout = workout;
     }
 
+    public Exercise getExercise() {
+        return exercise;
+    }
+
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
+    }
+
+    public WorkoutExercise getWorkoutExercise() {
+        return workoutExercise;
+    }
+
+    public void setWorkoutExercise(WorkoutExercise workoutExercise) {
+        this.workoutExercise = workoutExercise;
+    }
+
     public Integer getDay() {
         return day;
     }
@@ -156,7 +216,8 @@ public class ExerciseDone {
     @Override
     public String toString() {
         return "ExerciseDone{" +
-            "dudeId=" + dudeId +
+            "activeTrainingScheduleId=" + activeTrainingScheduleId +
+            ", dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", exerciseId=" + exerciseId +
@@ -175,6 +236,8 @@ public class ExerciseDone {
 
         ExerciseDone that = (ExerciseDone) o;
 
+        if (activeTrainingScheduleId != null ? !activeTrainingScheduleId.equals(that.activeTrainingScheduleId) : that.activeTrainingScheduleId != null)
+            return false;
         if (dudeId != null ? !dudeId.equals(that.dudeId) : that.dudeId != null) return false;
         if (trainingScheduleId != null ? !trainingScheduleId.equals(that.trainingScheduleId) : that.trainingScheduleId != null)
             return false;
@@ -193,7 +256,8 @@ public class ExerciseDone {
 
     @Override
     public int hashCode() {
-        int result = dudeId != null ? dudeId.hashCode() : 0;
+        int result = activeTrainingScheduleId != null ? activeTrainingScheduleId.hashCode() : 0;
+        result = 31 * result + (dudeId != null ? dudeId.hashCode() : 0);
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (exerciseId != null ? exerciseId.hashCode() : 0);
@@ -206,19 +270,33 @@ public class ExerciseDone {
     }
 
     public static final class ExerciseDoneBuilder {
+        private Long activeTrainingScheduleId;
+        private ActiveTrainingSchedule activeTrainingSchedule;
         private Long dudeId;
         private Long trainingScheduleId;
         private Integer trainingScheduleVersion;
-        private ActiveTrainingSchedule activeTrainingSchedule;
+        private TrainingSchedule trainingSchedule;
         private Long exerciseId;
         private Integer exerciseVersion;
         private Long workoutId;
         private Integer workoutVersion;
         private Workout workout;
+        private Exercise exercise;
+        private WorkoutExercise workoutExercise;
         private Integer day;
         private Boolean done;
 
         public ExerciseDoneBuilder() {
+        }
+
+        public ExerciseDoneBuilder activeTrainingScheduleId(Long activeTrainingScheduleId) {
+            this.activeTrainingScheduleId = activeTrainingScheduleId;
+            return this;
+        }
+
+        public ExerciseDoneBuilder activeTrainingSchedule(ActiveTrainingSchedule activeTrainingSchedule) {
+            this.activeTrainingSchedule = activeTrainingSchedule;
+            return this;
         }
 
         public ExerciseDoneBuilder dudeId(Long dudeId) {
@@ -236,8 +314,8 @@ public class ExerciseDone {
             return this;
         }
 
-        public ExerciseDoneBuilder activeTrainingSchedule(ActiveTrainingSchedule activeTrainingSchedule) {
-            this.activeTrainingSchedule = activeTrainingSchedule;
+        public ExerciseDoneBuilder trainingSchedule(TrainingSchedule trainingSchedule) {
+            this.trainingSchedule = trainingSchedule;
             return this;
         }
 
@@ -266,6 +344,16 @@ public class ExerciseDone {
             return this;
         }
 
+        public ExerciseDoneBuilder exercise(Exercise exercise) {
+            this.exercise = exercise;
+            return this;
+        }
+
+        public ExerciseDoneBuilder workoutExercise(WorkoutExercise workoutExercise) {
+            this.workoutExercise = workoutExercise;
+            return this;
+        }
+
         public ExerciseDoneBuilder day(Integer day) {
             this.day = day;
             return this;
@@ -278,15 +366,19 @@ public class ExerciseDone {
 
         public ExerciseDone build() {
             ExerciseDone exerciseDone = new ExerciseDone();
+            exerciseDone.setActiveTrainingScheduleId(activeTrainingScheduleId);
+            exerciseDone.setActiveTrainingSchedule(activeTrainingSchedule);
             exerciseDone.setDudeId(dudeId);
             exerciseDone.setTrainingScheduleId(trainingScheduleId);
             exerciseDone.setTrainingScheduleVersion(trainingScheduleVersion);
-            exerciseDone.setActiveTrainingSchedule(activeTrainingSchedule);
+            exerciseDone.setTrainingSchedule(trainingSchedule);
             exerciseDone.setExerciseId(exerciseId);
             exerciseDone.setExerciseVersion(exerciseVersion);
             exerciseDone.setWorkoutId(workoutId);
             exerciseDone.setWorkoutVersion(workoutVersion);
             exerciseDone.setWorkout(workout);
+            exerciseDone.setExercise(exercise);
+            exerciseDone.setWorkoutExercise(workoutExercise);
             exerciseDone.setDay(day);
             exerciseDone.setDone(done);
             return exerciseDone;

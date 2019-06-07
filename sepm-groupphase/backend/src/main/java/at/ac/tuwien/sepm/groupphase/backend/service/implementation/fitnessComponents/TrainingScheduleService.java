@@ -99,6 +99,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 for (WorkoutExercise workoutExercise : trainingScheduleWorkout.getWorkout().getExercises()) {
                     exerciseDoneBuilder = new ExerciseDone.ExerciseDoneBuilder();
 
+                    exerciseDoneBuilder.activeTrainingScheduleId(savedActiveTrainingSchedule.getId());
                     exerciseDoneBuilder.dudeId(activeTrainingSchedule.getDudeId());
                     exerciseDoneBuilder.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
                     exerciseDoneBuilder.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
