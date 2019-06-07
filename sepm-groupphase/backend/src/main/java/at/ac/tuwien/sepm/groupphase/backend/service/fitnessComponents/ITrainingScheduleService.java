@@ -15,11 +15,14 @@ public interface ITrainingScheduleService {
 
     /**
      * @param days available to do workout
+     * @param duration to do workouts per day
+     * @param minTarget minimum amount of calories to be spent per day
+     * @param maxTarget maximum amount of calories to be spent per day
      * @param trainingSchedule to be saved
      * @return the saved TrainingSchedule
      * @throws ServiceException if an error occurred while trying to save the TrainingSchedule in the system
      */
-    TrainingSchedule saveRandom(int days, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException;
+    TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException;
 
     /**
      * @param id of TrainingSchedule to be found

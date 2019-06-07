@@ -30,16 +30,17 @@ public class TrainingScheduleEndpoint {
         this.trainingScheduleMapper = trainingScheduleMapper;
     }
 
-    @RequestMapping(value = "/{days}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{days}/{duration}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new random Training Schedule", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleDto saveRandom(
-        @PathVariable("days") int days, @PathVariable("minTarget") double minTarget,
-        @PathVariable("maxTarget") double maxTarget, @Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
+        @PathVariable("days") int days, @PathVariable("duration") int duration,
+        @PathVariable("minTarget") double minTarget, @PathVariable("maxTarget") double maxTarget,
+        @Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
         try {
-            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,minTarget,maxTarget,trainingSchedule));
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,duration,minTarget,maxTarget,trainingSchedule));
         } catch (ServiceException e) {
             LOGGER.error("Could not save: " + trainingScheduleDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
