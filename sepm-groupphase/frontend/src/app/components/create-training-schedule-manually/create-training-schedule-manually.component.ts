@@ -10,7 +10,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CreateTrainingSchedule} from '../../dtos/create-trainingSchedule';
 import {CreateTrainingScheduleService} from '../../services/create-training-schedule.service';
 import {TrainingScheduleWorkoutDtoIn} from '../../dtos/trainingScheduleWorkoutDtoIn';
-import {TrainingSchedule} from '../../dtos/trainingSchedule';
 
 @Component({
   selector: 'app-create-training-schedule-manually',
@@ -541,6 +540,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
       this.tsForm.controls.tsName.value,
       this.tsForm.controls.tsDescription.value,
       this.tsForm.controls.tsDifficulty.value,
+      this.interval,
       this.trainingScheduleWorkouts,
       this.dude.id
     );
