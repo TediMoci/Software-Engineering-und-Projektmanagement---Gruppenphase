@@ -7,7 +7,7 @@ public class ExerciseDoneKey implements Serializable {
     private Long activeTrainingScheduleId;
     private Long dudeId;
     private Long trainingScheduleId;
-    private Long trainingScheduleVersion;
+    private Integer trainingScheduleVersion;
     private Long exerciseId;
     private Integer exerciseVersion;
     private Long workoutId;
@@ -17,7 +17,7 @@ public class ExerciseDoneKey implements Serializable {
     public ExerciseDoneKey() {
     }
 
-    public ExerciseDoneKey(Long activeTrainingScheduleId, Long dudeId, Long trainingScheduleId, Long trainingScheduleVersion, Long exerciseId, Integer exerciseVersion, Long workoutId, Integer workoutVersion, Integer day) {
+    public ExerciseDoneKey(Long activeTrainingScheduleId, Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion, Long exerciseId, Integer exerciseVersion, Long workoutId, Integer workoutVersion, Integer day) {
         this.activeTrainingScheduleId = activeTrainingScheduleId;
         this.dudeId = dudeId;
         this.trainingScheduleId = trainingScheduleId;
@@ -53,11 +53,11 @@ public class ExerciseDoneKey implements Serializable {
         this.trainingScheduleId = trainingScheduleId;
     }
 
-    public Long getTrainingScheduleVersion() {
+    public Integer getTrainingScheduleVersion() {
         return trainingScheduleVersion;
     }
 
-    public void setTrainingScheduleVersion(Long trainingScheduleVersion) {
+    public void setTrainingScheduleVersion(Integer trainingScheduleVersion) {
         this.trainingScheduleVersion = trainingScheduleVersion;
     }
 

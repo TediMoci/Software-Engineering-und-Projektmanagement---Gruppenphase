@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity.relationships;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
-import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,7 +9,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "active_training_schedule")
-@IdClass(ActiveTrainingScheduleKey.class)
 public class ActiveTrainingSchedule {
 
     @Id
@@ -18,15 +16,12 @@ public class ActiveTrainingSchedule {
     @SequenceGenerator(name = "seq_active_id", sequenceName = "seq_active_id")
     private Long id;
 
-    @Id
     @Column(name = "dude_id")
     private Long dudeId;
 
-    @Id
     @Column(name = "training_schedule_id")
     private Long trainingScheduleId;
 
-    @Id
     @Column(name = "training_schedule_version")
     private Integer trainingScheduleVersion;
 
