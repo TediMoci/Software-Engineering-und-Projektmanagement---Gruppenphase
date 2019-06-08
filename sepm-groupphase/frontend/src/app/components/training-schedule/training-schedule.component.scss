@@ -28,6 +28,10 @@
   line-height: 10px;
 }
 
+.makeActive{
+  margin-left: 10px;
+}
+
 .scrolling-wrapper {
   overflow-x: auto;
   overflow-y: hidden;
@@ -54,6 +58,7 @@
 .details{
   .hideButton{
     background: lightgrey;
+    margin: 10px;
   }
 }
 
@@ -61,4 +66,9 @@
 
 .col-sm-9 {
   padding: 40px;
+}
+
+.searchBar{
+  width: 100px;
+  margin: 10px;
 }

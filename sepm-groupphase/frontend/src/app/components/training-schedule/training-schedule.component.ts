@@ -6,6 +6,7 @@ import {TrainingScheduleService} from "../../services/training-schedule.service"
 import {Workout} from "../../dtos/workout";
 import {WorkoutService} from "../../services/workout.service";
 import {element} from "protractor";
+import {ActiveTrainingSchedule} from "../../dtos/active-training-schedule";
 
 @Component({
   selector: 'app-training-schedule',
@@ -25,14 +26,15 @@ export class TrainingScheduleComponent implements OnInit {
   trainingSchedule: TrainingSchedule;
   tsWorkouts: any;
   error: any;
-  displayedWorkouts: Array<any>;
   exercisesForWorkouts: any;
-  hover:boolean;
-  buttonDown: any;
   buttonSelected:any;
   selectedWorkout:any = [];
 
   workoutsPerDay: Array<any> = [];
+
+  //input for active
+  startDate: number;
+  intervalRepetitions: number;
 
   constructor(private trainingScheduleService:TrainingScheduleService, private workoutService:WorkoutService) {}
 
@@ -87,6 +89,18 @@ export class TrainingScheduleComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+  makeTsActive(){
+
+    const activeTs: ActiveTrainingSchedule = new ActiveTrainingSchedule(
+      this.dude.id,
+      this.trainingSchedule.id,
+      this.trainingSchedule.version,
+      0,
+      this.intervalRepetitions);
+    console.log("Trying to make TS active: " +JSON.stringify(activeTs));
+    this.trainingScheduleService.saveActiveSchedule(activeTs)
   }
 
   intOverview(){
