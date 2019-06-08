@@ -98,6 +98,9 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         for (int i = 0; i < activeTrainingSchedule.getIntervalRepetitions(); i++) {
             for (TrainingScheduleWorkout trainingScheduleWorkout : trainingScheduleWorkouts) {
                 for (WorkoutExercise workoutExercise : trainingScheduleWorkout.getWorkout().getExercises()) {
+                    if (activeTrainingSchedule.getAdaptive() && (trainingScheduleWorkout.getDay() + i*trainingSchedule.getIntervalLength()) > trainingSchedule.getIntervalLength()) {
+                        continue;
+                    }
                     exerciseDoneBuilder = new ExerciseDone.ExerciseDoneBuilder();
 
                     exerciseDoneBuilder.activeTrainingScheduleId(savedActiveTrainingSchedule.getId());
