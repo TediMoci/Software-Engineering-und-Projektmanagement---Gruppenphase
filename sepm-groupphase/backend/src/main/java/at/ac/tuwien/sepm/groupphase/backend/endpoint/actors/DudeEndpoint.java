@@ -132,11 +132,7 @@ public class DudeEndpoint {
             iDudeService.followFitnessProvider(dudeId, fitnessProviderId);
         } catch (ServiceException e) {
             LOGGER.error("Could not followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
-            if (e.getMessage().equals("You already follow this fitness provider!")) {
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 

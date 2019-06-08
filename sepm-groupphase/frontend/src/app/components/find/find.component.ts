@@ -282,6 +282,10 @@ export class FindComponent implements OnInit {
     this.entries = null;
   }
 
+  followSelectedFitnessProvider(fitnessProviderId: number) {
+    this.findService.followFitnessProvider(JSON.parse(localStorage.getItem('loggedInDude')).id, fitnessProviderId);
+  }
+
 
 
 }

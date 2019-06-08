@@ -80,6 +80,11 @@ export class FindService {
     return this.httpClient.get<FitnessProvider[]>(this.BaseUri + '/fitnessProvider/filtered', {params: params});
   }
 
+  followFitnessProvider(dudeId: number, fitnessProviderId: number): void {
+    console.log('follow fitness provider with dudeId ' + dudeId +  '; fitnessProviderId ' + fitnessProviderId);
+    this.httpClient.put(this.BaseUri + '/dudes/' + dudeId + '/follow/' + fitnessProviderId, null).subscribe();
+  }
+
   getAllDudesFiltered(dudeFilter: DudeFilter): Observable<Dude[]>{
     console.log('get all dudes filtered');
     let params = new HttpParams();

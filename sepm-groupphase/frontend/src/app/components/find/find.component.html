@@ -246,6 +246,8 @@
                     <p>Adress: {{element.address}}</p>
                     <p>Phone: {{element.phoneNumber}}</p>
                     <hr>
+                    <button type="button" (click)="followSelectedFitnessProvider(element.id)" class="btn btn-secondary">Follow</button>
+                    <hr>
                   </mat-expansion-panel>
                 </mat-accordion>
               </li>
