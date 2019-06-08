@@ -10,6 +10,9 @@ import java.time.LocalDate;
 @ApiModel(value = "ActiveTrainingScheduleDto", description = "A dto for setting active training schedule via rest")
 public class ActiveTrainingScheduleDto {
 
+    @ApiModelProperty(name = "Id of ActiveTrainingSchedule")
+    private Long id;
+
     @ApiModelProperty(required = true, name = "Id of Dude")
     @NotNull(message = "dudeId must be given")
     private Long dudeId;
@@ -29,6 +32,18 @@ public class ActiveTrainingScheduleDto {
     @NotNull(message = "intervalRepetitions must be given")
     @Min(value = 1, message = "Min for intervalRepetitions is 1")
     private Integer intervalRepetitions;
+
+    @ApiModelProperty(required = true, name = "Is ActiveTrainingSchedule adaptive or not")
+    @NotNull(message = "isAdaptive must be given")
+    private Boolean isAdaptive;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getDudeId() {
         return dudeId;
@@ -70,6 +85,14 @@ public class ActiveTrainingScheduleDto {
         this.intervalRepetitions = intervalRepetitions;
     }
 
+    public Boolean getAdaptive() {
+        return isAdaptive;
+    }
+
+    public void setAdaptive(Boolean adaptive) {
+        isAdaptive = adaptive;
+    }
+
     public static ActiveTrainingScheduleDtoBuilder builder() {
         return new ActiveTrainingScheduleDtoBuilder();
     }
@@ -77,11 +100,13 @@ public class ActiveTrainingScheduleDto {
     @Override
     public String toString() {
         return "ActiveTrainingScheduleDto{" +
-            "dudeId=" + dudeId +
+            "id=" + id +
+            ", dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", startDate=" + startDate +
             ", intervalRepetitions=" + intervalRepetitions +
+            ", isAdaptive=" + isAdaptive +
             '}';
     }
 
@@ -92,34 +117,46 @@ public class ActiveTrainingScheduleDto {
 
         ActiveTrainingScheduleDto that = (ActiveTrainingScheduleDto) o;
 
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (dudeId != null ? !dudeId.equals(that.dudeId) : that.dudeId != null) return false;
         if (trainingScheduleId != null ? !trainingScheduleId.equals(that.trainingScheduleId) : that.trainingScheduleId != null)
             return false;
         if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
             return false;
         if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
-        return intervalRepetitions != null ? intervalRepetitions.equals(that.intervalRepetitions) : that.intervalRepetitions == null;
+        if (intervalRepetitions != null ? !intervalRepetitions.equals(that.intervalRepetitions) : that.intervalRepetitions != null)
+            return false;
+        return isAdaptive != null ? isAdaptive.equals(that.isAdaptive) : that.isAdaptive == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = dudeId != null ? dudeId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (dudeId != null ? dudeId.hashCode() : 0);
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (intervalRepetitions != null ? intervalRepetitions.hashCode() : 0);
+        result = 31 * result + (isAdaptive != null ? isAdaptive.hashCode() : 0);
         return result;
     }
 
     public static final class ActiveTrainingScheduleDtoBuilder {
+        private Long id;
         private Long dudeId;
         private Long trainingScheduleId;
         private Integer trainingScheduleVersion;
         private LocalDate startDate;
         private Integer intervalRepetitions;
+        private Boolean isAdaptive;
 
         public ActiveTrainingScheduleDtoBuilder() {
+        }
+
+        public ActiveTrainingScheduleDtoBuilder id(Long id) {
+            this.id = id;
+            return this;
         }
 
         public ActiveTrainingScheduleDtoBuilder dudeId(Long dudeId) {
@@ -147,13 +184,20 @@ public class ActiveTrainingScheduleDto {
             return this;
         }
 
+        public ActiveTrainingScheduleDtoBuilder isAdaptive(Boolean isAdaptive) {
+            this.isAdaptive = isAdaptive;
+            return this;
+        }
+
         public ActiveTrainingScheduleDto build() {
             ActiveTrainingScheduleDto activeTrainingScheduleDto = new ActiveTrainingScheduleDto();
+            activeTrainingScheduleDto.setId(id);
             activeTrainingScheduleDto.setDudeId(dudeId);
             activeTrainingScheduleDto.setTrainingScheduleId(trainingScheduleId);
             activeTrainingScheduleDto.setTrainingScheduleVersion(trainingScheduleVersion);
             activeTrainingScheduleDto.setStartDate(startDate);
             activeTrainingScheduleDto.setIntervalRepetitions(intervalRepetitions);
+            activeTrainingScheduleDto.setAdaptive(isAdaptive);
             return activeTrainingScheduleDto;
         }
     }

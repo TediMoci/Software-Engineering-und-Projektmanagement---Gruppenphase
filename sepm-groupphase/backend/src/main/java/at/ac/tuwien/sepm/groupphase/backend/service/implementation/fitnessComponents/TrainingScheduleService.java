@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
@@ -10,8 +10,9 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.helperStructure.WorkoutExerciseHelp;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.*;
-import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.TrainingScheduleWorkoutValidator;
@@ -34,57 +35,41 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private final IWorkoutRepository iWorkoutRepository;
     private final IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository;
     private final IExerciseDoneRepository iExerciseDoneRepository;
+    private final IDudeRepository iDudeRepository;
     private final TrainingScheduleValidator trainingScheduleValidator;
     private final TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator;
     private final IWorkoutService workoutService;
-    private final ITrainingScheduleService trainingScheduleService;
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleService.class);
     private static Map<Integer, List<Workout>> finalList = new HashMap<Integer, List<Workout>>();
     private static Integer listPosition = 0;
 
-
     // variables for training schedule adaption
     // --------------------------------------------------------------------------
-    // list of workouts per day
-    List<TrainingScheduleWorkout> workouts1 = new ArrayList<>();
-    List<TrainingScheduleWorkout> workouts2 = new ArrayList<>();
-    List<TrainingScheduleWorkout> workouts3 = new ArrayList<>();
-    List<TrainingScheduleWorkout> workouts4 = new ArrayList<>();
-    List<TrainingScheduleWorkout> workouts5 = new ArrayList<>();
-    List<TrainingScheduleWorkout> workouts6 = new ArrayList<>();
-    List<TrainingScheduleWorkout> workouts7 = new ArrayList<>();
-
-    // list of exercises per day
-    List<WorkoutExercise> ex1 = new ArrayList<>();
-    List<WorkoutExercise> ex2 = new ArrayList<>();
-    List<WorkoutExercise> ex3 = new ArrayList<>();
-    List<WorkoutExercise> ex4 = new ArrayList<>();
-    List<WorkoutExercise> ex5 = new ArrayList<>();
-    List<WorkoutExercise> ex6 = new ArrayList<>();
-    List<WorkoutExercise> ex7 = new ArrayList<>();
+    // list of all exercises
+    private List<WorkoutExerciseHelp> allExercises = new ArrayList<>();
 
     // number of exercises per day of interval
-    int numOfExDay1 = 0;
-    int numOfExDay2 = 0;
-    int numOfExDay3 = 0;
-    int numOfExDay4 = 0;
-    int numOfExDay5 = 0;
-    int numOfExDay6 = 0;
-    int numOfExDay7 = 0;
+    private int numOfExDay1 = 0;
+    private int numOfExDay2 = 0;
+    private int numOfExDay3 = 0;
+    private int numOfExDay4 = 0;
+    private int numOfExDay5 = 0;
+    private int numOfExDay6 = 0;
+    private int numOfExDay7 = 0;
 
-    int totalEx = 0; // total number of exercises per interval
-    int categoryStrength = 0; // total number of exercises with category strength per interval
+    private int totalEx = 0; // total number of exercises per interval
+    private int categoryStrength = 0; // total number of exercises with category strength per interval
     double[] calories;
     // --------------------------------------------------------------------------
 
-    public TrainingScheduleService(IWorkoutService workoutService, ITrainingScheduleService trainingScheduleService, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(IWorkoutService workoutService, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.workoutService = workoutService;
-        this.trainingScheduleService = trainingScheduleService;
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
         this.iWorkoutRepository = iWorkoutRepository;
         this.iActiveTrainingScheduleRepository = iActiveTrainingScheduleRepository;
         this.iExerciseDoneRepository = iExerciseDoneRepository;
+        this.iDudeRepository = iDudeRepository;
         this.trainingScheduleValidator = trainingScheduleValidator;
         this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
     }
@@ -114,11 +99,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     public ActiveTrainingSchedule saveActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException {
         LOGGER.info("Entering saveActive for: " + activeTrainingSchedule);
         try {
-            if (iActiveTrainingScheduleRepository.findByDudeId(activeTrainingSchedule.getDudeId()).isPresent()) {
-                throw new ServiceException("Dude already has an ActiveTrainingSchedule.");
+            if (iDudeRepository.findById(activeTrainingSchedule.getDudeId()).get().getActiveTrainingSchedule() != null) {
+                throw new ServiceException("You already have an active training schedule!");
             }
         } catch (NoSuchElementException e) {
-            LOGGER.debug("Dude has no ActiveTrainingSchedule");
+            throw new ServiceException("No Dude in database with id: " + activeTrainingSchedule.getDudeId());
         }
 
         activeTrainingSchedule.setStartDate(LocalDate.now());
@@ -141,8 +126,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         for (int i = 0; i < activeTrainingSchedule.getIntervalRepetitions(); i++) {
             for (TrainingScheduleWorkout trainingScheduleWorkout : trainingScheduleWorkouts) {
                 for (WorkoutExercise workoutExercise : trainingScheduleWorkout.getWorkout().getExercises()) {
+                    if (activeTrainingSchedule.getAdaptive() && (trainingScheduleWorkout.getDay() + i*trainingSchedule.getIntervalLength()) > trainingSchedule.getIntervalLength()) {
+                        continue;
+                    }
                     exerciseDoneBuilder = new ExerciseDone.ExerciseDoneBuilder();
 
+                    exerciseDoneBuilder.activeTrainingScheduleId(savedActiveTrainingSchedule.getId());
                     exerciseDoneBuilder.dudeId(activeTrainingSchedule.getDudeId());
                     exerciseDoneBuilder.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
                     exerciseDoneBuilder.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
@@ -237,12 +226,27 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         LOGGER.info("Entering deleteActive with dudeId: " + dudeId);
         ActiveTrainingSchedule activeTrainingSchedule;
         try {
-            activeTrainingSchedule = iActiveTrainingScheduleRepository.findByDudeId(dudeId).get();
+            activeTrainingSchedule = iDudeRepository.findById(dudeId).get().getActiveTrainingSchedule();
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
 
         // TODO (Amir): stat-calculations and -saving for activeTrainingSchedule
+
+        // delete exerciseDone from to delete activeTrainingSchedule
+        List<TrainingSchedule> copiedTs = new ArrayList<>();
+        for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++){
+            iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
+            if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule()))) {
+                copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
+            }
+        }
+        // delete copies of trainingSchedule created by adaptive change methods
+        if (activeTrainingSchedule.getAdaptive()) {
+            for (TrainingSchedule copy: copiedTs) {
+                iTrainingScheduleRepository.delete(copy.getId());
+            }
+        }
 
         try {
             iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
@@ -353,7 +357,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
-    public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException{
+    @Override
+    public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException {
 
         // old trainingSchedule
         TrainingSchedule oldTs = activeSchedule.getTrainingSchedule();
@@ -372,34 +377,32 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
 
         for (TrainingScheduleWorkout tsWa : workouts) {
-
             switch (tsWa.getDay()) {
                 case 1:
-                    addToWorkoutAndExList(tsWa, workouts1, ex1, numOfExDay1);
+                    countExToAdaptTotalExAndStrengthEx(tsWa, 1);
                     break;
                 case 2:
-                    addToWorkoutAndExList(tsWa, workouts2, ex2, numOfExDay2);
+                    countExToAdaptTotalExAndStrengthEx(tsWa, 2);
                     break;
                 case 3:
-                    addToWorkoutAndExList(tsWa, workouts3, ex3, numOfExDay3);
+                    countExToAdaptTotalExAndStrengthEx(tsWa, 3);
                     break;
                 case 4:
-                    addToWorkoutAndExList(tsWa, workouts4, ex4, numOfExDay4);
+                    countExToAdaptTotalExAndStrengthEx(tsWa, 4);
                     break;
                 case 5:
-                    addToWorkoutAndExList(tsWa, workouts5, ex5, numOfExDay5);
+                    countExToAdaptTotalExAndStrengthEx(tsWa, 5);
                     break;
                 case 6:
-                    addToWorkoutAndExList(tsWa, workouts6, ex6, numOfExDay6);
+                    countExToAdaptTotalExAndStrengthEx(tsWa, 6);
                     break;
                 case 7:
-                    addToWorkoutAndExList(tsWa, workouts7, ex7, numOfExDay7);
+                    countExToAdaptTotalExAndStrengthEx(tsWa, 7);
                     break;
             }
         }
 
         boolean strengthFocused = false;
-
         if (totalEx != 0) {
             if (categoryStrength / totalEx > 0.7) {
                 strengthFocused = true;
@@ -475,12 +478,54 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         double percentPerExDay6 = (numOfExDay6 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay6));
         double percentPerExDay7 = (numOfExDay7 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay7));
 
-        // TODO: Workoutexercises anpassen
-        // TODO: look for done (ExerciseDone), to see where adaptive change needs to be aplied
-        // TODO: adapt time and calorie consumption using change percent
-        // ---------------------------------------------------------------------------------------------------------------------------
-        // TODO: Done (List<ExerciseDone> anpassen (TsId, TsV, WaId, WaV))
-        // TODO: DudeEndpoint: if interval is done, call adaptive method "calculatePercentageOfChangeForInterval()"
+        // change number of sets and repetitions according to percentage of change per day
+        for (TrainingScheduleWorkout tsw : ts.getWorkouts()) {
+            switch (tsw.getDay()) {
+                case 1:
+                    tsw.getWorkout().setExercises(applyAdaptiveChange(tsw.getWorkout().getExercises(), percentPerExDay1, 1));
+                    break;
+                case 2:
+                    tsw.getWorkout().setExercises(applyAdaptiveChange(tsw.getWorkout().getExercises(), percentPerExDay2, 2));
+                    break;
+                case 3:
+                    tsw.getWorkout().setExercises(applyAdaptiveChange(tsw.getWorkout().getExercises(), percentPerExDay3, 3));
+                    break;
+                case 4:
+                    tsw.getWorkout().setExercises(applyAdaptiveChange(tsw.getWorkout().getExercises(), percentPerExDay4, 4));
+                    break;
+                case 5:
+                    tsw.getWorkout().setExercises(applyAdaptiveChange(tsw.getWorkout().getExercises(), percentPerExDay5, 5));
+                    break;
+                case 6:
+                    tsw.getWorkout().setExercises(applyAdaptiveChange(tsw.getWorkout().getExercises(), percentPerExDay6, 6));
+                    break;
+                case 7:
+                    tsw.getWorkout().setExercises(applyAdaptiveChange(tsw.getWorkout().getExercises(), percentPerExDay7, 7));
+                    break;
+            }
+        }
+
+        int startDayCurrentInterval = (intervalRepetitions - 1) * totalEx;
+        ExerciseDone.ExerciseDoneBuilder builderExDone = new ExerciseDone.ExerciseDoneBuilder();
+        for (int i = startDayCurrentInterval, j = 0; i < startDayCurrentInterval + totalEx; i++, j++) {
+
+            builderExDone.dudeId(dude.getId());
+            builderExDone.trainingScheduleId(ts.getId());
+            builderExDone.trainingScheduleVersion(ts.getVersion());
+            builderExDone.activeTrainingScheduleId(activeSchedule.getId());
+            builderExDone.exerciseId(allExercises.get(j).getWorkoutExercise().getExerciseId());
+            builderExDone.exerciseVersion(allExercises.get(j).getWorkoutExercise().getExerciseVersion());
+            builderExDone.workoutId(allExercises.get(j).getWorkoutExercise().getWorkoutId());
+            builderExDone.workoutVersion(allExercises.get(j).getWorkoutExercise().getWorkoutVersion());
+            builderExDone.workout(allExercises.get(j).getWorkoutExercise().getWorkout());
+            builderExDone.day(allExercises.get(j).getDay() + ((intervalRepetitions - 1) * intervalLength));
+            builderExDone.done(false);
+            try {
+                iExerciseDoneRepository.save(builderExDone.build());
+            } catch (DataAccessException e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
 
         ActiveTrainingSchedule.ActiveTrainingScheduleBuilder builderATs = new ActiveTrainingSchedule.ActiveTrainingScheduleBuilder();
         builderATs.dudeId(activeSchedule.getDudeId());
@@ -488,32 +533,58 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         builderATs.trainingScheduleVersion(ts.getVersion());
         builderATs.startDate(activeSchedule.getStartDate());
         builderATs.intervalRepetitions(activeSchedule.getIntervalRepetitions());
-        builderATs.done(null); // todo adjust list of exercise done!!!
-        builderATs.dude(activeSchedule.getDude());
         builderATs.trainingSchedule(ts);
         return builderATs.build();
     }
 
-    private void addToWorkoutAndExList(TrainingScheduleWorkout currentTsWorkout, List<TrainingScheduleWorkout> workouts, List<WorkoutExercise> exercises, int numOfExDay) {
-        // dont change if repetition = 1 und sets = 1 und category= other oder, endurance
-        workouts.add(currentTsWorkout);
-        exercises.addAll(currentTsWorkout.getWorkout().getExercises());
-        for (WorkoutExercise e : currentTsWorkout.getWorkout().getExercises()) {
+    private void countExToAdaptTotalExAndStrengthEx(TrainingScheduleWorkout workout, int day) {
+        WorkoutExerciseHelp.WorkoutExerciseHelpBuilder builderWaExH = new WorkoutExerciseHelp.WorkoutExerciseHelpBuilder();
+        for (WorkoutExercise e : workout.getWorkout().getExercises()) {
             // only count exercise to number of toChange exercises, it is not of category Endurance or Other with only 1 set and repetition
-            if (!((e.getExercise().getCategory() == Category.Endurance || e.getExercise().getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1)) {
-                numOfExDay++;
-            }
-            totalEx++;
             if (e.getExercise().getCategory() == Category.Strength) {
                 categoryStrength++;
             }
+            if ((e.getExercise().getCategory() == Category.Endurance || e.getExercise().getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1) {
+                builderWaExH.workoutExercise(e);
+                builderWaExH.day(day);
+                allExercises.add(builderWaExH.build());
+            } else {
+                switch (day) {
+                    case 1:
+                        numOfExDay1++;
+                        break;
+                    case 2:
+                        numOfExDay2++;
+                        break;
+                    case 3:
+                        numOfExDay3++;
+                        break;
+                    case 4:
+                        numOfExDay4++;
+                        break;
+                    case 5:
+                        numOfExDay5++;
+                        break;
+                    case 6:
+                        numOfExDay6++;
+                        break;
+                    case 7:
+                        numOfExDay7++;
+                        break;
+                }
+            }
+            totalEx++;
         }
     }
 
-    // changes number of repetitions and sets for all given exercises
-    // (expects list of WorkoutExercises of one day and the percent of Change calculated for each exercise for this day)
-    private List<WorkoutExercise> applyAdaptiveChange(List<WorkoutExercise> ex, int percentPerExDay) {
+    // TODO: WorkoutExercises anpassen
+    // TODO: adapt time and calorie consumption using change percent
+    // TODO: look for done (ExerciseDone), to see where adaptive change needs to be applied
+    // TODO: take into account if increase or decrease!
+    private List<WorkoutExercise> applyAdaptiveChange(List<WorkoutExercise> ex, double percentPerExDay, int day) {
+
         int repsHelp;
+        WorkoutExerciseHelp.WorkoutExerciseHelpBuilder builderWaExH = new WorkoutExerciseHelp.WorkoutExerciseHelpBuilder();
 
         int calculateDurationPerRepetition = 0;
         int durationHelp = 0;
@@ -528,14 +599,17 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 }
                 if (repsHelp > 100) {
                     // if maximum number of repetitions is exceeded: set default number of repetitions to 5
-                    e.setRepetitions(5);
-                    if (e.getSets() < 15){
+                    e.setRepetitions(repsHelp / 2);
+                    if (e.getSets() < 15) {
                         e.setSets(e.getSets() + 1);
                     }
                 } else {
                     e.setRepetitions(repsHelp);
                     e.setExDuration(durationHelp);
                 }
+                builderWaExH.workoutExercise(e);
+                builderWaExH.day(day);
+                allExercises.add(builderWaExH.build());
             }
         }
         return ex;
@@ -572,9 +646,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     private TrainingSchedule copyOldTrainingSchedule(TrainingSchedule oldTs) throws ServiceException {
 
-        List<TrainingScheduleWorkout> copyTsWa = new ArrayList<>();
         List<WorkoutExercise> copyWaEx = new ArrayList<>();
+        List<TrainingScheduleWorkout> copyTsWa = new ArrayList<>();
         Workout wa;
+
         Workout.WorkoutBuilder builderWa = new Workout.WorkoutBuilder();
         TrainingScheduleWorkout.TrainingScheduleWorkoutBuilder builderTsWa = new TrainingScheduleWorkout.TrainingScheduleWorkoutBuilder();
         WorkoutExercise.WorkoutExerciseBuilder builderWaEx = new WorkoutExercise.WorkoutExerciseBuilder();
@@ -587,7 +662,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         builder.rating(oldTs.getRating());
         builder.isHistory(true);
 
-        for (TrainingScheduleWorkout tsWa: oldTs.getWorkouts()) {
+        for (TrainingScheduleWorkout tsWa : oldTs.getWorkouts()) {
 
             builderWa.name(tsWa.getWorkout().getName());
             builderWa.description(tsWa.getWorkout().getDescription());
@@ -596,33 +671,30 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderWa.rating(tsWa.getWorkout().getRating());
             builderWa.isHistory(true);
 
-            for (WorkoutExercise wEx: tsWa.getWorkout().getExercises()) {
+            for (WorkoutExercise wEx : tsWa.getWorkout().getExercises()) {
                 builderWaEx.exerciseId(wEx.getExerciseId());
                 builderWaEx.exerciseVersion(wEx.getExerciseVersion());
-                builderWaEx.exercise(wEx.getExercise());
                 builderWaEx.exDuration(wEx.getExDuration());
                 builderWaEx.repetitions(wEx.getRepetitions());
                 builderWaEx.sets(wEx.getSets());
                 copyWaEx.add(builderWaEx.build());
             }
-
             builderWa.exercises(copyWaEx);
             copyWaEx.clear();
-
-            builderWa.trainingSchedules(tsWa.getWorkout().getTrainingSchedules());
-            builderWa.creator(tsWa.getWorkout().getCreator());
             wa = workoutService.save(builderWa.build());
 
             builderTsWa.workoutId(wa.getId());
             builderTsWa.workoutVersion(wa.getVersion());
             builderTsWa.day(tsWa.getDay());
-            builderTsWa.workout(wa);
             copyTsWa.add(builderTsWa.build());
         }
-
         builder.workouts(copyTsWa);
-        builder.creator(oldTs.getCreator());
-        builder.activeUsages(oldTs.getActiveUsages());
-        return trainingScheduleService.save(builder.build());
+        copyTsWa.clear();
+        try {
+            return iTrainingScheduleRepository.save(builder.build());
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+
     }
 }

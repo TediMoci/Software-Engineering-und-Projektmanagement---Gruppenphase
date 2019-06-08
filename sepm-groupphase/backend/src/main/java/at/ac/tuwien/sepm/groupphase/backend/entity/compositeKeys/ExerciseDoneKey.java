@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class ExerciseDoneKey implements Serializable {
 
+    private Long activeTrainingScheduleId;
     private Long dudeId;
     private Long trainingScheduleId;
     private Integer trainingScheduleVersion;
@@ -16,7 +17,8 @@ public class ExerciseDoneKey implements Serializable {
     public ExerciseDoneKey() {
     }
 
-    public ExerciseDoneKey(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion, Long exerciseId, Integer exerciseVersion, Long workoutId, Integer workoutVersion, Integer day) {
+    public ExerciseDoneKey(Long activeTrainingScheduleId, Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion, Long exerciseId, Integer exerciseVersion, Long workoutId, Integer workoutVersion, Integer day) {
+        this.activeTrainingScheduleId = activeTrainingScheduleId;
         this.dudeId = dudeId;
         this.trainingScheduleId = trainingScheduleId;
         this.trainingScheduleVersion = trainingScheduleVersion;
@@ -25,6 +27,14 @@ public class ExerciseDoneKey implements Serializable {
         this.workoutId = workoutId;
         this.workoutVersion = workoutVersion;
         this.day = day;
+    }
+
+    public Long getActiveTrainingScheduleId() {
+        return activeTrainingScheduleId;
+    }
+
+    public void setActiveTrainingScheduleId(Long activeTrainingScheduleId) {
+        this.activeTrainingScheduleId = activeTrainingScheduleId;
     }
 
     public Long getDudeId() {
@@ -94,7 +104,8 @@ public class ExerciseDoneKey implements Serializable {
     @Override
     public String toString() {
         return "ExerciseDoneKey{" +
-            "dudeId=" + dudeId +
+            "activeTrainingScheduleId=" + activeTrainingScheduleId +
+            ", dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", exerciseId=" + exerciseId +
@@ -112,6 +123,8 @@ public class ExerciseDoneKey implements Serializable {
 
         ExerciseDoneKey that = (ExerciseDoneKey) o;
 
+        if (activeTrainingScheduleId != null ? !activeTrainingScheduleId.equals(that.activeTrainingScheduleId) : that.activeTrainingScheduleId != null)
+            return false;
         if (dudeId != null ? !dudeId.equals(that.dudeId) : that.dudeId != null) return false;
         if (trainingScheduleId != null ? !trainingScheduleId.equals(that.trainingScheduleId) : that.trainingScheduleId != null)
             return false;
@@ -129,7 +142,8 @@ public class ExerciseDoneKey implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = dudeId != null ? dudeId.hashCode() : 0;
+        int result = activeTrainingScheduleId != null ? activeTrainingScheduleId.hashCode() : 0;
+        result = 31 * result + (dudeId != null ? dudeId.hashCode() : 0);
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (exerciseId != null ? exerciseId.hashCode() : 0);

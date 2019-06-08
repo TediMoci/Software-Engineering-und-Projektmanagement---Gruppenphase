@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class DudeEndpoint {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.save(dude));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -71,10 +72,10 @@ public class DudeEndpoint {
         List<DudeDto> dudeListDTO = new ArrayList<>();
         try {
             List<Dude> dudeList = iDudeService.findAll();
-            for (int i=0; i< dudeList.size(); i++){
+            for (int i = 0; i < dudeList.size(); i++) {
                 dudeListDTO.add(dudeMapper.dudeToDudeDto(dudeList.get(i)));
             }
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         return dudeListDTO;
@@ -85,7 +86,7 @@ public class DudeEndpoint {
     public DudeDto findDudeById(@PathVariable("id") Long id) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findDudeById(id));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -95,20 +96,20 @@ public class DudeEndpoint {
     public DudeDto findDudeByName(String name) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findByName(name));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
     @RequestMapping(value = "/bmi", method = RequestMethod.GET)
     @ApiOperation(value = "Get BMI of dude", authorizations = {@Authorization(value = "apiKey")})
-    public Double getBmi(Double height, Double weight){
+    public Double getBmi(Double height, Double weight) {
         return iDudeService.calculateBMI(height, weight);
     }
 
     @RequestMapping(value = "/age", method = RequestMethod.GET)
     @ApiOperation(value = "Get age of dude", authorizations = {@Authorization(value = "apiKey")})
-    public Integer getAge(@RequestParam("birthday")@DateTimeFormat(pattern = "\"yyyy-MM-dd\"") LocalDate birthday){
+    public Integer getAge(@RequestParam("birthday") @DateTimeFormat(pattern = "\"yyyy-MM-dd\"") LocalDate birthday) {
         return iDudeService.calculateAge(birthday);
     }
 
@@ -118,7 +119,7 @@ public class DudeEndpoint {
     public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -228,6 +229,19 @@ public class DudeEndpoint {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
             }
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your active training schedule has expired.");
+        }
+        if (Period.between(activeTrainingSchedule.getStartDate(), LocalDate.now()).getDays() % activeTrainingSchedule.getTrainingSchedule().getIntervalLength() == 0) {
+            Dude dude;
+            try {
+                dude = iDudeService.findDudeById(id);
+            } catch (ServiceException e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find dude with id " + id);
+            }
+            try {
+                return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude));
+            } catch (ServiceException e) {
+                throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Could not adapt activeTrainingSchedule with id " + activeTrainingSchedule.getId());
+            }
         }
         return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(activeTrainingSchedule);
     }
