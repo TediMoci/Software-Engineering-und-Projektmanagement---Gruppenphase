@@ -207,6 +207,10 @@ public class DudeEndpoint {
     public ActiveTrainingScheduleDto getActiveTrainingScheduleByDudeId(@PathVariable Long id) {
         LOGGER.info("Entering getActiveTrainingScheduleByDudeId with id: " + id);
         ActiveTrainingSchedule activeTrainingSchedule;
+
+        // TODO: DudeEndpoint: if interval is done, call adaptive method "calculatePercentageOfChangeForInterval()"
+        // TODO: repository: delete exdone and ts copies from repository, after active ts is closed
+        
         try {
             activeTrainingSchedule = iDudeService.findDudeById(id).getActiveTrainingSchedule();
         } catch (ServiceException e) {
