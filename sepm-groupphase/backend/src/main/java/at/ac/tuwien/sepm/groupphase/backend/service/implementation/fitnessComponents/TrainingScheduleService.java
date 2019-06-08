@@ -212,6 +212,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
+    @Override
+    public List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException {
+        return null;
+    }
+
     private void validateTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts) throws ServiceException {
         for (TrainingScheduleWorkout trainingScheduleWorkout : trainingScheduleWorkouts) {
             try {

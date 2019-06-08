@@ -5,6 +5,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingS
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
+import java.util.List;
+
 public interface ITrainingScheduleService {
 
     /**
@@ -58,4 +60,6 @@ public interface ITrainingScheduleService {
     TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException;
 
     TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException;
+
+    List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
 }
