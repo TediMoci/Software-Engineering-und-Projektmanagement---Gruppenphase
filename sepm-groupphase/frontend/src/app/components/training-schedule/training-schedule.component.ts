@@ -101,7 +101,6 @@ export class TrainingScheduleComponent implements OnInit {
       this.workoutsPerDay[i] = elemsForDay;
       elemsForDay = [];
     }
-
   }
 
   initTabs(days: number){

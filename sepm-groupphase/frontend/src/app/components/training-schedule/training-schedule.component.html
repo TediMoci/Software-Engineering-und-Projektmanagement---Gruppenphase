@@ -29,7 +29,10 @@
               <div class="altContent">
                 <p *ngIf="workoutsPerDay[tabs.indexOf(element)]!= undefined && workoutsPerDay[tabs.indexOf(element)].length == 0">No Workouts for {{element}}</p>
               </div>
-              <button mat-stroked-button class="card-in-card" matTooltip="Click for more details" [matTooltipShowDelay]="1000" *ngFor='let workout of workoutsPerDay[tabs.indexOf(element)]' [value]="workout" (click)="selectedWorkout = workout; getSelectedWorkoutExercises(selectedWorkout)">
+              <button mat-stroked-button class="card-in-card" matTooltip="Click for more details"
+                      [matTooltipShowDelay]="1000"
+                      *ngFor='let workout of workoutsPerDay[tabs.indexOf(element)]'
+                      [value]="workout" (click)="selectedWorkout = workout; getSelectedWorkoutExercises(selectedWorkout)">
                 {{workout.name}}
               </button>
             </mat-card>
