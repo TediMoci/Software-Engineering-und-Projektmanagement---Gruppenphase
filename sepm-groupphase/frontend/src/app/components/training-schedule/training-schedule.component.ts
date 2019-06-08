@@ -29,6 +29,8 @@ export class TrainingScheduleComponent implements OnInit {
   exercisesForWorkouts: any;
   hover:boolean;
   buttonDown: any;
+  buttonSelected:any;
+  selectedWorkout:any = [];
 
   workoutsPerDay: Array<any> = [];
 
@@ -131,7 +133,11 @@ export class TrainingScheduleComponent implements OnInit {
     }
   }
   dummy(){
-    console.log("works")
+    console.log("works " + JSON.stringify(this.buttonSelected))
+  }
+
+  testReturn(e: any){
+    console.log(JSON.stringify(e))
   }
 
 
