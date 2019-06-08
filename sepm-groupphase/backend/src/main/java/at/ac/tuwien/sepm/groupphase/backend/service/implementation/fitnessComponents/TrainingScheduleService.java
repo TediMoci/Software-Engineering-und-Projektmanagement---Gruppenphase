@@ -74,6 +74,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     int totalEx = 0; // total number of exercises per interval
     int categoryStrength = 0; // total number of exercises with category strength per interval
+    double[] calories;
     // --------------------------------------------------------------------------
 
     public TrainingScheduleService(IWorkoutService workoutService, ITrainingScheduleService trainingScheduleService, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
@@ -514,10 +515,17 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private List<WorkoutExercise> applyAdaptiveChange(List<WorkoutExercise> ex, int percentPerExDay) {
         int repsHelp;
 
+        int calculateDurationPerRepetition = 0;
+        int durationHelp = 0;
+
         for (WorkoutExercise e : ex) {
             if (!((e.getExercise().getCategory() == Category.Endurance || e.getExercise().getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1)) {
                 // calculate new number of repetitions
+                calculateDurationPerRepetition = (e.getRepetitions()*e.getSets())/e.getExDuration();
                 repsHelp = (int) new BigDecimal(String.valueOf(e.getRepetitions() + (percentPerExDay * e.getRepetitions()))).setScale(0, RoundingMode.HALF_UP).doubleValue();
+                for (int i = 0; i < repsHelp ; i++) {
+                    durationHelp  += calculateDurationPerRepetition;
+                }
                 if (repsHelp > 100) {
                     // if maximum number of repetitions is exceeded: set default number of repetitions to 5
                     e.setRepetitions(5);
@@ -526,11 +534,41 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     }
                 } else {
                     e.setRepetitions(repsHelp);
+                    e.setExDuration(durationHelp);
                 }
             }
         }
         return ex;
     }
+
+    private double[] calculateCalorieForWorkouts (List<Workout> ex){
+        int totalRepetitions = 0;
+        double[] calculationRepetitionPerCalories = new double[ex.size()];
+        int i = 0;
+        for (Workout e : ex){
+            for (WorkoutExercise workoutExercise : e.getExercises()){
+                totalRepetitions += workoutExercise.getRepetitions()*workoutExercise.getSets();
+            }
+            calculationRepetitionPerCalories[i] = totalRepetitions/e.getCalorieConsumption();
+            i++;
+        }
+        return calculationRepetitionPerCalories;
+    }
+
+   private List<Workout> applyAdaptiveChangesWorkout(List<Workout> ex, double [] calories){
+        int i = 0;
+        int totalRepetitions = 0;
+        double caloriesHelp = 0;
+       for (Workout e : ex) {
+           for (WorkoutExercise workoutExercise : e.getExercises()) {
+               totalRepetitions += workoutExercise.getRepetitions() * workoutExercise.getSets();
+           }
+           caloriesHelp += (totalRepetitions * calories[i]);
+           e.setCalorieConsumption(caloriesHelp);
+           i++;
+       }
+       return ex;
+   }
 
     private TrainingSchedule copyOldTrainingSchedule(TrainingSchedule oldTs) throws ServiceException {
 
