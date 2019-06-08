@@ -43,6 +43,7 @@ import {TrainingScheduleComponent} from './components/training-schedule/training
 import {EditTrainingScheduleComponent} from './components/edit-training-schedule/edit-training-schedule.component';
 import {FitnessProviderComponent} from './components/fitness-provider/fitness-provider.component';
 import {CourseDudeViewComponent} from './components/course-dude-view/course-dude-view.component';
+import {FollowerDudeComponent} from './components/follower-dude/follower-dude.component';
 
 const routes: Routes = [
 
@@ -50,6 +51,7 @@ const routes: Routes = [
   {path: 'login-as-fitness-provider', component: LoginAsFitnessProviderComponent},
   {path: 'register-as-dude', component: RegisterAsDudeComponent},
   {path: 'register-as-fitness-provider', component: RegisterAsFitnessProviderComponent},
+  {path: 'follower-dude', component: FollowerDudeComponent},
   {path: 'dude-profile', canActivate: [RoleGuard], component: DudeProfileComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'bros', canActivate: [RoleGuard], component: BrosComponent},

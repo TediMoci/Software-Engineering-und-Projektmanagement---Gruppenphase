@@ -24,7 +24,7 @@
             <p>Follower: {{numOfFollowers}}</p>
           </div>
           <div  *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'">
-            <p>Follower: {{numOfFollowers}}, <a [routerLink]="['/follower']" class="btn2 btn-link">Follower</a></p>
+            <p>Followers: {{numOfFollowers}}, <a [routerLink]="['/follower']" class="btn2 btn-link">Followers</a></p>
           </div>
          </div>
         <div class="row-sm-1">

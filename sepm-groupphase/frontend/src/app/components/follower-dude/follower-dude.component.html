@@ -13,21 +13,17 @@
       <div class="col-sm-9">
         <div class="row">
           <div class="col">
-            <h1>{{fitnessProviderName}}</h1>
+            <h1>{{dudeName}}</h1>
             <p> Description: {{description}} </p>
-            <p> Address: {{address}} </p>
             <p> E-Mail: {{email}} </p>
-            <p> Phone Number: {{phoneNumber}} </p>
-            <p> Website: {{website}} </p>
-            <h3>Courses:</h3>
-            <ul>
-              <li *ngFor='let element of courses'>
-                <a [routerLink]="['/course-dude-view']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
-              </li>
-            </ul>
+            <p> Sex: {{sex}} </p>
+            <p> Self-Assessment: {{selfAssessment}} </p>
+            <p> Birthday: {{birthday}} </p>
+            <p> Height: {{height}} </p>
+            <p> Weight: {{weight}} </p>
           </div>
           <div class ="col">
-            <img class="img-fluid" src="{{imagePath2}}" align="center" alt="fitness provider image">
+            <img class="img-fluid" src="{{imagePath2}}" align="center" alt="dude image">
           </div>
         </div>
       </div>
