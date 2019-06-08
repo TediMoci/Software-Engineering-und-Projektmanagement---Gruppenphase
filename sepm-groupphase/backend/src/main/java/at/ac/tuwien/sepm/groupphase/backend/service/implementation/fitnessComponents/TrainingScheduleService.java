@@ -232,6 +232,21 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         // TODO (Amir): stat-calculations and -saving for activeTrainingSchedule
 
+        // delete exerciseDone from to delete activeTrainingSchedule
+        List<TrainingSchedule> copiedTs = new ArrayList<>();
+        for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++){
+            iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
+            if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule()))) {
+                copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
+            }
+        }
+        // delete copies of trainingSchedule created by adaptive change methods
+        if (activeTrainingSchedule.getAdaptive()) {
+            for (TrainingSchedule copy: copiedTs) {
+                iTrainingScheduleRepository.delete(copy.getId());
+            }
+        }
+
         try {
             iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
         } catch (DataAccessException e) {
@@ -341,6 +356,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
+    @Override
     public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException {
 
         // old trainingSchedule
@@ -560,7 +576,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
-    // TODO: Workoutexercises anpassen
+    // TODO: WorkoutExercises anpassen
     // TODO: adapt time and calorie consumption using change percent
     // TODO: look for done (ExerciseDone), to see where adaptive change needs to be applied
     // TODO: take into account if increase or decrease!

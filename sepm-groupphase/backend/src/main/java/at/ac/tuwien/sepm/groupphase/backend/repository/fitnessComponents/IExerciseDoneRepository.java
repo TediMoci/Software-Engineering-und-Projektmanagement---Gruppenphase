@@ -17,4 +17,9 @@ public interface IExerciseDoneRepository extends JpaRepository<ExerciseDone, Exe
      */
     ExerciseDone save(ExerciseDone exerciseDone) throws DataAccessException;
 
+    /**
+     *
+     * @param exerciseDone to be deleted
+     */
+    void delete(ExerciseDone exerciseDone);
 }
