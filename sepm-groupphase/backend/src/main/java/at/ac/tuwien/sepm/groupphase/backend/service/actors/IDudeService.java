@@ -68,4 +68,5 @@ public interface IDudeService {
      */
     void unfollowFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException;
 
+    List<Dude> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
 }

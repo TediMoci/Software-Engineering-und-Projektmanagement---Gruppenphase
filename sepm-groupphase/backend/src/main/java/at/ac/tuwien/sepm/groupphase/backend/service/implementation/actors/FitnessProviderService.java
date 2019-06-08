@@ -112,4 +112,13 @@ public class FitnessProviderService implements IFitnessProviderService {
         }
     }
 
+    @Override
+    public List<FitnessProvider> findByFilter(String filter) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter);
+        try {
+            return iFitnessProviderRepository.findByFilter(filter);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

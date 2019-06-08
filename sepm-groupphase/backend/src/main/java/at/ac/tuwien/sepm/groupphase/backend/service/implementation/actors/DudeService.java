@@ -175,4 +175,18 @@ public class DudeService implements IDudeService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public List<Dude> findByFilter(String filter, Integer selfAssessment) throws ServiceException {
+        try {
+            if (selfAssessment != null) {
+                return iDudeRepository.findByFilterWithSelfAssesment(filter, selfAssessment);
+            } else {
+                return iDudeRepository.findByFilterWithoutAssesment(filter);
+            }
+
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

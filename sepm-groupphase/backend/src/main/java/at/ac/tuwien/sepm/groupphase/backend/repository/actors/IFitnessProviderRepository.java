@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,4 +31,10 @@ public interface IFitnessProviderRepository extends JpaRepository<FitnessProvide
      * @return
      */
     List<FitnessProvider> findAll();
+
+    /*
+
+     */
+    @Query("SELECT f FROM FitnessProvider  f WHERE f.name LIKE %?1% OR f.description LIKE %?1% OR f.address LIKE %?1%")
+    List<FitnessProvider> findByFilter(String filter) throws DataAccessException;
 }
