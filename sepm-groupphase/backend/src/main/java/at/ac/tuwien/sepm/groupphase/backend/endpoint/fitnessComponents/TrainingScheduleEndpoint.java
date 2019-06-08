@@ -74,7 +74,7 @@ public class TrainingScheduleEndpoint {
             return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.saveActive(activeTrainingSchedule));
         } catch (ServiceException e) {
             LOGGER.error("Could not saveActive for: " + activeTrainingScheduleDto);
-            if (e.getMessage().equals("Dude already has an ActiveTrainingSchedule.")) {
+            if (e.getMessage().equals("You already have an active training schedule!")) {
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

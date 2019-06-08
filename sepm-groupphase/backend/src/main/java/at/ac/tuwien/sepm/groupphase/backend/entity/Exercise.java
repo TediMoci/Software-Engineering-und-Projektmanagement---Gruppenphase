@@ -40,7 +40,7 @@ public class Exercise {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "exercise")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
 
     @ManyToOne(fetch = FetchType.EAGER)
