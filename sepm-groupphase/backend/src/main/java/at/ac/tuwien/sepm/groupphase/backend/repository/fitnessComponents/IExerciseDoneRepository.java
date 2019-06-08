@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface IExerciseDoneRepository extends JpaRepository<ExerciseDone, ExerciseDoneKey> {
 
@@ -22,4 +24,17 @@ public interface IExerciseDoneRepository extends JpaRepository<ExerciseDone, Exe
      * @param exerciseDone to be deleted
      */
     void delete(ExerciseDone exerciseDone);
+
+    /**
+     *
+     * @param activeTrainingScheduleId
+     * @param dudeId
+     * @param trainingScheduleId
+     * @param trainingScheduleVersion
+     * @param workoutId
+     * @param workoutVersion
+     * @param day
+     * @return
+     */
+    List<ExerciseDone> findByActiveTrainingScheduleIdAndDudeIdAndTrainingScheduleIdAndTrainingScheduleVersionAndWorkoutIdAndWorkoutVersionAndDay(Long activeTrainingScheduleId, Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion, Long workoutId, Integer workoutVersion, Integer day);
 }
