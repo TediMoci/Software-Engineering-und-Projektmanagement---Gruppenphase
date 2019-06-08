@@ -28,7 +28,7 @@ public class WorkoutExercise {
     @Column(name = "workout_version")
     private Integer workoutVersion;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("workout_id")
     @JoinColumns({
         @JoinColumn(name = "workout_id", referencedColumnName = "id"),
