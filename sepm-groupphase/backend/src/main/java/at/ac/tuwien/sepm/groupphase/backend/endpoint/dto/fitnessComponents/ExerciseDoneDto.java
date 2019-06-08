@@ -8,6 +8,9 @@ import javax.validation.constraints.NotNull;
 @ApiModel(value = "ExerciseDoneDto", description = "A dto for exercise-done entries in active training schedule via rest")
 public class ExerciseDoneDto {
 
+    @ApiModelProperty(name = "Id of ActiveTrainingSchedule")
+    private Long activeTrainingScheduleId;
+
     @ApiModelProperty(required = true, name = "Id of Dude")
     @NotNull(message = "dudeId must be given")
     private Long dudeId;
@@ -43,6 +46,14 @@ public class ExerciseDoneDto {
     @ApiModelProperty(required = true, name = "Exercise done or not")
     @NotNull(message = "done must be given")
     private Boolean done;
+
+    public Long getActiveTrainingScheduleId() {
+        return activeTrainingScheduleId;
+    }
+
+    public void setActiveTrainingScheduleId(Long activeTrainingScheduleId) {
+        this.activeTrainingScheduleId = activeTrainingScheduleId;
+    }
 
     public Long getDudeId() {
         return dudeId;
@@ -123,7 +134,8 @@ public class ExerciseDoneDto {
     @Override
     public String toString() {
         return "ExerciseDoneDto{" +
-            "dudeId=" + dudeId +
+            "activeTrainingScheduleId=" + activeTrainingScheduleId +
+            ", dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", exerciseId=" + exerciseId +
@@ -142,6 +154,8 @@ public class ExerciseDoneDto {
 
         ExerciseDoneDto that = (ExerciseDoneDto) o;
 
+        if (activeTrainingScheduleId != null ? !activeTrainingScheduleId.equals(that.activeTrainingScheduleId) : that.activeTrainingScheduleId != null)
+            return false;
         if (dudeId != null ? !dudeId.equals(that.dudeId) : that.dudeId != null) return false;
         if (trainingScheduleId != null ? !trainingScheduleId.equals(that.trainingScheduleId) : that.trainingScheduleId != null)
             return false;
@@ -160,7 +174,8 @@ public class ExerciseDoneDto {
 
     @Override
     public int hashCode() {
-        int result = dudeId != null ? dudeId.hashCode() : 0;
+        int result = activeTrainingScheduleId != null ? activeTrainingScheduleId.hashCode() : 0;
+        result = 31 * result + (dudeId != null ? dudeId.hashCode() : 0);
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (exerciseId != null ? exerciseId.hashCode() : 0);
@@ -173,6 +188,7 @@ public class ExerciseDoneDto {
     }
 
     public static final class ExerciseDoneDtoBuilder {
+        private Long activeTrainingScheduleId;
         private Long dudeId;
         private Long trainingScheduleId;
         private Integer trainingScheduleVersion;
@@ -184,6 +200,11 @@ public class ExerciseDoneDto {
         private Boolean done;
 
         public ExerciseDoneDtoBuilder() {
+        }
+
+        public ExerciseDoneDtoBuilder activeTrainingScheduleId(Long activeTrainingScheduleId) {
+            this.activeTrainingScheduleId = activeTrainingScheduleId;
+            return this;
         }
 
         public ExerciseDoneDtoBuilder dudeId(Long dudeId) {
@@ -233,6 +254,7 @@ public class ExerciseDoneDto {
 
         public ExerciseDoneDto build() {
             ExerciseDoneDto exerciseDoneDto = new ExerciseDoneDto();
+            exerciseDoneDto.setActiveTrainingScheduleId(activeTrainingScheduleId);
             exerciseDoneDto.setDudeId(dudeId);
             exerciseDoneDto.setTrainingScheduleId(trainingScheduleId);
             exerciseDoneDto.setTrainingScheduleVersion(trainingScheduleVersion);

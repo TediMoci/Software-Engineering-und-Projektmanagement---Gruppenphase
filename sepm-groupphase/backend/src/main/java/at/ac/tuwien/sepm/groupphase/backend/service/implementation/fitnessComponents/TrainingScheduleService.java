@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.helperStructure.WorkoutExerciseHelp;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
@@ -34,6 +35,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private final IWorkoutRepository iWorkoutRepository;
     private final IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository;
     private final IExerciseDoneRepository iExerciseDoneRepository;
+    private final IDudeRepository iDudeRepository;
     private final TrainingScheduleValidator trainingScheduleValidator;
     private final TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator;
     private final IWorkoutService workoutService;
@@ -61,7 +63,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private int categoryStrength = 0; // total number of exercises with category strength per interval
     // --------------------------------------------------------------------------
 
-    public TrainingScheduleService(IWorkoutService workoutService, ITrainingScheduleService trainingScheduleService, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(IWorkoutService workoutService, ITrainingScheduleService trainingScheduleService, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.workoutService = workoutService;
         this.trainingScheduleService = trainingScheduleService;
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
@@ -69,6 +71,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         this.iWorkoutRepository = iWorkoutRepository;
         this.iActiveTrainingScheduleRepository = iActiveTrainingScheduleRepository;
         this.iExerciseDoneRepository = iExerciseDoneRepository;
+        this.iDudeRepository = iDudeRepository;
         this.trainingScheduleValidator = trainingScheduleValidator;
         this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
     }
@@ -98,11 +101,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     public ActiveTrainingSchedule saveActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException {
         LOGGER.info("Entering saveActive for: " + activeTrainingSchedule);
         try {
-            if (iActiveTrainingScheduleRepository.findByDudeId(activeTrainingSchedule.getDudeId()).isPresent()) {
-                throw new ServiceException("Dude already has an ActiveTrainingSchedule.");
+            if (iDudeRepository.findById(activeTrainingSchedule.getDudeId()).get().getActiveTrainingSchedule() != null) {
+                throw new ServiceException("You already have an active training schedule!");
             }
         } catch (NoSuchElementException e) {
-            LOGGER.debug("Dude has no ActiveTrainingSchedule");
+            throw new ServiceException("No Dude in database with id: " + activeTrainingSchedule.getDudeId());
         }
 
         activeTrainingSchedule.setStartDate(LocalDate.now());
@@ -125,8 +128,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         for (int i = 0; i < activeTrainingSchedule.getIntervalRepetitions(); i++) {
             for (TrainingScheduleWorkout trainingScheduleWorkout : trainingScheduleWorkouts) {
                 for (WorkoutExercise workoutExercise : trainingScheduleWorkout.getWorkout().getExercises()) {
+                    if (activeTrainingSchedule.getAdaptive() && (trainingScheduleWorkout.getDay() + i*trainingSchedule.getIntervalLength()) > trainingSchedule.getIntervalLength()) {
+                        continue;
+                    }
                     exerciseDoneBuilder = new ExerciseDone.ExerciseDoneBuilder();
 
+                    exerciseDoneBuilder.activeTrainingScheduleId(savedActiveTrainingSchedule.getId());
                     exerciseDoneBuilder.dudeId(activeTrainingSchedule.getDudeId());
                     exerciseDoneBuilder.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
                     exerciseDoneBuilder.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
@@ -134,7 +141,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     exerciseDoneBuilder.exerciseVersion(workoutExercise.getExerciseVersion());
                     exerciseDoneBuilder.workoutId(workoutExercise.getWorkoutId());
                     exerciseDoneBuilder.workoutVersion(workoutExercise.getWorkoutVersion());
-                    exerciseDoneBuilder.day(trainingScheduleWorkout.getDay() + i * trainingSchedule.getIntervalLength());
+                    exerciseDoneBuilder.day(trainingScheduleWorkout.getDay() + i*trainingSchedule.getIntervalLength());
                     exerciseDoneBuilder.done(false);
 
                     try {
@@ -221,7 +228,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         LOGGER.info("Entering deleteActive with dudeId: " + dudeId);
         ActiveTrainingSchedule activeTrainingSchedule;
         try {
-            activeTrainingSchedule = iActiveTrainingScheduleRepository.findByDudeId(dudeId).get();
+            activeTrainingSchedule = iDudeRepository.findById(dudeId).get().getActiveTrainingSchedule();
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
