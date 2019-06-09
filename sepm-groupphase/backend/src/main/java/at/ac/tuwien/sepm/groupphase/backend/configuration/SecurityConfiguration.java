@@ -104,6 +104,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}/workouts",
                     "/dudes/{id}/trainingSchedules",
                     "/dudes/{id}/activeTrainingSchedule",
+                    "/dudes/{id}/activeTrainingSchedule/done",
                     "/dudes/filtered",
                     "/{id}/{version}/exercises",
                     "/user",
@@ -137,6 +138,7 @@ public class SecurityConfiguration {
                     "/exercise/{id}",
                     "/course/{id}",
                     "/trainingSchedule/{id}",
+                    "/trainingSchedule/active/{dudeId}",
                     "/workout/{id}").permitAll()
                 .antMatchers(HttpMethod.PUT,
             "/dudes/{name}",

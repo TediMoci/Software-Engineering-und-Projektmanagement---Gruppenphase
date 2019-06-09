@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity.relationships;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
-import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,18 +9,19 @@ import java.util.List;
 
 @Entity
 @Table(name = "active_training_schedule")
-@IdClass(ActiveTrainingScheduleKey.class)
 public class ActiveTrainingSchedule {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_active_id")
+    @SequenceGenerator(name = "seq_active_id", sequenceName = "seq_active_id")
+    private Long id;
+
     @Column(name = "dude_id")
     private Long dudeId;
 
-    @Id
     @Column(name = "training_schedule_id")
     private Long trainingScheduleId;
 
-    @Id
     @Column(name = "training_schedule_version")
     private Integer trainingScheduleVersion;
 
@@ -31,21 +31,32 @@ public class ActiveTrainingSchedule {
     @Column(nullable = false, name = "interval_repetitions")
     private Integer intervalRepetitions;
 
+    @Column(nullable = false, name = "is_adaptive")
+    private Boolean isAdaptive;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "activeTrainingSchedule")
     private List<ExerciseDone> done;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("dude_id")
     @JoinColumn(name = "dude_id", referencedColumnName = "id")
     private Dude dude;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("training_schedule_id")
     @JoinColumns({
         @JoinColumn(name = "training_schedule_id", referencedColumnName = "id"),
         @JoinColumn(name = "training_schedule_version", referencedColumnName = "version")
     })
     private TrainingSchedule trainingSchedule;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getDudeId() {
         return dudeId;
@@ -87,6 +98,14 @@ public class ActiveTrainingSchedule {
         this.intervalRepetitions = intervalRepetitions;
     }
 
+    public Boolean getAdaptive() {
+        return isAdaptive;
+    }
+
+    public void setAdaptive(Boolean adaptive) {
+        isAdaptive = adaptive;
+    }
+
     public List<ExerciseDone> getDone() {
         return done;
     }
@@ -118,14 +137,13 @@ public class ActiveTrainingSchedule {
     @Override
     public String toString() {
         return "ActiveTrainingSchedule{" +
-            "dudeId=" + dudeId +
+            "id=" + id +
+            ", dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", startDate=" + startDate +
             ", intervalRepetitions=" + intervalRepetitions +
-            ", done=" + done +
-            ", dude=" + dude +
-            ", trainingSchedule=" + trainingSchedule +
+            ", isAdaptive=" + isAdaptive +
             '}';
     }
 
@@ -136,6 +154,7 @@ public class ActiveTrainingSchedule {
 
         ActiveTrainingSchedule that = (ActiveTrainingSchedule) o;
 
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (dudeId != null ? !dudeId.equals(that.dudeId) : that.dudeId != null) return false;
         if (trainingScheduleId != null ? !trainingScheduleId.equals(that.trainingScheduleId) : that.trainingScheduleId != null)
             return false;
@@ -144,36 +163,40 @@ public class ActiveTrainingSchedule {
         if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
         if (intervalRepetitions != null ? !intervalRepetitions.equals(that.intervalRepetitions) : that.intervalRepetitions != null)
             return false;
-        if (done != null ? !done.equals(that.done) : that.done != null) return false;
-        if (dude != null ? !dude.equals(that.dude) : that.dude != null) return false;
-        return trainingSchedule != null ? trainingSchedule.equals(that.trainingSchedule) : that.trainingSchedule == null;
+        return isAdaptive != null ? isAdaptive.equals(that.isAdaptive) : that.isAdaptive == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = dudeId != null ? dudeId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (dudeId != null ? dudeId.hashCode() : 0);
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (intervalRepetitions != null ? intervalRepetitions.hashCode() : 0);
-        result = 31 * result + (done != null ? done.hashCode() : 0);
-        result = 31 * result + (dude != null ? dude.hashCode() : 0);
-        result = 31 * result + (trainingSchedule != null ? trainingSchedule.hashCode() : 0);
+        result = 31 * result + (isAdaptive != null ? isAdaptive.hashCode() : 0);
         return result;
     }
 
     public static final class ActiveTrainingScheduleBuilder {
+        private Long id;
         private Long dudeId;
         private Long trainingScheduleId;
         private Integer trainingScheduleVersion;
         private LocalDate startDate;
         private Integer intervalRepetitions;
+        private Boolean isAdaptive;
         private List<ExerciseDone> done;
         private Dude dude;
         private TrainingSchedule trainingSchedule;
 
         public ActiveTrainingScheduleBuilder() {
+        }
+
+        public ActiveTrainingScheduleBuilder id(Long id) {
+            this.id = id;
+            return this;
         }
 
         public ActiveTrainingScheduleBuilder dudeId(Long dudeId) {
@@ -201,6 +224,11 @@ public class ActiveTrainingSchedule {
             return this;
         }
 
+        public ActiveTrainingScheduleBuilder isAdaptive(Boolean isAdaptive) {
+            this.isAdaptive = isAdaptive;
+            return this;
+        }
+
         public ActiveTrainingScheduleBuilder done(List<ExerciseDone> done) {
             this.done = done;
             return this;
@@ -218,11 +246,13 @@ public class ActiveTrainingSchedule {
 
         public ActiveTrainingSchedule build() {
             ActiveTrainingSchedule activeTrainingSchedule = new ActiveTrainingSchedule();
+            activeTrainingSchedule.setId(id);
             activeTrainingSchedule.setDudeId(dudeId);
             activeTrainingSchedule.setTrainingScheduleId(trainingScheduleId);
             activeTrainingSchedule.setTrainingScheduleVersion(trainingScheduleVersion);
             activeTrainingSchedule.setStartDate(startDate);
             activeTrainingSchedule.setIntervalRepetitions(intervalRepetitions);
+            activeTrainingSchedule.setAdaptive(isAdaptive);
             activeTrainingSchedule.setDone(done);
             activeTrainingSchedule.setDude(dude);
             activeTrainingSchedule.setTrainingSchedule(trainingSchedule);

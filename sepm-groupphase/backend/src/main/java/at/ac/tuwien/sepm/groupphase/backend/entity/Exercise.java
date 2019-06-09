@@ -40,7 +40,7 @@ public class Exercise {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "exercise")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -151,8 +151,6 @@ public class Exercise {
             ", rating=" + rating +
             ", category=" + category +
             ", isHistory=" + isHistory +
-            ", workouts=" + workouts +
-            ", creator=" + creator +
             '}';
     }
 
@@ -173,9 +171,8 @@ public class Exercise {
             return false;
         if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
         if (category != exercise.category) return false;
-        if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
-        if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
-        return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
+        return isHistory != null ? isHistory.equals(exercise.isHistory) : exercise.isHistory == null;
+
     }
 
     @Override
@@ -189,8 +186,6 @@ public class Exercise {
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
-        result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
-        result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
     }
 

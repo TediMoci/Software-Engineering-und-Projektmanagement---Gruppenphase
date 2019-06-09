@@ -38,7 +38,7 @@ public class TrainingScheduleWorkout {
     })
     private Workout workout;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("training_schedule_id")
     @JoinColumns({
         @JoinColumn(name = "training_schedule_id", referencedColumnName = "id"),
@@ -114,8 +114,6 @@ public class TrainingScheduleWorkout {
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", day=" + day +
-            ", workout=" + workout +
-            ", trainingSchedule=" + trainingSchedule +
             '}';
     }
 
@@ -133,9 +131,7 @@ public class TrainingScheduleWorkout {
             return false;
         if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
             return false;
-        if (day != null ? !day.equals(that.day) : that.day != null) return false;
-        if (workout != null ? !workout.equals(that.workout) : that.workout != null) return false;
-        return trainingSchedule != null ? trainingSchedule.equals(that.trainingSchedule) : that.trainingSchedule == null;
+        return day != null ? day.equals(that.day) : that.day == null;
 
     }
 
@@ -146,8 +142,6 @@ public class TrainingScheduleWorkout {
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (day != null ? day.hashCode() : 0);
-        result = 31 * result + (workout != null ? workout.hashCode() : 0);
-        result = 31 * result + (trainingSchedule != null ? trainingSchedule.hashCode() : 0);
         return result;
     }
 

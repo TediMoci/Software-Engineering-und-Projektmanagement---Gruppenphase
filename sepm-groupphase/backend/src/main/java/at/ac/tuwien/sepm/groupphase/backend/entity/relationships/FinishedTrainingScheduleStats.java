@@ -177,8 +177,6 @@ public class FinishedTrainingScheduleStats {
             ", dudeId=" + dudeId +
             ", trainingScheduleId=" + trainingScheduleId +
             ", trainingScheduleVersion=" + trainingScheduleVersion +
-            ", dude=" + dude +
-            ", trainingSchedule=" + trainingSchedule +
             ", totalHours=" + totalHours +
             ", totalDays=" + totalDays +
             ", totalCalorieConsumption=" + totalCalorieConsumption +
@@ -202,9 +200,6 @@ public class FinishedTrainingScheduleStats {
             return false;
         if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
             return false;
-        if (dude != null ? !dude.equals(that.dude) : that.dude != null) return false;
-        if (trainingSchedule != null ? !trainingSchedule.equals(that.trainingSchedule) : that.trainingSchedule != null)
-            return false;
         if (totalHours != null ? !totalHours.equals(that.totalHours) : that.totalHours != null) return false;
         if (totalDays != null ? !totalDays.equals(that.totalDays) : that.totalDays != null) return false;
         if (totalCalorieConsumption != null ? !totalCalorieConsumption.equals(that.totalCalorieConsumption) : that.totalCalorieConsumption != null)
@@ -225,8 +220,6 @@ public class FinishedTrainingScheduleStats {
         result = 31 * result + (dudeId != null ? dudeId.hashCode() : 0);
         result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
         result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
-        result = 31 * result + (dude != null ? dude.hashCode() : 0);
-        result = 31 * result + (trainingSchedule != null ? trainingSchedule.hashCode() : 0);
         result = 31 * result + (totalHours != null ? totalHours.hashCode() : 0);
         result = 31 * result + (totalDays != null ? totalDays.hashCode() : 0);
         result = 31 * result + (totalCalorieConsumption != null ? totalCalorieConsumption.hashCode() : 0);
