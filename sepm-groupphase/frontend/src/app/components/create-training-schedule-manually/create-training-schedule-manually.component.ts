@@ -541,6 +541,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
       this.tsForm.controls.tsName.value,
       this.tsForm.controls.tsDescription.value,
       this.tsForm.controls.tsDifficulty.value,
+      this.interval,
       this.trainingScheduleWorkouts,
       this.dude.id
     );

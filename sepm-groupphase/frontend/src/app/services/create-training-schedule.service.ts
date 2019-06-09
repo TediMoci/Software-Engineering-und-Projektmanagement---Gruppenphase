@@ -15,7 +15,7 @@ export class CreateTrainingScheduleService {
   constructor(private httpClient: HttpClient, private globals: Globals) {}
 
   addTrainingSchedule(trainingSchedule: CreateTrainingSchedule): Observable<TrainingSchedule> {
-    console.log('add trainingSchedule with name ' + trainingSchedule.name);
+    console.log('add trainingSchedule with name ' + trainingSchedule.name + JSON.stringify(trainingSchedule));
     return this.httpClient.post<TrainingSchedule>(this.trainingScheduleBaseUri, trainingSchedule);
   }
 }

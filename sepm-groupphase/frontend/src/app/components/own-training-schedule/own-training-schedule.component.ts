@@ -38,6 +38,7 @@ export class OwnTrainingScheduleComponent implements OnInit {
           }
           return 0;
         });
+        console.log('loaded ' + JSON.stringify(this.trainingSchedules[1]))
       },
       error => {
         this.error = error;
@@ -47,7 +48,9 @@ export class OwnTrainingScheduleComponent implements OnInit {
   }
 
   setSelectedTrainingSchedule (element: TrainingSchedule) {
+    console.log('Selected ' + JSON.stringify( JSON.stringify(element)))
     localStorage.setItem('selectedTrainingSchedule', JSON.stringify(element));
+
   }
 
   goToEditTrainingSchedule(element: TrainingSchedule) {
