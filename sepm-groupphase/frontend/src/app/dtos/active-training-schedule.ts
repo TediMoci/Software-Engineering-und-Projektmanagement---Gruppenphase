@@ -4,5 +4,6 @@ export class ActiveTrainingSchedule {
     public trainingScheduleId: number,
     public trainingScheduleVersion: number,
     public intervalRepetitions: number,
+    public adaptive: boolean = false
   ){}
 }
