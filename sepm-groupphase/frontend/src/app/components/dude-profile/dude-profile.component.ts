@@ -104,7 +104,7 @@ export class DudeProfileComponent implements OnInit {
             (data)=>{
               console.log("loaded Ts: " + JSON.stringify(data));
               this.trainingSchedule = data;
-              this.tsDuration = this.initDuration(this.trainingSchedule.intervalLength, this.activeTs.intervalRepetitions)
+              this.tsDuration = this.initDuration(this.trainingSchedule.intervalLength,this.activeTs.intervalRepetitions)
               this.tabs = this.initTabs(this.tsDuration);
 
               this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(this.trainingSchedule.id,this.trainingSchedule.version).subscribe(
@@ -169,9 +169,9 @@ export class DudeProfileComponent implements OnInit {
   }
   intOverview(){
     let elemsForDay: Array<Workout> = [];
-    for (let i = 0; i < this.trainingSchedule.intervalLength; i++){
+    for (let i = 0; i < this.tsDuration; i++){
       for(let element of this.tsWorkouts){
-        if(i+1 == element.day){
+        if((i+1)%7 == element.day){
           console.log("Day "+ (i+1) + ": " + element.name)
           elemsForDay.push(element)
         }
@@ -184,7 +184,7 @@ export class DudeProfileComponent implements OnInit {
     let array:Array<any> = [];
     console.log("Getting all workouts of day " + selected)
     for(let e of this.tsWorkouts){
-      if(e.day == selected+1){
+      if(e.day == (selected+1)){
         array.push(e);
       }
     }
