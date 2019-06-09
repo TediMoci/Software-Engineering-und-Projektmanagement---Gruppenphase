@@ -43,6 +43,7 @@ export class DudeProfileComponent implements OnInit {
   tsDifficulty: number;
   tsWorkouts: any;
   tsDuration: number;
+  tsTrue: boolean = false;
   //🐡 Sorted Workouts by day
   selectedWorkout:any = [];
   exercisesForWorkouts:any;
@@ -106,6 +107,7 @@ export class DudeProfileComponent implements OnInit {
             (data)=>{
               console.log("loaded Ts: " + JSON.stringify(data));
               this.trainingSchedule = data;
+              this.tsTrue = true;
               this.tsName = this.trainingSchedule.name;
               this.tsDiscription= this.trainingSchedule.description;
               this.tsDifficulty= this.trainingSchedule.difficulty;
@@ -202,6 +204,19 @@ export class DudeProfileComponent implements OnInit {
       case 2:return "Advanced";
       case 3:return "Pro";
     }
+  }
+
+  deactivate(){
+    this.trainingScheduleService.deleteActiveTrainingScheduleBYId(this.dude.id)
+      .subscribe(() => {
+          console.log('ended schedule successfully');
+          this.tsTrue = false;
+          this.ngOnInit();
+        },
+        error => {
+          this.error = error;
+        }
+      );
   }
 
 }
