@@ -88,6 +88,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
     public ExerciseDone exerciseDoneDtoToExerciseDone(ExerciseDoneDto exerciseDoneDto) {
         ExerciseDone.ExerciseDoneBuilder builder = new ExerciseDone.ExerciseDoneBuilder();
 
+        builder.activeTrainingScheduleId(exerciseDoneDto.getActiveTrainingScheduleId());
         builder.dudeId(exerciseDoneDto.getDudeId());
         builder.trainingScheduleId(exerciseDoneDto.getTrainingScheduleId());
         builder.trainingScheduleVersion(exerciseDoneDto.getTrainingScheduleVersion());
@@ -105,6 +106,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
     public ExerciseDoneDto exerciseDoneToExerciseDoneDto(ExerciseDone exerciseDone) {
         ExerciseDoneDto.ExerciseDoneDtoBuilder builder = new ExerciseDoneDto.ExerciseDoneDtoBuilder();
 
+        builder.activeTrainingScheduleId(exerciseDone.getActiveTrainingScheduleId());
         builder.dudeId(exerciseDone.getDudeId());
         builder.trainingScheduleId(exerciseDone.getTrainingScheduleId());
         builder.trainingScheduleVersion(exerciseDone.getTrainingScheduleVersion());
@@ -126,6 +128,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.trainingScheduleId(activeTrainingScheduleDto.getTrainingScheduleId());
         builder.trainingScheduleVersion(activeTrainingScheduleDto.getTrainingScheduleVersion());
         builder.intervalRepetitions(activeTrainingScheduleDto.getIntervalRepetitions());
+        builder.isAdaptive(activeTrainingScheduleDto.getAdaptive());
 
         return builder.build();
     }
@@ -134,11 +137,13 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
     public ActiveTrainingScheduleDto activeTrainingScheduleToActiveTrainingScheduleDto(ActiveTrainingSchedule activeTrainingSchedule) {
         ActiveTrainingScheduleDto.ActiveTrainingScheduleDtoBuilder builder = new ActiveTrainingScheduleDto.ActiveTrainingScheduleDtoBuilder();
 
+        builder.id(activeTrainingSchedule.getId());
         builder.dudeId(activeTrainingSchedule.getDudeId());
         builder.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
         builder.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
         builder.startDate(activeTrainingSchedule.getStartDate());
         builder.intervalRepetitions(activeTrainingSchedule.getIntervalRepetitions());
+        builder.isAdaptive(activeTrainingSchedule.getAdaptive());
 
         return builder.build();
     }

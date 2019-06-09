@@ -20,7 +20,7 @@ export class OwnCoursesService {
     return this.httpClient.get<Course[]>(this.courseBaseUri + '/' + fitnessProvider.id + '/courses');
   }
 
-  deleteCourse(courseId: number){
+  deleteCourse(courseId: number) {
     console.log('delete course with id ' + courseId);
     return this.httpClient.delete(this.courseEditBaseUri + '/' + courseId);
   }

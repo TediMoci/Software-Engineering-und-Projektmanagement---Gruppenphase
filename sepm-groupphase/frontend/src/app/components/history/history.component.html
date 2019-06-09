@@ -16,8 +16,13 @@
         </div>
       </div>
       <div class="col-sm-9">
-        <h1>Your old Training Schedules</h1>
-        <p>TODO: list of finished training schedules</p>
+        <h1>My formerly active Training Schedules</h1>
+        <p>Click on a name to see your Training Schedule together with Training Schedule statistics. Scroll to see more Training Schedules!</p>
+        <ul>
+          <li *ngFor='let element of stats'>
+            <a [routerLink]="['/statistics']" (click)="setSelectedStats(element)" class="btn2 btn-link">{{element.trainingSchedule.name}}</a>
+            </li>
+        </ul>
       </div>
 
     </div>
