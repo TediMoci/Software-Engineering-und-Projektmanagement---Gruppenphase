@@ -1,23 +1,23 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 <div class="container-fluid">
 
   <div class="container">
     <div class="row">
 
       <div class="col-sm-3">
-        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <img class="img-fluid" src="{{imagePath}}" alt="fitness provider profile image">
         <div class="row-sm-1">
-          <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
+          <h4 style="text-decoration: underline;">{{userName}}</h4>
         </div>
       </div>
       <div class="col-sm-9">
-        <h1>Follower</h1>
-        <p>TODO: list of follower goes here</p>
+        <h1>My Followers</h1>
+        <p>Click on a name to see the details of the follower. Scroll to see more followers!</p>
+        <ul>
+          <li *ngFor='let element of followers'>
+            <a [routerLink]="['/follower-dude']" (click)="setSelectedDude(element)" class="btn2 btn-link">{{element.name}}</a>
+          </li>
+        </ul>
       </div>
 
     </div>
