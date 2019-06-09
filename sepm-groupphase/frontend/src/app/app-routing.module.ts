@@ -41,6 +41,8 @@ import {EditWorkoutExercisesComponent} from './components/edit-workout-exercises
 import {CreateTrainingScheduleManuallyComponent} from './components/create-training-schedule-manually/create-training-schedule-manually.component';
 import {TrainingScheduleComponent} from './components/training-schedule/training-schedule.component';
 import {EditTrainingScheduleComponent} from './components/edit-training-schedule/edit-training-schedule.component';
+import {EditTrainingScheduleWorkoutsComponent} from './components/edit-training-schedule-workouts/edit-training-schedule-workouts.component';
+
 
 const routes: Routes = [
 
@@ -82,7 +84,8 @@ const routes: Routes = [
   {path: 'edit-workout-exercises', canActivate: [RoleGuard], component: EditWorkoutExercisesComponent},
   {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent},
   {path: 'trainingSchedule', canActivate: [AuthGuard], component: TrainingScheduleComponent},
-  {path: 'edit-training-schedule', canActivate:[RoleGuard], component: EditTrainingScheduleComponent}
+  {path: 'edit-training-schedule', canActivate: [RoleGuard], component: EditTrainingScheduleComponent},
+  {path: 'edit-training-workouts', canActivate: [RoleGuard], component: EditTrainingScheduleWorkoutsComponent}
 ];
 
 @NgModule({

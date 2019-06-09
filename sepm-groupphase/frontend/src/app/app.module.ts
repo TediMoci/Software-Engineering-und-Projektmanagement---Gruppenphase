@@ -84,6 +84,7 @@ import { EditWorkoutExercisesComponent } from './components/edit-workout-exercis
 import { CreateTrainingScheduleManuallyComponent } from './components/create-training-schedule-manually/create-training-schedule-manually.component';
 import { TrainingScheduleComponent } from './components/training-schedule/training-schedule.component';
 import { EditTrainingScheduleComponent } from './components/edit-training-schedule/edit-training-schedule.component';
+import { EditTrainingScheduleWorkoutsComponent } from './components/edit-training-schedule-workouts/edit-training-schedule-workouts.component';
 
 @NgModule({
   declarations: [
@@ -129,6 +130,7 @@ import { EditTrainingScheduleComponent } from './components/edit-training-schedu
     CreateTrainingScheduleManuallyComponent,
     TrainingScheduleComponent,
     EditTrainingScheduleComponent,
+    EditTrainingScheduleWorkoutsComponent,
   ],
   imports: [
     MatAutocompleteModule,
