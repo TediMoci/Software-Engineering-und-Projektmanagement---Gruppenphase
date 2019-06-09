@@ -27,8 +27,9 @@ export class TrainingScheduleService {
     console.log('delete aktive training schedule with id '+ trainingScheduleId);
     return this.httpClient.delete(this.BaseUri + "/" + trainingScheduleId);
   }
+  //todo: this does not work 🐡 🐡 🐡
   saveActiveSchedule(activeTs:ActiveTrainingSchedule): Observable<ActiveTrainingSchedule>{
-    console.log('save active training schedule: ' + JSON.stringify(activeTs))
+    console.log('save active training schedule: ' + JSON.stringify(activeTs));
     return this.httpClient.post<ActiveTrainingSchedule>(this.BaseUri + "/active", activeTs)
   }
 }

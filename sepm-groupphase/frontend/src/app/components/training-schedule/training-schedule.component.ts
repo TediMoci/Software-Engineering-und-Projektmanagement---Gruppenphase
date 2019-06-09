@@ -97,7 +97,6 @@ export class TrainingScheduleComponent implements OnInit {
       this.dude.id,
       this.trainingSchedule.id,
       this.trainingSchedule.version,
-      0,
       this.intervalRepetitions);
     console.log("Trying to make TS active: " +JSON.stringify(activeTs));
     this.trainingScheduleService.saveActiveSchedule(activeTs)
