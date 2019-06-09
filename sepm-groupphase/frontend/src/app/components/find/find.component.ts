@@ -41,7 +41,6 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMaxActual: string = "";
   public filterDudeSelfAssessmentActual: string = "None";
 
-
   entries: any;
   exercisesForWorkouts: any;
 
@@ -50,7 +49,7 @@ export class FindComponent implements OnInit {
   error: any;
   dude: Dude;
 
-  //Filter Objects
+  // Filter Objects
   courceFilter: CourseFilter;
   fitnessProvider: FitnessProvider;
   exerciseFilter: ExerciseFilter;
@@ -58,7 +57,7 @@ export class FindComponent implements OnInit {
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
 
-
+  followedFP: String;
 
   constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
 
@@ -198,7 +197,7 @@ export class FindComponent implements OnInit {
           this.inputTextActual,
           this.filterDudeSelfAssessmentActual);
 
-        console.log("name: "+this.dudeFilter.filter);
+        console.log("name: " + this.dudeFilter.filter);
         this.findService.getAllDudesFiltered(this.dudeFilter).subscribe(
           (data) => {
             console.log('get all dudes');
@@ -222,7 +221,7 @@ export class FindComponent implements OnInit {
         this.fitnessProviderFilter = new FitnessProviderFilter(
           this.inputTextActual);
 
-        console.log("name: "+this.fitnessProviderFilter.filter);
+        console.log("name: "+ this.fitnessProviderFilter.filter);
         this.findService.getAllFitnessProviderFiltered(this.fitnessProviderFilter).subscribe(
           (data) => {
             console.log('get all courses');
@@ -263,8 +262,8 @@ export class FindComponent implements OnInit {
   convertDifficulty(element:any){
     switch (element) {
       case 1: return "Beginner";
-      case 2:return "Advanced";
-      case 3:return "Pro";
+      case 2: return "Advanced";
+      case 3: return "Pro";
     }
   }
 
@@ -276,16 +275,19 @@ export class FindComponent implements OnInit {
   }
   setSelectedWorkout(element: Workout) {
     localStorage.setItem('selectedWorkout', JSON.stringify(element));
-    console.log(localStorage.getItem("selectedWorkout"))
+    console.log(localStorage.getItem('selectedWorkout'));
   }
   resetResults() {
     this.entries = null;
   }
 
-  followSelectedFitnessProvider(fitnessProviderId: number) {
-    this.findService.followFitnessProvider(JSON.parse(localStorage.getItem('loggedInDude')).id, fitnessProviderId);
+  followSelectedFitnessProvider(fitnessProvider: FitnessProvider) {
+    this.findService.followFitnessProvider(JSON.parse(localStorage.getItem('loggedInDude')).id, fitnessProvider.id);
+    this.followedFP = fitnessProvider.name;
   }
 
-
+  vanishError() {
+    this.error = false;
+  }
 
 }

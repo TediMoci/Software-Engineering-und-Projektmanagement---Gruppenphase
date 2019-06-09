@@ -1,4 +1,5 @@
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 <div class="container-fluid">
 
   <div class="container">
@@ -22,11 +23,12 @@
             <h3>Courses:</h3>
             <ul>
               <li *ngFor='let element of courses'>
-                <a [routerLink]="['/course-dude-view']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
+                <a [routerLink]="['/course-dude-view']" (click)="setSelectedCourse(element)"
+                   class="btn2 btn-link">{{element.name}}</a>
               </li>
             </ul>
           </div>
-          <div class ="col">
+          <div class="col">
             <img class="img-fluid" src="{{imagePath2}}" align="center" alt="fitness provider image">
           </div>
         </div>

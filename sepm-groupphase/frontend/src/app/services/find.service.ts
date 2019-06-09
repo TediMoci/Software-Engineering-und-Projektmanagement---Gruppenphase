@@ -80,7 +80,7 @@ export class FindService {
     return this.httpClient.get<FitnessProvider[]>(this.BaseUri + '/fitnessProvider/filtered', {params: params});
   }
 
-  followFitnessProvider(dudeId: number, fitnessProviderId: number): void {
+  followFitnessProvider(dudeId: number, fitnessProviderId: number) {
     console.log('follow fitness provider with dudeId ' + dudeId +  '; fitnessProviderId ' + fitnessProviderId);
     this.httpClient.put(this.BaseUri + '/dudes/' + dudeId + '/follow/' + fitnessProviderId, null).subscribe();
   }

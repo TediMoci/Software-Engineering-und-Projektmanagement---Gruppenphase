@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {FitnessProvider} from '../../dtos/fitness-provider';
+import {ProfileService} from '../../services/profile.service';
 
 @Component({
   selector: 'app-dude',
@@ -18,11 +19,12 @@ export class FollowerDudeComponent implements OnInit {
   email: string;
   sex: any;
   selfAssessment: string;
-  birthday: Date;
+  age: number;
   height: number;
   weight: number;
   dude: Dude;
-  constructor() { }
+  error: any;
+  constructor(private profileService: ProfileService) { }
 
   ngOnInit() {
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
@@ -46,7 +48,15 @@ export class FollowerDudeComponent implements OnInit {
         break;
       }
     }
-    this.birthday = this.dude.birthday;
+    this.profileService.getAge(this.dude.birthday, this.dude.name).subscribe(
+      (data) => {
+        console.log('calculate age of dude with name ' + this.dude.name);
+        this.age = data;
+      },
+      error => {
+        this.error = error;
+      }
+    );
     this.height = this.dude.height;
     this.weight = this.dude.weight;
   }
