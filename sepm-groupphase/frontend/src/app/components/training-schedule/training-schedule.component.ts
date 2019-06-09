@@ -22,7 +22,7 @@ export class TrainingScheduleComponent implements OnInit {
   tsName: string;
   tabs: Array<string>;
   tabContent: any;
-  selected= new FormControl(0);
+  selected = new FormControl(0);
   trainingSchedule: TrainingSchedule;
   tsWorkouts: any;
   error: any;

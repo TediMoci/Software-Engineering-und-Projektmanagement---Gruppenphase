@@ -1,0 +1,84 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
+        <div class="row-sm-1">
+          <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <h1>{{nameOfStatistic}}</h1>
+
+        <p> <i class="fas fa-history"></i> Total hours: {{totalHours}}</p>
+        <p> <i class="far fa-calendar-check"></i> Total days: {{totalDays}}</p>
+        <p> <i class="fas fa-running"></i> Total calories: {{totalCalories}}</p>
+        <p> <i class="far fa-arrow-alt-circle-up"></i> Total interval repetitions: {{totalIntervalRepetitions}}</p>
+        <p> <i class="fas fa-percent"></i> Percentage of categories: Strength: {{strengthPercent}}%, Endurance: {{endurancePercent}}%, Other: {{otherPercent}}% </p>
+
+        <hr />
+
+        <p>Difficulty: {{convertDifficulty(trainingSchedule.difficulty)}}</p>
+        <p>"{{trainingSchedule.description}}"</p>
+
+        <div>
+          <div class="scrolling-wrapper">
+            <mat-card class="card" *ngFor="let element of tabs">
+              <h1>{{element}}</h1>
+              <hr>
+              <div class="altContent">
+                <p *ngIf="workoutsPerDay[tabs.indexOf(element)]!= undefined && workoutsPerDay[tabs.indexOf(element)].length == 0">No Workouts for {{element}}</p>
+              </div>
+              <button mat-stroked-button class="card-in-card" matTooltip="Click for more details"
+                      [matTooltipShowDelay]="1000"
+                      *ngFor='let workout of workoutsPerDay[tabs.indexOf(element)]'
+                      [value]="workout" (click)="selectedWorkout = workout; getSelectedWorkoutExercises(selectedWorkout)">
+                {{workout.name}}
+              </button>
+            </mat-card>
+          </div>
+          <div class="details" *ngIf="selectedWorkout.length != 0">
+
+            <section>
+              <button class="hideButton" mat-flat-button (click)="selectedWorkout = []">Hide details</button>
+            </section>
+
+          </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<div class="modal" id="statisticModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Overall Facts</h4>
+      </div>
+
+      <p> <i class="fas fa-history"></i> Total hours: {{totalHours}}</p>
+      <p> <i class="far fa-calendar-check"></i> Total days: {{totalDays}}</p>
+      <p> <i class="fas fa-running"></i> Total calories: {{totalCalories}}</p>
+      <p> <i class="far fa-arrow-alt-circle-up"></i> Total interval repetitions: {{totalIntervalRepetitions}}</p>
+      <p> <i class="fas fa-percent"></i> Percentage of categories: Strength: {{strengthPercent}}%, Endurance: {{endurancePercent}}%, Other: {{otherPercent}}% </p>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>

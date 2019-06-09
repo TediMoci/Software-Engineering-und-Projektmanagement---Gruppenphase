@@ -105,6 +105,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}/trainingSchedules",
                     "/dudes/{id}/activeTrainingSchedule",
                     "/dudes/{id}/activeTrainingSchedule/done",
+                    "/dudes/{id}/statistics",
                     "/dudes/filtered",
                     "/dudes/{dudeId}/follow",
                     "/dudes/filtered",
