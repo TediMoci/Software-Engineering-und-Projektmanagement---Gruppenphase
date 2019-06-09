@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
-import {ActiveTrainingSchedule} from "../dtos/active-training-schedule";
-import {catchError} from "rxjs/operators";
+import {ActiveTrainingSchedule} from '../dtos/active-training-schedule';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +25,9 @@ export class ProfileService {
     return this.httpClient.get<number>(this.dudeBaseUri + '/bmi', {params: params});
   }
 
-  getActiveSchedule(id:number): Observable<ActiveTrainingSchedule>{
+  getActiveSchedule(id: number): Observable<ActiveTrainingSchedule> {
     console.log('checking for active training schedule for Dude with id ' + id);
-    return this.httpClient.get<ActiveTrainingSchedule>(this.dudeBaseUri+'/'+id+'/activeTrainingSchedule')
+    return this.httpClient.get<ActiveTrainingSchedule>(this.dudeBaseUri + '/' + id + '/activeTrainingSchedule');
 
   }
 
