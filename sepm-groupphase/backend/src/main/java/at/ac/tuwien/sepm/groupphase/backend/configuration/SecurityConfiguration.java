@@ -95,6 +95,7 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.POST).permitAll()
                 .antMatchers(HttpMethod.GET,
                     "/authentication",
+                    "/downloadFile/{fileName:.+}",
                     "/user",
                     "/user/name",
                     "/dudes",
