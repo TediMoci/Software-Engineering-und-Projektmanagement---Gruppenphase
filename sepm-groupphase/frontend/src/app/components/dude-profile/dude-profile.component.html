@@ -29,18 +29,18 @@
       <div class="col-sm-9">
         <h1>🐡Current Training Schedule🐡</h1>
         <hr>
-        <div *ngIf="activeTs && trainingSchedule">
+        <div  *ngIf="activeTs && trainingSchedule">
           <div class="row">
             <div class="col">
-              <h2>{{trainingSchedule.name}}</h2>
+              <h2>{{tsName}}</h2>
             </div>
             <div class="col">
               <button class="deactivate btn btn-danger float-right"  data-toggle="modal" data-target="#deActiveModal" >End Schedule</button>
             </div>
           </div>
 
-          <p>Difficulty: {{convertDifficulty(trainingSchedule.difficulty)}}</p>
-          <p>"{{trainingSchedule.description}}"</p>
+          <p>Difficulty: {{convertDifficulty(tsDifficulty)}}</p>
+          <p>"{{tsDiscription}}"</p>
           <div class="scrolling-wrapper">
             <mat-card class="card" *ngFor="let element of tabs">
               <h1>{{element}}</h1>
@@ -117,7 +117,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h4 class="modal-title">Do you want to end {{trainingSchedule.name}}?</h4>
+        <h4 class="modal-title">Do you want to end {{tsName}}?</h4>
       </div>
       <!--div *ngIf="submitted && !!workoutExForm.controls.duration.errors" class="error"-->
 

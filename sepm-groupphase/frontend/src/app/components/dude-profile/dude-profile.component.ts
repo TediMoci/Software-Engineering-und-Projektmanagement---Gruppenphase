@@ -38,13 +38,15 @@ export class DudeProfileComponent implements OnInit {
   ActiveTsVersion: number;
   //🐡 Actual Schedule
   trainingSchedule: TrainingSchedule;
+  tsName:string;
+  tsDiscription:string;
+  tsDifficulty: number;
   tsWorkouts: any;
   tsDuration: number;
   //🐡 Sorted Workouts by day
   selectedWorkout:any = [];
   exercisesForWorkouts:any;
   workoutsPerDay: Array<any> = [];
-  tsName: string;
   //🐡 Display Stuff
   tabs: Array<string>;
   tabContent: any;
@@ -104,6 +106,9 @@ export class DudeProfileComponent implements OnInit {
             (data)=>{
               console.log("loaded Ts: " + JSON.stringify(data));
               this.trainingSchedule = data;
+              this.tsName = this.trainingSchedule.name;
+              this.tsDiscription= this.trainingSchedule.description;
+              this.tsDifficulty= this.trainingSchedule.difficulty;
               this.tsDuration = this.initDuration(this.trainingSchedule.intervalLength,this.activeTs.intervalRepetitions)
               this.tabs = this.initTabs(this.tsDuration);
 
