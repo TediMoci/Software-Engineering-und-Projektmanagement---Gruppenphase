@@ -8,10 +8,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IStatsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.FinishedTrainingScheduleStats;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
@@ -42,15 +44,17 @@ public class DudeEndpoint {
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private final IExerciseMapper exerciseMapper;
     private final IWorkoutMapper workoutMapper;
+    private final IStatsMapper statsMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
+    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper, IStatsMapper statsMapper) {
         this.iDudeService = iDudeService;
         this.iTrainingScheduleService = iTrainingScheduleService;
         this.dudeMapper = dudeMapper;
         this.trainingScheduleMapper = trainingScheduleMapper;
         this.exerciseMapper = exerciseMapper;
         this.workoutMapper = workoutMapper;
+        this.statsMapper = statsMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -249,6 +253,24 @@ public class DudeEndpoint {
             exerciseDoneDtos[i] = trainingScheduleMapper.exerciseDoneToExerciseDoneDto(exerciseDones.get(i));
         }
         return exerciseDoneDtos;
+    }
+
+    @RequestMapping(value = "/{id}/statistics", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all statistics of formerly active training schedules of Dude", authorizations = {@Authorization(value = "apiKey")})
+    public FinishedTrainingScheduleStatsDto[] getStatisticsByDudeId(@PathVariable Long id) {
+        LOGGER.info("Entering getStatisticsByDudeId with id " + id);
+        List<FinishedTrainingScheduleStats> stats;
+        try {
+            stats = iDudeService.findDudeById(id).getFinishedTrainingScheduleStats();
+        } catch (ServiceException e){
+            LOGGER.error("Could not getStatisticsByDudeId with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        FinishedTrainingScheduleStatsDto[] statsDtos = new FinishedTrainingScheduleStatsDto[stats.size()];
+        for (int i = 0; i < stats.size(); i++) {
+            statsDtos[i] = statsMapper.finishedTrainingScheduleStatsToFinishedTrainingScheduleStatsDto(stats.get(i));
+        }
+        return statsDtos;
     }
 }
 
