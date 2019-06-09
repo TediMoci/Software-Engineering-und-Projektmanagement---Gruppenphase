@@ -206,6 +206,24 @@ public class DudeEndpoint {
         return trainingScheduleDtos;
     }
 
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Workouts by filters", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
+        List<Dude> dudes;
+        try {
+            dudes = iDudeService.findByFilter(filter, selfAssessment);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        DudeDto[] dudeDtos = new DudeDto[dudes.size()];
+        for (int i = 0; i < dudes.size(); i++) {
+            dudeDtos[i] = dudeMapper.dudeToDudeDto(dudes.get(i));
+        }
+        return dudeDtos;
+    }
+
     @RequestMapping(value = "/{id}/activeTrainingSchedule", method = RequestMethod.GET)
     @ApiOperation(value = "Get active training schedule of dude", authorizations = {@Authorization(value = "apiKey")})
     public ActiveTrainingScheduleDto getActiveTrainingScheduleByDudeId(@PathVariable Long id) {

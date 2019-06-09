@@ -54,4 +54,5 @@ public interface IDudeService {
      */
     Dude update(String name, Dude newDude) throws ServiceException;
 
+    List<Dude> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
 }

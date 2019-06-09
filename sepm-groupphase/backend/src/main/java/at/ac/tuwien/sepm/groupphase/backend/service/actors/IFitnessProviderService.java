@@ -25,4 +25,5 @@ public interface IFitnessProviderService {
     FitnessProvider findByName(String name) throws ServiceException;
 
 
+    List<FitnessProvider> findByFilter(String filter) throws ServiceException;
 }
