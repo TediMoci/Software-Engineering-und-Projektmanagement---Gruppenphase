@@ -259,7 +259,7 @@ public class DudeEndpoint {
 
     @PostMapping("/{id}/uploadImage")
     @ApiOperation(value = "Upload image for Dude", authorizations = {@Authorization(value = "apiKey")})
-    public void uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    public String uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         LOGGER.info("Entering uploadImage with id: " + id);
         String fileName = "dude_" + id;
         if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
@@ -270,7 +270,7 @@ public class DudeEndpoint {
         iFileStorageService.storeFile(fileName, file);
 
         try {
-            iDudeService.updateImagePath(id, fileName);
+            return iDudeService.updateImagePath(id, fileName);
         } catch (ServiceException e) {
             LOGGER.error("Could not updateImagePath with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

@@ -132,7 +132,7 @@ public class FitnessProviderEndpoint {
 
     @PostMapping("/{id}/uploadImage")
     @ApiOperation(value = "Upload image for FitnessProvider", authorizations = {@Authorization(value = "apiKey")})
-    public void uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    public String uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         LOGGER.info("Entering uploadImage with id: " + id);
         String fileName = "fitness_provider_" + id;
         if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
@@ -143,7 +143,7 @@ public class FitnessProviderEndpoint {
         iFileStorageService.storeFile(fileName, file);
 
         try {
-            iFitnessProviderService.updateImagePath(id, fileName);
+            return iFitnessProviderService.updateImagePath(id, fileName);
         } catch (ServiceException e) {
             LOGGER.error("Could not updateImagePath with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

@@ -57,8 +57,9 @@ public interface IDudeService {
     /**
      * @param id of the Dude
      * @param fileName of the image in the path
+     * @return the full image-path
      * @throws ServiceException if something went wrong while updating the imagePath in the system
      */
-    void updateImagePath(Long id, String fileName) throws ServiceException;
+    String updateImagePath(Long id, String fileName) throws ServiceException;
 
 }
