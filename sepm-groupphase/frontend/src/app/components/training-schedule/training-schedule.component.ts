@@ -36,7 +36,7 @@ export class TrainingScheduleComponent implements OnInit {
   // input for active
   submitted: boolean = false;
   tsForm: FormGroup;
-  adaptive: boolean = false;
+  intervalRepetitions: number;
 
   constructor(private trainingScheduleService: TrainingScheduleService,
               private workoutService: WorkoutService,
@@ -51,6 +51,7 @@ export class TrainingScheduleComponent implements OnInit {
     console.log(this.trainingSchedule.trainingScheduleWorkouts);
 
     this.tsForm = this.formBuilder.group({
+      adaptive: [false],
       repetitions: ['', Validators.required]
     });
 
@@ -100,7 +101,7 @@ export class TrainingScheduleComponent implements OnInit {
       this.trainingSchedule.id,
       this.trainingSchedule.version,
       this.tsForm.controls.repetitions.value,
-      this.adaptive);
+      this.tsForm.controls.adaptive.value);
 
     console.log('Make trainingSchedule active: ' + JSON.stringify(this.toSaveActiveTs));
     this.trainingScheduleService.saveActiveSchedule(this.toSaveActiveTs).subscribe(
