@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -24,11 +26,13 @@ import java.util.List;
 public class ExerciseEndpoint {
 
     private final IExerciseService iExerciseService;
+    private final IFileStorageService iFileStorageService;
     private final IExerciseMapper exerciseMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(ExerciseEndpoint.class);
 
-    public ExerciseEndpoint(IExerciseService iExerciseService, IExerciseMapper exerciseMapper) {
+    public ExerciseEndpoint(IExerciseService iExerciseService, IFileStorageService iFileStorageService, IExerciseMapper exerciseMapper) {
         this.iExerciseService = iExerciseService;
+        this.iFileStorageService = iFileStorageService;
         this.exerciseMapper = exerciseMapper;
     }
 
@@ -132,6 +136,26 @@ public class ExerciseEndpoint {
             iExerciseService.delete(id);
         } catch (ServiceException e){
             LOGGER.error("Could not delete exercise with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/{id}/{version}/uploadImage")
+    @ApiOperation(value = "Upload image for Exercise", authorizations = {@Authorization(value = "apiKey")})
+    public void uploadImage(@PathVariable Long id, @PathVariable Integer version, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("Entering uploadImage with id: " + id + "; version: " + version);
+        String fileName = "exercise_" + id + "_" + version;
+        if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
+            fileName += ".png";
+        } else {
+            fileName += ".jpg";
+        }
+        iFileStorageService.storeFile(fileName, file);
+
+        try {
+            iExerciseService.updateImagePath(id, version, fileName);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not updateImagePath with id: " + id + "; version: " + version);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
