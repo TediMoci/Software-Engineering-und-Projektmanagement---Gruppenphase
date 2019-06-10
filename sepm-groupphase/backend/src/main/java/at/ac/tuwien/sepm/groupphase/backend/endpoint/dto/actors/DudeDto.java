@@ -60,6 +60,9 @@ public class DudeDto {
     @Min(value = 1, message = "Min value for weight is 1") @Max(value = 700, message = "Max value for weight is 700")
     private Double weight;
 
+    @ApiModelProperty(name = "Path of profile-picture of Dude")
+    private String imagePath = "/assets/img/kugelfisch.jpg";
+
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {
         {
@@ -149,6 +152,14 @@ public class DudeDto {
         this.weight = weight;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public List<String> getRoles() {
         return roles;
     }
@@ -190,9 +201,8 @@ public class DudeDto {
             ", birthday=" + birthday +
             ", height=" + height +
             ", weight=" + weight +
+            ", imagePath='" + imagePath + '\'' +
             ", roles=" + roles +
-            ", fitnessProviders=" + fitnessProviders +
-            ", courses=" + courses +
             '}';
     }
 
@@ -214,10 +224,9 @@ public class DudeDto {
         if (birthday != null ? !birthday.equals(dudeDto.birthday) : dudeDto.birthday != null) return false;
         if (height != null ? !height.equals(dudeDto.height) : dudeDto.height != null) return false;
         if (weight != null ? !weight.equals(dudeDto.weight) : dudeDto.weight != null) return false;
-        if (roles != null ? !roles.equals(dudeDto.roles) : dudeDto.roles != null) return false;
-        if (fitnessProviders != null ? !fitnessProviders.equals(dudeDto.fitnessProviders) : dudeDto.fitnessProviders != null)
-            return false;
-        return courses != null ? courses.equals(dudeDto.courses) : dudeDto.courses == null;
+        if (imagePath != null ? !imagePath.equals(dudeDto.imagePath) : dudeDto.imagePath != null) return false;
+        return roles != null ? roles.equals(dudeDto.roles) : dudeDto.roles == null;
+
     }
 
     @Override
@@ -232,9 +241,8 @@ public class DudeDto {
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (imagePath != null ? imagePath.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
-        result = 31 * result + (fitnessProviders != null ? fitnessProviders.hashCode() : 0);
-        result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
     }
 
@@ -249,6 +257,7 @@ public class DudeDto {
         private LocalDate birthday;
         private Double height;
         private Double weight;
+        private String imagePath;
         private List<String> roles;
         private Set<FitnessProvider> fitnessProviders;
         private Set<Course> courses;
@@ -306,6 +315,11 @@ public class DudeDto {
             return this;
         }
 
+        public DudeDtoBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public DudeDtoBuilder roles(List<String> roles){
             this.roles = roles;
             return this;
@@ -333,6 +347,7 @@ public class DudeDto {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
+            dude.setImagePath(imagePath);
             dude.setRoles(roles);
             dude.setFitnessProviders(fitnessProviders);
             dude.setCourses(courses);
