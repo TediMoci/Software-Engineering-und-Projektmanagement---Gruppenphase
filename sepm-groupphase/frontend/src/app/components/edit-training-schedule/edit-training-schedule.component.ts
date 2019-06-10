@@ -56,7 +56,7 @@ export class EditTrainingScheduleComponent implements OnInit {
     if (this.prevRoute === '/edit-training-workouts') {
       this.name = JSON.parse(localStorage.getItem('nameForEditTS'));
       this.description = JSON.parse(localStorage.getItem('descriptionForEditTS'));
-      this.difficulty = JSON.parse(localStorage.getItem('difficultyEditTS'));
+      this.difficulty = JSON.parse(localStorage.getItem('difficultyLevelEditTS'));
     } else {
       this.name = this.oldTrainingSchedule.name;
       this.description = this.oldTrainingSchedule.description;
@@ -86,7 +86,7 @@ export class EditTrainingScheduleComponent implements OnInit {
   editWorkouts() {
     localStorage.setItem('nameForEditTS', JSON.stringify(this.editTSForm.controls.nameForEditTS.value));
     localStorage.setItem('descriptionForEditTS', JSON.stringify(this.editTSForm.controls.descriptionForEditTS.value));
-    localStorage.setItem('difficultyEdit', JSON.stringify(this.editTSForm.controls.difficultyLevelEditTS.value));
+    localStorage.setItem('difficultyLevelEditTS', JSON.stringify(this.editTSForm.controls.difficultyLevelEditTS.value));
   }
 
   editTrainingSchedule() {
@@ -138,7 +138,7 @@ export class EditTrainingScheduleComponent implements OnInit {
         localStorage.removeItem('nameForEditTS');
         localStorage.removeItem('descriptionForEditTS');
         localStorage.removeItem('chosenWorkoutsForEditTS');
-        localStorage.removeItem('difficultyEdit');
+        localStorage.removeItem('difficultyLevelEditTS');
         this.router.navigate(['myTrainingSchedules']);
       },
       error => {

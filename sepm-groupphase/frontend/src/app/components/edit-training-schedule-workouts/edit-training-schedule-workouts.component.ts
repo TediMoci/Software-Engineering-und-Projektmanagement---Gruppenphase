@@ -110,6 +110,10 @@ export class EditTrainingScheduleWorkoutsComponent implements OnInit {
     this.router.navigate(['/edit-training-schedule']);
   }
 
+  findWorkoutsByName() {
+
+  }
+
   vanishError() {
     this.error = false;
   }
