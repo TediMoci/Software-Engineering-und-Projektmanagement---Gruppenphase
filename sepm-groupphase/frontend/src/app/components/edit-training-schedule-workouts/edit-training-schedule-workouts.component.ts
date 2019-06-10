@@ -7,6 +7,8 @@ import {Router} from '@angular/router';
 import {WorkoutEx} from '../../dtos/workoutEx';
 import {Exercise} from '../../dtos/exercise';
 import {Workout} from '../../dtos/workout';
+import {WorkoutExercisesService} from '../../services/workout-exercises.service';
+import {TrainingScheduleWorkoutsService} from '../../services/training-schedule-workouts.service';
 
 @Component({
   selector: 'app-edit-training-schedule-workouts',
@@ -29,7 +31,7 @@ export class EditTrainingScheduleWorkoutsComponent implements OnInit {
   workouts: any;
   error: any;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private trainingScheduleWorkoutsService: TrainingScheduleWorkoutsService) { }
 
   ngOnInit() {
     if ((JSON.parse(localStorage.getItem('previousRoute')) === '/edit-training-schedule') && (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/edit-training-workouts')) {
@@ -111,7 +113,17 @@ export class EditTrainingScheduleWorkoutsComponent implements OnInit {
   }
 
   findWorkoutsByName() {
-
+    this.workoutName = this.registerForm.value.name;
+    this.trainingScheduleWorkoutsService.getWorkoutsByName(this.workoutName).subscribe(
+      (data) => {
+        console.log('get all workouts by name ' + this.workoutName);
+        console.log(data);
+        this.workouts = data;
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
 
   vanishError() {
