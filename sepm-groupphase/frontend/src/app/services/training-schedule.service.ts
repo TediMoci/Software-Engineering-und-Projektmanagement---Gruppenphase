@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {TrainingScheduleWo} from '../dtos/training-schedule-wo';
 import {TrainingSchedule} from '../dtos/trainingSchedule';
 import {ActiveTrainingSchedule} from '../dtos/active-training-schedule';
+import {GetActiveTrainingSchedule} from '../dtos/get-active-training-schedule';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +27,9 @@ export class TrainingScheduleService {
     console.log('delete active training schedule with dude id ' + dudeId);
     return this.httpClient.delete(this.BaseUri + '/active/' + dudeId);
   }
-  // todo: this does not work 🐡 🐡 🐡
-  saveActiveSchedule(activeTs: ActiveTrainingSchedule) {
+
+  saveActiveSchedule(activeTs: ActiveTrainingSchedule): Observable<GetActiveTrainingSchedule> {
     console.log('save active training schedule: ' + JSON.stringify(activeTs));
-    return this.httpClient.post(this.BaseUri + '/active', activeTs);
+    return this.httpClient.post<GetActiveTrainingSchedule>(this.BaseUri + '/active', activeTs);
   }
 }

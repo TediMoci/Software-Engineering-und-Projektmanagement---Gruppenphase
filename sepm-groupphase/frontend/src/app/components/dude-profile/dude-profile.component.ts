@@ -8,6 +8,7 @@ import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
 import {ActiveTrainingSchedule} from '../../dtos/active-training-schedule';
 import {WorkoutService} from '../../services/workout.service';
+import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
 
 @Component({
   selector: 'app-dude-profile',
@@ -28,14 +29,13 @@ export class DudeProfileComponent implements OnInit {
   bmi: number;
   description: string;
   email: string;
-
   dude: Dude;
 
-  // 🐡 Active Schedule Stuff
-  activeTs: ActiveTrainingSchedule;
+  // Active Schedule variables
+  activeTs: GetActiveTrainingSchedule;
   ActiveTsId: number;
   ActiveTsVersion: number;
-  // 🐡 Actual Schedule
+  // original Schedule
   trainingSchedule: TrainingSchedule;
   tsName: string;
   tsDiscription: string;
@@ -43,14 +43,12 @@ export class DudeProfileComponent implements OnInit {
   tsWorkouts: any;
   tsDuration: number;
   tsTrue: boolean = false;
-  // 🐡 Sorted Workouts by day
+  // Sorted Workouts by day
   selectedWorkout: any = [];
   exercisesForWorkouts: any;
   workoutsPerDay: Array<any> = [];
-  // 🐡 Display Stuff
+  // Display variables
   tabs: Array<string>;
-  tabContent: any;
-
 
   constructor(private globals: Globals,
               private workoutService: WorkoutService,
@@ -102,6 +100,7 @@ export class DudeProfileComponent implements OnInit {
       (data) => {
         console.log('checking for active training schedule ' + JSON.stringify(data));
         this.activeTs = data;
+        console.log(this.activeTs);
         this.ActiveTsId = this.activeTs.trainingScheduleId;
         this.ActiveTsVersion = this.activeTs.trainingScheduleVersion;
         this.trainingScheduleService.getTrainingScheduleByIdandVersion(this.ActiveTsId, this.ActiveTsVersion)
@@ -165,8 +164,8 @@ export class DudeProfileComponent implements OnInit {
     );
   }
 
-  initDuration(intervalLenght: number, intervalReps: number) {
-    return intervalLenght * intervalReps;
+  initDuration(intervalLength: number, intervalReps: number) {
+    return intervalLength * intervalReps;
   }
 
   initTabs(days: number) {
@@ -177,6 +176,7 @@ export class DudeProfileComponent implements OnInit {
     console.log(tabs.toString());
     return tabs;
   }
+
   intOverview() {
     let elemsForDay: Array<Workout> = [];
     for (let i = 0; i < this.tsDuration; i++) {
@@ -190,18 +190,8 @@ export class DudeProfileComponent implements OnInit {
       elemsForDay = [];
     }
   }
-  getContent(selected: number) {
-    const array: Array<any> = [];
-    console.log('Getting all workouts of day ' + selected);
-    for (const e of this.tsWorkouts) {
-      if (e.day === (selected + 1)) {
-        array.push(e);
-      }
-    }
-    return array;
-  }
 
-  convertDifficulty(element: any) {
+  convertDifficulty(element: number) {
     switch (element) {
       case 1: return 'Beginner';
       case 2: return 'Advanced';
@@ -220,6 +210,10 @@ export class DudeProfileComponent implements OnInit {
           this.error = error;
         }
       );
+  }
+
+  vanishError() {
+    this.error = false;
   }
 
 }

@@ -6,6 +6,7 @@ import {TrainingScheduleService} from '../../services/training-schedule.service'
 import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
 import {ActiveTrainingSchedule} from '../../dtos/active-training-schedule';
+import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
 
 @Component({
   selector: 'app-training-schedule',
@@ -26,7 +27,8 @@ export class TrainingScheduleComponent implements OnInit {
   tsWorkouts: any;
   error: any;
   exercisesForWorkouts: any;
-  buttonSelected: any;
+  toSaveActiveTs: ActiveTrainingSchedule;
+  newActiveTs: GetActiveTrainingSchedule;
   selectedWorkout: any = [];
 
   workoutsPerDay: Array<any> = [];
@@ -42,14 +44,8 @@ export class TrainingScheduleComponent implements OnInit {
     this.trainingSchedule = JSON.parse(localStorage.getItem('selectedTrainingSchedule'));
     this.tsName = this.trainingSchedule.name;
     this.userName = this.dude.name;
-
-
-
     this.tabs = this.initTabs(this.trainingSchedule.intervalLength);
     console.log(this.trainingSchedule.trainingScheduleWorkouts);
-    // this.tabContent = this.getContent(this.selected.value);
-
-
 
     this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(this.trainingSchedule.id, this.trainingSchedule.version).subscribe(
       (data) => {
@@ -91,14 +87,23 @@ export class TrainingScheduleComponent implements OnInit {
   }
 
   makeTsActive() {
-
-    const activeTs: ActiveTrainingSchedule = new ActiveTrainingSchedule(
+    this.toSaveActiveTs = new ActiveTrainingSchedule(
       this.dude.id,
       this.trainingSchedule.id,
       this.trainingSchedule.version,
-      this.intervalRepetitions);
-    console.log('Trying to make TS active: ' + JSON.stringify(activeTs));
-    this.trainingScheduleService.saveActiveSchedule(activeTs);
+      this.intervalRepetitions,
+      false);
+
+    console.log('Make trainingSchedule active: ' + JSON.stringify(this.toSaveActiveTs));
+    this.trainingScheduleService.saveActiveSchedule(this.toSaveActiveTs).subscribe(
+      (data) => {
+        this.newActiveTs = data;
+        console.log(this.newActiveTs);
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
 
   intOverview() {
@@ -124,7 +129,6 @@ export class TrainingScheduleComponent implements OnInit {
     return tabs;
   }
 
-
   getContent(selected: number) {
     const array: Array<any> = [];
     console.log('Getting all workouts of day ' + selected);
@@ -143,14 +147,5 @@ export class TrainingScheduleComponent implements OnInit {
       case 3: return 'Pro';
     }
   }
-  dummy() {
-    console.log('works ' + JSON.stringify(this.buttonSelected));
-  }
-
-  testReturn(e: any) {
-    console.log(JSON.stringify(e));
-  }
-
-
 
 }

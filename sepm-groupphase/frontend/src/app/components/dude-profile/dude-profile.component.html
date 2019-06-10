@@ -1,3 +1,9 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
 <body>
 
 <div class="container-fluid">
@@ -10,16 +16,17 @@
         <div class="row-sm-1"></div>
         <div class="row-sm-10">
           <h4 style="text-decoration: underline;">{{userName}}</h4>
-              <p></p>
-              <p>Skill: {{skill}}</p>
-              <p>Age: {{age}}</p>
-              <p>Sex: {{sex}}</p>
-              <p>Height: {{height}} cm</p>
-              <p>Weight: {{weight}} kg</p>
-              <p>Bmi: {{bmi}}</p>
-              <p>Fitness providers: <a [routerLink]="['/fitnessProviders']" class="btn2 btn-link">My Fitness Providers</a></p>
-              <p>Description: {{description}}</p>
-              <p>E-Mail: {{email}}</p>
+          <p></p>
+          <p>Skill: {{skill}}</p>
+          <p>Age: {{age}}</p>
+          <p>Sex: {{sex}}</p>
+          <p>Height: {{height}} cm</p>
+          <p>Weight: {{weight}} kg</p>
+          <p>Bmi: {{bmi}}</p>
+          <p>Fitness providers: <a [routerLink]="['/fitnessProviders']" class="btn2 btn-link">My Fitness Providers</a>
+          </p>
+          <p>Description: {{description}}</p>
+          <p>E-Mail: {{email}}</p>
         </div>
         <div class="row-sm-1">
           <a [routerLink]="['/edit-dude']" class="btn btn-link">Edit Profile</a>
@@ -27,15 +34,17 @@
       </div>
 
       <div class="col-sm-9">
-        <h1>🐡Current Training Schedule🐡</h1>
+        <h1>Current Training Schedule</h1>
         <hr>
-        <div  *ngIf="activeTs && tsTrue">
+        <div *ngIf="activeTs && tsTrue">
           <div class="row">
             <div class="col">
               <h2>{{tsName}}</h2>
             </div>
             <div class="col">
-              <button class="deactivate btn btn-danger float-right"  data-toggle="modal" data-target="#deActiveModal" >End Schedule</button>
+              <button class="deactivate btn btn-danger float-right" data-toggle="modal" data-target="#deActiveModal">End
+                Schedule
+              </button>
             </div>
           </div>
 
@@ -46,12 +55,15 @@
               <h1>{{element}}</h1>
               <hr>
               <div class="altContent">
-                <p *ngIf="workoutsPerDay[tabs.indexOf(element)]!= undefined && workoutsPerDay[tabs.indexOf(element)].length == 0">No Workouts for {{element}}</p>
+                <p
+                  *ngIf="workoutsPerDay[tabs.indexOf(element)]!= undefined && workoutsPerDay[tabs.indexOf(element)].length == 0">
+                  No Workouts for {{element}}</p>
               </div>
               <button mat-stroked-button class="card-in-card" matTooltip="Click for more details"
                       [matTooltipShowDelay]="1000"
                       *ngFor='let workout of workoutsPerDay[tabs.indexOf(element)]'
-                      [value]="workout" (click)="selectedWorkout = workout; getSelectedWorkoutExercises(selectedWorkout)">
+                      [value]="workout"
+                      (click)="selectedWorkout = workout; getSelectedWorkoutExercises(selectedWorkout)">
                 {{workout.name}}
               </button>
             </mat-card>
@@ -62,7 +74,7 @@
               <button class="hideButton" mat-flat-button (click)="selectedWorkout = []">Hide details</button>
             </section>
 
-            <section >
+            <section>
               <mat-card class="detailsContent">
                 <h2>{{selectedWorkout.name}}</h2>
                 <p>Difficulty: {{convertDifficulty(selectedWorkout.difficulty)}}</p>
@@ -80,7 +92,7 @@
                     <hr>
                     <p>Category: {{exercise.category}}</p>
                     <p>Muscle Group: {{exercise.muscleGroup}}</p>
-                    <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
+                    <p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p>
                     <hr>
                     <p>Repetitions: {{exercise.repetitions}}</p>
                     <p>Sets: {{exercise.sets}}</p>
@@ -100,8 +112,6 @@
             </section>
           </div>
         </div>
-
-        <p>some text</p>
       </div>
 
     </div>
@@ -111,7 +121,7 @@
 
 </body>
 
-<!-- modal for deleting exercise -->
+<!-- modal for deactivating trainingSchedule -->
 <div class="modal" id="deActiveModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -119,11 +129,11 @@
       <div class="modal-header">
         <h4 class="modal-title">Do you want to end {{tsName}}?</h4>
       </div>
-      <!--div *ngIf="submitted && !!workoutExForm.controls.duration.errors" class="error"-->
-
       <div class="modal-footer">
         <button type="button" class="cancel btn" data-dismiss="modal">Cancel</button>
-        <button type="button" (click)="deactivate()" class="deactivate btn btn-danger" data-dismiss="modal">End Schedule</button>
+        <button type="button" (click)="deactivate()" class="deactivate btn btn-danger" data-dismiss="modal">End
+          Schedule
+        </button>
       </div>
 
     </div>

@@ -57,8 +57,6 @@ export class FindComponent implements OnInit {
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
 
-
-
   constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
 
   ngOnInit() {
