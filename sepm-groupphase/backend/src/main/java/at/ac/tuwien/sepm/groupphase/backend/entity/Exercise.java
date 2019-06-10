@@ -40,6 +40,9 @@ public class Exercise {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
+    @Column(nullable = false)
+    private String imagePath = "/assets/img/exercise.png";
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
 
@@ -109,6 +112,14 @@ public class Exercise {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Set<WorkoutExercise> getWorkouts() {
@@ -199,6 +210,7 @@ public class Exercise {
         private Double rating;
         private Category category;
         private Boolean isHistory;
+        private String imagePath;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
 
@@ -251,6 +263,11 @@ public class Exercise {
             return this;
         }
 
+        public ExerciseBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public ExerciseBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -272,6 +289,7 @@ public class Exercise {
             exercise.setRating(rating);
             exercise.setCategory(category);
             exercise.setHistory(isHistory);
+            exercise.setImagePath(imagePath);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
             return exercise;

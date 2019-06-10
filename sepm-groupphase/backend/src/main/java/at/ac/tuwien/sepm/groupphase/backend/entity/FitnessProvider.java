@@ -34,6 +34,9 @@ public class FitnessProvider {
     @Column(nullable = false, length = 200)
     private String website = "No website given.";
 
+    @Column(nullable = false)
+    private String imagePath = "/assets/img/kugelfisch2.jpg";
+
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {
         {
@@ -109,6 +112,14 @@ public class FitnessProvider {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public List<String> getRoles() {
@@ -193,6 +204,7 @@ public class FitnessProvider {
         private String email;
         private String phoneNumber;
         private String website;
+        private String imagePath;
         private List<Dude> dudes;
         private List<Course> courses;
 
@@ -239,6 +251,11 @@ public class FitnessProvider {
             return this;
         }
 
+        public FitnessProviderBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public FitnessProviderBuilder dudes(List<Dude> dudes) {
             this.dudes = dudes;
             return this;
@@ -259,6 +276,7 @@ public class FitnessProvider {
             fitnessProvider.setEmail(email);
             fitnessProvider.setPhoneNumber(phoneNumber);
             fitnessProvider.setWebsite(website);
+            fitnessProvider.setImagePath(imagePath);
             fitnessProvider.setDudes(dudes);
             fitnessProvider.setCourses(courses);
             return fitnessProvider;

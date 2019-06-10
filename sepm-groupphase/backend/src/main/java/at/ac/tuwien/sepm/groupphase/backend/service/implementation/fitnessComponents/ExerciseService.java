@@ -117,4 +117,17 @@ public class ExerciseService implements IExerciseService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public void updateImagePath(Long id, Integer version, String fileName) throws ServiceException {
+        LOGGER.info("Entering updateImagePath with id: " + id + "; version: " + version + "; fileName: " + fileName);
+        Exercise exercise;
+        try {
+            exercise = iExerciseRepository.findByIdAndVersion(id, version).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        exercise.setImagePath("/assets/img/" + fileName);
+        iExerciseRepository.save(exercise);
+    }
 }

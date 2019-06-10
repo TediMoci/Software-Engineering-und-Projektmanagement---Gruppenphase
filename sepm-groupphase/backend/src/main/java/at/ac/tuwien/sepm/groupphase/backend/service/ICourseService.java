@@ -55,4 +55,11 @@ public interface ICourseService {
      */
     void delete(long id) throws ServiceException;
 
+    /**
+     * @param id of the Course
+     * @param fileName of the image in the path
+     * @throws ServiceException if something went wrong while updating the imagePath in the system
+     */
+    void updateImagePath(Long id, String fileName) throws ServiceException;
+
 }

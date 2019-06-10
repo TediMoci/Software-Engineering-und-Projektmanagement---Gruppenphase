@@ -17,6 +17,9 @@ public class Course {
     @Column(nullable = false, length = 3000)
     private String description = "No description given.";
 
+    @Column(nullable = false)
+    private String imagePath = "/assets/img/exercise.png";
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fitness_provider_id")
     private FitnessProvider creator;
@@ -46,6 +49,14 @@ public class Course {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public FitnessProvider getCreator() {
@@ -102,6 +113,7 @@ public class Course {
         private Long id;
         private String name;
         private String description;
+        private String imagePath;
         private FitnessProvider creator;
         private List<Dude> dudes;
 
@@ -123,6 +135,11 @@ public class Course {
             return this;
         }
 
+        public CourseBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public CourseBuilder creator(FitnessProvider creator) {
             this.creator = creator;
             return this;
@@ -138,6 +155,7 @@ public class Course {
             course.setId(id);
             course.setName(name);
             course.setDescription(description);
+            course.setImagePath(imagePath);
             course.setCreator(creator);
             course.setDudes(dudes);
             return course;

@@ -64,4 +64,12 @@ public interface IExerciseService {
      * @throws ServiceException if an error occurred while trying to find the Exercise in the system
      */
     void delete(long id) throws ServiceException;
+
+    /**
+     * @param id of the Exercise
+     * @param version of the Exercise
+     * @param fileName of the image in the path
+     * @throws ServiceException if something went wrong while updating the imagePath in the system
+     */
+    void updateImagePath(Long id, Integer version, String fileName) throws ServiceException;
 }
