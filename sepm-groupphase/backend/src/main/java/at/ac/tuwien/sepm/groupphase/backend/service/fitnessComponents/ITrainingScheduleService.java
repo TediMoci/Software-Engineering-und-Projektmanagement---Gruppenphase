@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
+import java.util.List;
+
 public interface ITrainingScheduleService {
 
     /**
@@ -44,4 +46,19 @@ public interface ITrainingScheduleService {
      * @throws ServiceException if an error occurred while trying to find the Workout in the system
      */
     TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException;
+
+    /**
+     * @param name of the TrainingSchedules to find
+     * @return TrainingSchedules with name beginning with the given name-string
+     * @throws ServiceException if an error occurred while trying to find the TrainingSchedules in the system
+     */
+    List<TrainingSchedule> findByName(String name) throws ServiceException;
+
+    /**
+     * @param id of the TrainingSchedule to find
+     * @param version of the TrainingSchedule to find
+     * @return the TrainingSchedule with the given id and version
+     * @throws ServiceException if an error occurred while trying to find the TrainingSchedule in the system
+     */
+    TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException;
 }

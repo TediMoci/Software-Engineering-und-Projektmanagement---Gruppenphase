@@ -115,6 +115,26 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
+    public List<TrainingSchedule> findByName(String name) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name);
+        try {
+            return iTrainingScheduleRepository.findByName(name);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
+        try {
+            return iTrainingScheduleRepository.findByIdAndVersion(id, version).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException {
         LOGGER.info("Updating training schedule with id: " + id);
         try {
