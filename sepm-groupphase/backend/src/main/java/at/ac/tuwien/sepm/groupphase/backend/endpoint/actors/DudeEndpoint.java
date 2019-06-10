@@ -230,7 +230,7 @@ public class DudeEndpoint {
             }
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your active training schedule has expired.");
         }
-        if (Period.between(activeTrainingSchedule.getStartDate(), LocalDate.now()).getDays() % activeTrainingSchedule.getTrainingSchedule().getIntervalLength() == 0) {
+        if (activeTrainingSchedule.getAdaptive() && Period.between(activeTrainingSchedule.getStartDate(), LocalDate.now()).getDays() % activeTrainingSchedule.getTrainingSchedule().getIntervalLength() == 0) {
             Dude dude;
             try {
                 dude = iDudeService.findDudeById(id);

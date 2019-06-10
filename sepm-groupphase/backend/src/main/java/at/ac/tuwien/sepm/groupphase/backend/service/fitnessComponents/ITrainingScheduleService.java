@@ -72,4 +72,13 @@ public interface ITrainingScheduleService {
      */
     ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException;
 
+    /**
+     *
+     * @param activeTs
+     * @param dudeId
+     * @param oldTs
+     * @return
+     * @throws ServiceException
+     */
+    TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException;
 }

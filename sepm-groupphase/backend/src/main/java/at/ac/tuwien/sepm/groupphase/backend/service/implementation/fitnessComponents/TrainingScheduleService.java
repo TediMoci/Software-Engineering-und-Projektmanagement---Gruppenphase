@@ -651,7 +651,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
-    private TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException {
+    @Override
+    public TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException {
 
         List<WorkoutExerciseDone> waExDoneHelp = new ArrayList<>();
         List<WorkoutExercise> copyWaEx = new ArrayList<>();
