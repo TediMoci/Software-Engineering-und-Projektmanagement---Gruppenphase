@@ -26,6 +26,7 @@ public class FitnessProviderMapper implements IFitnessProviderMapper {
         builder.email(fitnessProviderDto.getEmail());
         builder.phoneNumber(fitnessProviderDto.getPhoneNumber());
         builder.website(fitnessProviderDto.getWebsite());
+        builder.imagePath(fitnessProviderDto.getImagePath());
 
         return builder.build();
     }
@@ -41,6 +42,7 @@ public class FitnessProviderMapper implements IFitnessProviderMapper {
         builder.email(fitnessProvider.getEmail());
         builder.phoneNumber(fitnessProvider.getPhoneNumber());
         builder.website(fitnessProvider.getWebsite());
+        builder.imagePath(fitnessProvider.getImagePath());
 
         return builder.build();
     }

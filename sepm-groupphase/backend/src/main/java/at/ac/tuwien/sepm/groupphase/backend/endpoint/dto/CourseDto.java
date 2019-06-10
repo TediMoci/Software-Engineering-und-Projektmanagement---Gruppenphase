@@ -23,6 +23,9 @@ public class CourseDto {
     @Size(max = 3000, message = "Max description length is 3000")
     private String description = "No description given.";
 
+    @ApiModelProperty(name = "Path of picture of Course")
+    private String imagePath = "/assets/img/exercise.png";
+
     @ApiModelProperty(name = "FitnessProvider offering the Course")
     private Long creatorId;
 
@@ -51,6 +54,14 @@ public class CourseDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Long getCreatorId() {
@@ -115,6 +126,7 @@ public class CourseDto {
         private Long id;
         private String name;
         private String description;
+        private String imagePath;
         private Long creatorId;
         private DudeDto[] dudeDtos;
 
@@ -136,6 +148,11 @@ public class CourseDto {
             return this;
         }
 
+        public CourseDtoBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public CourseDtoBuilder creatorId(Long creatorId) {
             this.creatorId = creatorId;
             return this;
@@ -151,6 +168,7 @@ public class CourseDto {
             courseDto.setId(id);
             courseDto.setName(name);
             courseDto.setDescription(description);
+            courseDto.setImagePath(imagePath);
             courseDto.setCreatorId(creatorId);
             courseDto.setDudeDtos(dudeDtos);
             return courseDto;

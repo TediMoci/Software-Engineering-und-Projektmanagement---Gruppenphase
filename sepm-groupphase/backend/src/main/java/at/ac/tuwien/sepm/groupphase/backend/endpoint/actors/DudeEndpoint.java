@@ -320,32 +320,23 @@ public class DudeEndpoint {
     }
 
     @PostMapping("/{id}/uploadImage")
-    public UploadFileResponseDto uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        LOGGER.info("Entering uploadFile");
-        String name = "dude_" + id;
+    @ApiOperation(value = "Upload image for Dude", authorizations = {@Authorization(value = "apiKey")})
+    public void uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("Entering uploadImage with id: " + id);
+        String fileName = "dude_" + id;
         if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
-            name += ".png";
+            fileName += ".png";
         } else {
-            name += ".jpg";
+            fileName += ".jpg";
         }
-        LOGGER.debug(name);
-        String fileName = iFileStorageService.storeFile(name, file);
+        iFileStorageService.storeFile(fileName, file);
 
         try {
-            iDudeService.updateImagePath(id, name);
+            iDudeService.updateImagePath(id, fileName);
         } catch (ServiceException e) {
             LOGGER.error("Could not updateImagePath with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-
-
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path("/downloadFile/")
-            .path(fileName)
-            .toUriString();
-
-        return new UploadFileResponseDto(fileName, fileDownloadUri,
-            file.getContentType(), file.getSize());
     }
 }
 
