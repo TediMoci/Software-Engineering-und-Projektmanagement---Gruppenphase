@@ -23,8 +23,36 @@
         </div>
         <div class="row-sm-1">
           <a [routerLink]="['/edit-dude']" class="btn btn-link">Edit Profile</a>
+          <a class="btn btn-link2" (click)="file.click()">Upload Picture</a>
         </div>
       </div>
+
+      <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal" (change)="fileChangeEvent($event)" />
+      <div class="modal" id="cropModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h4 class="modal-title">Select a picture to upload for your profile</h4>
+            </div>
+            <span  style="color:orange;  position: center; margin-left: auto; margin-right: auto; " *ngIf="message && crop">{{message}}</span>
+            <image-cropper
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="false"
+              [resizeToWidth]="0"
+              format="jpeg"
+              (imageCropped)="imageCropped($event)"
+              (imageLoaded)="imageLoaded()"
+              (loadImageFailed)="loadImageFailed()"
+            ></image-cropper>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              <button (click)= "cropPicture()" class="btn btn-success" data-dismiss="modal" >Crop </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="col-sm-9">
         <h1>Current Training Schedule</h1>

@@ -27,6 +27,10 @@ export class DudeProfileComponent implements OnInit {
 
   dude: Dude;
 
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private globals: Globals, private profileService: ProfileService, private httpClient: HttpClient) {
   }
 
@@ -70,6 +74,35 @@ export class DudeProfileComponent implements OnInit {
         }
     );
 
+  }
+
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imagePath = files.base64;
+    console.log(this.imagePath);
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
   }
 
 }
