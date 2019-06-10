@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
 <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -13,20 +16,102 @@
 
       <div class="col-sm-3">
         <img class="img-fluid" src="{{imagePath}}" alt="dude profile image">
-        <div class="row-sm-1">
+        <div class="row-sm-10">
           <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
         </div>
       </div>
       <div class="col-sm-9">
         <h1>Create Training Schedule</h1>
-        <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Add Workouts</button>
 
-        <button type="button" (click)="createTrainingSchedule()" class="btn btn-success float-right">Create</button>
-        <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+          <div class="tsForm">
+
+            <form [formGroup]="tsForm">
+              <span class="anchor" id="formRegister"></span>
+
+              <div class="form-group">
+                <label for="tsName">Name*</label>
+                <input type="text" name="tsName" maxlength="50" class="form-control" id="tsName"
+                       formControlName="tsName"
+                       aria-describedby="tsNameHelp" placeholder="Enter name">
+                <div *ngIf="submitted && !!tsForm.controls.tsName.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsName.errors.required">Name is
+                    required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <span class="tsDifficulty">Difficulty*</span>
+                <div class="gap_space">
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input id="beginner" type="radio" class="custom-control-input" value=1 name="tsDifficulty"
+                           formControlName="tsDifficulty">
+                    <label class="custom-control-label" for="beginner">Beginner</label>
+                  </div>
+
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input id="advanced" type="radio" class="custom-control-input" value=2 name="tsDifficulty"
+                           formControlName="tsDifficulty">
+                    <label class="custom-control-label" for="advanced">Advanced</label>
+                  </div>
+
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input id="pro" type="radio" class="custom-control-input" value=3 name="tsDifficulty"
+                           formControlName="tsDifficulty">
+                    <label class="custom-control-label" for="pro">Pro</label>
+                  </div>
+                  <div *ngIf="submitted && !!tsForm.controls.tsDifficulty.errors" class="error">
+                    <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDifficulty.errors.required">
+                      Difficulty level is
+                      required!
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="tsDescription">Description*</label>
+                <textarea type="text" name="tsDescription" class="form-control" id="tsDescription"
+                       formControlName="tsDescription"
+                       aria-describedby="tsDescriptionHelp" placeholder="Enter description"></textarea>
+                <span>{{3000 - tsForm.controls.tsDescription.value.length}} left</span>
+                <div *ngIf="submitted && !!tsForm.controls.tsDescription.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDescription.errors.required">Description is
+                    required!
+                  </small>
+                </div>
+              </div>
+            </form>
+        </div>
+
+        <mat-label>Interval*</mat-label>
+        <div class="row">
+          <!--start dropdown-->
+          <mat-form-field>
+            <mat-label>{{showCurrentDays()}}</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let days of intervalDays" [value]="days" (click)="setChosenInterval(days)">
+                {{days}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--end dropdown-->
+        </div>
+
+        <div class="row">
+          <div class="addWA">
+          <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Add Workouts</button>
+          </div>
+        </div>
+
+        <div class="row-buttons">
+          <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+          <button type="button" (click)="createTrainingSchedule()" class="btn btn-success float-right">Create</button>
+          <p><small>Fields marked with * are mandatory!</small></p>
+        </div>
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- end of first view -->
@@ -38,176 +123,2118 @@
   <div class="container-tsPlanning">
     <div class="row-workoutPlanning">
       <div class="col-waPlanning">
+        <!-- start of info -->
         <div class="row-info">
           <h1>Add Workouts to your Training Schedule</h1>
         </div>
+        <!-- start of searchbar -->
         <div class="row-search">
           <h4>Find Workouts</h4>
-          <p>TODO: searchbar</p>
-        </div>
-        <div class="row-searchResults">
-          <h4>Search results</h4>
-          <p>TODO: show search results in accordeon</p>
 
-          <div
-            cdkDropList
-            #searchResults="cdkDropList"
-            [cdkDropListData]="searchRes"
-            [cdkDropListConnectedTo]="[day1, day2, day3, day4, day5, day6, day7]"
-            class="example-list"
-            (cdkDropListDropped)="drop($event)">
-            <div class="example-box" *ngFor="let item of searchRes" cdkDrag>{{item}}</div>
+          <div class="card-body row no-gutters align-items-center">
+            <!-- Search form -->
+            <div class="col-lg">
+              <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find Workouts'"
+                     [(ngModel)]="inputText"/>
+            </div>
+            <!--end of col-->
+            <div class="col-auto">
+              <button class="btn btn-md btn-success" (click)="search()" type="submit"><i class="fas fa-search"></i>
+              </button>
+            </div>
           </div>
 
-          <ul>
-            List content
-            <li *ngFor="let element of searchRes">
-              <p>{{element}}</p>
-            </li>
-          </ul>
-
-        </div>
-        <div class="row-intervals">
-          <h4>My Training Schedule</h4>
-          <div class="row">
-            <div class="col-day">
-              <h6>Day 1</h6>
-
-              <div
-                cdkDropList
-                #day1="cdkDropList"
-                [cdkDropListData]="d1"
-                [cdkDropListConnectedTo]="[searchResults, day2, day3, day4, day5, day6, day7]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
-                <div class="example-box" *ngFor="let item of d1" cdkDrag>{{item}}</div>
+          <div class="dropdown-filter">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonWorkoutDifficulty"
+                      data-toggle="dropdown" [(ngModel)]="filterWorkoutDifficulty" ngDefaultControl>
+                Difficulty: {{filterWorkoutDifficulty}}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" (click)="filterWorkoutDifficulty ='None'">None</a>
+                <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Beginner'">Beginner</a>
+                <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Advanced'">Advanced</a>
+                <a class="dropdown-item" (click)="filterWorkoutDifficulty ='Pro'">Pro</a>
               </div>
 
-              <ul>
-                List content
-                <li *ngFor="let element of d1">
-                  <p>{{element}}</p>
-                </li>
-              </ul>
-
-            </div>
-            <div class="col-day">
-              <h6>Day 2</h6>
-
-              <div
-                cdkDropList
-                #day2="cdkDropList"
-                [cdkDropListData]="d2"
-                [cdkDropListConnectedTo]="[searchResults, day1, day3, day4, day5, day6, day7]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
-                <div class="example-box" *ngFor="let item of d2" cdkDrag>{{item}}</div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="dropdownMenuButtonWorkoutCaloriesMin" data-toggle="dropdown"
+                        [(ngModel)]="filterWorkoutCaloriesMin" ngDefaultControl>
+                  Min
+                  Calories: {{filterWorkoutCaloriesMin == '' || filterWorkoutCaloriesMin == undefined ? 'None' : filterWorkoutCaloriesMin}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterWorkoutCaloriesMin =''">None</a>
+                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMin"
+                         placeholder="Minimum Calories" [(ngModel)]="filterWorkoutCaloriesMin">
+                </div>
               </div>
 
-              <ul>
-                List content
-                <li *ngFor="let element of d2">
-                  <p>{{element}}</p>
-                </li>
-              </ul>
-
-            </div>
-            <div class="col-day">
-              <h6>Day 3</h6>
-
-              <div
-                cdkDropList
-                #day3="cdkDropList"
-                [cdkDropListData]="d3"
-                [cdkDropListConnectedTo]="[searchResults, day1, day2, day4, day5, day6, day7]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
-                <div class="example-box" *ngFor="let item of d3" cdkDrag>{{item}}</div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="dropdownMenuButtonWorkoutCaloriesMax" data-toggle="dropdown"
+                        [(ngModel)]="filterWorkoutCaloriesMax " ngDefaultControl>
+                  Max
+                  Calories: {{filterWorkoutCaloriesMax == '' || filterWorkoutCaloriesMax == undefined ? 'None' : filterWorkoutCaloriesMax}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterWorkoutCaloriesMax =''">None</a>
+                  <input knifeOnlyNumbers type="text" class="form-control" maxlength="3" id="WorkoutCaloriesMax"
+                         placeholder="Maximum Calories" [(ngModel)]="filterWorkoutCaloriesMax">
+                </div>
               </div>
-
-            </div>
-            <div class="col-day">
-              <h6>Day 4</h6>
-
-              <div
-                cdkDropList
-                #day4="cdkDropList"
-                [cdkDropListData]="d4"
-                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day5, day6, day7]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
-                <div class="example-box" *ngFor="let item of d4" cdkDrag>{{item}}</div>
-              </div>
-
-            </div>
-            <div class="col-day">
-              <h6>Day 5</h6>
-
-              <div
-                cdkDropList
-                #day5="cdkDropList"
-                [cdkDropListData]="d5"
-                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day6, day7]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
-                <div class="example-box" *ngFor="let item of d5" cdkDrag>{{item}}</div>
-              </div>
-
-            </div>
-            <div class="col-day">
-              <h6>Day 6</h6>
-
-              <div
-                cdkDropList
-                #day6="cdkDropList"
-                [cdkDropListData]="d6"
-                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day5, day7]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
-                <div class="example-box" *ngFor="let item of d6" cdkDrag>{{item}}</div>
-              </div>
-
-            </div>
-            <div class="col-day">
-              <h6>Day 7</h6>
-
-              <div
-                cdkDropList
-                #day7="cdkDropList"
-                [cdkDropListData]="d7"
-                [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day5, day6]"
-                class="example-list"
-                (cdkDropListDropped)="drop($event)">
-                <div class="example-box" *ngFor="let item of d7" cdkDrag>{{item}}</div>
-              </div>
-
             </div>
           </div>
         </div>
-        <button type="button" (click)="addWorkouts(); changeView()" class="btn btn-success float-right">Add</button>
-        <button (click)="changeView()" class="btn btn-link">Cancel</button>
+
+        <!-- 1 Day --------------------------------------------------------------------------------------------- -->
+
+        <div *ngIf="interval === 1">
+
+          <!-- start of search results -->
+          <div class="row-searchResults">
+            <h4>Search results</h4>
+            <div
+              cdkDropList
+              #searchResults="cdkDropList"
+              [cdkDropListData]="searchRes"
+              [cdkDropListConnectedTo]="[day1]"
+              [id]="'searchRes1'"
+              class="example-list1"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let element of searchRes" cdkDrag>
+
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- start of schedule -->
+          <div class="row-intervals">
+            <h4>My Training Schedule</h4>
+            <div class="row">
+              <div class="col-day">
+                <h6>Day 1</h6>
+                <div
+                  cdkDropList
+                  #day1="cdkDropList"
+                  [cdkDropListData]="d1"
+                  [cdkDropListConnectedTo]="[searchResults]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="example-list">
+                  <div class="example-box" *ngFor="let element of d1" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2 Days ------------------------------------------------------------------------------------------- -->
+
+        <div *ngIf="interval === 2">
+
+          <!-- start of search results -->
+          <div class="row-searchResults">
+            <h4>Search results</h4>
+
+            <div
+              cdkDropList
+              #searchResults="cdkDropList"
+              [cdkDropListData]="searchRes"
+              [cdkDropListConnectedTo]="[day1, day2]"
+              [id]="'searchRes2'"
+              class="example-list1"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let element of searchRes" cdkDrag>
+
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- start of schedule -->
+          <div class="row-intervals">
+            <h4>My Training Schedule</h4>
+            <div class="row">
+              <div class="col-day">
+                <h6>Day 1</h6>
+                <div
+                  cdkDropList
+                  #day1="cdkDropList"
+                  [cdkDropListData]="d1"
+                  [cdkDropListConnectedTo]="[searchResults, day2]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="example-list">
+                  <div class="example-box" *ngFor="let element of d1" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-day">
+                <h6>Day 2</h6>
+                <div
+                  cdkDropList
+                  #day2="cdkDropList"
+                  [cdkDropListData]="d2"
+                  [cdkDropListConnectedTo]="[searchResults, day1]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d2" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3 Days --------------------------------------------------------------------------------------------- -->
+
+        <div *ngIf="interval === 3">
+
+          <!-- start of search results -->
+          <div class="row-searchResults">
+            <h4>Search results</h4>
+
+            <div
+              cdkDropList
+              #searchResults="cdkDropList"
+              [cdkDropListData]="searchRes"
+              [cdkDropListConnectedTo]="[day1, day2, day3]"
+              [id]="'searchRes3'"
+              class="example-list1"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let element of searchRes" cdkDrag>
+
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- start of schedule -->
+          <div class="row-intervals">
+            <h4>My Training Schedule</h4>
+            <div class="row">
+              <div class="col-day">
+                <h6>Day 1</h6>
+                <div
+                  cdkDropList
+                  #day1="cdkDropList"
+                  [cdkDropListData]="d1"
+                  [cdkDropListConnectedTo]="[searchResults, day2, day3]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="example-list">
+                  <div class="example-box" *ngFor="let element of d1" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-day">
+                <h6>Day 2</h6>
+                <div
+                  cdkDropList
+                  #day2="cdkDropList"
+                  [cdkDropListData]="d2"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day3]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d2" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 3</h6>
+                <div
+                  cdkDropList
+                  #day3="cdkDropList"
+                  [cdkDropListData]="d3"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d3" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 4 Days --------------------------------------------------------------------------------------------- -->
+
+        <div *ngIf="interval === 4">
+
+          <!-- start of search results -->
+          <div class="row-searchResults">
+            <h4>Search results</h4>
+
+            <div
+              cdkDropList
+              #searchResults="cdkDropList"
+              [cdkDropListData]="searchRes"
+              [cdkDropListConnectedTo]="[day1, day2, day3, day4]"
+              [id]="'searchRes4'"
+              class="example-list1"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let element of searchRes" cdkDrag>
+
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- start of schedule -->
+          <div class="row-intervals">
+            <h4>My Training Schedule</h4>
+            <div class="row">
+              <div class="col-day">
+                <h6>Day 1</h6>
+                <div
+                  cdkDropList
+                  #day1="cdkDropList"
+                  [cdkDropListData]="d1"
+                  [cdkDropListConnectedTo]="[searchResults, day2, day3, day4]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="example-list">
+                  <div class="example-box" *ngFor="let element of d1" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-day">
+                <h6>Day 2</h6>
+                <div
+                  cdkDropList
+                  #day2="cdkDropList"
+                  [cdkDropListData]="d2"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day3, day4]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d2" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 3</h6>
+                <div
+                  cdkDropList
+                  #day3="cdkDropList"
+                  [cdkDropListData]="d3"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day4]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d3" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 4</h6>
+                <div
+                  cdkDropList
+                  #day4="cdkDropList"
+                  [cdkDropListData]="d4"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d4" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 5 Days --------------------------------------------------------------------------------------------- -->
+
+        <div *ngIf="interval === 5">
+
+          <!-- start of search results -->
+          <div class="row-searchResults">
+            <h4>Search results</h4>
+
+            <div
+              cdkDropList
+              #searchResults="cdkDropList"
+              [cdkDropListData]="searchRes"
+              [cdkDropListConnectedTo]="[day1, day2, day3, day4, day5]"
+              [id]="'searchRes5'"
+              class="example-list1"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let element of searchRes" cdkDrag>
+
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- start of schedule -->
+          <div class="row-intervals">
+            <h4>My Training Schedule</h4>
+            <div class="row">
+              <div class="col-day">
+                <h6>Day 1</h6>
+                <div
+                  cdkDropList
+                  #day1="cdkDropList"
+                  [cdkDropListData]="d1"
+                  [cdkDropListConnectedTo]="[searchResults, day2, day3, day4, day5]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="example-list">
+                  <div class="example-box" *ngFor="let element of d1" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-day">
+                <h6>Day 2</h6>
+                <div
+                  cdkDropList
+                  #day2="cdkDropList"
+                  [cdkDropListData]="d2"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day3, day4, day5]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d2" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 3</h6>
+                <div
+                  cdkDropList
+                  #day3="cdkDropList"
+                  [cdkDropListData]="d3"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day4, day5]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d3" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 4</h6>
+                <div
+                  cdkDropList
+                  #day4="cdkDropList"
+                  [cdkDropListData]="d4"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day5]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d4" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 5</h6>
+                <div
+                  cdkDropList
+                  #day5="cdkDropList"
+                  [cdkDropListData]="d5"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d5" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 6 Days --------------------------------------------------------------------------------------------- -->
+
+        <div *ngIf="interval === 6">
+
+          <!-- start of search results -->
+          <div class="row-searchResults">
+            <h4>Search results</h4>
+
+            <div
+              cdkDropList
+              #searchResults="cdkDropList"
+              [cdkDropListData]="searchRes"
+              [cdkDropListConnectedTo]="[day1, day2, day3, day4, day5, day6]"
+              [id]="'searchRes6'"
+              class="example-list1"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let element of searchRes" cdkDrag>
+
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- start of schedule -->
+          <div class="row-intervals">
+            <h4>My Training Schedule</h4>
+            <div class="row">
+              <div class="col-day">
+                <h6>Day 1</h6>
+                <div
+                  cdkDropList
+                  #day1="cdkDropList"
+                  [cdkDropListData]="d1"
+                  [cdkDropListConnectedTo]="[searchResults, day2, day3, day4, day5, day6]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="example-list">
+                  <div class="example-box" *ngFor="let element of d1" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-day">
+                <h6>Day 2</h6>
+                <div
+                  cdkDropList
+                  #day2="cdkDropList"
+                  [cdkDropListData]="d2"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day3, day4, day5, day6]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d2" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 3</h6>
+                <div
+                  cdkDropList
+                  #day3="cdkDropList"
+                  [cdkDropListData]="d3"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day4, day5, day6]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d3" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 4</h6>
+                <div
+                  cdkDropList
+                  #day4="cdkDropList"
+                  [cdkDropListData]="d4"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day5, day6]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d4" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 5</h6>
+                <div
+                  cdkDropList
+                  #day5="cdkDropList"
+                  [cdkDropListData]="d5"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day6]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d5" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+                <div class="col-day">
+                  <h6>Day 6</h6>
+                  <div
+                    cdkDropList
+                    #day6="cdkDropList"
+                    [cdkDropListData]="d6"
+                    [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day5]"
+                    class="example-list"
+                    (cdkDropListDropped)="drop($event)">
+                    <div class="example-box" *ngFor="let element of d6" cdkDrag>
+
+                      <mat-accordion>
+                        <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large;">
+                              {{element.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                          <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                          <hr>
+                          <p>"{{element.description}}"</p>
+                          <hr>
+                          <p style="font-size: medium">Exercises:</p>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
+                            <mat-accordion>
+                              <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                  <mat-panel-title style="font-size: large">
+                                    {{exercise.name}}
+                                  </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <hr>
+                                <p>Category: {{exercise.category}}</p>
+                                <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                                <hr>
+                                <p>Repetitions: {{exercise.repetitions}}</p>
+                                <p>Sets: {{exercise.sets}}</p>
+                                <hr>
+                                <p>Duration: {{exercise.exDuration}}</p>
+                                <p>Equipment: {{exercise.equipment}}</p>
+                                <hr>
+                                <p>"{{exercise.description}}"</p>
+
+                              </mat-expansion-panel>
+                            </mat-accordion>
+                          </div>
+                        </mat-expansion-panel>
+                      </mat-accordion>
+
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 7 Days--------------------------------------------------------------------------------------------- -->
+
+        <div *ngIf="interval === 7">
+
+          <!-- start of search results -->
+          <div class="row-searchResults">
+            <h4>Search results</h4>
+
+            <div
+              cdkDropList
+              #searchResults="cdkDropList"
+              [cdkDropListData]="searchRes"
+              [cdkDropListConnectedTo]="[day1, day2, day3, day4, day5, day6, day7]"
+              [id]="'searchRes7'"
+              class="example-list1"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let element of searchRes" cdkDrag>
+
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <hr>
+                    <p style="font-size: medium">Exercises:</p>
+                    <div *ngFor='let exercise of exercisesForWorkouts'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{exercise.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Category: {{exercise.category}}</p>
+                          <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                          <hr>
+                          <p>Repetitions: {{exercise.repetitions}}</p>
+                          <p>Sets: {{exercise.sets}}</p>
+                          <hr>
+                          <p>Duration: {{exercise.exDuration}}</p>
+                          <p>Equipment: {{exercise.equipment}}</p>
+                          <hr>
+                          <p>"{{exercise.description}}"</p>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- start of schedule -->
+          <div class="row-intervals">
+            <h4>My Training Schedule</h4>
+            <div class="row">
+              <div class="col-day">
+                <h6>Day 1</h6>
+                <div
+                  cdkDropList
+                  #day1="cdkDropList"
+                  [cdkDropListData]="d1"
+                  [cdkDropListConnectedTo]="[searchResults, day2, day3, day4, day5, day6, day7]"
+                  (cdkDropListDropped)="drop($event)"
+                  class="example-list">
+                  <div class="example-box" *ngFor="let element of d1" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-day">
+                <h6>Day 2</h6>
+                <div
+                  cdkDropList
+                  #day2="cdkDropList"
+                  [cdkDropListData]="d2"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day3, day4, day5, day6, day7]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d2" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 3</h6>
+                <div
+                  cdkDropList
+                  #day3="cdkDropList"
+                  [cdkDropListData]="d3"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day4, day5, day6, day7]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d3" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 4</h6>
+                <div
+                  cdkDropList
+                  #day4="cdkDropList"
+                  [cdkDropListData]="d4"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day5, day6, day7]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d4" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 5</h6>
+                <div
+                  cdkDropList
+                  #day5="cdkDropList"
+                  [cdkDropListData]="d5"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day6, day7]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d5" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 6</h6>
+                <div
+                  cdkDropList
+                  #day6="cdkDropList"
+                  [cdkDropListData]="d6"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day5, day7]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d6" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-day">
+                <h6>Day 7</h6>
+                <div
+                  cdkDropList
+                  #day7="cdkDropList"
+                  [cdkDropListData]="d7"
+                  [cdkDropListConnectedTo]="[searchResults, day1, day2, day3, day4, day5, day6]"
+                  class="example-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="example-box" *ngFor="let element of d7" cdkDrag>
+
+                    <mat-accordion>
+                      <mat-expansion-panel (opened)="getSelectedWorkoutExercises(element)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title style="font-size: large;">
+                            {{element.name}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <hr>
+                        <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                        <p>Calorie Consumption: {{element.calorieConsumption}}</p>
+                        <hr>
+                        <p>"{{element.description}}"</p>
+                        <hr>
+                        <p style="font-size: medium">Exercises:</p>
+                        <div *ngFor='let exercise of exercisesForWorkouts'>
+                          <mat-accordion>
+                            <mat-expansion-panel>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title style="font-size: large">
+                                  {{exercise.name}}
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <hr>
+                              <p>Category: {{exercise.category}}</p>
+                              <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                              <hr>
+                              <p>Repetitions: {{exercise.repetitions}}</p>
+                              <p>Sets: {{exercise.sets}}</p>
+                              <hr>
+                              <p>Duration: {{exercise.exDuration}}</p>
+                              <p>Equipment: {{exercise.equipment}}</p>
+                              <hr>
+                              <p>"{{exercise.description}}"</p>
+
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------------------------------------------------- -->
+
+        <button type="button" (click)="changeView()" class="btn btn-success float-right">Add</button>
+        <button (click)="cancelWorkoutAllocation()" class="btn btn-link">Cancel</button>
       </div>
     </div>
   </div>
 </div>
-
 <!-- end of second view -->
-
-<!-- modal for showing workout details -->
-<div class="modal" id="workoutDetails">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{selectedWorkout}}</h4>
-        <p>TODO: get workout data</p>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-

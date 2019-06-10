@@ -27,8 +27,6 @@ public class DudeMapper implements IDudeMapper{
         builder.height(dudedto.getHeight());
         builder.weight(dudedto.getWeight());
         builder.roles(dudedto.getRoles());
-        builder.fitnessProviders(null);
-        builder.courses(null);
 
         return builder.build();
     }
@@ -53,8 +51,6 @@ public class DudeMapper implements IDudeMapper{
         builder.height(dude.getHeight());
         builder.weight(dude.getWeight());
         builder.roles(dude.getRoles());
-        builder.fitnessProviders(null);
-        builder.courses(null);
 
         return builder.build();
     }

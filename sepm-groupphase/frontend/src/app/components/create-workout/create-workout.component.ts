@@ -67,6 +67,7 @@ export class CreateWorkoutComponent implements OnInit {
     localStorage.setItem('descriptionForWorkout', JSON.stringify(this.registerForm.controls.descriptionForWorkout.value));
     localStorage.setItem('calorieConsumption', JSON.stringify(this.registerForm.controls.calorieConsumption.value));
     localStorage.setItem('difficulty', JSON.stringify(this.registerForm.controls.difficultyLevelWorkout.value));
+    this.router.navigate(['/workout-exercises']);
   }
     addWorkout() {
     localStorage.setItem('previousRoute', JSON.stringify('/'));

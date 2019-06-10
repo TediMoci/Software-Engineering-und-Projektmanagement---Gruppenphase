@@ -28,7 +28,7 @@ public class WorkoutExercise {
     @Column(name = "workout_version")
     private Integer workoutVersion;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @MapsId("workout_id")
     @JoinColumns({
         @JoinColumn(name = "workout_id", referencedColumnName = "id"),
@@ -140,8 +140,6 @@ public class WorkoutExercise {
             ", exerciseVersion=" + exerciseVersion +
             ", workoutId=" + workoutId +
             ", workoutVersion=" + workoutVersion +
-            ", workout=" + workout +
-            ", exercise=" + exercise +
             ", exDuration=" + exDuration +
             ", repetitions=" + repetitions +
             ", sets=" + sets +
@@ -161,8 +159,6 @@ public class WorkoutExercise {
         if (workoutId != null ? !workoutId.equals(that.workoutId) : that.workoutId != null) return false;
         if (workoutVersion != null ? !workoutVersion.equals(that.workoutVersion) : that.workoutVersion != null)
             return false;
-        if (workout != null ? !workout.equals(that.workout) : that.workout != null) return false;
-        if (exercise != null ? !exercise.equals(that.exercise) : that.exercise != null) return false;
         if (exDuration != null ? !exDuration.equals(that.exDuration) : that.exDuration != null) return false;
         if (repetitions != null ? !repetitions.equals(that.repetitions) : that.repetitions != null) return false;
         return sets != null ? sets.equals(that.sets) : that.sets == null;
@@ -175,8 +171,6 @@ public class WorkoutExercise {
         result = 31 * result + (exerciseVersion != null ? exerciseVersion.hashCode() : 0);
         result = 31 * result + (workoutId != null ? workoutId.hashCode() : 0);
         result = 31 * result + (workoutVersion != null ? workoutVersion.hashCode() : 0);
-        result = 31 * result + (workout != null ? workout.hashCode() : 0);
-        result = 31 * result + (exercise != null ? exercise.hashCode() : 0);
         result = 31 * result + (exDuration != null ? exDuration.hashCode() : 0);
         result = 31 * result + (repetitions != null ? repetitions.hashCode() : 0);
         result = 31 * result + (sets != null ? sets.hashCode() : 0);

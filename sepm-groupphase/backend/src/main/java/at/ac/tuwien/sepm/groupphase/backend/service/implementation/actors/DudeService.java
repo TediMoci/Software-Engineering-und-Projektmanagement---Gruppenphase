@@ -3,13 +3,17 @@ package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.FollowFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.DudeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.PersistenceException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -22,12 +26,15 @@ import java.util.NoSuchElementException;
 public class DudeService implements IDudeService {
 
     private final IDudeRepository iDudeRepository;
+    private final IFitnessProviderRepository iFitnessProviderRepository;
+    private final FollowFitnessProviderRepository followFitnessProviderRepository;
     private final DudeValidator dudeValidator;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public DudeService(IDudeRepository iDudeRepository, DudeValidator dudeValidator, PasswordEncoder passwordEncoder) {
+    public DudeService(IDudeRepository iDudeRepository, IFitnessProviderRepository iFitnessProviderRepository, FollowFitnessProviderRepository followFitnessProviderRepository, DudeValidator dudeValidator, PasswordEncoder passwordEncoder) {
         this.iDudeRepository = iDudeRepository;
+        this.iFitnessProviderRepository = iFitnessProviderRepository;
+        this.followFitnessProviderRepository = followFitnessProviderRepository;
         this.dudeValidator = dudeValidator;
         this.passwordEncoder = passwordEncoder;
     }
@@ -131,6 +138,54 @@ public class DudeService implements IDudeService {
             return iDudeRepository.save(oldDude);
 
         } catch (ValidationException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void followFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
+        try {
+            if (iDudeRepository.findById(dudeId).isEmpty()) {
+                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
+            } else if (iFitnessProviderRepository.findById(fitnessProviderId).isEmpty()) {
+                throw new NoSuchElementException("Could not find FitnessProvider with id: " + fitnessProviderId);
+            }
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            if (followFitnessProviderRepository.checkFollowedFitnessProvider(dudeId, fitnessProviderId) != 0) {
+                throw new ServiceException("You already follow this fitness provider!");
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            followFitnessProviderRepository.followFitnessProvider(dudeId, fitnessProviderId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void unfollowFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
+        try {
+            followFitnessProviderRepository.unfollowFitnessProvider(dudeId, fitnessProviderId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Dude> findByFilter(String filter, Integer selfAssessment) throws ServiceException {
+        try {
+            if (selfAssessment != null) {
+                return iDudeRepository.findByFilterWithSelfAssesment(filter, selfAssessment);
+            } else {
+                return iDudeRepository.findByFilterWithoutAssesment(filter);
+            }
+
+        } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
     }

@@ -24,7 +24,7 @@
             <p>Follower: {{numOfFollowers}}</p>
           </div>
           <div  *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'">
-            <p>Follower: {{numOfFollowers}}, <a [routerLink]="['/follower']" class="btn2 btn-link">Follower</a></p>
+            <p>Followers: {{numOfFollowers}}, <a [routerLink]="['/follower']" class="btn2 btn-link">Followers</a></p>
           </div>
          </div>
         <div class="row-sm-1">
@@ -41,7 +41,7 @@
         <p>Click the course name to find out more!</p>
         <ul>
           <li *ngFor='let element of courses'>
-          <a [routerLink]="['/course']" (click)="setChosenCourse(element)">{{element.name}}</a>
+          <a [routerLink]="['/course']" (click)="setChosenCourse(element)" class="btn3 btn-link">{{element.name}}</a>
           </li>
         </ul>
       </div>

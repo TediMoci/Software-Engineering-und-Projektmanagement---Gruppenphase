@@ -54,4 +54,19 @@ public interface IDudeService {
      */
     Dude update(String name, Dude newDude) throws ServiceException;
 
+    /**
+     * @param dudeId of the Dude
+     * @param fitnessProviderId of the FitnessProvider that the Dude wants to follow
+     * @throws ServiceException if an error occurred while trying to follow the FitnessProvider
+     */
+    void followFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param fitnessProviderId of the FitnessProvider that the Dude wants to unfollow
+     * @throws ServiceException if an error occurred while trying to unfollow the FitnessProvider
+     */
+    void unfollowFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException;
+
+    List<Dude> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
 }

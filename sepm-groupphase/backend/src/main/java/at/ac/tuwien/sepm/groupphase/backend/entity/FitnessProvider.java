@@ -150,9 +150,6 @@ public class FitnessProvider {
             ", email='" + email + '\'' +
             ", phoneNumber='" + phoneNumber + '\'' +
             ", website='" + website + '\'' +
-            ", roles='" + roles + '\'' +
-            ", dudes=" + dudes +
-            ", courses=" + courses +
             '}';
     }
 
@@ -170,9 +167,8 @@ public class FitnessProvider {
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
-        if (website != null ? !website.equals(that.website) : that.website != null) return false;
-        if (dudes != null ? !dudes.equals(that.dudes) : that.dudes != null) return false;
-        return courses != null ? courses.equals(that.courses) : that.courses == null;
+        return website != null ? website.equals(that.website) : that.website == null;
+
     }
 
     @Override
@@ -185,8 +181,6 @@ public class FitnessProvider {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (website != null ? website.hashCode() : 0);
-        result = 31 * result + (dudes != null ? dudes.hashCode() : 0);
-        result = 31 * result + (courses != null ? courses.hashCode() : 0);
         return result;
     }
 
