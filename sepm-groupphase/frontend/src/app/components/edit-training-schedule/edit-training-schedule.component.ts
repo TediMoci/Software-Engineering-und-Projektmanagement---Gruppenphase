@@ -96,21 +96,21 @@ export class EditTrainingScheduleComponent implements OnInit {
 
     if (JSON.parse(localStorage.getItem('chosenWorkoutsForEditTS')) === 'empty') {
       for (let counter1 = 0; counter1 < this.trainingScheduleWorkouts.length; counter1++){
-        const ex = this.trainingScheduleWorkouts[counter1];
+        const work = this.trainingScheduleWorkouts[counter1];
         this.newAddedWorkoutsIn.push(new TrainingScheduleWorkoutDtoIn(
-          ex.id,
-          ex.version,
-          ex.day
+          work.id,
+          work.version,
+          work.day
         ));
       }
     } else {
       this.newAddedWorkouts = JSON.parse(localStorage.getItem('chosenWorkoutsForEditTS'));
 
       for (let counter = 0; counter < this.newAddedWorkouts.length; counter++) {
-        const currentEx = this.newAddedWorkouts[counter].workout;
+        const currentWork = this.newAddedWorkouts[counter].workout;
         this.newAddedWorkoutsIn.push(new TrainingScheduleWorkoutDtoIn(
-          currentEx.id,
-          currentEx.version,
+          currentWork.id,
+          currentWork.version,
           this.newAddedWorkouts[counter].day
         ));
       }
@@ -121,8 +121,8 @@ export class EditTrainingScheduleComponent implements OnInit {
       this.oldTrainingSchedule.id,
       this.oldTrainingSchedule.version,
       this.editTSForm.controls.nameForEditTS.value,
-      this.editTSForm.controls.description.value,
-      this.editTSForm.controls.difficulty.value,
+      this.editTSForm.controls.descriptionForEditTS.value,
+      this.editTSForm.controls.difficultyLevelEditTS.value,
       this.newAddedWorkoutsIn,
       this.oldTrainingSchedule.creatorId
     );
