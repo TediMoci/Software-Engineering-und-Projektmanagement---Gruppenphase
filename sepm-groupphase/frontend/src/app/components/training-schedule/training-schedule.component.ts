@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {TrainingSchedule} from '../../dtos/trainingSchedule';
-import {FormControl} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
 import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
@@ -34,10 +34,13 @@ export class TrainingScheduleComponent implements OnInit {
   workoutsPerDay: Array<any> = [];
 
   // input for active
-  startDate: number;
-  intervalRepetitions: number;
+  submitted: boolean = false;
+  tsForm: FormGroup;
+  adaptive: boolean = false;
 
-  constructor(private trainingScheduleService: TrainingScheduleService, private workoutService: WorkoutService) {}
+  constructor(private trainingScheduleService: TrainingScheduleService,
+              private workoutService: WorkoutService,
+              private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
@@ -46,6 +49,10 @@ export class TrainingScheduleComponent implements OnInit {
     this.userName = this.dude.name;
     this.tabs = this.initTabs(this.trainingSchedule.intervalLength);
     console.log(this.trainingSchedule.trainingScheduleWorkouts);
+
+    this.tsForm = this.formBuilder.group({
+      repetitions: ['', Validators.required]
+    });
 
     this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(this.trainingSchedule.id, this.trainingSchedule.version).subscribe(
       (data) => {
@@ -87,12 +94,13 @@ export class TrainingScheduleComponent implements OnInit {
   }
 
   makeTsActive() {
+    this.submitted = true;
     this.toSaveActiveTs = new ActiveTrainingSchedule(
       this.dude.id,
       this.trainingSchedule.id,
       this.trainingSchedule.version,
-      this.intervalRepetitions,
-      false);
+      this.tsForm.controls.repetitions.value,
+      this.adaptive);
 
     console.log('Make trainingSchedule active: ' + JSON.stringify(this.toSaveActiveTs));
     this.trainingScheduleService.saveActiveSchedule(this.toSaveActiveTs).subscribe(
@@ -146,6 +154,9 @@ export class TrainingScheduleComponent implements OnInit {
       case 2: return 'Advanced';
       case 3: return 'Pro';
     }
+  }
+  vanishError() {
+    this.error = false;
   }
 
 }
