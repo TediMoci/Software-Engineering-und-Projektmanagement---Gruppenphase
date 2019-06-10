@@ -37,10 +37,11 @@ public class FileStorageService implements IFileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file) {
+    @Override
+    public String storeFile(String name, MultipartFile file) {
         LOGGER.info("Entering storeFile");
         // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(name);
 
         try {
             // Check if the file's name contains invalid characters
@@ -58,6 +59,7 @@ public class FileStorageService implements IFileStorageService {
         }
     }
 
+    @Override
     public Resource loadFileAsResource(String fileName) {
         LOGGER.info("Entering loadFileAsResource");
         try {

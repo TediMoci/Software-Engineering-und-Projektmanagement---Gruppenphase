@@ -6,6 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.DudeValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +26,7 @@ public class DudeService implements IDudeService {
     private final IDudeRepository iDudeRepository;
     private final DudeValidator dudeValidator;
     private final PasswordEncoder passwordEncoder;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DudeService.class);
 
     @Autowired
     public DudeService(IDudeRepository iDudeRepository, DudeValidator dudeValidator, PasswordEncoder passwordEncoder) {
@@ -133,5 +136,18 @@ public class DudeService implements IDudeService {
         } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    @Override
+    public void updateImagePath(Long id, String fileName) throws ServiceException {
+        LOGGER.info("Entering updateImagePath with id: " + id + "; fileName: " + fileName);
+        Dude dude;
+        try {
+            dude = iDudeRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        dude.setImagePath("/assets/img/" + fileName);
+        iDudeRepository.save(dude);
     }
 }

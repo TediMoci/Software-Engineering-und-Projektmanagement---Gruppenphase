@@ -54,4 +54,6 @@ public interface IDudeService {
      */
     Dude update(String name, Dude newDude) throws ServiceException;
 
+    void updateImagePath(Long id, String fileName) throws ServiceException;
+
 }

@@ -46,6 +46,9 @@ public class Dude {
     private Double weight;
     // in kilograms
 
+    @Column(nullable = false)
+    private String imagePath = "/assets/img/kugelfisch.jpg";
+
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {
         {
@@ -158,6 +161,14 @@ public class Dude {
 
     public void setWeight(Double weight) {
         this.weight = weight;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public List<String> getRoles() {
@@ -291,6 +302,7 @@ public class Dude {
         private LocalDate birthday;
         private Double height;
         private Double weight;
+        private String imagePath;
         private List<String> roles;
         private List<FitnessProvider> fitnessProviders;
         private List<Course> courses;
@@ -353,6 +365,11 @@ public class Dude {
             return this;
         }
 
+        public DudeBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public DudeBuilder roles(List<String> roles){
             this.roles = roles;
             return this;
@@ -405,6 +422,7 @@ public class Dude {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
+            dude.setImagePath(imagePath);
             dude.setRoles(roles);
             dude.setFitnessProviders(fitnessProviders);
             dude.setCourses(courses);

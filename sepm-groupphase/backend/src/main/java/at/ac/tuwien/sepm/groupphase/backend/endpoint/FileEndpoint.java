@@ -29,7 +29,7 @@ public class FileEndpoint {
     @PostMapping("/uploadFile")
     public UploadFileResponseDto uploadFile(@RequestParam("file") MultipartFile file) {
         LOGGER.info("Entering uploadFile");
-        String fileName = iFileStorageService.storeFile(file);
+        String fileName = iFileStorageService.storeFile("", file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/downloadFile/")

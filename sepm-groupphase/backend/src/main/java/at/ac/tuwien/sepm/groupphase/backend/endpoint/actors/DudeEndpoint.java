@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UploadFileResponseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
@@ -13,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessCompone
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import io.swagger.annotations.Api;
@@ -23,7 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -38,15 +42,17 @@ public class DudeEndpoint {
 
     private final IDudeService iDudeService;
     private final ITrainingScheduleService iTrainingScheduleService;
+    private final IFileStorageService iFileStorageService;
     private final IDudeMapper dudeMapper;
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private final IExerciseMapper exerciseMapper;
     private final IWorkoutMapper workoutMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
+    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IFileStorageService iFileStorageService, IDudeMapper dudeMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
         this.iDudeService = iDudeService;
         this.iTrainingScheduleService = iTrainingScheduleService;
+        this.iFileStorageService = iFileStorageService;
         this.dudeMapper = dudeMapper;
         this.trainingScheduleMapper = trainingScheduleMapper;
         this.exerciseMapper = exerciseMapper;
@@ -249,6 +255,35 @@ public class DudeEndpoint {
             exerciseDoneDtos[i] = trainingScheduleMapper.exerciseDoneToExerciseDoneDto(exerciseDones.get(i));
         }
         return exerciseDoneDtos;
+    }
+
+    @PostMapping("/{id}/uploadImage")
+    public UploadFileResponseDto uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("Entering uploadFile");
+        String name = "dude_" + id;
+        if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
+            name += ".png";
+        } else {
+            name += ".jpg";
+        }
+        LOGGER.debug(name);
+        String fileName = iFileStorageService.storeFile(name, file);
+
+        try {
+            iDudeService.updateImagePath(id, name);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not updateImagePath with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/downloadFile/")
+            .path(fileName)
+            .toUriString();
+
+        return new UploadFileResponseDto(fileName, fileDownloadUri,
+            file.getContentType(), file.getSize());
     }
 }
 
