@@ -69,7 +69,8 @@ public interface IExerciseService {
      * @param id of the Exercise
      * @param version of the Exercise
      * @param fileName of the image in the path
+     * @return the full image-path
      * @throws ServiceException if something went wrong while updating the imagePath in the system
      */
-    void updateImagePath(Long id, Integer version, String fileName) throws ServiceException;
+    String updateImagePath(Long id, Integer version, String fileName) throws ServiceException;
 }

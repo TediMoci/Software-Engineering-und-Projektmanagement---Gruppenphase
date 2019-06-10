@@ -194,7 +194,7 @@ public class DudeService implements IDudeService {
     }
 
     @Override
-    public void updateImagePath(Long id, String fileName) throws ServiceException {
+    public String updateImagePath(Long id, String fileName) throws ServiceException {
         LOGGER.info("Entering updateImagePath with id: " + id + "; fileName: " + fileName);
         Dude dude;
         try {
@@ -202,7 +202,9 @@ public class DudeService implements IDudeService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        dude.setImagePath("/assets/img/" + fileName);
+        String imagePath = "/assets/img/" + fileName;
+        dude.setImagePath(imagePath);
         iDudeRepository.save(dude);
+        return imagePath;
     }
 }

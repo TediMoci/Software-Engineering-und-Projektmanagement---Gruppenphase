@@ -119,7 +119,7 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
-    public void updateImagePath(Long id, Integer version, String fileName) throws ServiceException {
+    public String updateImagePath(Long id, Integer version, String fileName) throws ServiceException {
         LOGGER.info("Entering updateImagePath with id: " + id + "; version: " + version + "; fileName: " + fileName);
         Exercise exercise;
         try {
@@ -127,7 +127,9 @@ public class ExerciseService implements IExerciseService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        exercise.setImagePath("/assets/img/" + fileName);
+        String imagePath = "/assets/img/" + fileName;
+        exercise.setImagePath(imagePath);
         iExerciseRepository.save(exercise);
+        return imagePath;
     }
 }

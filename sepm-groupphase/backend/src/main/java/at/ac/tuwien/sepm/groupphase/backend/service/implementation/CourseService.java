@@ -98,7 +98,7 @@ public class CourseService implements ICourseService {
     }
 
     @Override
-    public void updateImagePath(Long id, String fileName) throws ServiceException {
+    public String updateImagePath(Long id, String fileName) throws ServiceException {
         LOGGER.info("Entering updateImagePath with id: " + id + "; fileName: " + fileName);
         Course course;
         try {
@@ -106,7 +106,9 @@ public class CourseService implements ICourseService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        course.setImagePath("/assets/img/" + fileName);
+        String imagePath = "/assets/img/" + fileName;
+        course.setImagePath(imagePath);
         iCourseRepository.save(course);
+        return imagePath;
     }
 }

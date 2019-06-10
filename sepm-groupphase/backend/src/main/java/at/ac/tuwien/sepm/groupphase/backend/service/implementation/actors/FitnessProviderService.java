@@ -112,7 +112,7 @@ public class FitnessProviderService implements IFitnessProviderService {
     }
 
     @Override
-    public void updateImagePath(Long id, String fileName) throws ServiceException {
+    public String updateImagePath(Long id, String fileName) throws ServiceException {
         LOGGER.info("Entering updateImagePath with id: " + id + "; fileName: " + fileName);
         FitnessProvider fitnessProvider;
         try {
@@ -120,8 +120,10 @@ public class FitnessProviderService implements IFitnessProviderService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        fitnessProvider.setImagePath("/assets/img/" + fileName);
+        String imagePath = "/assets/img/" + fileName;
+        fitnessProvider.setImagePath(imagePath);
         iFitnessProviderRepository.save(fitnessProvider);
+        return imagePath;
     }
 
     @Override
