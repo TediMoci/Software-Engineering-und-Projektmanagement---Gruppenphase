@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
-
 import java.util.List;
 
 public interface ITrainingScheduleService {
@@ -82,4 +81,13 @@ public interface ITrainingScheduleService {
      * @throws ServiceException if an error occurred while trying to find the TrainingSchedule in the system
      */
     TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException;
+
+    /**
+     *
+     * @param filter
+     * @param selfAssessment
+     * @return
+     * @throws ServiceException
+     */
+    List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
 }

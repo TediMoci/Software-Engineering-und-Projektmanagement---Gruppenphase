@@ -255,6 +255,21 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
+    @Override
+    public TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
+        try {
+            return iTrainingScheduleRepository.findByIdAndVersion(id, version).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException {
+        return null;
+    }
+
     private void validateTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts) throws ServiceException {
         for (TrainingScheduleWorkout trainingScheduleWorkout : trainingScheduleWorkouts) {
             try {
@@ -343,4 +358,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
         return allDuration;
     }
+
+
 }
