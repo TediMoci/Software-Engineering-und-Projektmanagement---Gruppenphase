@@ -8,6 +8,7 @@ import {TrainingScheduleWorkout} from '../../dtos/trainingScheduleWorkout';
 import {TrainingScheduleWork} from '../../dtos/trainingScheduleWork';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
 import {EditTrainingScheduleService} from '../../services/edit-training-schedule.service';
+import {TrainingScheduleWo} from '../../dtos/training-schedule-wo';
 
 @Component({
   selector: 'app-edit-training-schedule',
@@ -22,7 +23,7 @@ export class EditTrainingScheduleComponent implements OnInit {
   submitted: boolean = false;
   prevRoute: string;
 
-  trainingScheduleWorkouts: TrainingScheduleWorkout[] = [];
+  trainingScheduleWorkouts: TrainingScheduleWo[] = [];
   newAddedWorkouts: TrainingScheduleWork[];
   newAddedWorkoutsIn: TrainingScheduleWorkoutDtoIn[] = [];
   oldTrainingSchedule: TrainingSchedule;
@@ -63,7 +64,7 @@ export class EditTrainingScheduleComponent implements OnInit {
     }
 
     if (JSON.parse(localStorage.getItem('chosenWorkoutsForEditTS')) === 'empty') {
-      this.trainingScheduleService.getWorkoutsOfTSById(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version).subscribe((data) => {
+      this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version).subscribe((data) => {
           this.trainingScheduleWorkouts = data;
           localStorage.setItem('gottenWorkouts', JSON.stringify(this.trainingScheduleWorkouts));
         },
