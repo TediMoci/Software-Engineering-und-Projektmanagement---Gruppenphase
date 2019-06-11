@@ -7,7 +7,6 @@ import {TrainingScheduleWorkoutDtoIn} from '../../dtos/trainingScheduleWorkoutDt
 import {TrainingScheduleWorkout} from '../../dtos/trainingScheduleWorkout';
 import {TrainingScheduleWork} from '../../dtos/trainingScheduleWork';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
-import {EditTrainingSchedule} from '../../dtos/edit-training-schedule';
 import {EditTrainingScheduleService} from '../../services/edit-training-schedule.service';
 
 @Component({
@@ -117,12 +116,13 @@ export class EditTrainingScheduleComponent implements OnInit {
       console.log(this.newAddedWorkoutsIn);
     }
 
-    const editTrainingSchedule: EditTrainingSchedule = new EditTrainingSchedule(
+    const trainingSchedule: TrainingSchedule = new TrainingSchedule(
       this.oldTrainingSchedule.id,
       this.oldTrainingSchedule.version,
       this.editTSForm.controls.nameForEditTS.value,
       this.editTSForm.controls.descriptionForEditTS.value,
       this.editTSForm.controls.difficultyLevelEditTS.value,
+      this.oldTrainingSchedule.intervalLength,
       this.newAddedWorkoutsIn,
       this.oldTrainingSchedule.creatorId
     );
@@ -132,7 +132,7 @@ export class EditTrainingScheduleComponent implements OnInit {
       return;
     }
 
-    this.editTrainingScheduleService.editTrainingSchedule(editTrainingSchedule).subscribe(
+    this.editTrainingScheduleService.editTrainingSchedule(trainingSchedule).subscribe(
       (data) => {
         console.log(data);
         localStorage.removeItem('nameForEditTS');
