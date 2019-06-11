@@ -194,7 +194,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
-    public TrainingSchedule saveRandom(int days, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException {
+    public TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException {
         LOGGER.info("Entering save for: " + trainingSchedule);
         trainingSchedule.setWorkouts(null);
 
