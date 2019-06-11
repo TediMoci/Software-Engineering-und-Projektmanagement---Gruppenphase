@@ -97,6 +97,7 @@ public class ExerciseService implements IExerciseService {
             oldExercise.setHistory(true);
             newExercise.setId(id);
             newExercise.setVersion(oldExercise.getVersion()+1);
+            newExercise.setImagePath(oldExercise.getImagePath());
             iExerciseRepository.save(oldExercise);
             Long dbID = iExerciseRepository.save(newExercise).getId();
             iExerciseRepository.updateNew(newExercise.getId(), dbID);
