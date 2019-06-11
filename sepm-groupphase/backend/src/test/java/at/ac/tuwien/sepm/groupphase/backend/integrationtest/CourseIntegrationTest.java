@@ -92,7 +92,6 @@ public class CourseIntegrationTest {
 
     private CourseDto courseDtoBuilder(CourseDto d){
         CourseDto courseDto = new CourseDto();
-        courseDto.setId(d.getId());
         courseDto.setName(d.getName());
         courseDto.setDescription(d.getDescription());
         courseDto.setCreatorId(d.getCreatorId());
