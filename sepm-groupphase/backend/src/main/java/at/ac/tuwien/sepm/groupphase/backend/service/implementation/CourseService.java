@@ -79,6 +79,7 @@ public class CourseService implements ICourseService {
             Course oldCourse = findById(id);
             if (oldCourse==null) throw new ServiceException("Could not find cours with id: " + id);
             newCourse.setId(oldCourse.getId());
+            newCourse.setImagePath(oldCourse.getImagePath());
             return iCourseRepository.save(newCourse);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
