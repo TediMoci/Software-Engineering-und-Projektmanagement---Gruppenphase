@@ -239,12 +239,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             if (oldTraining == null) throw new ServiceException("Could not find training schedule with id: " + id);
             newTraining.setId(id);
             newTraining.setVersion(1+oldTraining.getVersion());
-            iTrainingScheduleRepository.delete(id);
 
             List<TrainingScheduleWorkout> trainingWorkouts = newTraining.getWorkouts();
             newTraining.setWorkouts(null);
             validateTrainingScheduleWorkouts(trainingWorkouts);
 
+            iTrainingScheduleRepository.delete(id);
             Long dbId = iTrainingScheduleRepository.save(newTraining).getId();
             iTrainingScheduleRepository.updateNew(newTraining.getId(), dbId);
             saveTrainingScheduleWorkouts(trainingWorkouts, newTraining);
