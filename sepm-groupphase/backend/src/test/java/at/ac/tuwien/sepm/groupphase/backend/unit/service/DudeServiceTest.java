@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.FollowFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyObject;
@@ -36,6 +40,12 @@ public class DudeServiceTest {
 
     @MockBean
     IDudeRepository dudeRepository;
+
+    @MockBean
+    IFitnessProviderRepository fitnessProviderRepository;
+
+    @MockBean
+    FollowFitnessProviderRepository followFitnessProviderRepository;
 
     @BeforeClass
     public static void beforeClass() {
@@ -166,5 +176,29 @@ public class DudeServiceTest {
     public void TestAge(){
         Dude dude = dudeBuilder();
         assertEquals(dudeService.calculateAge(dude.getBirthday()),2019-1997);
+    }
+
+    @Test
+    public void TestFitnessProviderFollowing() throws ServiceException {
+        Optional<Dude> optionalDude1 = Optional.of(dude1);
+        FitnessProvider fitnessProvider = new FitnessProvider();
+        fitnessProvider.setId(1L);
+        Optional<FitnessProvider> optionalFitnessProvider = Optional.of(fitnessProvider);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude1);
+        Mockito.when(fitnessProviderRepository.findById(1L)).thenReturn(optionalFitnessProvider);
+        Mockito.when(followFitnessProviderRepository.checkFollowedFitnessProvider(1L, 1L)).thenReturn(0);
+        dudeService.followFitnessProvider(1L, 1L);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void TestFitnessProviderFollowing_ifAlreadyFollowing_thenServiceException() throws ServiceException {
+        Optional<Dude> optionalDude1 = Optional.of(dude1);
+        FitnessProvider fitnessProvider = new FitnessProvider();
+        fitnessProvider.setId(1L);
+        Optional<FitnessProvider> optionalFitnessProvider = Optional.of(fitnessProvider);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude1);
+        Mockito.when(fitnessProviderRepository.findById(1L)).thenReturn(optionalFitnessProvider);
+        Mockito.when(followFitnessProviderRepository.checkFollowedFitnessProvider(1L, 1L)).thenReturn(1);
+        dudeService.followFitnessProvider(1L, 1L);
     }
 }
