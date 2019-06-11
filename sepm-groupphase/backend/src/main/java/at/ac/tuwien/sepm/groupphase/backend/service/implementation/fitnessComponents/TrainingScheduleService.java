@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -413,12 +414,17 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException {
 
+        // TODO: fix copying algorithm
+        // TODO: prevent copying trainingSchedule after every reload of page
+
         // old trainingSchedule
         TrainingSchedule oldTs = activeSchedule.getTrainingSchedule();
         // copy of old trainingSchedule, which will be altered
         TrainingSchedule ts = copyOldTrainingSchedule(activeSchedule, activeSchedule.getDudeId(), oldTs);
+
         LOGGER.debug("Successfully copied old TrainingSchedule");
-        LOGGER.debug("TS-Copy: " + ts.toString());
+
+        LOGGER.debug("Ts-Copy-Workouts-Size: " + ts.getWorkouts().size());
 
         List<TrainingScheduleWorkout> workouts = ts.getWorkouts();
         List<Workout> workoutList = new ArrayList<>();
@@ -570,6 +576,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderExDone.trainingScheduleId(ts.getId());
             builderExDone.trainingScheduleVersion(ts.getVersion());
             builderExDone.activeTrainingScheduleId(activeSchedule.getId());
+            LOGGER.debug("get info of workoutExercises from help structure");
             builderExDone.exerciseId(allExercises.get(j).getWorkoutExercise().getExerciseId());
             builderExDone.exerciseVersion(allExercises.get(j).getWorkoutExercise().getExerciseVersion());
             builderExDone.workoutId(allExercises.get(j).getWorkoutExercise().getWorkoutId());
@@ -579,6 +586,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             try {
                 LOGGER.debug("Save copies with adapted Workouts and WorkoutExercises to ExerciseDone in Database");
                 iExerciseDoneRepository.save(builderExDone.build());
+                LOGGER.debug("Successfully saved ExerciseDone");
             } catch (DataAccessException e) {
                 throw new ServiceException(e.getMessage());
             }
@@ -650,6 +658,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     private void adaptWorkouts(List<WorkoutHelp> waHelp) {
+        LOGGER.debug("entering adaptWorkouts");
         double totalCalories = 0;
         for (WorkoutHelp workoutHelp : waHelp) {
             for (WorkoutExercise ex : workoutHelp.getWorkout().getExercises()) {
@@ -657,12 +666,14 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             }
             totalCalories = 0;
             workoutHelp.getWorkout().setCalorieConsumption(totalCalories);
+            LOGGER.debug("Update workout after adaptive change");
             iWorkoutRepository.save(workoutHelp.getWorkout());
+            LOGGER.debug("Successfully updated workout after adaptive change");
         }
     }
 
     private void applyAdaptiveChange(List<WorkoutExerciseDone> ex, double percentPerExDay, int day) {
-
+        LOGGER.debug("entering applyAdaptiveChange");
         int repsHelpIncrease;
         int repsHelpDecrease;
         WorkoutExerciseHelp.WorkoutExerciseHelpBuilder builderWaExH = new WorkoutExerciseHelp.WorkoutExerciseHelpBuilder();
@@ -703,7 +714,9 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     }
                 }
 
+                LOGGER.debug("Update workoutExercise after adaptive change");
                 iWorkoutExerciseRepository.save(e);
+                LOGGER.debug("Successfully updated workoutExercise after adaptive change");
 
                 builderWaExH.workoutExercise(e);
                 builderWaExH.day(day);
@@ -728,6 +741,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         WorkoutExerciseDone.WorkoutExerciseDoneBuilder builderWaExDone = new WorkoutExerciseDone.WorkoutExerciseDoneBuilder();
 
         builder.name(oldTs.getName());
+        builder.creator(activeTs.getDude());
         builder.description(oldTs.getDescription());
         builder.difficulty(oldTs.getDifficulty());
         builder.intervalLength(oldTs.getIntervalLength());
@@ -742,31 +756,33 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderWa.difficulty(tsWa.getWorkout().getDifficulty());
             builderWa.calorieConsumption(tsWa.getWorkout().getCalorieConsumption());
             builderWa.rating(tsWa.getWorkout().getRating());
+            builderWa.creator(activeTs.getDude());
             builderWa.isHistory(true);
 
-            LOGGER.debug("Find ExerciseDone by TrainingScheduleWorkout");
-            List<ExerciseDone> exDoneForTsWa = iExerciseDoneRepository.findByActiveTrainingScheduleIdAndDudeIdAndTrainingScheduleIdAndTrainingScheduleVersionAndWorkoutIdAndWorkoutVersionAndDay(
-                activeTs.getId(), dudeId, oldTs.getId(), oldTs.getVersion(), tsWa.getWorkout().getId(), tsWa.getWorkout().getVersion(), (tsWa.getDay() + ((activeTs.getIntervalRepetitions() - 1) * activeTs.getTrainingSchedule().getIntervalLength()))); // !
-
+            List<ExerciseDone> exDoneForTsWa = activeTs.getDone();
+            int tsWaDay = tsWa.getDay() + ((Period.between(LocalDate.now(), activeTs.getStartDate()).getDays()/activeTs.getTrainingSchedule().getIntervalLength()) * activeTs.getTrainingSchedule().getIntervalLength());
             for (ExerciseDone exDone : exDoneForTsWa) {
-                builderWaEx.exerciseId(exDone.getWorkoutExercise().getExerciseId());
-                builderWaEx.exerciseVersion(exDone.getWorkoutExercise().getExerciseVersion());
-                builderWaEx.exDuration(exDone.getWorkoutExercise().getExDuration());
-                builderWaEx.repetitions(exDone.getWorkoutExercise().getRepetitions());
-                builderWaEx.sets(exDone.getWorkoutExercise().getSets());
-                copyWaEx.add(builderWaEx.build());
+                if ((exDone.getWorkout().getId().equals(tsWa.getWorkout().getId())) && (exDone.getWorkout().getVersion().equals(tsWa.getWorkout().getVersion())) && (exDone.getDay() == tsWaDay)) {
+                    builderWaEx.exerciseId(exDone.getWorkoutExercise().getExerciseId());
+                    builderWaEx.exerciseVersion(exDone.getWorkoutExercise().getExerciseVersion());
+                    builderWaEx.exDuration(exDone.getWorkoutExercise().getExDuration());
+                    builderWaEx.repetitions(exDone.getWorkoutExercise().getRepetitions());
+                    builderWaEx.sets(exDone.getWorkoutExercise().getSets());
+                    copyWaEx.add(builderWaEx.build());
 
-                // save workoutExercise and done information to help structure
-                builderWaExDone.workoutExercise(builderWaEx.build());
-                builderWaExDone.done(exDone.getDone());
-                waExDoneHelp.add(builderWaExDone.build());
+                    // save workoutExercise and done information to help structure
+                    builderWaExDone.workoutExercise(builderWaEx.build());
+                    builderWaExDone.done(exDone.getDone());
+                    waExDoneHelp.add(builderWaExDone.build());
+                }
             }
 
             builderWa.exercises(copyWaEx);
-            copyWaEx.clear();
-            exDoneForTsWa.clear();
             LOGGER.debug("Save Workout-Copy");
             wa = workoutService.save(builderWa.build());
+            LOGGER.debug("Succesfully saved workout with id " + wa.getId());
+            copyWaEx.clear();
+            exDoneForTsWa.clear();
 
             // save workoutId and workoutVersion to help-Structure
             for (WorkoutExerciseDone w : waExDoneHelp) {
@@ -805,10 +821,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             copyTsWa.add(builderTsWa.build());
         }
         builder.workouts(copyTsWa);
-        copyTsWa.clear();
+        List<ActiveTrainingSchedule> activeUsages = new ArrayList<>();
+        activeUsages.add(activeTs);
+        builder.activeUsages(activeUsages);
         try {
             LOGGER.debug("Save TrainingSchedule-Copy");
-            return iTrainingScheduleRepository.save(builder.build());
+            return save(builder.build());
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }

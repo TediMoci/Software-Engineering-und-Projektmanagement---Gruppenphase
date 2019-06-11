@@ -19,22 +19,4 @@ public interface IExerciseDoneRepository extends JpaRepository<ExerciseDone, Exe
      */
     ExerciseDone save(ExerciseDone exerciseDone) throws DataAccessException;
 
-    /**
-     *
-     * @param exerciseDone to be deleted
-     */
-    void delete(ExerciseDone exerciseDone);
-
-    /**
-     *
-     * @param activeTrainingScheduleId
-     * @param dudeId
-     * @param trainingScheduleId
-     * @param trainingScheduleVersion
-     * @param workoutId
-     * @param workoutVersion
-     * @param day
-     * @return
-     */
-    List<ExerciseDone> findByActiveTrainingScheduleIdAndDudeIdAndTrainingScheduleIdAndTrainingScheduleVersionAndWorkoutIdAndWorkoutVersionAndDay(Long activeTrainingScheduleId, Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion, Long workoutId, Integer workoutVersion, Integer day);
-}
+   }
