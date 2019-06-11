@@ -52,11 +52,11 @@
           <p>"{{tsDiscription}}"</p>
           <div class="scrolling-wrapper">
             <mat-card class="card" *ngFor="let element of tabs">
-              <h1>{{element}}</h1>
+              <h1 style="color: green" *ngIf="tabs.indexOf(element) + prog(tsIntervalLenght, globalTimeDelta) == globalTimeDelta">{{element}}</h1>
+              <h1 *ngIf="tabs.indexOf(element) + prog(tsIntervalLenght, globalTimeDelta) != globalTimeDelta">{{element}}</h1>
               <hr>
               <div class="altContent">
-                <p
-                  *ngIf="workoutsPerDay[tabs.indexOf(element)]!= undefined && workoutsPerDay[tabs.indexOf(element)].length == 0">
+                <p *ngIf="workoutsPerDay[tabs.indexOf(element)]!= undefined && workoutsPerDay[tabs.indexOf(element)].length == 0">
                   No Workouts for {{element}}</p>
               </div>
               <button mat-stroked-button class="card-in-card" matTooltip="Click for more details"

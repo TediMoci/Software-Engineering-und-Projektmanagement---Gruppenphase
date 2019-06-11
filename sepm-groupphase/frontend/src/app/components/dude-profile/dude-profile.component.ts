@@ -30,11 +30,14 @@ export class DudeProfileComponent implements OnInit {
   description: string;
   email: string;
   dude: Dude;
+  dateNow: Date;
+  globalTimeDelta: number;
 
   // Active Schedule variables
   activeTs: GetActiveTrainingSchedule;
   ActiveTsId: number;
   ActiveTsVersion: number;
+  startDate: Date;
   // original Schedule
   trainingSchedule: TrainingSchedule;
   tsName: string;
@@ -42,6 +45,7 @@ export class DudeProfileComponent implements OnInit {
   tsDifficulty: number;
   tsWorkouts: any;
   tsDuration: number;
+  tsIntervalLenght: number;
   tsTrue: boolean = false;
   // Sorted Workouts by day
   selectedWorkout: any = [];
@@ -53,11 +57,12 @@ export class DudeProfileComponent implements OnInit {
   constructor(private globals: Globals,
               private workoutService: WorkoutService,
               private trainingScheduleService: TrainingScheduleService,
-              private profileService: ProfileService,) {
+              private profileService: ProfileService) {
   }
 
   ngOnInit() {
-
+    this.dateNow = new Date();
+    console.log('Current Date: ' + this.dateNow);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
 
     this.userName = this.dude.name;
@@ -103,6 +108,8 @@ export class DudeProfileComponent implements OnInit {
         console.log(this.activeTs);
         this.ActiveTsId = this.activeTs.trainingScheduleId;
         this.ActiveTsVersion = this.activeTs.trainingScheduleVersion;
+        this.startDate = new Date(this.activeTs.startDate);
+        console.log('Active ts start date: ' + this.startDate);
         this.trainingScheduleService.getTrainingScheduleByIdandVersion(this.ActiveTsId, this.ActiveTsVersion)
           .subscribe(
             (data2) => {
@@ -112,8 +119,9 @@ export class DudeProfileComponent implements OnInit {
               this.tsName = this.trainingSchedule.name;
               this.tsDiscription = this.trainingSchedule.description;
               this.tsDifficulty = this.trainingSchedule.difficulty;
-              this.tsDuration = this.initDuration(this.trainingSchedule.intervalLength, this.activeTs.intervalRepetitions);
-              this.tabs = this.initTabs(this.tsDuration);
+              this.tsIntervalLenght = this.trainingSchedule.intervalLength;
+              this.globalTimeDelta = this.getDateDifference( this.dateNow, this.startDate);
+              this.tabs = this.initTabs(this.trainingSchedule.intervalLength, this.globalTimeDelta);
               this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(
                 this.trainingSchedule.id,
                 this.trainingSchedule.version).subscribe(
@@ -168,10 +176,11 @@ export class DudeProfileComponent implements OnInit {
     return intervalLength * intervalReps;
   }
 
-  initTabs(days: number) {
+  initTabs(interval: number, daysPassed: number) {
     const tabs: Array<string> = [];
-    for (let _i = 1 ; _i <= days; _i++) {
-      tabs.push('Day ' + _i);
+    for (let _i = 1 ; _i <= interval; _i++) {
+      const prog = this.prog(interval, daysPassed);
+      tabs.push('Day ' + (_i + prog ));
     }
     console.log(tabs.toString());
     return tabs;
@@ -179,7 +188,7 @@ export class DudeProfileComponent implements OnInit {
 
   intOverview() {
     let elemsForDay: Array<Workout> = [];
-    for (let i = 0; i < this.tsDuration; i++) {
+    for (let i = 0; i < this.tsIntervalLenght; i++) {
       for (const element of this.tsWorkouts) {
         if ((i + 1) % 7 === element.day) {
           console.log('Day ' + (i + 1) + ': ' + element.name);
@@ -215,5 +224,16 @@ export class DudeProfileComponent implements OnInit {
   vanishError() {
     this.error = false;
   }
+  getDateDifference(date1: Date, date2: Date) {
+    const diff = Math.abs(date1.getTime() - date2.getTime())
+    const delta =  Math.ceil( diff / (1000 * 3600 * 24));
+
+    return delta - 1;
+
+  }
+  prog(interval: number, delta: number) {
+    return Math.floor(delta / interval) * interval;
+  }
+
 
 }
