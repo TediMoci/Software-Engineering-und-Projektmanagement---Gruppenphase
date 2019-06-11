@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import java.util.List;
 
 public interface ITrainingScheduleService {
 
@@ -29,7 +30,7 @@ public interface ITrainingScheduleService {
     void markExercisesAsDone(ExerciseDone[] exerciseDones) throws ServiceException;
 
     /**
-     * @param days             available to do workout
+     * @param days available to do workout
      * @param trainingSchedule to be saved
      * @return the saved TrainingSchedule
      * @throws ServiceException if an error occurred while trying to save the TrainingSchedule in the system
@@ -56,7 +57,7 @@ public interface ITrainingScheduleService {
     void deleteActive(Long dudeId) throws ServiceException;
 
     /**
-     * @param id          of TrainingSchedule to be found
+     * @param id of TrainingSchedule to be found
      * @param newTraining that will be updated
      * @return updated TrainingSchedule
      * @throws ServiceException if an error occurred while trying to find the Workout in the system
@@ -81,4 +82,22 @@ public interface ITrainingScheduleService {
      * @throws ServiceException
      */
     TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException;
+
+    /**
+     *
+     * @param id
+     * @param version
+     * @return
+     * @throws ServiceException
+     */
+    TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException;
+
+    /**
+     *
+     * @param filter
+     * @param selfAssessment
+     * @return
+     * @throws ServiceException
+     */
+    List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
 }

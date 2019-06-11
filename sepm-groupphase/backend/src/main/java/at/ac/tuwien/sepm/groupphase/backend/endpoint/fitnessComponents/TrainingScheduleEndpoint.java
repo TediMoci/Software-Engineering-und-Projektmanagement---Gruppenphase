@@ -1,12 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDoneDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import io.swagger.annotations.Api;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/trainingSchedule")
@@ -133,5 +133,54 @@ public class TrainingScheduleEndpoint {
             LOGGER.error("Could not update Training Schedule with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(value = "/{id}/{version}/workouts", method = RequestMethod.GET)
+    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleWorkoutDtoOut[] getAllWorkoutsByTrainingScheduleIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+        List<TrainingScheduleWorkout> trainingScheduleWorkouts;
+        try {
+            trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        TrainingScheduleWorkoutDtoOut[] trainingScheduleWorkoutDtoOuts = new TrainingScheduleWorkoutDtoOut[trainingScheduleWorkouts.size()];
+        for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
+            trainingScheduleWorkoutDtoOuts[i] = trainingScheduleMapper.trainingScheduleWorkoutToTrainingScheduleWorkoutDtoOut(trainingScheduleWorkouts.get(i));
+        }
+        return trainingScheduleWorkoutDtoOuts;
+    }
+
+    @RequestMapping(value = "/{id}/{version}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get a Training Schedule by id and version", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleDto findByIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
+        try {
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.findByIdAndVersion(id, version));
+        } catch (ServiceException e) {
+            LOGGER.error("Could not find training schedule with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Training Schedule by filters", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
+        //todo: change Request Params
+        List<TrainingSchedule> trainingSchedules;
+        try {
+            trainingSchedules = iTrainingScheduleService.findByFilter(filter, selfAssessment);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        TrainingScheduleDto[] trainingScheduleDtos = new TrainingScheduleDto[trainingSchedules.size()];
+        for (int i = 0; i < trainingSchedules.size(); i++) {
+            trainingScheduleDtos[i] = trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(trainingSchedules.get(i));
+        }
+        return trainingScheduleDtos;
     }
 }
