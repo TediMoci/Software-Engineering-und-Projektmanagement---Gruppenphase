@@ -25,6 +25,8 @@ export class OwnTrainingScheduleComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    localStorage.setItem('chosenWorkoutsForEditTS', JSON.stringify('empty'));
+    localStorage.setItem('firstAccess', JSON.stringify('true'));
 
     this.ownTrainingSchedulesService.getAllTrainingSchedulesOfLoggedInDude(this.dude).subscribe(
       (data) => {

@@ -31,11 +31,14 @@ public interface ITrainingScheduleService {
 
     /**
      * @param days available to do workout
+     * @param duration to do workouts per day
+     * @param minTarget minimum amount of calories to be spent per day
+     * @param maxTarget maximum amount of calories to be spent per day
      * @param trainingSchedule to be saved
      * @return the saved TrainingSchedule
      * @throws ServiceException if an error occurred while trying to save the TrainingSchedule in the system
      */
-    TrainingSchedule saveRandom(int days, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException;
+    TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException;
 
     /**
      * @param id of TrainingSchedule to be found
@@ -89,6 +92,19 @@ public interface ITrainingScheduleService {
      * @param version
      * @return
      * @throws ServiceException
+     */
+    /**
+     * @param name of the TrainingSchedules to find
+     * @return TrainingSchedules with name beginning with the given name-string
+     * @throws ServiceException if an error occurred while trying to find the TrainingSchedules in the system
+     */
+    List<TrainingSchedule> findByName(String name) throws ServiceException;
+
+    /**
+     * @param id of the TrainingSchedule to find
+     * @param version of the TrainingSchedule to find
+     * @return the TrainingSchedule with the given id and version
+     * @throws ServiceException if an error occurred while trying to find the TrainingSchedule in the system
      */
     TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException;
 

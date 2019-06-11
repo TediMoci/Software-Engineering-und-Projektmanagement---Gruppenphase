@@ -6,12 +6,13 @@ import {TrainingScheduleWo} from '../dtos/training-schedule-wo';
 import {TrainingSchedule} from '../dtos/trainingSchedule';
 import {ActiveTrainingSchedule} from '../dtos/active-training-schedule';
 import {GetActiveTrainingSchedule} from '../dtos/get-active-training-schedule';
+import {WorkoutExercise} from '../dtos/workoutExercise';
+import {TrainingScheduleWorkout} from '../dtos/trainingScheduleWorkout';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingScheduleService {
-
   private BaseUri: string = this.globals.backendUri + '/trainingSchedule';
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 

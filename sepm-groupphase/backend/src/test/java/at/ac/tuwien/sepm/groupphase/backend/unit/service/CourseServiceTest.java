@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -67,6 +68,48 @@ public class CourseServiceTest {
     public void whenSaveOneInvalidCourse_thenServiceException() throws ServiceException {
         Mockito.when(courseRepository.save(anyObject())).thenThrow(Mockito.mock(DataAccessException.class));
         courseService.save(course1);
+    }
+
+    @Test
+    public void whenFindOneCourseById_thenGetFoundCourse() throws ServiceException {
+        Mockito.when(courseRepository.findById(anyLong())).thenReturn(Optional.of(course1));
+        assertEquals(courseService.findById(1L), course1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindOneCourseById_ifNoSuchElementException_thenServiceException() throws ServiceException {
+        Mockito.when(courseRepository.findById(anyLong())).thenThrow(Mockito.mock(NoSuchElementException.class));
+        assertEquals(courseService.findById(1L), course1);
+    }
+
+    @Test
+    public void whenFindByName_thenGetListContainingCourse() throws ServiceException {
+        Mockito.when(courseRepository.findByName(anyString())).thenReturn(courses2);
+        assertEquals(courseService.findByName("Course2"), courses2);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindByName_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(courseRepository.findByName(anyString())).thenThrow(Mockito.mock(DataAccessException.class));
+        courseService.findByName("Course2");
+    }
+
+    @Test
+    public void whenFindAll_thenGetListOfCourses() throws ServiceException {
+        Mockito.when(courseRepository.findAll()).thenReturn(courses2);
+        assertEquals(courseService.findAll(), courses2);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindAll_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(courseRepository.findAll()).thenThrow(Mockito.mock(DataAccessException.class));
+        courseService.findAll();
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenDeleteCourse_ifNoSuchElementException_thenServiceException() throws ServiceException {
+        Mockito.when(courseRepository.findById(anyLong())).thenThrow(Mockito.mock(NoSuchElementException.class));
+        courseService.delete(1L);
     }
 
     @Test

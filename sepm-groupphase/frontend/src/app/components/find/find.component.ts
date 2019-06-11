@@ -19,8 +19,6 @@ import {DudeFilter} from '../../dtos/dude-filter';
   styleUrls: ['./find.component.scss']
 })
 
-// todo: add filter to different categories
-// todo: display entities form backend
 export class FindComponent implements OnInit {
 
   // Inputs from html
@@ -40,7 +38,6 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMaxActual: string = '';
   public filterDudeSelfAssessmentActual: string = 'None';
 
-
   entries: any;
   exercisesForWorkouts: any;
 
@@ -56,6 +53,8 @@ export class FindComponent implements OnInit {
   workoutFilter: WorkoutFilter;
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
+
+  followedFP: String;
 
   constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
 
@@ -277,6 +276,15 @@ export class FindComponent implements OnInit {
   }
   resetResults() {
     this.entries = null;
+  }
+
+  followSelectedFitnessProvider(fitnessProvider: FitnessProvider) {
+    this.findService.followFitnessProvider(JSON.parse(localStorage.getItem('loggedInDude')).id, fitnessProvider.id);
+    this.followedFP = fitnessProvider.name;
+  }
+
+  vanishError() {
+    this.error = false;
   }
 
 }

@@ -6,7 +6,6 @@ import {ProfileService} from '../../services/profile.service';
 import {Workout} from '../../dtos/workout';
 import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
-import {ActiveTrainingSchedule} from '../../dtos/active-training-schedule';
 import {WorkoutService} from '../../services/workout.service';
 import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
 

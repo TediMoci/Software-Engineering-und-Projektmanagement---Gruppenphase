@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface ITrainingScheduleRepository extends JpaRepository<TrainingSchedule, TrainingScheduleKey> {
@@ -57,4 +57,12 @@ public interface ITrainingScheduleRepository extends JpaRepository<TrainingSched
     @Transactional
     @Query("UPDATE TrainingSchedule t SET t.id=:myID WHERE t.id=:dbID AND t.isHistory=false")
     void updateNew(@Param("myID")long myId, @Param("dbID")long dbId) throws DataAccessException;
+
+    /**
+     * @param name of the TrainingSchedules to find
+     * @return TrainingSchedules with name beginning with the given name-string
+     * @throws DataAccessException if an error occurred while trying to find the TrainingSchedules in the database
+     */
+    @Query("SELECT t FROM TrainingSchedule t WHERE t.name LIKE ?1% AND t.isHistory=false")
+    List<TrainingSchedule> findByName(String name) throws DataAccessException;
 }

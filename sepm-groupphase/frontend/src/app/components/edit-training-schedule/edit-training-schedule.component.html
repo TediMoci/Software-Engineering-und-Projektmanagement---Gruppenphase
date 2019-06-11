@@ -3,7 +3,7 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-
+<body>
 <div class="container-fluid">
 
   <div class="container">
@@ -16,12 +16,71 @@
         </div>
       </div>
       <div class="col-sm-9">
+        <div class="form">
+          <form [formGroup]="editTSForm">
+            <span class="anchor" id="formRegister"></span>
         <h1>Edit Training Schedule</h1>
+
+            <div class="form-group">
+            <label for="nameForEditTS">Name*</label>
+            <input type="text" name="nameForEditTS" maxlength="50" class="form-control" id="nameForEditTS" formControlName="nameForEditTS"
+                   aria-describedby="nameForEditTSHelp" ngModel="{{name}}">
+              <div *ngIf="submitted && !!editTSForm.controls.nameForEditTS.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editTSForm.controls.nameForEditTS.errors.required">Name is
+                required!
+              </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <span class="difficultyLevelEditTS">Difficulty Level*</span>
+              <div class="gap_space">
+                <div class= "custom-control custom-radio custom-control-inline">
+                  <input id="beginner" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS" [checked]="beginner">
+                  <label class="custom-control-label" for="beginner">Beginner</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="advanced" type="radio" class="custom-control-input" value= 2 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS" [checked]="advanced">
+                  <label class="custom-control-label" for="advanced">Advanced</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="pro" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS" [checked]="pro">
+                  <label class="custom-control-label" for="pro">Pro</label>
+                </div>
+                <div *ngIf="submitted && !!editTSForm.controls.difficultyLevelEditTS.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!editTSForm.controls.difficultyLevelEditTS.errors.required">Difficulty level is
+                    required!
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="descriptionForEditTS">Description*</label>
+              <textarea type="text" name="descriptionForEditTS" class="form-control" id="descriptionForEditTS" formControlName="descriptionForEditTS"
+                        aria-describedby="descriptionForEditTSHelp" ngModel="{{description}}" maxlength="3000"></textarea>
+              <span>{{3000 - editTSForm.controls.descriptionForEditTS.value.length}} left</span>
+              <div *ngIf="submitted && !!editTSForm.controls.descriptionForEditTS.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!editTSForm.controls.descriptionForEditTS.errors.required">Description is
+                  required!
+                </small>
+              </div>
+            </div>
+
+          </form>
+          <a [routerLink]="['/edit-training-workouts']" (click)="editWorkouts()" class="btn2 btn-link">Edit Workouts</a>
+        </div>
+        <button type="button" (click)="editTrainingSchedule()" class="btn btn-success float-right">Edit</button>
+        <a (click)="backToCreateTrainingSchedule()" class="btn btn-link">Cancel</a>
+        <p><small>Fields marked with * are mandatory!</small></p>
       </div>
 
     </div>
   </div>
-
 </div>
+</body>
+
 
 

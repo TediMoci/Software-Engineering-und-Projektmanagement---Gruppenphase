@@ -1,5 +1,4 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
-
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
@@ -199,8 +198,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         LOGGER.info("Entering save for: " + trainingSchedule);
         trainingSchedule.setWorkouts(null);
 
-        List<Workout> workouts = iWorkoutRepository.findAll();
-        sum_up(workouts, minTarget, maxTarget, days);
+        List<Workout> workouts = iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty());
+        sum_up(workouts,minTarget,maxTarget,days,duration);
 
         TrainingSchedule savedTrainingSchedule;
         try {
@@ -273,6 +272,26 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
+    public List<TrainingSchedule> findByName(String name) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name);
+        try {
+            return iTrainingScheduleRepository.findByName(name);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
+        try {
+            return iTrainingScheduleRepository.findByIdAndVersion(id, version).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException {
         LOGGER.info("Updating training schedule with id: " + id);
         try {
@@ -292,16 +311,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
             return newTraining;
         } catch (DataAccessException e) {
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    @Override
-    public TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException {
-        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
-        try {
-            return iTrainingScheduleRepository.findByIdAndVersion(id, version).get();
-        } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
     }
@@ -349,25 +358,27 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
-    private static void sum_up(List<Workout> numbers, double minTarget, double maxTarget, int days) throws ServiceException {
-        if (days < 1 || days > 7) {
-            throw new ServiceException("Please give a valid number of days per week");
-        }
-        if (minTarget > maxTarget) {
-            throw new ServiceException("Please give the correct minimum and maximum values");
-        }
-        sum_up_recursive(numbers, minTarget, maxTarget, new ArrayList<Workout>(), days);
-        if (finalList.isEmpty())
-            throw new ServiceException("Training schedule could not be formed with existing workouts");
+    private static void sum_up(List<Workout> numbers, double minTarget, double maxTarget, int days, int duration) throws ServiceException {
+        if (duration<1 || duration>1440) throw new ServiceException("Please give a valid duration per day");
+        if (days<1 || days>7) throw new ServiceException("Please give a valid number of days per week");
+        if (minTarget>maxTarget) throw new ServiceException("Please give the correct minimum and maximum values");
+
+        sum_up_recursive(numbers,minTarget,maxTarget,new ArrayList<Workout>(),days,duration);
+        if (finalList.isEmpty()) throw new ServiceException("Training schedule could not be formed with existing workouts");
     }
 
-    private static void sum_up_recursive(List<Workout> numbers, double minTarget, double maxTarget, List<Workout> partial, int days) {
+    private static void sum_up_recursive(List<Workout> numbers, double minTarget, double maxTarget, List<Workout> partial, int days, int duration) {
         if (listPosition == days) return;
         double s = 0.0;
-        for (Workout x : partial) s += x.getCalorieConsumption();
+        int allDuration = 0;
+
+        for (Workout x : partial) {
+            allDuration += getDuration(x);
+            s += x.getCalorieConsumption();
+        }
 
         //if sum equals target, put it in list
-        if (s <= maxTarget && s >= minTarget) {
+        if (s <= maxTarget && s >= minTarget && allDuration<=duration) {
             finalList.put(listPosition, partial);
             listPosition++;
         }
@@ -385,8 +396,17 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             //put elements of n in partial list one by one
             List<Workout> partial_rec = new ArrayList<Workout>(partial);
             partial_rec.add(n);
-            sum_up_recursive(remaining, minTarget, maxTarget, partial_rec, days);
+            sum_up_recursive(remaining, minTarget, maxTarget, partial_rec, days,duration);
         }
+    }
+
+    private static int getDuration(Workout workout) {
+        int allDuration = 0;
+        List<WorkoutExercise> workoutExercises = workout.getExercises();
+        for (WorkoutExercise w : workoutExercises){
+            allDuration = allDuration + w.getExDuration();
+        }
+        return allDuration;
     }
 
     // ----------------------------------------- start of methods for adapting training schedule automatically -----------------------------------------
