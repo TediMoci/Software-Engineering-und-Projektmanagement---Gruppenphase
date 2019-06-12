@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CourseDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UploadFileResponseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
@@ -378,6 +377,24 @@ public class DudeEndpoint {
             exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
         }
         return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/workouts", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked workouts of dude", authorizations = {@Authorization(value = "apiKey")})
+    public WorkoutDto[] getBookmarkedWorkouts(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedWorkouts with id: " + id);
+        List<Workout> workouts;
+        try {
+            workouts = iDudeService.findDudeById(id).getWorkoutBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedWorkouts with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        WorkoutDto[] workoutDtos = new WorkoutDto[workouts.size()];
+        for (int i = 0; i < workouts.size(); i++) {
+            workoutDtos[i] = workoutMapper.workoutToWorkoutDto(workouts.get(i));
+        }
+        return workoutDtos;
     }
 
 }
