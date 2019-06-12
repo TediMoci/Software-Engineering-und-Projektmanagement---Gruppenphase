@@ -59,9 +59,8 @@
                 <span  style="color:orange;  position: center; margin-left: auto; margin-right: auto; " *ngIf="message && crop">{{message}}</span>
                 <image-cropper
                   [imageChangedEvent]="imageChangedEvent"
-                  [maintainAspectRatio]="false"
+                  [maintainAspectRatio]="true"
                   [resizeToWidth]="0"
-                  format="jpeg"
                   (imageCropped)="imageCropped($event)"
                   (imageLoaded)="imageLoaded()"
                   (loadImageFailed)="loadImageFailed()"
