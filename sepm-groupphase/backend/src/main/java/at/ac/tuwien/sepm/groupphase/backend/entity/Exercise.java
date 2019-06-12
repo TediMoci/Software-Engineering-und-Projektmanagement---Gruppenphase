@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -49,6 +50,9 @@ public class Exercise {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dude_id")
     private Dude creator;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exerciseBookmarks")
+    private List<Dude> bookmarkDudes;
 
     public Long getId() {
         return id;
@@ -146,6 +150,14 @@ public class Exercise {
         isHistory = history;
     }
 
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
+    }
+
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
+    }
+
     public static ExerciseBuilder builder() {
         return new ExerciseBuilder();
     }
@@ -213,6 +225,7 @@ public class Exercise {
         private String imagePath;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
+        private List<Dude> bookmarkDudes;
 
         public ExerciseBuilder() {
         }
@@ -278,6 +291,11 @@ public class Exercise {
             return this;
         }
 
+        public ExerciseBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
+            return this;
+        }
+
         public Exercise build() {
             Exercise exercise = new Exercise();
             exercise.setId(id);
@@ -292,6 +310,7 @@ public class Exercise {
             exercise.setImagePath(imagePath);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
+            exercise.setBookmarkDudes(bookmarkDudes);
             return exercise;
         }
     }
