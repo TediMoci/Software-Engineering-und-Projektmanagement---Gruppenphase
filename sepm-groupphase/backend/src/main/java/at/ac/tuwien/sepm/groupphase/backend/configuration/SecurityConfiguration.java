@@ -111,6 +111,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}/bookmarks/courses",
                     "/dudes/{id}/bookmarks/exercises",
                     "/dudes/{id}/bookmarks/workouts",
+                    "/dudes/{id}/bookmarks/trainingSchedules",
                     "/dudes/filtered",
                     "/{id}/{version}/exercises",
                     "/user",
@@ -150,6 +151,7 @@ public class SecurityConfiguration {
                     "/course/bookmark/{dudeId}/{courseId}",
                     "/exercise/bookmark/{dudeId}/{exerciseId}/{exerciseVersion}",
                     "/workout/bookmark/{dudeId}/{workoutId}/{workoutVersion}",
+                    "/trainingSchedule/bookmark/{dudeId}/{trainingScheduleId}/{trainingScheduleVersion}",
                     "/trainingSchedule/{id}",
                     "/trainingSchedule/active/{dudeId}",
                     "/workout/{id}").permitAll()
@@ -163,6 +165,7 @@ public class SecurityConfiguration {
                     "/course/bookmark/{dudeId}/{courseId}",
                     "/exercise/bookmark/{dudeId}/{exerciseId}/{exerciseVersion}",
                     "/workout/bookmark/{dudeId}/{workoutId}/{workoutVersion}",
+                    "/trainingSchedule/bookmark/{dudeId}/{trainingScheduleId}/{trainingScheduleVersion}",
                     "/workout/{id}",
                     "/fitnessProvider/{name}").permitAll()
             ;
