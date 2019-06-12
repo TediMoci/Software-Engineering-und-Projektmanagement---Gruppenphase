@@ -262,10 +262,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++) {
             int maxDayNotChosen = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
-            iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
             if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule())) && (activeTrainingSchedule.getDone().get(i).getDay() > maxDayNotChosen)) {
                 copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
             }
+            iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
         }
 
         // delete copies of trainingSchedule created by adaptive change methods
@@ -290,12 +290,15 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 iWorkoutRepository.deleteById(w.getId());
             }
         }
-        // delete copies of WorkoutExercises created by adaptive change methods
+        /*
+          // delete copies of WorkoutExercises created by adaptive change methods
         if (toDeleteWorkoutExercise != null){
             for (WorkoutExercise w: toDeleteWorkoutExercise){
                 iWorkoutExerciseRepository.delete(w);
             }
         }
+         */
+
 
         try {
             iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
@@ -747,7 +750,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         e.setExDuration(calculateDurationPerRepetition * e.getRepetitions());
                     }
                 } else {
-                    if (repsHelpDecrease == 1) {
+                    if (repsHelpDecrease <= 1) {
                         if (e.getSets() > 1) {
                             e.setSets(e.getSets() - 1);
                             e.setRepetitions(10);

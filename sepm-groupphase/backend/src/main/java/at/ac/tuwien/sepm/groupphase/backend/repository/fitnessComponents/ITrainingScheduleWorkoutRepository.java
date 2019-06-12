@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.TrainingSchedul
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public interface ITrainingScheduleWorkoutRepository extends JpaRepository<Traini
      * @param workout to delete
      * @throws DataAccessException if an error occurred while trying to delete the given TrainingScheduleWorkout
      */
+    @Modifying
     @Transactional
     void delete(TrainingScheduleWorkout workout) throws DataAccessException;
 }

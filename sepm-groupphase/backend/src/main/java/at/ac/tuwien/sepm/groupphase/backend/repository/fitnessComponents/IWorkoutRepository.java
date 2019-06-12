@@ -109,6 +109,7 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
      * @param id of Workout to delete
      * @throws DataAccessException if an error occured while trying to delete the Workout with given id
      */
+    @Modifying
     @Transactional
     void deleteById(Long id) throws DataAccessException;
 
