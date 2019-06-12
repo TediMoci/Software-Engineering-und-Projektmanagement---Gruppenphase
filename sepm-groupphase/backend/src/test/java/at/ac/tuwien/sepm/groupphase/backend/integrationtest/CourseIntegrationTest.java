@@ -2,12 +2,16 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CourseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ICourseRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -39,6 +43,9 @@ public class CourseIntegrationTest {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    ICourseRepository courseRepository;
+
     @BeforeClass
     public static void beforeClass() {
         fitnessProviderDto.setName("FitnessProvider1");
@@ -69,7 +76,26 @@ public class CourseIntegrationTest {
 
             initialized = true;
         }
+    }
 
+    @After
+    public void deleteEntitiesAfterTest(){
+        courseRepository.deleteAll();
+    }
+
+    private Long postCourse(CourseDto course) {
+        HttpEntity<CourseDto> courseRequest = new HttpEntity<>(course);
+        ResponseEntity<CourseDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest, CourseDto.class);
+        return response.getBody().getId();
+    }
+
+    private CourseDto courseDtoBuilder(CourseDto d){
+        CourseDto courseDto = new CourseDto();
+        courseDto.setName(d.getName());
+        courseDto.setDescription(d.getDescription());
+        courseDto.setCreatorId(d.getCreatorId());
+        return courseDto;
     }
 
     @Test
@@ -88,6 +114,63 @@ public class CourseIntegrationTest {
     public void whenSaveOneCourseWithBlankName_then400BadRequest() {
         HttpEntity<CourseDto> courseRequest = new HttpEntity<>(invalidCourseDto1);
         REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest, CourseDto.class);
+    }
+
+    @Test
+    public void givenCourse_whenFindCourseById_thenGetCourse(){
+        Long i = postCourse(validCourseDto1);
+        CourseDto foundCourse = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/" + i, CourseDto.class);
+        assertEquals(foundCourse.getName(), validCourseDto1.getName());
+        assertEquals(foundCourse.getDescription(), validCourseDto1.getDescription());
+        assertEquals(foundCourse.getCreatorId(), validCourseDto1.getCreatorId());
+    }
+
+    @Test(expected = HttpClientErrorException.class)
+    public void givenNothing_whenFindCourseById_thenHttpClientErrorException(){
+        REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/1", CourseDto.class);
+    }
+
+    @Test
+    public void givenTwoCourses_whenFindCourseByName_thenGetCourses(){
+        postCourse(validCourseDto1);
+        postCourse(validCourseDto1);
+        CourseDto[] foundCourses = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "?name=" + validCourseDto1.getName(), CourseDto[].class);
+        assertEquals(foundCourses.length,2);
+    }
+
+    @Test
+    public void givenNothing_whenFindCourseByName_thenGetEmptyArray(){
+        CourseDto[] foundCourses = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "?name=" + validCourseDto1.getName(), CourseDto[].class);
+        assertEquals(foundCourses.length,0);
+    }
+
+    @Test
+    public void givenTwoCourses_whenFindAll_thenStatus200AndGetCourses(){
+        postCourse(validCourseDto1);
+        postCourse(validCourseDto1);
+        ResponseEntity<CourseDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<CourseDto[]>() {
+            });
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody().length, 2);
+    }
+
+    @Test
+    public void givenTwoCourses_whenDeleteOneCourse_thenGetArrayWithOneCourse(){
+        Long a = postCourse(validCourseDto1);
+        Long b = postCourse(validCourseDto1);
+        CourseDto[] foundCoursesInitial = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/all", CourseDto[].class);
+        assertEquals(foundCoursesInitial.length, 2);
+
+        REST_TEMPLATE.delete(BASE_URL + port + COURSE_ENDPOINT + "/" + a);
+
+        CourseDto[] foundCoursesAfter = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/all", CourseDto[].class);
+        assertEquals(foundCoursesAfter.length, 1);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void givenNothing_whenDeleteOneCourse_then400BadRequest(){
+        REST_TEMPLATE.delete(BASE_URL + port + COURSE_ENDPOINT + "/11");
     }
 
     @Test

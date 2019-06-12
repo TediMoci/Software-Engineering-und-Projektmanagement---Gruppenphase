@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,6 +31,7 @@ public class DudeIntegrationTest  {
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
     private static final String BASE_URL = "http://localhost:";
     private static final String DUDE_ENDPOINT = "/dudes";
+    private static final String FITNESS_PROVIDER_ENDPOINT = "/fitnessProvider";
     private static final DudeDto testDude1 = new DudeDto();
     private static final DudeDto testDude2 = new DudeDto();
 
@@ -37,6 +40,9 @@ public class DudeIntegrationTest  {
 
     @Autowired
     IDudeRepository dudeRepository;
+
+    @Autowired
+    IFitnessProviderRepository fitnessProviderRepository;
 
     @BeforeClass
     public static void setUp(){
@@ -90,6 +96,7 @@ public class DudeIntegrationTest  {
     @After
     public void deleteEntitiesAfterTest(){
         dudeRepository.deleteAll();
+        fitnessProviderRepository.deleteAll();
     }
 
     @Test
@@ -143,7 +150,6 @@ public class DudeIntegrationTest  {
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         assertEquals(response.getBody().size(),2);
     }
-
 
     @Test
     public void givenDude_whenFindDudeById_thenGetDude(){
@@ -200,6 +206,37 @@ public class DudeIntegrationTest  {
         assertEquals(dude.getDescription(), dudeResponse.getDescription());
         assertEquals(dude.getBirthday(), dudeResponse.getBirthday());
         assertEquals(dude.getSex(), dudeResponse.getSex());
+    }
+
+    @Test
+    public void givenDudeAndFitnessProvider_whenDudeFollowsFitnessProvider_thenFitnessProviderInFollowList() {
+        DudeDto dudeDto = dudeDtoBuilder(testDude1);
+        Long dudeId = postDude(dudeDto);
+
+        FitnessProviderDto fitnessProviderDto = new FitnessProviderDto();
+        fitnessProviderDto.setId(1L);
+        fitnessProviderDto.setName("FitProv1");
+        fitnessProviderDto.setPassword("qqqqqqqq");
+        fitnessProviderDto.setAddress("home");
+        fitnessProviderDto.setEmail("test@email.com");
+        HttpEntity<FitnessProviderDto> fitnessProviderRequest = new HttpEntity<>(fitnessProviderDto);
+        ResponseEntity<FitnessProviderDto> responseFitnessProvider = REST_TEMPLATE
+            .exchange(BASE_URL + port + FITNESS_PROVIDER_ENDPOINT, HttpMethod.POST, fitnessProviderRequest, FitnessProviderDto.class);
+        Long fitnessProviderId = responseFitnessProvider.getBody().getId();
+
+        REST_TEMPLATE.exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + dudeId + "/follow/" + fitnessProviderId, HttpMethod.PUT, null, Void.class);
+
+        ResponseEntity<FitnessProviderDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + dudeId + "/follow", HttpMethod.GET, null, FitnessProviderDto[].class);
+        assertEquals(1, response.getBody().length);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void givenDude_whenDudeFollowsNonExistingFitnessProvider_then400BadRequest() {
+        DudeDto dudeDto = dudeDtoBuilder(testDude1);
+        Long dudeId = postDude(dudeDto);
+
+        REST_TEMPLATE.exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + dudeId + "/follow/" + 1, HttpMethod.PUT, null, Void.class);
     }
 
 }
