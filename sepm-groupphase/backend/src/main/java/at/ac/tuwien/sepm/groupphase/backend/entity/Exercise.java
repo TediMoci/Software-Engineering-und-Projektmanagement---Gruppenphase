@@ -176,9 +176,6 @@ public class Exercise {
         if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
         if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
         return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
-
-        return isHistory != null ? isHistory.equals(exercise.isHistory) : exercise.isHistory == null;
-
     }
 
     @Override
