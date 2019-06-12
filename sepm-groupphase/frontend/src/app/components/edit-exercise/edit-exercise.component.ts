@@ -12,8 +12,8 @@ import {Exercise} from '../../dtos/exercise';
 })
 export class EditExerciseComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
-  imagePath2: string = '/assets/img/exercise.png';
+  imagePath: string;
+  imagePath2: string;
   userName: string;
   editExForm: FormGroup;
   error: any;
@@ -40,7 +40,8 @@ export class EditExerciseComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.oldExercise = JSON.parse(localStorage.getItem('selectedExercise'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
+    this.imagePath2 = this.oldExercise.imagePath;
     this.editExForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       equipment: ['', [Validators.required]],
@@ -75,7 +76,8 @@ export class EditExerciseComponent implements OnInit {
       this.editExForm.controls.equipment.value,
       this.editExForm.controls.muscleGroup.value,
       this.editExForm.controls.category.value,
-      this.oldExercise.creatorId
+      this.oldExercise.creatorId,
+      this.oldExercise.imagePath
     );
 
     if (this.editExForm.invalid) {
@@ -85,7 +87,14 @@ export class EditExerciseComponent implements OnInit {
 
     this.editExerciseService.editExercise(exercise, this.oldExercise).subscribe(
       (data) => {
-        localStorage.setItem('selectedExercise', JSON.stringify(data));
+        if (this.editExerciseService.getFileStorage() !== undefined) {
+          this.editExerciseService.uploadPictureForExercise(data.id, data.version, this.editExerciseService.getFileStorage()).subscribe(() => {
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        }
         this.router.navigate(['/myExercises']);
       },
       error => {
@@ -93,6 +102,7 @@ export class EditExerciseComponent implements OnInit {
       }
     );
   }
+
 
   vanishError() {
     this.error = false;
@@ -113,7 +123,9 @@ export class EditExerciseComponent implements OnInit {
       return;
     }
     console.log(files.file);
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
     this.imagePath2 = files.base64;
+    this.editExerciseService.setFileStorage(imageFile);
   }
   fileChangeEvent(event: any): void {
     this.crop = false;

@@ -11,7 +11,7 @@ import {Exercise} from '../../dtos/exercise';
 })
 export class OwnExercisesComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   exercises: any;
@@ -25,7 +25,7 @@ export class OwnExercisesComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
     this.ownExercisesService.getAllExercisesOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all exercises created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);

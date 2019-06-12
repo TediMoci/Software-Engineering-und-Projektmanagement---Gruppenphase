@@ -11,7 +11,7 @@ import {OwnTrainingSchedulesService} from '../../services/own-training-schedules
 })
 export class OwnTrainingScheduleComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   trainingSchedules: any;
@@ -25,7 +25,7 @@ export class OwnTrainingScheduleComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
     this.ownTrainingSchedulesService.getAllTrainingSchedulesOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all trainingSchedules created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);

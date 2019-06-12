@@ -7,7 +7,8 @@ export class FitnessProvider {
     public description: string,
     public email:  string,
     public phoneNumber: string,
-    public website: string
+    public website: string,
+    public imagePath: string
   ) {}
 }
 

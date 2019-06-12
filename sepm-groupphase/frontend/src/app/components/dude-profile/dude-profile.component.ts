@@ -1,9 +1,9 @@
-import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {LoginComponent} from '../login/login.component';
-import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../../global/globals';
 import {Dude} from '../../dtos/dude';
 import {ProfileService} from '../../services/profile.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-dude-profile',
@@ -14,7 +14,7 @@ import {ProfileService} from '../../services/profile.service';
 export class DudeProfileComponent implements OnInit {
 
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   sex: any;
   skill: string;
@@ -31,15 +31,20 @@ export class DudeProfileComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;
-  constructor(private globals: Globals, private profileService: ProfileService, private httpClient: HttpClient) {
+  constructor(private globals: Globals, private profileService: ProfileService, private authService: AuthService) {
   }
-
   ngOnInit() {
-
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
-
+    this.authService.getUserByNameFromDude(this.dude.name).subscribe((data) => {
+      localStorage.setItem('loggedInDude', JSON.stringify(data));
+      },
+      error => {
+        this.error = error;
+      }
+    );
+    this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
     if (this.dude.selfAssessment === 1) {
       this.skill = 'Beginner';
     } else if (this.dude.selfAssessment === 2) {
@@ -90,9 +95,14 @@ export class DudeProfileComponent implements OnInit {
     if (files.length === 0) {
       return;
     }
-    console.log(files.file);
-    this.imagePath = files.base64;
-    console.log(this.imagePath);
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
+    this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe(data => {
+      console.log('upload picture' + data);
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
   fileChangeEvent(event: any): void {
     this.crop = false;

@@ -9,7 +9,7 @@ import {TrainingSchedule} from '../../dtos/trainingSchedule';
 })
 export class TrainingScheduleComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   tsName: string;
@@ -22,6 +22,7 @@ export class TrainingScheduleComponent implements OnInit {
     this.trainingSchedule = JSON.parse(localStorage.getItem('selectedTrainingSchedule'));
     this.tsName = this.trainingSchedule.name;
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
   }
 
 }

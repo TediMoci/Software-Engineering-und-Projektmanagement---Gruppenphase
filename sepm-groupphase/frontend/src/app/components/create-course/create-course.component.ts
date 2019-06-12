@@ -13,7 +13,7 @@ import {CreateCourse} from '../../dtos/create-course';
 export class CreateCourseComponent implements OnInit {
 
   error: any;
-  imagePath: string = 'assets/img/kugelfisch2.jpg';
+  imagePath: string;
   imagePathCourse: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
@@ -30,6 +30,7 @@ export class CreateCourseComponent implements OnInit {
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
 
     this.userName = this.fitnessProvider.name;
+    this.imagePath = this.fitnessProvider.imagePath;
     this.registerForm = this.formBuilder.group({
       nameForCourse: ['', [Validators.required]],
       descriptionForCourse: ['', [Validators.required]]
@@ -53,8 +54,18 @@ export class CreateCourseComponent implements OnInit {
     }
 
     this.createCourseService.addCourse(course).subscribe(
-      () => {
+      (data) => {
         console.log(course);
+        if (this.createCourseService.getFileStorage() !== undefined) {
+          console.log(this.createCourseService.getFileStorage());
+          this.createCourseService.uploadPictureForCourse(data.id, this.createCourseService.getFileStorage()).subscribe(
+            () => {
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        }
         this.router.navigate(['create-for-FP']);
       },
       error => {
@@ -79,7 +90,9 @@ export class CreateCourseComponent implements OnInit {
     }
     console.log(files.file);
     this.imagePathCourse = files.base64;
-    console.log(this.imagePathCourse);
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
+    console.log(imageFile);
+    this.createCourseService.setFileStorage(imageFile);
   }
   fileChangeEvent(event: any): void {
     this.crop = false;

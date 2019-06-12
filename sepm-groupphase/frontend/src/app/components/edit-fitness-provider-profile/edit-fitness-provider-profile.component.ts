@@ -63,7 +63,8 @@ export class EditFitnessProviderProfileComponent implements OnInit {
       this.editFPForm.controls.description.value,
       this.editFPForm.controls.email.value,
       this.editFPForm.controls.phoneNumber.value,
-      this.editFPForm.controls.website.value
+      this.editFPForm.controls.website.value,
+      this.oldFitnessProvider.imagePath
     );
 
     if (this.editFPForm.invalid) {

@@ -11,7 +11,7 @@ import {FitnessProvidersFollowedService} from '../../services/fitness-providers-
 })
 export class FitnessProvidersFollowedComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   fitnessProviders: any;
@@ -24,6 +24,7 @@ export class FitnessProvidersFollowedComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.fitnessProvidersFollowedService.getAllFollowedFitnessProvidersOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all fitness providers followed by dude with name ' + this.dude.name + ' and id ' + this.dude.id);

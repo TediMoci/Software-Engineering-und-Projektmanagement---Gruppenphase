@@ -24,5 +24,11 @@ export class ProfileService {
     return this.httpClient.get<number>(this.dudeBaseUri + '/bmi', {params: params});
   }
 
+  uploadPictureDudes(id: number, base64: File):  Observable<string> {
+    const formData = new FormData();
+    formData.append('file', base64);
+    console.log(formData.get('file'));
+    return this.httpClient.post<string>(this.dudeBaseUri + '/' + id + '/uploadImage', formData);
+  }
 }
 

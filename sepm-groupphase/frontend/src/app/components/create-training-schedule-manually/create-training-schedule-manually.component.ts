@@ -19,7 +19,7 @@ import {TrainingSchedule} from '../../dtos/trainingSchedule';
 })
 export class CreateTrainingScheduleManuallyComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   error: any;
@@ -71,6 +71,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.generalTSData = true;
 
     this.tsForm = this.formBuilder.group({

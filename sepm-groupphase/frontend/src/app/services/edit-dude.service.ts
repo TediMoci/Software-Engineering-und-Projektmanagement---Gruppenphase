@@ -17,4 +17,6 @@ export class EditDudeService {
     console.log('edit dude with new name ' + editDude.name + ' and old name ' + oldDude.name);
     return this.httpClient.put<Dude>(this.dudeBaseUri + '/' + oldDude.name, editDude);
   }
+
+
 }

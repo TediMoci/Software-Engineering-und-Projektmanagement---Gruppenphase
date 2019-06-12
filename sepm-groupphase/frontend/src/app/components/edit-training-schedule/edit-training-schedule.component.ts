@@ -8,7 +8,7 @@ import {Dude} from '../../dtos/dude';
 })
 export class EditTrainingScheduleComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   constructor() { }
@@ -17,5 +17,6 @@ export class EditTrainingScheduleComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
   }
 }
