@@ -109,6 +109,7 @@ public class SecurityConfiguration {
                     "/dudes/{id}/uploadImage",
                     "/dudes/{dudeId}/follow",
                     "/dudes/{id}/bookmarks/courses",
+                    "/dudes/{id}/bookmarks/exercises",
                     "/dudes/filtered",
                     "/{id}/{version}/exercises",
                     "/user",
@@ -146,6 +147,7 @@ public class SecurityConfiguration {
                     "/exercise/{id}",
                     "/course/{id}",
                     "/course/bookmark/{dudeId}/{courseId}",
+                    "/exercise/bookmark/{dudeId}/{exerciseId}/{exerciseVersion}",
                     "/trainingSchedule/{id}",
                     "/trainingSchedule/active/{dudeId}",
                     "/workout/{id}").permitAll()
@@ -157,6 +159,7 @@ public class SecurityConfiguration {
                     "/trainingSchedule/active/done",
                     "/course/{id}",
                     "/course/bookmark/{dudeId}/{courseId}",
+                    "/exercise/bookmark/{dudeId}/{exerciseId}/{exerciseVersion}",
                     "/workout/{id}",
                     "/fitnessProvider/{name}").permitAll()
             ;

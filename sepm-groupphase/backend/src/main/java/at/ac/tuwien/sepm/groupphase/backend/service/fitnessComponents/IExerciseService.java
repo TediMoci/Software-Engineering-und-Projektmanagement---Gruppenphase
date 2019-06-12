@@ -73,4 +73,20 @@ public interface IExerciseService {
      * @throws ServiceException if something went wrong while updating the imagePath in the system
      */
     String updateImagePath(Long id, Integer version, String fileName) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param exerciseId of the Exercise that the Dude wants to bookmark
+     * @param exerciseVersion of the Exercise that the Dude wants to bookmark
+     * @throws ServiceException if an error occurred while trying to bookmark the Exercise
+     */
+    void saveExerciseBookmark(Long dudeId, Long exerciseId, Integer exerciseVersion) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param exerciseId of the Exercise that the Dude wants to delete the bookmark for
+     * @param exerciseVersion of the Exercise that the Dude wants to delete the bookmark for
+     * @throws ServiceException if an error occurred while trying to delete the bookmark for the Exercise
+     */
+    void deleteExerciseBookmark(Long dudeId, Long exerciseId, Integer exerciseVersion) throws ServiceException;
 }

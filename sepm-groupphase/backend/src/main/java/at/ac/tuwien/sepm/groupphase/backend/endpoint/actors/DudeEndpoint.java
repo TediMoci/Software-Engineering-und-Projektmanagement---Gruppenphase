@@ -362,5 +362,23 @@ public class DudeEndpoint {
         return courseDtos;
     }
 
+    @RequestMapping(value = "/{id}/bookmarks/exercises", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked exercises of dude", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto[] getBookmarkedExercises(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedExercises with id: " + id);
+        List<Exercise> exercises;
+        try {
+            exercises = iDudeService.findDudeById(id).getExerciseBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedExercises with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
+        }
+        return exerciseDtos;
+    }
+
 }
 
