@@ -185,6 +185,24 @@ public class TrainingScheduleEndpoint {
         return trainingScheduleWorkoutDtoOuts;
     }
 
+    @RequestMapping(value = "/{id}/{version}/workouts/copyTs", method = RequestMethod.GET)
+    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleWorkoutDtoOut[] getAllWorkoutsByCopyTrainingScheduleIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+        List<TrainingScheduleWorkout> trainingScheduleWorkouts;
+        try {
+            trainingScheduleWorkouts = iTrainingScheduleService.findByIdAndVersion(id, version).getWorkouts();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        TrainingScheduleWorkoutDtoOut[] trainingScheduleWorkoutDtoOuts = new TrainingScheduleWorkoutDtoOut[trainingScheduleWorkouts.size()];
+        for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
+            trainingScheduleWorkoutDtoOuts[i] = trainingScheduleMapper.trainingScheduleWorkoutToTrainingScheduleWorkoutDtoOut(trainingScheduleWorkouts.get(i));
+        }
+        return trainingScheduleWorkoutDtoOuts;
+    }
+
     @RequestMapping(value = "/filtered", method = RequestMethod.GET)
     @ApiOperation(value = "Get Training Schedule by filters", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {

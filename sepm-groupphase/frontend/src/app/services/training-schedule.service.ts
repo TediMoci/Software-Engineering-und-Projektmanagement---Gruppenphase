@@ -20,6 +20,12 @@ export class TrainingScheduleService {
     console.log('get all workouts belonging to the training schedule with id ' + trainingScheduleId);
     return this.httpClient.get<TrainingScheduleWo[]>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion + '/workouts');
   }
+
+  getWorkoutsOfCopyTrainingScheduleByIdAndVersion(trainingScheduleId: number, trainingScheduleVersion: number): Observable<TrainingScheduleWo[]> {
+    console.log('get all workouts belongig to a copied training schedule used for adaptive trainingSchedule change with id ' + trainingScheduleId);
+    return this.httpClient.get<TrainingScheduleWo[]>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion + '/workouts/copyTs');
+  }
+
   getTrainingScheduleByIdandVersion(trainingScheduleId: number, trainingScheduleVersion: number): Observable<TrainingSchedule> {
     console.log('get training schedule with id ' + trainingScheduleId);
     return this.httpClient.get<TrainingSchedule>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion);

@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,9 +21,16 @@ public interface IWorkoutExerciseRepository extends JpaRepository<WorkoutExercis
     WorkoutExercise save(WorkoutExercise workoutExercise) throws DataAccessException;
 
     /**
-     *
-     * @param workout
-     * @return
+     * @param workout which should be used in workoutExercise
+     * @return WorkoutExercises using the given workout
+     * @throws DataAccessException if an error occurred while trying to find the workoutExercises using the given workout in the database
      */
-    List<WorkoutExercise> findByWorkout(Workout workout);
+    List<WorkoutExercise> findByWorkout(Workout workout) throws DataAccessException;
+
+    /**
+     * @param workoutExercise to delete
+     * @throws DataAccessException if an error occurred while trying to delete the given workoutExercise
+     */
+    @Transactional
+    void delete(WorkoutExercise workoutExercise) throws DataAccessException;
 }

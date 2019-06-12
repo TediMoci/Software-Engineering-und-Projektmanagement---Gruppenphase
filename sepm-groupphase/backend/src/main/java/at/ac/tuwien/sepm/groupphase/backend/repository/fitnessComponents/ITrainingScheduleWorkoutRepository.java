@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingSchedul
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,10 +20,16 @@ public interface ITrainingScheduleWorkoutRepository extends JpaRepository<Traini
     TrainingScheduleWorkout save(TrainingScheduleWorkout trainingScheduleWorkout) throws DataAccessException;
 
     /**
-     *
-     * @param trainingSchedule
-     * @return
+     * @param trainingSchedule which uses sought for trainingScheduleWorkouts
+     * @return List of TrainingScheduleWorkouts used in the given TrainingSchedule
+     * @throws DataAccessException if an error occurred while trying to find all TrainingScheduleWorkouts in the given trainingScheduleWorkout
      */
-    List<TrainingScheduleWorkout> findByTrainingSchedule(TrainingSchedule trainingSchedule);
+    List<TrainingScheduleWorkout> findByTrainingSchedule(TrainingSchedule trainingSchedule) throws DataAccessException;
 
+    /**
+     * @param workout to delete
+     * @throws DataAccessException if an error occurred while trying to delete the given TrainingScheduleWorkout
+     */
+    @Transactional
+    void delete(TrainingScheduleWorkout workout) throws DataAccessException;
 }

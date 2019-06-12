@@ -256,16 +256,44 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         // delete exerciseDone from to delete activeTrainingSchedule
         List<TrainingSchedule> copiedTs = new ArrayList<>();
+        List<TrainingScheduleWorkout> toDeleteTrainingScheduleWorkouts = new ArrayList<>();
+        List<Workout> toDeleteWorkout = new ArrayList<>();
+        List<WorkoutExercise> toDeleteWorkoutExercise = new ArrayList<>();
+
         for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++) {
+            int maxDayNotChosen = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
             iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
-            if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule()))) {
+            if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule())) && (activeTrainingSchedule.getDone().get(i).getDay() > maxDayNotChosen)) {
                 copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
             }
         }
+
         // delete copies of trainingSchedule created by adaptive change methods
         if (activeTrainingSchedule.getAdaptive()) {
             for (TrainingSchedule copy : copiedTs) {
-                iTrainingScheduleRepository.delete(copy.getId());
+                toDeleteTrainingScheduleWorkouts.addAll(copy.getWorkouts());
+                LOGGER.debug("delete trainingSchedule with id " + copy.getId());
+                iTrainingScheduleRepository.deleteById(copy.getId());
+            }
+        }
+        // delete copies of TrainingScheduleWorkouts created by adaptive change methods
+        if (toDeleteTrainingScheduleWorkouts != null){
+            for (TrainingScheduleWorkout w: toDeleteTrainingScheduleWorkouts){
+                toDeleteWorkout.add(w.getWorkout());
+                iTrainingScheduleWorkoutRepository.delete(w);
+            }
+        }
+        // delete copies of Workouts created by adaptive change methods
+        if (toDeleteWorkout != null){
+            for (Workout w: toDeleteWorkout) {
+                toDeleteWorkoutExercise.addAll(w.getExercises());
+                iWorkoutRepository.deleteById(w.getId());
+            }
+        }
+        // delete copies of WorkoutExercises created by adaptive change methods
+        if (toDeleteWorkoutExercise != null){
+            for (WorkoutExercise w: toDeleteWorkoutExercise){
+                iWorkoutExerciseRepository.delete(w);
             }
         }
 
@@ -493,7 +521,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         if (selfAssessment == 1) {
             a = 1.5;
         } else {
-            a = 3;
+            a = 10;
         }
 
         double s; // maximum percentage for training schedule adaption
@@ -662,7 +690,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         builderWaH.day(day);
         builderWaH.workout(workout.getWorkout());
-        builderWaH.caloriesConsumption(totalRepetitions / workout.getWorkout().getCalorieConsumption());
+        builderWaH.caloriesConsumption(workout.getWorkout().getCalorieConsumption()/totalRepetitions);
         allWorkouts.add(builderWaH.build());
 
     }
@@ -672,14 +700,13 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         double totalCalories = 0;
         LOGGER.debug("NumOfWorkouts: " + waHelp.size());
         for (WorkoutHelp workoutHelp : waHelp) {
-            // TODO: Bugfix: calories not saved to workout in workoutHelp, calorieConsumption in workoutHelp is non
             LOGGER.debug("Workouthelp: " + workoutHelp.toString());
             LOGGER.debug("workout: " + workoutHelp.getWorkout().toString());
             for (WorkoutExercise ex : workoutHelp.getWorkout().getExercises()) {
                 totalCalories += workoutHelp.getCaloriesConsumption() * ex.getRepetitions() * ex.getSets();
             }
-            totalCalories = 0;
             workoutHelp.getWorkout().setCalorieConsumption(totalCalories);
+            totalCalories = 0;
             LOGGER.debug("Update workout after adaptive change");
             iWorkoutRepository.save(workoutHelp.getWorkout());
             LOGGER.debug("Successfully updated workout after adaptive change");
