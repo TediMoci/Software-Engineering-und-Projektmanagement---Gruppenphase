@@ -43,8 +43,6 @@ export class EditTrainingScheduleComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
-  }
-}
     this.prevRoute = JSON.parse(localStorage.getItem('previousRoute'));
     this.oldTrainingSchedule = JSON.parse(localStorage.getItem('selectedTrainingSchedule'));
 

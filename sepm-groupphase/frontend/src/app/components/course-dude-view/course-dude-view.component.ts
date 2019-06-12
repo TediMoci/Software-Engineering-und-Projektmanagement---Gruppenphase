@@ -28,9 +28,9 @@ export class CourseDudeViewComponent implements OnInit {
     this.imagePath = this.dude.imagePath;
     this.fitnessProvider = JSON.parse(localStorage.getItem('selectedFitnessProvider'));
     this.fitnessProviderName = this.fitnessProvider.name;
-    this.imagePath2 = this.fitnessProvider.imagePath;
     this.course = JSON.parse(localStorage.getItem('selectedCourse'));
     this.courseName = this.course.name;
+    this.imagePath2 = this.course.imagePath;
     this.description = this.course.description;
   }
 

@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {LoginComponent} from '../login/login.component';
 import {Globals} from '../../global/globals';
 import {Dude} from '../../dtos/dude';
@@ -37,7 +37,7 @@ export class DudeProfileComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;
-  constructor(private globals: Globals, private profileService: ProfileService, private authService: AuthService) {
+
   // Active Schedule variables
   activeTs: GetActiveTrainingSchedule;
   ActiveTsId: number;
@@ -59,11 +59,7 @@ export class DudeProfileComponent implements OnInit {
   // Display variables
   tabs: Array<string>;
 
-  constructor(private globals: Globals,
-              private workoutService: WorkoutService,
-              private trainingScheduleService: TrainingScheduleService,
-              private profileService: ProfileService) {
-  }
+  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private authService: AuthService) {}
   ngOnInit() {
     this.dateNow = new Date();
     console.log('Current Date: ' + this.dateNow);
