@@ -1,4 +1,4 @@
-export class Workout {
+export class TrainingScheduleWorkout {
   constructor(
     public id: number,
     public version: number,
@@ -6,6 +6,7 @@ export class Workout {
     public description: string,
     public difficulty: number,
     public calorieConsumption: number,
+    public day: number,
     public creatorId: number
   ) {}
 }

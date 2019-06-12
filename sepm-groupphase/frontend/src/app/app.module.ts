@@ -88,6 +88,7 @@ import { EditTrainingScheduleComponent } from './components/edit-training-schedu
 import { FitnessProviderComponent } from './components/fitness-provider/fitness-provider.component';
 import { CourseDudeViewComponent } from './components/course-dude-view/course-dude-view.component';
 import { FollowerDudeComponent } from './components/follower-dude/follower-dude.component';
+import { EditTrainingScheduleWorkoutsComponent } from './components/edit-training-schedule-workouts/edit-training-schedule-workouts.component';
 
 @NgModule({
   declarations: [
@@ -136,6 +137,7 @@ import { FollowerDudeComponent } from './components/follower-dude/follower-dude.
     FitnessProviderComponent,
     CourseDudeViewComponent,
     FollowerDudeComponent,
+    EditTrainingScheduleWorkoutsComponent,
   ],
   imports: [
     MatAutocompleteModule,

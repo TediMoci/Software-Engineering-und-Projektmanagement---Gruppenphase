@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {from, Observable} from 'rxjs';
 import {FindService} from '../../services/find.service';
 import {Dude} from '../../dtos/dude';
 import {Exercise} from '../../dtos/exercise';
 import {AuthService} from '../../services/auth.service';
 import {FitnessProvider} from '../../dtos/fitness-provider';
-import {ExerciseFilter} from "../../dtos/exercise-filter";
-import {CourseFilter} from "../../dtos/course-filter";
-import {WorkoutFilter} from "../../dtos/workout-filter";
-import {Course} from "../../dtos/course";
-import {Workout} from "../../dtos/workout";
-import {WorkoutService} from "../../services/workout.service";
-import {FitnessProviderFilter} from "../../dtos/fitness-provider-filter";
-import {DudeFilter} from "../../dtos/dude-filter";
+import {ExerciseFilter} from '../../dtos/exercise-filter';
+import {CourseFilter} from '../../dtos/course-filter';
+import {WorkoutFilter} from '../../dtos/workout-filter';
+import {Course} from '../../dtos/course';
+import {Workout} from '../../dtos/workout';
+import {WorkoutService} from '../../services/workout.service';
+import {FitnessProviderFilter} from '../../dtos/fitness-provider-filter';
+import {DudeFilter} from '../../dtos/dude-filter';
 
 @Component({
   selector: 'app-find',
@@ -20,26 +19,24 @@ import {DudeFilter} from "../../dtos/dude-filter";
   styleUrls: ['./find.component.scss']
 })
 
-// todo: add filter to different categories
-// todo: display entities form backend
 export class FindComponent implements OnInit {
 
   // Inputs from html
-  public category: string = "Exercise";
+  public category: string = 'Exercise';
   public inputText: any;
-  public filterExerciseCategory:string = "None";
-  public filterWorkoutDifficulty: string = "None";
-  public filterWorkoutCaloriesMin: string = "";
-  public filterWorkoutCaloriesMax: string = "";
-  public filterDudeSelfAssessment: string = "None";
+  public filterExerciseCategory: string = 'None';
+  public filterWorkoutDifficulty: string = 'None';
+  public filterWorkoutCaloriesMin: string = '';
+  public filterWorkoutCaloriesMax: string = '';
+  public filterDudeSelfAssessment: string = 'None';
 
   // Transfer Variables
   public inputTextActual: any;
-  public filterExerciseCategoryActual: string = "None";
-  public filterWorkoutDifficultyActual: string = "None";
-  public filterWorkoutCaloriesMinActual: string = "";
-  public filterWorkoutCaloriesMaxActual: string = "";
-  public filterDudeSelfAssessmentActual: string = "None";
+  public filterExerciseCategoryActual: string = 'None';
+  public filterWorkoutDifficultyActual: string = 'None';
+  public filterWorkoutCaloriesMinActual: string = '';
+  public filterWorkoutCaloriesMaxActual: string = '';
+  public filterDudeSelfAssessmentActual: string = 'None';
 
   entries: any;
   exercisesForWorkouts: any;
@@ -73,19 +70,19 @@ export class FindComponent implements OnInit {
     }
   }
 
-  startSearch(category: string){
-    console.log("searchvalue: " + this.inputText);
+  startSearch(category: string) {
+    console.log('searchvalue: ' + this.inputText);
 
-    if(this.inputText === undefined){
+    if (this.inputText === undefined) {
       this.inputTextActual = null;
-    }else {
+    } else {
       this.inputTextActual = this.inputText;
     }
 
     switch (category) {
-      case "Exercise":
+      case 'Exercise':
 
-        if(this.filterExerciseCategory=="None"){
+        if (this.filterExerciseCategory === 'None') {
           this.filterExerciseCategoryActual = null;
         } else {
           this.filterExerciseCategoryActual = this.filterExerciseCategory;
@@ -94,7 +91,7 @@ export class FindComponent implements OnInit {
         this.exerciseFilter = new ExerciseFilter(
           this.inputTextActual,
           this.filterExerciseCategoryActual);
-        console.log("name: "+this.exerciseFilter.filter);
+        console.log('name: ' + this.exerciseFilter.filter);
         this.findService.getAllExercisesFilterd(this.exerciseFilter).subscribe(
           (data) => {
             console.log('get all exercises');
@@ -113,12 +110,12 @@ export class FindComponent implements OnInit {
           }
         );
         break;
-      case "Course":
+      case 'Course':
 
         this.courceFilter = new CourseFilter(
           this.inputTextActual);
 
-        console.log("name: "+this.courceFilter.filter);
+        console.log('name: ' + this.courceFilter.filter);
         this.findService.getAllCoursesFilterd(this.courceFilter).subscribe(
           (data) => {
             console.log('get all courses');
@@ -137,24 +134,24 @@ export class FindComponent implements OnInit {
           }
         );
         break;
-      case "Workout":
-        console.log("min: "+this.filterWorkoutCaloriesMin);
-        console.log("max: "+this.filterWorkoutCaloriesMax);
+      case 'Workout':
+        console.log('min: ' + this.filterWorkoutCaloriesMin);
+        console.log('max: ' + this.filterWorkoutCaloriesMax);
 
         switch (this.filterWorkoutDifficulty) {
-          case "None": this.filterWorkoutDifficultyActual = null; break;
-          case  "Beginner": this.filterWorkoutDifficultyActual = "1"; break;
-          case  "Advanced": this.filterWorkoutDifficultyActual = "2"; break;
-          case  "Pro": this.filterWorkoutDifficultyActual = "3"; break;
+          case 'None': this.filterWorkoutDifficultyActual = null; break;
+          case  'Beginner': this.filterWorkoutDifficultyActual = '1'; break;
+          case  'Advanced': this.filterWorkoutDifficultyActual = '2'; break;
+          case  'Pro': this.filterWorkoutDifficultyActual = '3'; break;
         }
 
-        if(this.filterWorkoutCaloriesMin==""){
+        if (this.filterWorkoutCaloriesMin === '') {
           this.filterWorkoutCaloriesMinActual = null;
         } else {
           this.filterWorkoutCaloriesMinActual = this.filterWorkoutCaloriesMin;
         }
 
-        if(this.filterWorkoutCaloriesMax==""){
+        if (this.filterWorkoutCaloriesMax === '') {
           this.filterWorkoutCaloriesMaxActual = null;
         } else {
           this.filterWorkoutCaloriesMaxActual = this.filterWorkoutCaloriesMax;
@@ -166,7 +163,7 @@ export class FindComponent implements OnInit {
           this.filterWorkoutCaloriesMinActual,
           this.filterWorkoutCaloriesMaxActual);
 
-        console.log("name: "+this.workoutFilter.calorieLower);
+        console.log('name: ' + this.workoutFilter.calorieLower);
         this.findService.getAllWorkoutsFilterd(this.workoutFilter).subscribe(
           (data) => {
             console.log('get all courses');
@@ -185,19 +182,19 @@ export class FindComponent implements OnInit {
           }
         );
         break;
-      case "Dudes":
+      case 'Dudes':
 
         switch (this.filterDudeSelfAssessment) {
-          case "None": this.filterDudeSelfAssessmentActual = null; break;
-          case  "Beginner": this.filterDudeSelfAssessmentActual = "1"; break;
-          case  "Advanced": this.filterDudeSelfAssessmentActual = "2"; break;
-          case  "Pro": this.filterDudeSelfAssessmentActual = "3"; break;
+          case 'None': this.filterDudeSelfAssessmentActual = null; break;
+          case  'Beginner': this.filterDudeSelfAssessmentActual = '1'; break;
+          case  'Advanced': this.filterDudeSelfAssessmentActual = '2'; break;
+          case  'Pro': this.filterDudeSelfAssessmentActual = '3'; break;
         }
         this.dudeFilter = new DudeFilter(
           this.inputTextActual,
           this.filterDudeSelfAssessmentActual);
 
-        console.log("name: " + this.dudeFilter.filter);
+        console.log('name: ' + this.dudeFilter.filter);
         this.findService.getAllDudesFiltered(this.dudeFilter).subscribe(
           (data) => {
             console.log('get all dudes');
@@ -216,12 +213,12 @@ export class FindComponent implements OnInit {
           }
         );
         break;
-      case "Fitness Provider":
+      case 'Fitness Provider':
 
         this.fitnessProviderFilter = new FitnessProviderFilter(
           this.inputTextActual);
 
-        console.log("name: "+ this.fitnessProviderFilter.filter);
+        console.log('name: ' + this.fitnessProviderFilter.filter);
         this.findService.getAllFitnessProviderFiltered(this.fitnessProviderFilter).subscribe(
           (data) => {
             console.log('get all courses');
@@ -242,7 +239,7 @@ export class FindComponent implements OnInit {
         break;
     }
   }
-  getSelectedWorkoutExercises(workout: Workout){
+  getSelectedWorkoutExercises(workout: Workout) {
     this.workoutService.getExercisesOfWorkoutById(workout.id, workout.version).subscribe(
       (data) => {
         console.log('get all exercises of workout ' + workout.name);
@@ -259,11 +256,11 @@ export class FindComponent implements OnInit {
     );
   }
 
-  convertDifficulty(element:any){
+  convertDifficulty(element: any) {
     switch (element) {
-      case 1: return "Beginner";
-      case 2: return "Advanced";
-      case 3: return "Pro";
+      case 1: return 'Beginner';
+      case 2: return 'Advanced';
+      case 3: return 'Pro';
     }
   }
 

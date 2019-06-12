@@ -26,6 +26,9 @@ export class OwnTrainingScheduleComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
+    localStorage.setItem('chosenWorkoutsForEditTS', JSON.stringify('empty'));
+    localStorage.setItem('firstAccess', JSON.stringify('true'));
+
     this.ownTrainingSchedulesService.getAllTrainingSchedulesOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all trainingSchedules created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
@@ -38,6 +41,7 @@ export class OwnTrainingScheduleComponent implements OnInit {
           }
           return 0;
         });
+        console.log('loaded ' + JSON.stringify(this.trainingSchedules[1]))
       },
       error => {
         this.error = error;
@@ -47,7 +51,9 @@ export class OwnTrainingScheduleComponent implements OnInit {
   }
 
   setSelectedTrainingSchedule (element: TrainingSchedule) {
+    console.log('Selected ' + JSON.stringify( JSON.stringify(element)))
     localStorage.setItem('selectedTrainingSchedule', JSON.stringify(element));
+
   }
 
   goToEditTrainingSchedule(element: TrainingSchedule) {

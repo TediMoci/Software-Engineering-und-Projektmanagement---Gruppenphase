@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
+import {GetActiveTrainingSchedule} from '../dtos/get-active-training-schedule';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,11 @@ export class ProfileService {
     console.log(formData.get('file'));
     return this.httpClient.post<string>(this.dudeBaseUri + '/' + id + '/uploadImage', formData);
   }
+  getActiveSchedule(id: number): Observable<GetActiveTrainingSchedule> {
+    console.log('checking for active training schedule for Dude with id ' + id);
+    return this.httpClient.get<GetActiveTrainingSchedule>(this.dudeBaseUri + '/' + id + '/activeTrainingSchedule');
+
+  }
+
 }
 

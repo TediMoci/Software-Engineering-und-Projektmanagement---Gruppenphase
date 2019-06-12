@@ -252,6 +252,7 @@ public class DudeEndpoint {
         return trainingScheduleDtos;
     }
 
+
     @RequestMapping(value = "/{id}/activeTrainingSchedule", method = RequestMethod.GET)
     @ApiOperation(value = "Get active training schedule of dude", authorizations = {@Authorization(value = "apiKey")})
     public ActiveTrainingScheduleDto getActiveTrainingScheduleByDudeId(@PathVariable Long id) {
