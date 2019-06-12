@@ -153,14 +153,15 @@
             <!--end case-->
             <!--start case-->
             <ul *ngSwitchCase="'Course'" style="list-style-type: none;" >
-              <li *ngFor='let element of entries'>
+              <li >
                 <mat-accordion>
-                  <mat-expansion-panel>
-                    <mat-expansion-panel-header>
+                  <mat-expansion-panel *ngFor='let element of entries' (opened)="setSelectedFPofCourse(element)">
+                    <mat-expansion-panel-header >
                       <mat-panel-title style="font-size: large">
                         {{element.name}}
                       </mat-panel-title>
                     </mat-expansion-panel-header>
+                    <p>Provided by: <a *ngIf="selectedFP" [routerLink]="['/fitnessProvider']" class="btn2 btn-link">{{selectedFP.name}}</a> </p>
                     <hr>
                     <p>"{{element.description}}"</p>
                   </mat-expansion-panel>
@@ -237,6 +238,7 @@
             <!--end case-->
             <!--start case-->
             <ul *ngSwitchCase="'Fitness Provider'" style="list-style-type: none;" >
+
               <li *ngFor='let element of entries'>
                 <mat-accordion>
                   <mat-expansion-panel>

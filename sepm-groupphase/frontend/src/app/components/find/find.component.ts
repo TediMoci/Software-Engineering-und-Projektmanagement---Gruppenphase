@@ -12,6 +12,7 @@ import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
 import {FitnessProviderFilter} from '../../dtos/fitness-provider-filter';
 import {DudeFilter} from '../../dtos/dude-filter';
+import {Local} from "protractor/built/driverProviders";
 
 @Component({
   selector: 'app-find',
@@ -38,7 +39,7 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMaxActual: string = '';
   public filterDudeSelfAssessmentActual: string = 'None';
 
-  entries: any;
+  entries: Array<any>;
   exercisesForWorkouts: any;
 
   imagePath: string;
@@ -54,6 +55,9 @@ export class FindComponent implements OnInit {
   workoutFilter: WorkoutFilter;
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
+
+  // Router Objects
+  selectedFP: FitnessProvider;
 
   followedFP: String;
 
@@ -276,6 +280,19 @@ export class FindComponent implements OnInit {
   setSelectedWorkout(element: Workout) {
     localStorage.setItem('selectedWorkout', JSON.stringify(element));
     console.log(localStorage.getItem('selectedWorkout'));
+  }
+  setSelectedFPofCourse(element: Course) {
+    this.findService.getOneFitnessProvider(element.creatorId).subscribe(
+      (data) => {
+        this.selectedFP = data;
+        console.log('Loaded FP: ' + this.selectedFP.name);
+        localStorage.setItem('selectedFitnessProvider', JSON.stringify(data));
+        console.log('FP in LS' + localStorage.getItem('selectedFitnessProvider'));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
   resetResults() {
     this.entries = null;
