@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 import java.util.List;
@@ -38,11 +39,12 @@ public interface IExerciseService {
 
     /**
      * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param muscleGroup to be filtered for
      * @param category to be filtered for
      * @return all Exercises in the system according to the given filters
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
-    List<Exercise> findByFilter(String filter, Category category) throws ServiceException;
+    List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category) throws ServiceException;
 
     /**
      * @param id of Exercise to be found

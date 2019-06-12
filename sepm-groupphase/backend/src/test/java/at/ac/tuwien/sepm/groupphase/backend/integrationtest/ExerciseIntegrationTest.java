@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -57,19 +58,19 @@ public class ExerciseIntegrationTest {
         validExerciseDto1.setName("Exercise1");
         validExerciseDto1.setDescription("Description1");
         validExerciseDto1.setEquipment("Equipment1");
-        validExerciseDto1.setMuscleGroup("MuscleGroup1");
+        validExerciseDto1.setMuscleGroup(MuscleGroup.Other);
         validExerciseDto1.setCategory(Category.Strength);
 
         validExerciseDto2.setName("Exercise2");
         validExerciseDto2.setDescription("Description2");
         validExerciseDto2.setEquipment("Equipment2");
-        validExerciseDto2.setMuscleGroup("MuscleGroup2");
+        validExerciseDto2.setMuscleGroup(MuscleGroup.Other);
         validExerciseDto2.setCategory(Category.Endurance);
 
         invalidExerciseDto1.setName("Exercise3");
         invalidExerciseDto1.setDescription("Description3");
         invalidExerciseDto1.setEquipment("Equipment3");
-        invalidExerciseDto1.setMuscleGroup("MuscleGroup3");
+        invalidExerciseDto1.setMuscleGroup(MuscleGroup.Other);
         invalidExerciseDto1.setCategory(null);
     }
 
