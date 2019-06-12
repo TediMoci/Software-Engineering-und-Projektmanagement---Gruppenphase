@@ -60,6 +60,11 @@ export class OwnTrainingScheduleComponent implements OnInit {
     this.router.navigate(['/edit-training-schedule']);
   }
 
+  goToEditTrainingSchedule2(element: TrainingSchedule) {
+    localStorage.setItem('selectedTrainingSchedule', JSON.stringify(element));
+    this.router.navigate(['/edit-trainingschedule']);
+  }
+
   setToDeleteTrainingSchedule(element: TrainingSchedule) {
     localStorage.setItem('selectedTrainingSchedule', JSON.stringify(element));
     this.trainingScheduleToDelete = element.name;
