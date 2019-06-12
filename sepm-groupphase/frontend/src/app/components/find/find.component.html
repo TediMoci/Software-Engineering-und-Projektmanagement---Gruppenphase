@@ -252,7 +252,9 @@
                     <p>Adress: {{element.address}}</p>
                     <p>Phone: {{element.phoneNumber}}</p>
                     <hr>
+                    <div *ngIf="isDude">
                     <button type="button" (click)="followSelectedFitnessProvider(element)" class="btn btn-secondary" data-toggle="modal" data-target="#followModal">Follow</button>
+                    </div>
                     <hr>
                   </mat-expansion-panel>
                 </mat-accordion>

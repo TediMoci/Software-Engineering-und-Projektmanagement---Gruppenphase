@@ -43,6 +43,7 @@ export class FindComponent implements OnInit {
 
   imagePath: string;
   userName: string;
+  isDude: boolean;
   error: any;
   dude: Dude;
 
@@ -63,10 +64,12 @@ export class FindComponent implements OnInit {
       this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
       this.userName = this.dude.name;
       this.imagePath = '/assets/img/kugelfisch.jpg';
+      this.isDude = true;
     } if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'FITNESS_PROVIDER') {
       this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
       this.userName = this.fitnessProvider.name;
       this.imagePath = '/assets/img/kugelfisch2.jpg';
+      this.isDude = false;
     }
   }
 
