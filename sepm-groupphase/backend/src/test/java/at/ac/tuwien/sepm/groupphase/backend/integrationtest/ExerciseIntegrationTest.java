@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -230,5 +231,22 @@ public class ExerciseIntegrationTest {
         ResponseEntity<ExerciseDto[]> response3 = REST_TEMPLATE
             .exchange(BASE_URL + port + EXERCISE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, ExerciseDto[].class);
         assertEquals(e2, response3.getBody() == null ? null : response3.getBody()[0]);
+    }
+
+    @Test
+    public void givenDudeAndExercise_whenDudeBookmarksExercise_thenExerciseInBookmarkedExercises() {
+        ExerciseDto exerciseDto = exerciseDtoBuilder(validExerciseDto1);
+        Long exerciseId = postExercise(exerciseDto);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + 1 + "/" + exerciseId + "/1", HttpMethod.PUT, null, Void.class);
+
+        ResponseEntity<ExerciseDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + 1 + "/bookmarks/exercises", HttpMethod.GET, null, ExerciseDto[].class);
+        assertEquals(1, response.getBody().length);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + 1 + "/" + exerciseId + "/1", HttpMethod.DELETE, null, Void.class);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void givenDude_whenDudeBookmarksNonExistingExercise_then400BadRequest() {
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + 1 + "/" + 1 + "/1", HttpMethod.PUT, null, Void.class);
     }
 }
