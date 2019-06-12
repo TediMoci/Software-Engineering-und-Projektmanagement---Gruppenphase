@@ -12,7 +12,6 @@ import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
 import {FitnessProviderFilter} from '../../dtos/fitness-provider-filter';
 import {DudeFilter} from '../../dtos/dude-filter';
-import {Local} from "protractor/built/driverProviders";
 
 @Component({
   selector: 'app-find',
