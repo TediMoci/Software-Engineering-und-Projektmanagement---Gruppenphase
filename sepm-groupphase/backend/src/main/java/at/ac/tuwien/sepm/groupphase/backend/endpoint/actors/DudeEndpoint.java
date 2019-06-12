@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CourseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UploadFileResponseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.ICourseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
@@ -47,9 +49,10 @@ public class DudeEndpoint {
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private final IExerciseMapper exerciseMapper;
     private final IWorkoutMapper workoutMapper;
+    private final ICourseMapper courseMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper, IFileStorageService iFileStorageService) {
+    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IFileStorageService iFileStorageService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper, ICourseMapper courseMapper) {
         this.iDudeService = iDudeService;
         this.iTrainingScheduleService = iTrainingScheduleService;
         this.iFileStorageService = iFileStorageService;
@@ -58,6 +61,7 @@ public class DudeEndpoint {
         this.trainingScheduleMapper = trainingScheduleMapper;
         this.exerciseMapper = exerciseMapper;
         this.workoutMapper = workoutMapper;
+        this.courseMapper = courseMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -339,5 +343,24 @@ public class DudeEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
+    @RequestMapping(value = "/{id}/bookmarks/courses", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked courses of dude", authorizations = {@Authorization(value = "apiKey")})
+    public CourseDto[] getBookmarkedCourses(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedCourses with id: " + id);
+        List<Course> courses;
+        try {
+            courses = iDudeService.findDudeById(id).getCourseBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedCourses with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        CourseDto[] courseDtos = new CourseDto[courses.size()];
+        for (int i = 0; i < courses.size(); i++) {
+            courseDtos[i] = courseMapper.courseToCourseDto(courses.get(i));
+        }
+        return courseDtos;
+    }
+
 }
 
