@@ -1,10 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface IWorkoutExerciseRepository extends JpaRepository<WorkoutExercise, WorkoutExerciseKey> {
@@ -16,4 +19,10 @@ public interface IWorkoutExerciseRepository extends JpaRepository<WorkoutExercis
      */
     WorkoutExercise save(WorkoutExercise workoutExercise) throws DataAccessException;
 
+    /**
+     *
+     * @param workout
+     * @return
+     */
+    List<WorkoutExercise> findByWorkout(Workout workout);
 }
