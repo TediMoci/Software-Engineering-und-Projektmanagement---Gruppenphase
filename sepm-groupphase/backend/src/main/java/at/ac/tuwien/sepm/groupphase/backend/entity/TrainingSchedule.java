@@ -48,6 +48,9 @@ public class TrainingSchedule {
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "trainingSchedule")
     private List<ActiveTrainingSchedule> activeUsages;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "trainingScheduleBookmarks")
+    private List<Dude> bookmarkDudes;
+
     public Long getId() {
         return id;
     }
@@ -136,6 +139,14 @@ public class TrainingSchedule {
         this.activeUsages = activeUsages;
     }
 
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
+    }
+
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
+    }
+
     public static TrainingScheduleBuilder builder() {
         return new TrainingScheduleBuilder();
     }
@@ -198,6 +209,7 @@ public class TrainingSchedule {
         private List<TrainingScheduleWorkout> workouts;
         private Dude creator;
         private List<ActiveTrainingSchedule> activeUsages;
+        private List<Dude> bookmarkDudes;
 
         public TrainingScheduleBuilder() {
         }
@@ -257,6 +269,11 @@ public class TrainingSchedule {
             return this;
         }
 
+        public TrainingScheduleBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
+            return this;
+        }
+
         public TrainingSchedule build() {
             TrainingSchedule trainingSchedule = new TrainingSchedule();
             trainingSchedule.setId(id);
@@ -269,6 +286,7 @@ public class TrainingSchedule {
             trainingSchedule.setWorkouts(workouts);
             trainingSchedule.setCreator(creator);
             trainingSchedule.setActiveUsages(activeUsages);
+            trainingSchedule.setBookmarkDudes(bookmarkDudes);
             return trainingSchedule;
         }
     }

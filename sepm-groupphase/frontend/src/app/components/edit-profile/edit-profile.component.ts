@@ -89,6 +89,7 @@ export class EditProfileComponent implements OnInit {
       this.editForm.controls.birthday.value,
       this.editForm.controls.height.value,
       this.editForm.controls.weight.value,
+      this.oldDude.imagePath
     );
 
     if (this.editForm.invalid) {

@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,12 +41,18 @@ public class Exercise {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
+    @Column(nullable = false)
+    private String imagePath = "/assets/img/exercise.png";
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dude_id")
     private Dude creator;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exerciseBookmarks")
+    private List<Dude> bookmarkDudes;
 
     public Long getId() {
         return id;
@@ -111,6 +118,14 @@ public class Exercise {
         this.category = category;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public Set<WorkoutExercise> getWorkouts() {
         return workouts;
     }
@@ -133,6 +148,14 @@ public class Exercise {
 
     public void setHistory(Boolean history) {
         isHistory = history;
+    }
+
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
+    }
+
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
     }
 
     public static ExerciseBuilder builder() {
@@ -199,8 +222,10 @@ public class Exercise {
         private Double rating;
         private Category category;
         private Boolean isHistory;
+        private String imagePath;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
+        private List<Dude> bookmarkDudes;
 
         public ExerciseBuilder() {
         }
@@ -251,6 +276,11 @@ public class Exercise {
             return this;
         }
 
+        public ExerciseBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public ExerciseBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -258,6 +288,11 @@ public class Exercise {
 
         public ExerciseBuilder creator(Dude creator) {
             this.creator = creator;
+            return this;
+        }
+
+        public ExerciseBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
             return this;
         }
 
@@ -272,8 +307,10 @@ public class Exercise {
             exercise.setRating(rating);
             exercise.setCategory(category);
             exercise.setHistory(isHistory);
+            exercise.setImagePath(imagePath);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
+            exercise.setBookmarkDudes(bookmarkDudes);
             return exercise;
         }
     }

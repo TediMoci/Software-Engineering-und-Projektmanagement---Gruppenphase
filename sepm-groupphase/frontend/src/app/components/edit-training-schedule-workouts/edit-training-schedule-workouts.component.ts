@@ -16,7 +16,7 @@ import {TrainingScheduleWorkoutsService} from '../../services/training-schedule-
   styleUrls: ['./edit-training-schedule-workouts.component.scss']
 })
 export class EditTrainingScheduleWorkoutsComponent implements OnInit {
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
 
@@ -73,6 +73,7 @@ export class EditTrainingScheduleWorkoutsComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.trainingWorkForm = this.formBuilder.group({
       day: ['', [Validators.required]]
     });

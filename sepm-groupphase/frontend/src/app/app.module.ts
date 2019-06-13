@@ -44,6 +44,7 @@ import { CreateWorkoutComponent } from './components/create-workout/create-worko
 import { WorkoutExercisesComponent } from './components/workout-exercises/workout-exercises.component';
 import { CourseComponent } from './components/course/course.component';
 import { EditCourseComponent } from './components/edit-course/edit-course.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 import { OwnCoursesComponent } from './components/own-courses/own-courses.component';
 import {
   MatAutocompleteModule,
@@ -178,7 +179,8 @@ import { EditTrainingScheduleWorkoutsComponent } from './components/edit-trainin
     FormsModule,
     BrowserAnimationsModule,
     NgKnifeModule,
-    DragDropModule
+    DragDropModule,
+    ImageCropperModule
   ],
   providers: [httpInterceptorProviders, Globals, WorkoutExercisesComponent, EditWorkoutExercisesComponent, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
     multi: true}],

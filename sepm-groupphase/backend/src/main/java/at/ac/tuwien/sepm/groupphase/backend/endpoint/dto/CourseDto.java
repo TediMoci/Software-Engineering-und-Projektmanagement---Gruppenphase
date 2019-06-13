@@ -1,12 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
 
 @ApiModel(value = "CourseDto", description = "A dto for course entries via rest")
 public class CourseDto {
@@ -23,11 +21,11 @@ public class CourseDto {
     @Size(max = 3000, message = "Max description length is 3000")
     private String description = "No description given.";
 
+    @ApiModelProperty(name = "Path of picture of Course")
+    private String imagePath = "/assets/img/exercise.png";
+
     @ApiModelProperty(name = "FitnessProvider offering the Course")
     private Long creatorId;
-
-    @ApiModelProperty(name = "Dudes having the Course bookmarked")
-    private DudeDto[] dudeDtos;
 
     public Long getId() {
         return id;
@@ -53,20 +51,20 @@ public class CourseDto {
         this.description = description;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public Long getCreatorId() {
         return creatorId;
     }
 
     public void setCreatorId(Long creatorId) {
         this.creatorId = creatorId;
-    }
-
-    public DudeDto[] getDudeDtos() {
-        return dudeDtos;
-    }
-
-    public void setDudeDtos(DudeDto[] dudeDtos) {
-        this.dudeDtos = dudeDtos;
     }
 
     public static CourseDtoBuilder builder() {
@@ -79,8 +77,8 @@ public class CourseDto {
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
+            ", imagePath='" + imagePath + '\'' +
             ", creatorId=" + creatorId +
-            ", dudeDtos=" + Arrays.toString(dudeDtos) +
             '}';
     }
 
@@ -95,9 +93,8 @@ public class CourseDto {
         if (name != null ? !name.equals(courseDto.name) : courseDto.name != null) return false;
         if (description != null ? !description.equals(courseDto.description) : courseDto.description != null)
             return false;
-        if (creatorId != null ? !creatorId.equals(courseDto.creatorId) : courseDto.creatorId != null) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(dudeDtos, courseDto.dudeDtos);
+        if (imagePath != null ? !imagePath.equals(courseDto.imagePath) : courseDto.imagePath != null) return false;
+        return creatorId != null ? creatorId.equals(courseDto.creatorId) : courseDto.creatorId == null;
 
     }
 
@@ -106,8 +103,8 @@ public class CourseDto {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (imagePath != null ? imagePath.hashCode() : 0);
         result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(dudeDtos);
         return result;
     }
 
@@ -115,8 +112,8 @@ public class CourseDto {
         private Long id;
         private String name;
         private String description;
+        private String imagePath;
         private Long creatorId;
-        private DudeDto[] dudeDtos;
 
         public CourseDtoBuilder() {
         }
@@ -136,13 +133,13 @@ public class CourseDto {
             return this;
         }
 
-        public CourseDtoBuilder creatorId(Long creatorId) {
-            this.creatorId = creatorId;
+        public CourseDtoBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
             return this;
         }
 
-        public CourseDtoBuilder dudeDtos(DudeDto[] dudeDtos) {
-            this.dudeDtos = dudeDtos;
+        public CourseDtoBuilder creatorId(Long creatorId) {
+            this.creatorId = creatorId;
             return this;
         }
 
@@ -151,8 +148,8 @@ public class CourseDto {
             courseDto.setId(id);
             courseDto.setName(name);
             courseDto.setDescription(description);
+            courseDto.setImagePath(imagePath);
             courseDto.setCreatorId(creatorId);
-            courseDto.setDudeDtos(dudeDtos);
             return courseDto;
         }
     }

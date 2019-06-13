@@ -66,12 +66,12 @@ export class FindComponent implements OnInit {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'DUDE') {
       this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
       this.userName = this.dude.name;
-      this.imagePath = '/assets/img/kugelfisch.jpg';
+      this.imagePath = this.dude.imagePath;
       this.isDude = true;
     } if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'FITNESS_PROVIDER') {
       this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
       this.userName = this.fitnessProvider.name;
-      this.imagePath = '/assets/img/kugelfisch2.jpg';
+      this.imagePath = this.fitnessProvider.imagePath;
       this.isDude = false;
     }
   }

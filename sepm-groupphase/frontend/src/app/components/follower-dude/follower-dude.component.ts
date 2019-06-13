@@ -10,8 +10,8 @@ import {ProfileService} from '../../services/profile.service';
 })
 export class FollowerDudeComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch2.jpg';
-  imagePath2: string = 'assets/img/kugelfisch.jpg';
+  imagePath: string;
+  imagePath2: string ;
   userName: string;
   fitnessProvider: FitnessProvider;
   dudeName: string;
@@ -29,8 +29,10 @@ export class FollowerDudeComponent implements OnInit {
   ngOnInit() {
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.fitnessProvider.name;
+    this.imagePath = this.fitnessProvider.imagePath;
     this.dude = JSON.parse(localStorage.getItem('selectedDude'));
     this.dudeName = this.dude.name;
+    this.imagePath2 = this.dude.imagePath;
     this.description = this.dude.description;
     this.email = this.dude.email;
     this.sex = this.dude.sex;

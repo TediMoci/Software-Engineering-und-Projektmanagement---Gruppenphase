@@ -48,6 +48,9 @@ public class Workout {
     @JoinColumn(name = "dude_id")
     private Dude creator;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "workoutBookmarks")
+    private List<Dude> bookmarkDudes;
+
     public Long getId() {
         return id;
     }
@@ -136,6 +139,14 @@ public class Workout {
         this.creator = creator;
     }
 
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
+    }
+
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
+    }
+
     public static WorkoutBuilder builder() {
         return new WorkoutBuilder();
     }
@@ -198,6 +209,7 @@ public class Workout {
         private List<WorkoutExercise> exercises;
         private List<TrainingScheduleWorkout> trainingSchedules;
         private Dude creator;
+        private List<Dude> bookmarkDudes;
 
         public WorkoutBuilder() {
         }
@@ -257,6 +269,11 @@ public class Workout {
             return this;
         }
 
+        public WorkoutBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
+            return this;
+        }
+
         public Workout build() {
             Workout workout = new Workout();
             workout.setId(id);
@@ -270,6 +287,7 @@ public class Workout {
             workout.setExercises(exercises);
             workout.setTrainingSchedules(trainingSchedules);
             workout.setCreator(creator);
+            workout.setBookmarkDudes(bookmarkDudes);
             return workout;
         }
     }

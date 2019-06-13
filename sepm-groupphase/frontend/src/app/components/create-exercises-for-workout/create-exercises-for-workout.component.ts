@@ -16,14 +16,18 @@ import {EditWorkoutExercisesComponent} from '../edit-workout-exercises/edit-work
 })
 export class CreateExercisesForWorkoutComponent implements OnInit {
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
+  imagePath: string;
   imagePathExercise: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
   currentChosenExercises: WorkoutEx[];
+  message: string;
 
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
@@ -31,6 +35,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     localStorage.setItem('previousRoute', JSON.stringify('/create-exercise-for-workout'));
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.registerForm = this.formBuilder.group({
       nameForExercise: ['', [Validators.required]],
       equipmentExercise: [''],
@@ -109,6 +114,37 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
 
   vanishError() {
     this.error = false;
+  }
+
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imagePathExercise = files.base64;
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
+    console.log(imageFile);
+    this.createExerciseService.setFileStorage(imageFile);
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
   }
 
 }

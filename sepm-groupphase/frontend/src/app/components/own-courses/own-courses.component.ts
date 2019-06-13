@@ -11,7 +11,7 @@ import {Course} from '../../dtos/course';
 })
 export class OwnCoursesComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch2.jpg';
+  imagePath: string ;
   userName: string;
   fitnessProvider: FitnessProvider;
   courses: any;
@@ -23,7 +23,7 @@ export class OwnCoursesComponent implements OnInit {
 
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.fitnessProvider.name;
-
+    this.imagePath = this.fitnessProvider.imagePath;
     this.ownCoursesService.getAllCoursesOfLoggedInFP(this.fitnessProvider).subscribe(
       (data) => {
         console.log('get all courses created by fitnessprovider with name ' + this.fitnessProvider.name + ' and id ' + this.fitnessProvider.id);

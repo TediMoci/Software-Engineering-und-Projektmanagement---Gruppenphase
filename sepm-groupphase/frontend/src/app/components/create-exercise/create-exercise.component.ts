@@ -11,18 +11,25 @@ import {CreateExerciseService} from '../../services/create-exercise.service';
 })
 export class CreateExerciseComponent implements OnInit {
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
-  imagePathExercise: string = 'assets/img/exercise.png';
+  imagePath: string;
+  imgURL: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
-
+  exerciseID: number;
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
   ngOnInit() {
+    console.log(this.createExerciseService.getFileStorage());
+    localStorage.removeItem('exerciseID');
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
+    this.imagePath = this.dude.imagePath;
     this.userName = this.dude.name;
     this.registerForm = this.formBuilder.group({
       nameForExercise: ['', [Validators.required]],
@@ -45,7 +52,7 @@ export class CreateExerciseComponent implements OnInit {
       this.registerForm.controls.categoryExercise.value,
       this.registerForm.controls.descriptionForExercise.value,
       this.registerForm.controls.muscleGroupExercise.value,
-      this.dude.id
+      this.dude.id,
     );
 
     if (this.registerForm.invalid) {
@@ -54,8 +61,17 @@ export class CreateExerciseComponent implements OnInit {
     }
 
     this.createExerciseService.addExercise(exercise).subscribe(
-      () => {
-        console.log(exercise);
+      (data) => {
+        if (this.createExerciseService.getFileStorage() !== undefined) {
+          console.log(this.createExerciseService.getFileStorage());
+          this.createExerciseService.uploadPictureForExercise(data.id, 1, this.createExerciseService.getFileStorage()).subscribe(
+            () => {
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        }
         this.router.navigate(['create']);
       },
       error => {
@@ -64,7 +80,39 @@ export class CreateExerciseComponent implements OnInit {
     );
   }
 
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imgURL = files.base64;
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
+    console.log(imageFile);
+    this.createExerciseService.setFileStorage(imageFile);
+
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
   vanishError() {
     this.error = false;
   }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
+  }
+
 }

@@ -11,6 +11,7 @@ export class WorkoutExercise {
     public repetitions: number,
     public sets: number,
     public exDuration: number,
-    public creatorId: number
+    public creatorId: number,
+    public imagePath: string
   ) {}
 }

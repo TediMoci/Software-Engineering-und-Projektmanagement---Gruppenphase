@@ -16,8 +16,8 @@ import {TrainingScheduleWo} from '../../dtos/training-schedule-wo';
   styleUrls: ['./edit-training-schedule.component.scss']
 })
 export class EditTrainingScheduleComponent implements OnInit {
+  imagePath: string;
   error: any;
-  imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   editTSForm: FormGroup;
   submitted: boolean = false;
@@ -42,6 +42,7 @@ export class EditTrainingScheduleComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.prevRoute = JSON.parse(localStorage.getItem('previousRoute'));
     this.oldTrainingSchedule = JSON.parse(localStorage.getItem('selectedTrainingSchedule'));
 

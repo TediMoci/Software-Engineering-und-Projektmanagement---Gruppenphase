@@ -11,7 +11,7 @@ import {WorkoutService} from '../../services/workout.service';
 })
 export class WorkoutComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   workoutName: string;
   difficulty: string;
@@ -31,6 +31,7 @@ export class WorkoutComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
 
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.workoutName = this.workout.name;
     if (this.workout.difficulty === 1) {
       this.difficulty = 'Beginner';
