@@ -38,6 +38,9 @@ public class Workout {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workout")
     private List<WorkoutExercise> exercises;
 
@@ -113,6 +116,14 @@ public class Workout {
 
     public void setHistory(Boolean history) {
         isHistory = history;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public List<WorkoutExercise> getExercises() {
@@ -206,6 +217,7 @@ public class Workout {
         private Double calorieConsumption;
         private Double rating;
         private Boolean isHistory;
+        private Boolean isPrivate;
         private List<WorkoutExercise> exercises;
         private List<TrainingScheduleWorkout> trainingSchedules;
         private Dude creator;
@@ -254,6 +266,11 @@ public class Workout {
             return this;
         }
 
+        public WorkoutBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public WorkoutBuilder exercises(List<WorkoutExercise> exercises) {
             this.exercises = exercises;
             return this;
@@ -284,6 +301,7 @@ public class Workout {
             workout.setCalorieConsumption(calorieConsumption);
             workout.setRating(rating);
             workout.setHistory(isHistory);
+            workout.setIsPrivate(isPrivate);
             workout.setExercises(exercises);
             workout.setTrainingSchedules(trainingSchedules);
             workout.setCreator(creator);

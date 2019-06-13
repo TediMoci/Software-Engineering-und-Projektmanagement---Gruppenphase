@@ -22,6 +22,7 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.category(exerciseDto.getCategory());
         builder.isHistory(false);
         builder.imagePath(exerciseDto.getImagePath());
+        builder.isPrivate(exerciseDto.getIsPrivate());
         builder.version(exerciseDto.getVersion());
 
         Dude.DudeBuilder dudeBuilder = new Dude.DudeBuilder();
@@ -44,6 +45,7 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.rating(exercise.getRating());
         builder.category(exercise.getCategory());
         builder.imagePath(exercise.getImagePath());
+        builder.isPrivate(exercise.getIsPrivate());
         builder.version(exercise.getVersion());
         builder.creatorId(exercise.getCreator().getId());
 
