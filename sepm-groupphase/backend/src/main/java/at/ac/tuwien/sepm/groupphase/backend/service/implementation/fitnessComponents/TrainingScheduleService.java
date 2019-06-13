@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
-import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
@@ -30,7 +29,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -58,14 +56,18 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     //list of all workouts
     private List<WorkoutHelp> allWorkouts = new ArrayList<>();
 
+    int t; // current intervalrepetition
+    double a; // percentage for the first repetition of the interval, initial change of x%, on average x% change per interval
+    double s; // maximum percentage for training schedule adaption
+    double totalChangePerDayInPercent; // total percent of change per day calculated by logistic growth function
+    double k; // growth constant calculated for logistic growth function
+    double bt; // percent per interval for intervalrepetition t
+    int intervalLength;
+    int intervalRepetitions;
+    int selfAssessment;
+
     // number of exercises per day of interval
-    private int numOfExDay1 = 0;
-    private int numOfExDay2 = 0;
-    private int numOfExDay3 = 0;
-    private int numOfExDay4 = 0;
-    private int numOfExDay5 = 0;
-    private int numOfExDay6 = 0;
-    private int numOfExDay7 = 0;
+    private int[] numOfExPerDay = new int[]{0, 0, 0, 0, 0, 0, 0};
 
     // list of workoutExercise per day with information done/not done
     private List<WorkoutExerciseDone> waExDay1 = new ArrayList<>();
@@ -419,70 +421,41 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException {
 
-        // TODO: prevent copying trainingSchedule after every reload of page
-
         // old trainingSchedule
         TrainingSchedule oldTs = activeSchedule.getTrainingSchedule();
+        LocalDate startDate = activeSchedule.getStartDate();
+        intervalLength = oldTs.getIntervalLength();
+        selfAssessment = dude.getSelfAssessment();
+        intervalRepetitions = activeSchedule.getIntervalRepetitions();
+
+        t = ((Period.between(startDate, LocalDate.now()).getDays()) / oldTs.getIntervalLength()) + 1;
+        LOGGER.debug("IntervalNumber: " + t);
+        if (t == 1) {
+            return activeSchedule;
+        }
+
         // copy of old trainingSchedule, which will be altered
         TrainingSchedule ts = copyOldTrainingSchedule(activeSchedule, activeSchedule.getDudeId(), oldTs);
         LOGGER.debug("Successfully copied old TrainingSchedule");
 
         List<TrainingScheduleWorkout> workouts = iTrainingScheduleWorkoutRepository.findByTrainingSchedule(ts);
+        Exercise exercise;
         for (TrainingScheduleWorkout w : workouts) {
             Workout wa = iWorkoutRepository.findByIdAndVersion(w.getWorkoutId(), w.getWorkoutVersion()).get();
-            List<WorkoutExercise> waEx = iWorkoutExerciseRepository.findByWorkout(wa);
+            List<WorkoutExercise> waEx = iWorkoutExerciseRepository.findByWorkoutIdAndWorkoutVersion(wa.getId(), wa.getVersion());
             for (WorkoutExercise wex : waEx) {
                 wex.setWorkout(wa);
-                wex.setExercise(iExerciseRepository.findByIdAndVersion(wex.getExerciseId(), wex.getExerciseVersion()).get());
+                exercise = iExerciseRepository.findByIdAndVersion(wex.getExerciseId(), wex.getExerciseVersion()).get();
+                wex.setExercise(exercise);
             }
             wa.setExercises(waEx);
             w.setWorkout(wa);
         }
         ts.setWorkouts(workouts);
 
-        LOGGER.debug("Ts-Copy-Workouts-Size: " + workouts.size());
-        LocalDate startDate = activeSchedule.getStartDate();
-        int intervalRepetitions = activeSchedule.getIntervalRepetitions();
-        int intervalLength = ts.getIntervalLength();
-        int selfAssessment = dude.getSelfAssessment();
-
-        int t = ((Period.between(startDate, LocalDate.now()).getDays()) / intervalLength) + 1;
-        LOGGER.debug("IntervalNumber: " + t);
-        if (t == 1) {
-            return activeSchedule;
-        }
-
+        LOGGER.debug("Count values needed for adaptive calculations of workouts");
         for (TrainingScheduleWorkout tsWa : workouts) {
-            switch (tsWa.getDay()) {
-                case 1:
-                    LOGGER.debug("Count values needed for adaptive calculations for workouts of day 1");
-                    countExToAdaptTotalExAndStrengthEx(tsWa, 1);
-                    break;
-                case 2:
-                    LOGGER.debug("Count values needed for adaptive calculations for workouts of day 2");
-                    countExToAdaptTotalExAndStrengthEx(tsWa, 2);
-                    break;
-                case 3:
-                    LOGGER.debug("Count values needed for adaptive calculations for workouts of day 3");
-                    countExToAdaptTotalExAndStrengthEx(tsWa, 3);
-                    break;
-                case 4:
-                    LOGGER.debug("Count values needed for adaptive calculations for workouts of day 4");
-                    countExToAdaptTotalExAndStrengthEx(tsWa, 4);
-                    break;
-                case 5:
-                    LOGGER.debug("Count values needed for adaptive calculations for workouts of day 5");
-                    countExToAdaptTotalExAndStrengthEx(tsWa, 5);
-                    break;
-                case 6:
-                    LOGGER.debug("Count values needed for adaptive calculations for workouts of day 6");
-                    countExToAdaptTotalExAndStrengthEx(tsWa, 6);
-                    break;
-                case 7:
-                    LOGGER.debug("Count values needed for adaptive calculations for workouts of day 7");
-                    countExToAdaptTotalExAndStrengthEx(tsWa, 7);
-                    break;
-            }
+            countExToAdaptTotalExAndStrengthEx(tsWa, tsWa.getDay());
         }
 
         boolean strengthFocused = false;
@@ -492,26 +465,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             }
         }
 
-        double a; // percentage for the first repetition of the interval, initial change of x%, on average x% change per interval
         if (selfAssessment == 1) {
             a = 1.5;
         } else {
-            a = 10;
-        }
-
-        double s; // maximum percentage for training schedule adaption
-        if (selfAssessment == 1) {
-            if ((intervalRepetitions * a) > 10) {
-                s = 10;
-            } else {
-                s = (intervalRepetitions * a);
-            }
-        } else {
-            if ((intervalRepetitions * a) > 30) {
-                s = 30;
-            } else {
-                s = (intervalRepetitions * a);
-            }
+            a = 3;
         }
 
         if (strengthFocused) {
@@ -528,12 +485,26 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     s = (intervalRepetitions * a);
                 }
             }
+        } else {
+            if (selfAssessment == 1) {
+                if ((intervalRepetitions * a) > 10) {
+                    s = 10;
+                } else {
+                    s = (intervalRepetitions * a);
+                }
+            } else {
+                if ((intervalRepetitions * a) > 30) {
+                    s = 30;
+                } else {
+                    s = (intervalRepetitions * a);
+                }
+            }
         }
 
         LOGGER.debug("Calculate percentage of change per interval with logistic growth function");
         // logistic growth function to generate percentage of change compared to the inital data
-        double k = Math.log((a * s - (s - a) * a) / ((s - a) * (s - a))) / -(s * (intervalRepetitions - 1)); // growth constant, calculated for model according to other parameters
-        double bt = Math.floor((a * s) / (a + (s - a) * Math.exp(-s * k * (t - 1)))); // result: percentage of change in the t-th interval
+        k = Math.log((a * s - (s - a) * a) / ((s - a) * (s - a))) / -(s * (intervalRepetitions - 1)); // growth constant, calculated for model according to other parameters
+        bt = Math.floor((a * s) / (a + (s - a) * Math.exp(-s * k * (t - 1)))); // result: percentage of change in the t-th interval
 
         /*
          * Percentage of change per interval is applied for each day containing workouts
@@ -545,8 +516,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
          *    if maximumRepetitions are reached, number of sets is altered and repetitions are set to default minimum
          */
 
-        double totalChangePerDayInPercent = 0;
-
         if (t == 2) {
             totalChangePerDayInPercent = bt;
         } else {
@@ -555,28 +524,22 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         LOGGER.debug("Calculate adaptive change percent per exercise per day");
         // spread percentage of change equally on all exercises per day
-        double percentPerExDay1 = (numOfExDay1 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay1));
-        double percentPerExDay2 = (numOfExDay2 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay2));
-        double percentPerExDay3 = (numOfExDay3 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay3));
-        double percentPerExDay4 = (numOfExDay4 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay4));
-        double percentPerExDay5 = (numOfExDay5 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay5));
-        double percentPerExDay6 = (numOfExDay6 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay6));
-        double percentPerExDay7 = (numOfExDay7 == 0 ? 0 : (totalChangePerDayInPercent / numOfExDay7));
+        double percentPerExDay1 = (numOfExPerDay[0] == 0 ? 0 : (totalChangePerDayInPercent / numOfExPerDay[0]));
+        double percentPerExDay2 = (numOfExPerDay[1] == 0 ? 0 : (totalChangePerDayInPercent / numOfExPerDay[1]));
+        double percentPerExDay3 = (numOfExPerDay[2] == 0 ? 0 : (totalChangePerDayInPercent / numOfExPerDay[2]));
+        double percentPerExDay4 = (numOfExPerDay[3] == 0 ? 0 : (totalChangePerDayInPercent / numOfExPerDay[3]));
+        double percentPerExDay5 = (numOfExPerDay[4] == 0 ? 0 : (totalChangePerDayInPercent / numOfExPerDay[4]));
+        double percentPerExDay6 = (numOfExPerDay[5] == 0 ? 0 : (totalChangePerDayInPercent / numOfExPerDay[5]));
+        double percentPerExDay7 = (numOfExPerDay[6] == 0 ? 0 : (totalChangePerDayInPercent / numOfExPerDay[6]));
 
         // change number of sets and repetitions according to percentage of change per day
-        LOGGER.debug("Apply adaptive change to workoutExercises of day 1");
+        LOGGER.debug("Apply adaptive change to workoutExercises");
         applyAdaptiveChange(waExDay1, percentPerExDay1, 1);
-        LOGGER.debug("Apply adaptive change to workoutExercises of day 2");
         applyAdaptiveChange(waExDay2, percentPerExDay2, 2);
-        LOGGER.debug("Apply adaptive change to workoutExercises of day 3");
         applyAdaptiveChange(waExDay3, percentPerExDay3, 3);
-        LOGGER.debug("Apply adaptive change to workoutExercises of day 4");
         applyAdaptiveChange(waExDay4, percentPerExDay4, 4);
-        LOGGER.debug("Apply adaptive change to workoutExercises of day 5");
         applyAdaptiveChange(waExDay5, percentPerExDay5, 5);
-        LOGGER.debug("Apply adaptive change to workoutExercises of day 6");
         applyAdaptiveChange(waExDay6, percentPerExDay6, 6);
-        LOGGER.debug("Apply adaptive change to workoutExercises of day 7");
         applyAdaptiveChange(waExDay7, percentPerExDay7, 7);
 
         LOGGER.debug("Apply adaptive change to workouts");
@@ -589,13 +552,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderExDone.trainingScheduleId(ts.getId());
             builderExDone.trainingScheduleVersion(ts.getVersion());
             builderExDone.activeTrainingScheduleId(activeSchedule.getId());
-            LOGGER.debug("get info of workoutExercises from help structure");
             builderExDone.exerciseId(allExercises.get(j).getWorkoutExercise().getExerciseId());
             builderExDone.exerciseVersion(allExercises.get(j).getWorkoutExercise().getExerciseVersion());
             builderExDone.workoutId(allExercises.get(j).getWorkoutExercise().getWorkoutId());
             builderExDone.workoutVersion(allExercises.get(j).getWorkoutExercise().getWorkoutVersion());
-            int currentDay = allExercises.get(j).getDay() + ((Period.between(LocalDate.now(), activeSchedule.getStartDate()).getDays() / activeSchedule.getTrainingSchedule().getIntervalLength()) * activeSchedule.getTrainingSchedule().getIntervalLength());
-            builderExDone.day(currentDay + activeSchedule.getTrainingSchedule().getIntervalLength());
+            builderExDone.day(allExercises.get(j).getDay() + (t - 1) * intervalLength);
             builderExDone.done(false);
             try {
                 LOGGER.debug("Save copies with adapted Workouts and WorkoutExercises to ExerciseDone in Database");
@@ -637,56 +598,14 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 builderWaExH.day(day);
                 allExercises.add(builderWaExH.build());
             } else {
-                switch (day) {
-                    case 1:
-                        numOfExDay1++;
-                        break;
-                    case 2:
-                        numOfExDay2++;
-                        break;
-                    case 3:
-                        numOfExDay3++;
-                        break;
-                    case 4:
-                        numOfExDay4++;
-                        break;
-                    case 5:
-                        numOfExDay5++;
-                        break;
-                    case 6:
-                        numOfExDay6++;
-                        break;
-                    case 7:
-                        numOfExDay7++;
-                        break;
-                }
+                numOfExPerDay[day - 1] = numOfExPerDay[day - 1] + 1;
             }
             totalEx++;
         }
-
         builderWaH.day(day);
         builderWaH.workout(workout.getWorkout());
         builderWaH.caloriesConsumption(workout.getWorkout().getCalorieConsumption() / totalRepetitions);
         allWorkouts.add(builderWaH.build());
-
-    }
-
-    private void adaptWorkouts(List<WorkoutHelp> waHelp) {
-        LOGGER.debug("entering adaptWorkouts");
-        double totalCalories = 0;
-        LOGGER.debug("NumOfWorkouts: " + waHelp.size());
-        for (WorkoutHelp workoutHelp : waHelp) {
-            LOGGER.debug("Workouthelp: " + workoutHelp.toString());
-            LOGGER.debug("workout: " + workoutHelp.getWorkout().toString());
-            for (WorkoutExercise ex : workoutHelp.getWorkout().getExercises()) {
-                totalCalories += workoutHelp.getCaloriesConsumption() * ex.getRepetitions() * ex.getSets();
-            }
-            workoutHelp.getWorkout().setCalorieConsumption(totalCalories);
-            totalCalories = 0;
-            LOGGER.debug("Update workout after adaptive change");
-            iWorkoutRepository.save(workoutHelp.getWorkout());
-            LOGGER.debug("Successfully updated workout after adaptive change");
-        }
     }
 
     private void applyAdaptiveChange(List<WorkoutExerciseDone> ex, double percentPerExDay, int day) {
@@ -707,8 +626,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             if (!((exc.getCategory() == Category.Endurance || exc.getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1)) {
                 // calculate new number of repetitions
                 calculateDurationPerRepetition = (e.getRepetitions() * e.getSets()) / e.getExDuration();
-                repsHelpIncrease = (int) new BigDecimal(String.valueOf(e.getRepetitions() + (percentPerExDay * e.getRepetitions()))).setScale(0, RoundingMode.HALF_UP).doubleValue();
-                repsHelpDecrease = (int) new BigDecimal(String.valueOf(e.getRepetitions() - (percentPerExDay * e.getRepetitions()))).setScale(0, RoundingMode.HALF_UP).doubleValue();
+                repsHelpIncrease = BigDecimal.valueOf(e.getRepetitions() + (percentPerExDay * e.getRepetitions())).setScale(0, RoundingMode.HALF_UP).intValue();
+                repsHelpDecrease = BigDecimal.valueOf(e.getRepetitions() - (percentPerExDay * e.getRepetitions())).setScale(0, RoundingMode.HALF_UP).intValue();
 
                 // increase/decrease
                 if (eDone.isDone()) {
@@ -745,10 +664,25 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
+    private void adaptWorkouts(List<WorkoutHelp> waHelp) {
+        LOGGER.debug("entering adaptWorkouts");
+        double totalCalories = 0;
+        for (WorkoutHelp workoutHelp : waHelp) {
+            for (WorkoutExercise ex : workoutHelp.getWorkout().getExercises()) {
+                totalCalories += workoutHelp.getCaloriesConsumption() * ex.getRepetitions() * ex.getSets();
+            }
+            totalCalories = Math.round(totalCalories);
+            workoutHelp.getWorkout().setCalorieConsumption(totalCalories);
+            totalCalories = 0;
+            LOGGER.debug("Update workout after adaptive change");
+            iWorkoutRepository.save(workoutHelp.getWorkout());
+            LOGGER.debug("Successfully updated workout after adaptive change");
+        }
+    }
+
     @Override
     public TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException {
-
-        LOGGER.debug("Start copying old trainingSchedule");
+        LOGGER.debug("Entering copy old trainingSchedule");
         List<WorkoutExerciseDone> waExDoneHelp = new ArrayList<>();
         List<WorkoutExercise> copyWaEx = new ArrayList<>();
         List<TrainingScheduleWorkout> copyTsWa = new ArrayList<>();
@@ -780,7 +714,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderWa.creator(activeTs.getDude());
             builderWa.isHistory(true);
 
-            int tsWaDay = tsWa.getDay() + ((Period.between(LocalDate.now(), activeTs.getStartDate()).getDays() / activeTs.getTrainingSchedule().getIntervalLength()) * activeTs.getTrainingSchedule().getIntervalLength());
+            int tsWaDay;
+            if (t == 1) {
+                tsWaDay = tsWa.getDay();
+            } else {
+                tsWaDay = tsWa.getDay() + (t - 2) * oldTs.getIntervalLength();
+            }
             for (ExerciseDone exDone : exDoneForTsWa) {
                 if ((exDone.getWorkoutId().equals(tsWa.getWorkoutId())) && (exDone.getWorkoutVersion().equals(tsWa.getWorkoutVersion())) && (exDone.getDay() == tsWaDay)) {
                     builderWaEx.exerciseId(exDone.getWorkoutExercise().getExerciseId());
@@ -829,6 +768,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         break;
                     case 7:
                         waExDay7.add(w);
+                        break;
+                    default:
                         break;
                 }
             }

@@ -22,11 +22,12 @@ public interface IWorkoutExerciseRepository extends JpaRepository<WorkoutExercis
     WorkoutExercise save(WorkoutExercise workoutExercise) throws DataAccessException;
 
     /**
-     * @param workout which should be used in workoutExercise
+     * @param workoutId which should be used in workoutExercise
+     * @param workoutVersion which should be used in workoutExercise
      * @return WorkoutExercises using the given workout
      * @throws DataAccessException if an error occurred while trying to find the workoutExercises using the given workout in the database
      */
-    List<WorkoutExercise> findByWorkout(Workout workout) throws DataAccessException;
+    List<WorkoutExercise> findByWorkoutIdAndWorkoutVersion(Long workoutId, Integer workoutVersion) throws DataAccessException;
 
     /**
      * @param workoutExercise to delete
