@@ -63,6 +63,9 @@ public class DudeDto {
     @ApiModelProperty(name = "Path of profile-picture of Dude")
     private String imagePath = "/assets/img/kugelfisch.jpg";
 
+    @ApiModelProperty(name = "Visibility of Dude-profile")
+    private Boolean isPrivate = false;
+
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {
         {
@@ -158,6 +161,14 @@ public class DudeDto {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public List<String> getRoles() {
@@ -258,6 +269,7 @@ public class DudeDto {
         private Double height;
         private Double weight;
         private String imagePath;
+        private Boolean isPrivate;
         private List<String> roles;
         private Set<FitnessProvider> fitnessProviders;
         private Set<Course> courses;
@@ -320,6 +332,11 @@ public class DudeDto {
             return this;
         }
 
+        public DudeDtoBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public DudeDtoBuilder roles(List<String> roles){
             this.roles = roles;
             return this;
@@ -348,6 +365,7 @@ public class DudeDto {
             dude.setHeight(height);
             dude.setWeight(weight);
             dude.setImagePath(imagePath);
+            dude.setIsPrivate(isPrivate);
             dude.setRoles(roles);
             dude.setFitnessProviders(fitnessProviders);
             dude.setCourses(courses);

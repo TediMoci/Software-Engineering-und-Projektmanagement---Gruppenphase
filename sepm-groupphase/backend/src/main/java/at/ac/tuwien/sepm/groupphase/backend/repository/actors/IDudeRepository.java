@@ -31,9 +31,9 @@ public interface IDudeRepository extends JpaRepository<Dude, Long> {
      */
     List<Dude> findAll();
 
-    @Query("SELECT d FROM Dude d WHERE (d.name LIKE %?1%) AND d.selfAssessment=?2")
+    @Query("SELECT d FROM Dude d WHERE (d.name LIKE %?1%) AND d.selfAssessment=?2 AND d.isPrivate=false")
     List<Dude> findByFilterWithSelfAssesment(String filter, Integer selfAssessment);
 
-    @Query("SELECT d FROM Dude d WHERE d.name LIKE %?1%")
+    @Query("SELECT d FROM Dude d WHERE d.name LIKE %?1% AND d.isPrivate=false")
     List<Dude> findByFilterWithoutAssesment(String filter);
 }

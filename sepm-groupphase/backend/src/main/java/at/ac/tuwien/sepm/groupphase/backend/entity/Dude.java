@@ -49,6 +49,9 @@ public class Dude {
     @Column(nullable = false)
     private String imagePath = "/assets/img/kugelfisch.jpg";
 
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
+
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {
         {
@@ -202,6 +205,14 @@ public class Dude {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public List<String> getRoles() {
@@ -360,6 +371,7 @@ public class Dude {
         private Double height;
         private Double weight;
         private String imagePath;
+        private Boolean isPrivate;
         private List<String> roles;
         private List<FitnessProvider> fitnessProviders;
         private List<Course> courseBookmarks;
@@ -427,6 +439,11 @@ public class Dude {
 
         public DudeBuilder imagePath(String imagePath) {
             this.imagePath = imagePath;
+            return this;
+        }
+
+        public DudeBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
             return this;
         }
 
@@ -498,6 +515,7 @@ public class Dude {
             dude.setHeight(height);
             dude.setWeight(weight);
             dude.setImagePath(imagePath);
+            dude.setIsPrivate(isPrivate);
             dude.setRoles(roles);
             dude.setFitnessProviders(fitnessProviders);
             dude.setCourseBookmarks(courseBookmarks);

@@ -121,12 +121,18 @@ public class FitnessProviderEndpoint {
     @ApiOperation(value = "Get all followers of the fitness provider with the given id", authorizations ={ @Authorization(value = "apiKey")})
     public DudeDto[] getDudesFollowingFitnessProvider(@PathVariable Long id) {
         LOGGER.info("Entering getDudesFollowingFitnessProvider with id: " + id);
-        List<Dude> dudes;
+        List<Dude> allDudes;
         try {
-            dudes = iFitnessProviderService.findById(id).getDudes();
+            allDudes = iFitnessProviderService.findById(id).getDudes();
         } catch (ServiceException e) {
             LOGGER.error("Could not getDudesFollowingFitnessProvider with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<Dude> dudes = new ArrayList<>();
+        for (Dude dude : allDudes) {
+            if (!dude.getIsPrivate()) {
+                dudes.add(dude);
+            }
         }
         DudeDto[] dudeDtos = new DudeDto[dudes.size()];
         for (int i = 0; i < dudes.size(); i++) {
