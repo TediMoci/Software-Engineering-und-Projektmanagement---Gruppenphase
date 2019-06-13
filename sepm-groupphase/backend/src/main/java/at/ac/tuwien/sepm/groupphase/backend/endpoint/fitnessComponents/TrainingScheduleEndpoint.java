@@ -2,12 +2,15 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
+import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -28,10 +31,14 @@ public class TrainingScheduleEndpoint {
     private final ITrainingScheduleService iTrainingScheduleService;
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleEndpoint.class);
+    private final IWorkoutService iWorkoutService;
+    private final IWorkoutMapper workoutMapper;
 
-    public TrainingScheduleEndpoint(ITrainingScheduleService iTrainingScheduleService, ITrainingScheduleMapper trainingScheduleMapper) {
+    public TrainingScheduleEndpoint(ITrainingScheduleService iTrainingScheduleService, ITrainingScheduleMapper trainingScheduleMapper, IWorkoutService iWorkoutService, IWorkoutMapper workoutMapper) {
         this.iTrainingScheduleService = iTrainingScheduleService;
         this.trainingScheduleMapper = trainingScheduleMapper;
+        this.iWorkoutService = iWorkoutService;
+        this.workoutMapper = workoutMapper;
     }
 
     @RequestMapping(value = "/{days}/{duration}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
@@ -170,7 +177,7 @@ public class TrainingScheduleEndpoint {
     @RequestMapping(value = "/{id}/{version}/workouts", method = RequestMethod.GET)
     @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleWorkoutDtoOut[] getAllWorkoutsByTrainingScheduleIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
-        LOGGER.info("Entering getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+        LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
         List<TrainingScheduleWorkout> trainingScheduleWorkouts;
         try {
             trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
@@ -202,5 +209,26 @@ public class TrainingScheduleEndpoint {
             trainingScheduleDtos[i] = trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(trainingSchedules.get(i));
         }
         return trainingScheduleDtos;
+    }
+
+    @RequestMapping(value = "/{id}/{version}/workouts/{day}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public List<WorkoutDto> getAllWorkoutsByTrainingScheduleIdAndVersionAndDay(@PathVariable Long id, @PathVariable Integer version, @PathVariable Integer day) {
+        LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version);
+        List<TrainingScheduleWorkout> trainingScheduleWorkouts;
+        try {
+            trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
+            List<WorkoutDto> workoutDtos = new ArrayList<>();
+            for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
+                if (trainingScheduleWorkouts.get(i).getDay().equals(day)){
+                    Workout w = iWorkoutService.findByIdAndVersion(trainingScheduleWorkouts.get(i).getWorkoutId(), trainingScheduleWorkouts.get(i).getWorkoutVersion());
+                    workoutDtos.add(workoutMapper.workoutToWorkoutDto(w));
+                }
+            }
+            return workoutDtos;
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 }

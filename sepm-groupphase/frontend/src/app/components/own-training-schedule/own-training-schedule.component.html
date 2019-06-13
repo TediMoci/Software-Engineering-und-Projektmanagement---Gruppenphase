@@ -17,9 +17,6 @@
           <li *ngFor='let element of trainingSchedules'>
             <a [routerLink]="['/trainingSchedule']" (click)="setSelectedTrainingSchedule(element)" class="btn2 btn-link">{{element.name}}</a>
             <button type="button" (click)="goToEditTrainingSchedule(element)" class="btn btn-secondary"><i class="fa fa-pencil-alt"></i></button>
-
-            <button type="button" (click)="goToEditTrainingSchedule2(element)" class="btn btn-secondary"><i class="fa fa-pencil-alt"></i></button>
-
             <button type="button" (click)="setToDeleteTrainingSchedule(element)" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash"></i></button>
           </li>
         </ul>
