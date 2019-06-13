@@ -11,6 +11,8 @@ export class CreateForFitnessProviderComponent implements OnInit {
   imagePath: string;
   userName: string;
   fitnessProvider: FitnessProvider;
+  error: any;
+
   constructor() { }
 
   ngOnInit() {
@@ -18,6 +20,9 @@ export class CreateForFitnessProviderComponent implements OnInit {
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.fitnessProvider.name;
     this.imagePath = this.fitnessProvider.imagePath;
+  }
+  vanishError() {
+    this.error = false;
   }
 
 }
