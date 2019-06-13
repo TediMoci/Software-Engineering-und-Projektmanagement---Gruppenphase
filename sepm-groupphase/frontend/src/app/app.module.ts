@@ -87,7 +87,7 @@ import { EditTrainingScheduleComponent } from './components/edit-training-schedu
 import { FitnessProviderComponent } from './components/fitness-provider/fitness-provider.component';
 import { CourseDudeViewComponent } from './components/course-dude-view/course-dude-view.component';
 import { FollowerDudeComponent } from './components/follower-dude/follower-dude.component';
-import { CreateTrainingScheduleRandomlyComponent } from './components/create-training-schedule-randomly/create-training-schedule-randomly.component';
+import { EditTrainingScheduleWorkoutsComponent } from './components/edit-training-schedule-workouts/edit-training-schedule-workouts.component';
 
 @NgModule({
   declarations: [
@@ -136,7 +136,7 @@ import { CreateTrainingScheduleRandomlyComponent } from './components/create-tra
     FitnessProviderComponent,
     CourseDudeViewComponent,
     FollowerDudeComponent,
-    CreateTrainingScheduleRandomlyComponent,
+    EditTrainingScheduleWorkoutsComponent,
   ],
   imports: [
     MatAutocompleteModule,

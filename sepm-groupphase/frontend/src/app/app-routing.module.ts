@@ -44,7 +44,8 @@ import {EditTrainingScheduleComponent} from './components/edit-training-schedule
 import {FitnessProviderComponent} from './components/fitness-provider/fitness-provider.component';
 import {CourseDudeViewComponent} from './components/course-dude-view/course-dude-view.component';
 import {FollowerDudeComponent} from './components/follower-dude/follower-dude.component';
-import {CreateTrainingScheduleRandomlyComponent} from './components/create-training-schedule-randomly/create-training-schedule-randomly.component';
+import {EditTrainingScheduleWorkoutsComponent} from './components/edit-training-schedule-workouts/edit-training-schedule-workouts.component';
+
 
 const routes: Routes = [
 
@@ -63,7 +64,6 @@ const routes: Routes = [
   {path: 'create-course', canActivate: [FitnessProviderRoleGuard], component: CreateCourseComponent},
   {path: 'create-workout', canActivate: [RoleGuard], component: CreateWorkoutComponent},
   {path: 'create-trainingSchedule-m', canActivate: [RoleGuard], component: CreateTrainingScheduleManuallyComponent},
-  {path: 'create-trainingSchedule-r', canActivate: [RoleGuard], component: CreateTrainingScheduleRandomlyComponent},
   {path: 'workout-exercises', canActivate: [RoleGuard], component: WorkoutExercisesComponent},
   {path: 'find', canActivate: [AuthGuard], component: FindComponent},
   {path: 'history', canActivate: [RoleGuard], component: HistoryComponent},
@@ -89,7 +89,8 @@ const routes: Routes = [
   {path: 'edit-workout-exercises', canActivate: [RoleGuard], component: EditWorkoutExercisesComponent},
   {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent},
   {path: 'trainingSchedule', canActivate: [AuthGuard], component: TrainingScheduleComponent},
-  {path: 'edit-training-schedule', canActivate:[RoleGuard], component: EditTrainingScheduleComponent}
+  {path: 'edit-training-schedule', canActivate: [RoleGuard], component: EditTrainingScheduleComponent},
+  {path: 'edit-training-workouts', canActivate: [RoleGuard], component: EditTrainingScheduleWorkoutsComponent}
 ];
 
 @NgModule({

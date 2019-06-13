@@ -31,6 +31,16 @@
 .makeActive{
   margin-left: 10px;
 }
+.form-group{
+  margin-top: 10px;
+  margin-left: 40px;
+  .searchBar{
+    width: 100px;
+  }
+  .RadioButton{
+    margin-top: 20px;
+  }
+}
 
 .scrolling-wrapper {
   overflow-x: auto;
@@ -68,7 +78,4 @@
   padding: 40px;
 }
 
-.searchBar{
-  width: 100px;
-  margin: 10px;
-}
+

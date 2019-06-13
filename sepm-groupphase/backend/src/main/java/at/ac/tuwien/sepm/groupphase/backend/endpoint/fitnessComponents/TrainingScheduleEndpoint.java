@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,16 +34,18 @@ public class TrainingScheduleEndpoint {
         this.trainingScheduleMapper = trainingScheduleMapper;
     }
 
-    @RequestMapping(value = "/{days}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{days}/{duration}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new random Training Schedule", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleDto saveRandom(
-        @PathVariable("days") int days, @PathVariable("minTarget") double minTarget,
-        @PathVariable("maxTarget") double maxTarget, @Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
+        @PathVariable("days") int days, @PathVariable("duration") int duration,
+        @PathVariable("minTarget") double minTarget, @PathVariable("maxTarget") double maxTarget,
+        @RequestParam(value = "lowerDifficulty", defaultValue = "false") boolean lowerDifficulty,
+        @Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
         try {
-            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,minTarget,maxTarget,trainingSchedule));
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,duration,minTarget,maxTarget,trainingSchedule,lowerDifficulty));
         } catch (ServiceException e) {
             LOGGER.error("Could not save: " + trainingScheduleDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -135,6 +137,37 @@ public class TrainingScheduleEndpoint {
         }
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation(value = "Get training schedules by name", authorizations = {@Authorization(value = "apiKey")})
+    public List<TrainingScheduleDto> findByName(@RequestParam String name) {
+        LOGGER.info("Entering findByName with name: " + name);
+        List<TrainingSchedule> trainingSchedules;
+        try {
+            trainingSchedules = iTrainingScheduleService.findByName(name);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not find training schedules with name: " + name);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<TrainingScheduleDto> trainingScheduleDtos = new ArrayList<>();
+        for (TrainingSchedule trainingSchedule : trainingSchedules) {
+            trainingScheduleDtos.add(trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(trainingSchedule));
+        }
+        return trainingScheduleDtos;
+    }
+
+    @RequestMapping(value = "/{id}/{version}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get a Training Schedule by id and version", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleDto findByIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
+        try {
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.findByIdAndVersion(id, version));
+        } catch (ServiceException e) {
+            LOGGER.error("Could not find Training Schedule with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+
     @RequestMapping(value = "/{id}/{version}/workouts", method = RequestMethod.GET)
     @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleWorkoutDtoOut[] getAllWorkoutsByTrainingScheduleIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
@@ -151,18 +184,6 @@ public class TrainingScheduleEndpoint {
             trainingScheduleWorkoutDtoOuts[i] = trainingScheduleMapper.trainingScheduleWorkoutToTrainingScheduleWorkoutDtoOut(trainingScheduleWorkouts.get(i));
         }
         return trainingScheduleWorkoutDtoOuts;
-    }
-
-    @RequestMapping(value = "/{id}/{version}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get a Training Schedule by id and version", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto findByIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
-        LOGGER.info("Entering findByIdAndVersion with id: " + id + "; and version: " + version);
-        try {
-            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.findByIdAndVersion(id, version));
-        } catch (ServiceException e) {
-            LOGGER.error("Could not find training schedule with id: " + id + "; and version: " + version);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
     }
 
     @RequestMapping(value = "/filtered", method = RequestMethod.GET)

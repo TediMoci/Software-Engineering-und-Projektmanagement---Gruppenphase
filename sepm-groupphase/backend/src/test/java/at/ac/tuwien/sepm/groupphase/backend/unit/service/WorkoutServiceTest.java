@@ -17,15 +17,18 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -84,6 +87,21 @@ public class WorkoutServiceTest {
         validWorkouts2.add(validWorkout2);
     }
 
+    private Workout buildWorkout(Workout w){
+        Workout workout = new Workout();
+        workout.setId(w.getId());
+        workout.setVersion(w.getVersion());
+        workout.setName(w.getName());
+        workout.setHistory(w.getHistory());
+        workout.setDifficulty(w.getDifficulty());
+        workout.setDescription(w.getDescription());
+        workout.setCalorieConsumption(w.getCalorieConsumption());
+        workout.setRating(w.getRating());
+        workout.setCreator(w.getCreator());
+        workout.setExercises(w.getExercises());
+        return workout;
+    }
+
     @Test
     public void whenSaveOneWorkout_thenGetSavedWorkout() throws ServiceException {
         Workout workout = new Workout();
@@ -118,6 +136,62 @@ public class WorkoutServiceTest {
             Mockito.when(workoutExerciseRepository.save(workoutExercise)).thenReturn(workoutExercise);
         }
         workoutService.save(workout);
+    }
+
+    @Test
+    public void whenFindOneWorkoutByIdAndVersion_thenGetFoundWorkout() throws ServiceException {
+        Mockito.when(workoutRepository.findByIdAndVersion(anyLong(),anyInt())).thenReturn(java.util.Optional.of(validWorkout1));
+        assertEquals(workoutService.findByIdAndVersion(1L,1),validWorkout1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindOneWorkoutByIdAndVersion_ifNoSuchElementException_thenServiceException() throws ServiceException {
+        Mockito.when(workoutRepository.findByIdAndVersion(anyLong(),anyInt())).thenThrow(Mockito.mock(NoSuchElementException.class));
+        workoutService.findByIdAndVersion(1L,1);
+    }
+
+    @Test
+    public void whenFindByName_thenGetFoundWorkouts() throws ServiceException {
+        List<Workout> workouts = new ArrayList<>();
+        Workout workout = buildWorkout(validWorkout1);
+        workouts.add(workout);
+        workouts.add(workout);
+        Mockito.when(workoutRepository.findByName(anyString())).thenReturn(workouts);
+        assertEquals(workoutService.findByName(workout.getName()),workouts);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindByName_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(workoutRepository.findByName(anyString())).thenThrow(Mockito.mock(DataAccessException.class));
+        workoutService.findByName("anyName");
+    }
+
+    @Test
+    public void whenFindAll_thenGetFoundWorkouts() throws ServiceException {
+        List<Workout> workouts = new ArrayList<>();
+        Workout workout = buildWorkout(validWorkout1);
+        workouts.add(workout);
+        workouts.add(workout);
+        Mockito.when(workoutRepository.findAll()).thenReturn(workouts);
+        assertEquals(workoutService.findAll(),workouts);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindAll_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(workoutRepository.findAll()).thenThrow(Mockito.mock(DataAccessException.class));
+        workoutService.findAll();
+    }
+
+    @Test
+    public void whenFindOneWorkoutById_thenGetFoundWorkout() throws ServiceException {
+        Mockito.when(workoutRepository.findById(anyLong())).thenReturn(validWorkout1);
+        assertEquals(workoutService.findById(1L),validWorkout1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindOneWorkoutById_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(workoutRepository.findById(anyLong())).thenThrow(Mockito.mock(DataAccessException.class));
+        workoutService.findById(1L);
     }
 
     @Test

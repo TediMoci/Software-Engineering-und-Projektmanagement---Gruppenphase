@@ -8,6 +8,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.DudeValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +32,7 @@ public class DudeService implements IDudeService {
     private final FollowFitnessProviderRepository followFitnessProviderRepository;
     private final DudeValidator dudeValidator;
     private final PasswordEncoder passwordEncoder;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DudeService.class);
 
     public DudeService(IDudeRepository iDudeRepository, IFitnessProviderRepository iFitnessProviderRepository, FollowFitnessProviderRepository followFitnessProviderRepository, DudeValidator dudeValidator, PasswordEncoder passwordEncoder) {
         this.iDudeRepository = iDudeRepository;
@@ -144,6 +147,7 @@ public class DudeService implements IDudeService {
 
     @Override
     public void followFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
+        LOGGER.info("Entering followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
         try {
             if (iDudeRepository.findById(dudeId).isEmpty()) {
                 throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
@@ -169,6 +173,7 @@ public class DudeService implements IDudeService {
 
     @Override
     public void unfollowFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
+        LOGGER.info("Entering unfollowFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
         try {
             followFitnessProviderRepository.unfollowFitnessProvider(dudeId, fitnessProviderId);
         } catch (PersistenceException e) {

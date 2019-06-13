@@ -19,8 +19,6 @@ import {DudeFilter} from '../../dtos/dude-filter';
   styleUrls: ['./find.component.scss']
 })
 
-// todo: add filter to different categories
-// todo: display entities form backend
 export class FindComponent implements OnInit {
 
   // Inputs from html
@@ -40,12 +38,12 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMaxActual: string = '';
   public filterDudeSelfAssessmentActual: string = 'None';
 
-
-  entries: any;
+  entries: Array<any>;
   exercisesForWorkouts: any;
 
   imagePath: string;
   userName: string;
+  isDude: boolean;
   error: any;
   dude: Dude;
 
@@ -57,6 +55,9 @@ export class FindComponent implements OnInit {
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
 
+  // Router Objects
+  selectedFP: FitnessProvider;
+
   followedFP: String;
 
   constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
@@ -66,10 +67,12 @@ export class FindComponent implements OnInit {
       this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
       this.userName = this.dude.name;
       this.imagePath = '/assets/img/kugelfisch.jpg';
+      this.isDude = true;
     } if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'FITNESS_PROVIDER') {
       this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
       this.userName = this.fitnessProvider.name;
       this.imagePath = '/assets/img/kugelfisch2.jpg';
+      this.isDude = false;
     }
   }
 
@@ -276,6 +279,19 @@ export class FindComponent implements OnInit {
   setSelectedWorkout(element: Workout) {
     localStorage.setItem('selectedWorkout', JSON.stringify(element));
     console.log(localStorage.getItem('selectedWorkout'));
+  }
+  setSelectedFPofCourse(element: Course) {
+    this.findService.getOneFitnessProvider(element.creatorId).subscribe(
+      (data) => {
+        this.selectedFP = data;
+        console.log('Loaded FP: ' + this.selectedFP.name);
+        localStorage.setItem('selectedFitnessProvider', JSON.stringify(data));
+        console.log('FP in LS' + localStorage.getItem('selectedFitnessProvider'));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
   resetResults() {
     this.entries = null;
