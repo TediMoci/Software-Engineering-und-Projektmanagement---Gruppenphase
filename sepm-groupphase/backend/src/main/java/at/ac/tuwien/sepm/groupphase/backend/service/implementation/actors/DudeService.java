@@ -147,9 +147,8 @@ public class DudeService implements IDudeService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        String imagePath = "/assets/img/" + fileName;
-        dude.setImagePath(imagePath);
+        dude.setImagePath(fileName);
         iDudeRepository.save(dude);
-        return imagePath;
+        return fileName;
     }
 }

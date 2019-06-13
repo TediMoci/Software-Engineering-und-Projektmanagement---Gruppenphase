@@ -44,7 +44,7 @@ public class ExerciseDto {
     private Category category;
 
     @ApiModelProperty(name = "Path of picture of Exercise")
-    private String imagePath = "/assets/img/exercise.png";
+    private String imagePath = "exercise.png";
 
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;

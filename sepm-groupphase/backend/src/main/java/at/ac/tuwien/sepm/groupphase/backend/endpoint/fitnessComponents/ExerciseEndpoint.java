@@ -144,13 +144,14 @@ public class ExerciseEndpoint {
     @ApiOperation(value = "Upload image for Exercise", authorizations = {@Authorization(value = "apiKey")})
     public String uploadImage(@PathVariable Long id, @PathVariable Integer version, @RequestParam("file") MultipartFile file) {
         LOGGER.info("Entering uploadImage with id: " + id + "; version: " + version);
-        String fileName = "exercise_" + id + "_" + version;
-        if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
-            fileName += ".png";
-        } else {
-            fileName += ".jpg";
+        String fileName = "exercise_" + id + "_" + version + ".png";
+
+        try {
+            iFileStorageService.storeFile(fileName, file);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not uploadImage with id: " + id + "; version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        iFileStorageService.storeFile(fileName, file);
 
         try {
             return iExerciseService.updateImagePath(id, version, fileName);

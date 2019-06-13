@@ -31,4 +31,4 @@ spring:
       access-matcher: "hasIpAddress('10.0.0.0/16') or hasIpAddress('127.0.0.0/8') or hasIpAddress('::1')"
 
 file:
-  upload-dir: ../frontend/src/assets/img
+  upload-dir: ./images
