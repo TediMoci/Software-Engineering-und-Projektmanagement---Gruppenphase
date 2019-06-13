@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UploadFileResponseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
@@ -26,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -324,13 +322,14 @@ public class DudeEndpoint {
     @ApiOperation(value = "Upload image for Dude", authorizations = {@Authorization(value = "apiKey")})
     public String uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         LOGGER.info("Entering uploadImage with id: " + id);
-        String fileName = "dude_" + id;
-        if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
-            fileName += ".png";
-        } else {
-            fileName += ".jpg";
+        String fileName = "dude_" + id + ".png";
+
+        try {
+            iFileStorageService.storeFile(fileName, file);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not uploadImage with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        iFileStorageService.storeFile(fileName, file);
 
         try {
             return iDudeService.updateImagePath(id, fileName);

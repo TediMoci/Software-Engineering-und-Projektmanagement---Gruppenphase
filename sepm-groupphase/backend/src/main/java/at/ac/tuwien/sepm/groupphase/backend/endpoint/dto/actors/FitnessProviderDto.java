@@ -44,7 +44,7 @@ public class FitnessProviderDto {
     private String website = "No website given.";
 
     @ApiModelProperty(name = "Path of profile-picture of Fitness Provider")
-    private String imagePath = "/assets/img/kugelfisch2.jpg";
+    private String imagePath = "kugelfisch2.jpg";
 
     public Long getId() {
         return id;
