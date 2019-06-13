@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -204,7 +206,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         trainingSchedule.setWorkouts(null);
 
         List<Workout> workouts = iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty());
-        sum_up(workouts,minTarget,maxTarget,days,duration);
+        sum_up(workouts, minTarget, maxTarget, days, duration);
 
         TrainingSchedule savedTrainingSchedule;
         try {
@@ -254,53 +256,20 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         // TODO (Amir): stat-calculations and -saving for activeTrainingSchedule
 
-        // delete exerciseDone from to delete activeTrainingSchedule
-        List<TrainingSchedule> copiedTs = new ArrayList<>();
-        List<TrainingScheduleWorkout> toDeleteTrainingScheduleWorkouts = new ArrayList<>();
-        List<Workout> toDeleteWorkout = new ArrayList<>();
-        List<WorkoutExercise> toDeleteWorkoutExercise = new ArrayList<>();
-
-        for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++) {
-            int maxDayNotChosen = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
-            if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule())) && (activeTrainingSchedule.getDone().get(i).getDay() > maxDayNotChosen)) {
-                copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
-            }
-            iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
-        }
-
-        // delete copies of trainingSchedule created by adaptive change methods
-        if (activeTrainingSchedule.getAdaptive()) {
-            for (TrainingSchedule copy : copiedTs) {
-                toDeleteTrainingScheduleWorkouts.addAll(copy.getWorkouts());
-                LOGGER.debug("delete trainingSchedule with id " + copy.getId());
-                iTrainingScheduleRepository.deleteById(copy.getId());
-            }
-        }
-        // delete copies of TrainingScheduleWorkouts created by adaptive change methods
-        if (toDeleteTrainingScheduleWorkouts != null){
-            for (TrainingScheduleWorkout w: toDeleteTrainingScheduleWorkouts){
-                toDeleteWorkout.add(w.getWorkout());
-                iTrainingScheduleWorkoutRepository.delete(w);
-            }
-        }
-        // delete copies of Workouts created by adaptive change methods
-        if (toDeleteWorkout != null){
-            for (Workout w: toDeleteWorkout) {
-                toDeleteWorkoutExercise.addAll(w.getExercises());
-                iWorkoutRepository.deleteById(w.getId());
-            }
-        }
-        /*
-          // delete copies of WorkoutExercises created by adaptive change methods
-        if (toDeleteWorkoutExercise != null){
-            for (WorkoutExercise w: toDeleteWorkoutExercise){
-                iWorkoutExerciseRepository.delete(w);
-            }
-        }
-         */
-
-
         try {
+            // delete exerciseDone from to delete activeTrainingSchedule
+            List<TrainingSchedule> copiedTs = new ArrayList<>();
+            for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++) {
+                int maxDayNotChosen = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
+                if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule())) && (activeTrainingSchedule.getDone().get(i).getDay() > maxDayNotChosen)) {
+                    copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
+                }
+                iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
+            }
+            for (TrainingSchedule t : copiedTs) {
+                LOGGER.debug("delete trainingSchedule with id " + t.getId());
+                iTrainingScheduleRepository.deleteById(t.getId());
+            }
             iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
@@ -395,12 +364,13 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     private static void sum_up(List<Workout> numbers, double minTarget, double maxTarget, int days, int duration) throws ServiceException {
-        if (duration<1 || duration>1440) throw new ServiceException("Please give a valid duration per day");
-        if (days<1 || days>7) throw new ServiceException("Please give a valid number of days per week");
-        if (minTarget>maxTarget) throw new ServiceException("Please give the correct minimum and maximum values");
+        if (duration < 1 || duration > 1440) throw new ServiceException("Please give a valid duration per day");
+        if (days < 1 || days > 7) throw new ServiceException("Please give a valid number of days per week");
+        if (minTarget > maxTarget) throw new ServiceException("Please give the correct minimum and maximum values");
 
-        sum_up_recursive(numbers,minTarget,maxTarget,new ArrayList<Workout>(),days,duration);
-        if (finalList.isEmpty()) throw new ServiceException("Training schedule could not be formed with existing workouts");
+        sum_up_recursive(numbers, minTarget, maxTarget, new ArrayList<Workout>(), days, duration);
+        if (finalList.isEmpty())
+            throw new ServiceException("Training schedule could not be formed with existing workouts");
     }
 
     private static void sum_up_recursive(List<Workout> numbers, double minTarget, double maxTarget, List<Workout> partial, int days, int duration) {
@@ -414,7 +384,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
 
         //if sum equals target, put it in list
-        if (s <= maxTarget && s >= minTarget && allDuration<=duration) {
+        if (s <= maxTarget && s >= minTarget && allDuration <= duration) {
             finalList.put(listPosition, partial);
             listPosition++;
         }
@@ -432,14 +402,14 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             //put elements of n in partial list one by one
             List<Workout> partial_rec = new ArrayList<Workout>(partial);
             partial_rec.add(n);
-            sum_up_recursive(remaining, minTarget, maxTarget, partial_rec, days,duration);
+            sum_up_recursive(remaining, minTarget, maxTarget, partial_rec, days, duration);
         }
     }
 
     private static int getDuration(Workout workout) {
         int allDuration = 0;
         List<WorkoutExercise> workoutExercises = workout.getExercises();
-        for (WorkoutExercise w : workoutExercises){
+        for (WorkoutExercise w : workoutExercises) {
             allDuration = allDuration + w.getExDuration();
         }
         return allDuration;
@@ -458,16 +428,17 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         LOGGER.debug("Successfully copied old TrainingSchedule");
 
         List<TrainingScheduleWorkout> workouts = iTrainingScheduleWorkoutRepository.findByTrainingSchedule(ts);
-        for (TrainingScheduleWorkout w: workouts) {
+        for (TrainingScheduleWorkout w : workouts) {
             Workout wa = iWorkoutRepository.findByIdAndVersion(w.getWorkoutId(), w.getWorkoutVersion()).get();
             List<WorkoutExercise> waEx = iWorkoutExerciseRepository.findByWorkout(wa);
-            for (WorkoutExercise wex: waEx) {
+            for (WorkoutExercise wex : waEx) {
                 wex.setWorkout(wa);
                 wex.setExercise(iExerciseRepository.findByIdAndVersion(wex.getExerciseId(), wex.getExerciseVersion()).get());
             }
             wa.setExercises(waEx);
             w.setWorkout(wa);
         }
+        ts.setWorkouts(workouts);
 
         LOGGER.debug("Ts-Copy-Workouts-Size: " + workouts.size());
         LocalDate startDate = activeSchedule.getStartDate();
@@ -475,7 +446,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         int intervalLength = ts.getIntervalLength();
         int selfAssessment = dude.getSelfAssessment();
 
-        int t = (Period.between(startDate, LocalDate.now()).getDays()) / intervalLength;
+        int t = ((Period.between(startDate, LocalDate.now()).getDays()) / intervalLength) + 1;
+        LOGGER.debug("IntervalNumber: " + t);
         if (t == 1) {
             return activeSchedule;
         }
@@ -622,7 +594,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderExDone.exerciseVersion(allExercises.get(j).getWorkoutExercise().getExerciseVersion());
             builderExDone.workoutId(allExercises.get(j).getWorkoutExercise().getWorkoutId());
             builderExDone.workoutVersion(allExercises.get(j).getWorkoutExercise().getWorkoutVersion());
-            builderExDone.day(allExercises.get(j).getDay() + (((Period.between(LocalDate.now(), activeSchedule.getStartDate()).getDays() + intervalLength)/activeSchedule.getTrainingSchedule().getIntervalLength()) * activeSchedule.getTrainingSchedule().getIntervalLength()));
+            int currentDay = allExercises.get(j).getDay() + ((Period.between(LocalDate.now(), activeSchedule.getStartDate()).getDays() / activeSchedule.getTrainingSchedule().getIntervalLength()) * activeSchedule.getTrainingSchedule().getIntervalLength());
+            builderExDone.day(currentDay + activeSchedule.getTrainingSchedule().getIntervalLength());
             builderExDone.done(false);
             try {
                 LOGGER.debug("Save copies with adapted Workouts and WorkoutExercises to ExerciseDone in Database");
@@ -644,7 +617,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         try {
             LOGGER.debug("update current ActiveTrainingSchedule in database");
             return iActiveTrainingScheduleRepository.save(builderATs.build());
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
     }
@@ -693,7 +666,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         builderWaH.day(day);
         builderWaH.workout(workout.getWorkout());
-        builderWaH.caloriesConsumption(workout.getWorkout().getCalorieConsumption()/totalRepetitions);
+        builderWaH.caloriesConsumption(workout.getWorkout().getCalorieConsumption() / totalRepetitions);
         allWorkouts.add(builderWaH.build());
 
     }
@@ -779,6 +752,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         List<WorkoutExerciseDone> waExDoneHelp = new ArrayList<>();
         List<WorkoutExercise> copyWaEx = new ArrayList<>();
         List<TrainingScheduleWorkout> copyTsWa = new ArrayList<>();
+        List<ExerciseDone> exDoneForTsWa = activeTs.getDone();
         Workout wa;
 
         Workout.WorkoutBuilder builderWa = new Workout.WorkoutBuilder();
@@ -806,10 +780,9 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderWa.creator(activeTs.getDude());
             builderWa.isHistory(true);
 
-            List<ExerciseDone> exDoneForTsWa = activeTs.getDone();
-            int tsWaDay = tsWa.getDay() + ((Period.between(LocalDate.now(), activeTs.getStartDate()).getDays()/activeTs.getTrainingSchedule().getIntervalLength()) * activeTs.getTrainingSchedule().getIntervalLength());
+            int tsWaDay = tsWa.getDay() + ((Period.between(LocalDate.now(), activeTs.getStartDate()).getDays() / activeTs.getTrainingSchedule().getIntervalLength()) * activeTs.getTrainingSchedule().getIntervalLength());
             for (ExerciseDone exDone : exDoneForTsWa) {
-                if ((exDone.getWorkout().getId().equals(tsWa.getWorkout().getId())) && (exDone.getWorkout().getVersion().equals(tsWa.getWorkout().getVersion())) && (exDone.getDay() == tsWaDay)) {
+                if ((exDone.getWorkoutId().equals(tsWa.getWorkoutId())) && (exDone.getWorkoutVersion().equals(tsWa.getWorkoutVersion())) && (exDone.getDay() == tsWaDay)) {
                     builderWaEx.exerciseId(exDone.getWorkoutExercise().getExerciseId());
                     builderWaEx.exerciseVersion(exDone.getWorkoutExercise().getExerciseVersion());
                     builderWaEx.exDuration(exDone.getWorkoutExercise().getExDuration());
@@ -829,7 +802,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             wa = workoutService.save(builderWa.build());
             LOGGER.debug("Succesfully saved workout with id " + wa.getId());
             copyWaEx.clear();
-            exDoneForTsWa.clear();
 
             // save workoutId and workoutVersion to help-Structure
             for (WorkoutExerciseDone w : waExDoneHelp) {

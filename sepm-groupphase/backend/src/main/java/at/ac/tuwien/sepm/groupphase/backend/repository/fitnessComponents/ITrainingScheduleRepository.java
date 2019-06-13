@@ -53,6 +53,7 @@ public interface ITrainingScheduleRepository extends JpaRepository<TrainingSched
      * @param id of TrainingSchedule to delete
      * @throws DataAccessException if an error occurred while trying to delete the TrainingSchedule in the database
      */
+    @Modifying
     @Transactional
     void deleteById(long id) throws DataAccessException;
 
