@@ -27,49 +27,52 @@
             <span class="anchor" id="formRegister"></span>
 
             <div class="form-group">
-              <div class="row">
-                <div class="col">
-                  <label for="tsMinTarget">MinTarget*</label>
-                  <input type="number" name="tsMinTarget" maxlength="4" class="form-control" id="tsMinTarget"
-                         formControlName="tsMinTarget"
-                         aria-describedby="tsMinTargetHelp" placeholder="Enter name">
-                  <div *ngIf="submitted && !!tsForm.controls.tsMinTarget.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.required">Name is
-                      required!
-                    </small>
-                  </div>
-                </div>
-                <div class="col">
-                  <label for="tsMaxTarget">MaxTarget*</label>
-                  <input type="number" name="tsMaxTarget" maxlength="4" class="form-control" id="tsMaxTarget"
-                         formControlName="tsMaxTarget"
-                         aria-describedby="tsMaxTargetHelp" placeholder="Enter name">
-                  <div *ngIf="submitted && !!tsForm.controls.tsMaxTarget.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.required">Name is
-                      required!
-                    </small>
-                  </div>
-                </div>
+              <!--start - field-->
+              <label for="tsMinTarget">MinTarget*</label>
+              <input type="number" name="tsMinTarget"min="0" max="1000" class="form-control" id="tsMinTarget"
+                     formControlName="tsMinTarget"
+                     aria-describedby="tsMinTargetHelp">
+              <div *ngIf="submitted && !!tsForm.controls.tsMinTarget.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.required">Name is
+                  required!
+                </small>
               </div>
-
-              <div class="row">
-
-                <div class="col">
-                  <!--start dropdown-->
-                  <label>Interval*</label>
-                  <mat-form-field>
-                    <mat-label>{{showCurrentDays()}}</mat-label>
-                    <mat-select>
-                      <mat-option *ngFor="let days of intervalDays" [value]="days" (click)="setChosenInterval(days)">
-                        {{days}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  <!--end dropdown-->
-                </div>
-                <div class="col"></div>
-
+              <!--end - field-->
+              <!--start - field-->
+              <label for="tsMaxTarget">MaxTarget*</label>
+              <input type="number" name="tsMaxTarget" min="0" max="1000" class="form-control" id="tsMaxTarget"
+                     formControlName="tsMaxTarget"
+                     aria-describedby="tsMaxTargetHelp">
+              <div *ngIf="submitted && !!tsForm.controls.tsMaxTarget.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.required">Max Tar is
+                  required!
+                </small>
               </div>
+              <!--end - field-->
+              <!--start - field-->
+              <label for="tsRepetitions">Repetitions*</label>
+              <input type="number" min="0" max="100" name="tsRepetitions" class="form-control" id="tsRepetitions" formControlName="tsRepetitions"
+                     aria-describedby="repetitionsHelp">
+              <div *ngIf="submitted && !!tsForm.controls.tsRepetitions.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsRepetitions.errors.required">Repetitions is required!</small>
+              </div>
+              <!--end - field-->
+              <!--start - field-->
+              <mat-form-field>
+                <mat-label>Interval Lenght*</mat-label>
+                <mat-select formControlName="tsInterval">
+                  <mat-option *ngFor="let days of intervalDays" [value]="days">
+                    {{days}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div *ngIf="submitted && !!tsForm.controls.tsInterval.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsInterval.errors.required">Interval is required!</small>
+              </div>
+              <!--end - field-->
+              <!--start - field-->
+              <mat-checkbox color="primary" class= "RadioButton" formControlName="tsOnlyMyDifficulty">Only exercises for my skill level</mat-checkbox>
+              <!--end - field-->
             </div>
           </form>
 
