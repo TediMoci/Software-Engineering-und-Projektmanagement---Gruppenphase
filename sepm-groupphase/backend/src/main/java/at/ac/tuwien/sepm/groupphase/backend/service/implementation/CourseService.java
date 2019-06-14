@@ -107,8 +107,9 @@ public class CourseService implements ICourseService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        course.setImagePath(fileName);
+        String imagePath = "http://localhost:8080/downloadImage/" + fileName;
+        course.setImagePath(imagePath);
         iCourseRepository.save(course);
-        return fileName;
+        return imagePath;
     }
 }

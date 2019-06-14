@@ -35,7 +35,7 @@ public class FitnessProvider {
     private String website = "No website given.";
 
     @Column(nullable = false)
-    private String imagePath = "kugelfisch2.jpg";
+    private String imagePath = "http://localhost:8080/downloadImage/kugelfisch2.jpg";
 
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {
