@@ -155,10 +155,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         List<Workout> workouts = new ArrayList<>();
 
         if (lowerDifficulty){
-            workouts.addAll(iWorkoutRepository.findByLowerDifficulty(trainingSchedule.getDifficulty()));
+            workouts.addAll(iWorkoutRepository.findByLowerDifficulty(trainingSchedule.getDifficulty(),maxTarget));
         }
         else{
-            workouts.addAll(iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty()));
+            workouts.addAll(iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty(),maxTarget));
         }
 
         sum_up(workouts,minTarget,maxTarget,days,duration);
