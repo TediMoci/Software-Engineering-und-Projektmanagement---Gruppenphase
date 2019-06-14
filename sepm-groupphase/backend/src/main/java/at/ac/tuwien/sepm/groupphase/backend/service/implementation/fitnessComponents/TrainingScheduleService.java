@@ -58,15 +58,15 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     //list of all workouts
     private List<WorkoutHelp> allWorkouts = new ArrayList<>();
 
-    int t; // current intervalrepetition
-    double a; // percentage for the first repetition of the interval, initial change of x%, on average x% change per interval
-    double s; // maximum percentage for training schedule adaption
-    double totalChangePerDayInPercent; // total percent of change per day calculated by logistic growth function
-    double k; // growth constant calculated for logistic growth function
-    double bt; // percent per interval for intervalrepetition t
-    int intervalLength;
-    int intervalRepetitions;
-    int selfAssessment;
+    private int t; // current intervalrepetition
+    private double a; // percentage for the first repetition of the interval, initial change of x%, on average x% change per interval
+    private double s; // maximum percentage for training schedule adaption
+    private double totalChangePerDayInPercent; // total percent of change per day calculated by logistic growth function
+    private double k; // growth constant calculated for logistic growth function
+    private double bt; // percent per interval for intervalrepetition t
+    private int intervalLength;
+    private int intervalRepetitions;
+    private int selfAssessment;
 
     // number of exercises per day of interval
     private int[] numOfExPerDay = new int[]{0, 0, 0, 0, 0, 0, 0};
@@ -665,6 +665,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         allWorkouts.add(builderWaH.build());
     }
 
+    // TODO: reps and sets decrease/increase
+    // TODO: save exerciseDone more often than necessary
     private void applyAdaptiveChange(List<WorkoutExerciseDone> ex, double percentPerExDay, int day) {
         LOGGER.debug("entering applyAdaptiveChange");
         int repsHelpIncrease;
@@ -689,10 +691,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 // increase/decrease
                 if (eDone.isDone()) {
                     if (repsHelpIncrease > 100) {
-                        // if maximum number of repetitions is exceeded: set default number of repetitions to oldRepetitions/2 and increase number of sets by 1
-                        e.setRepetitions(repsHelpIncrease / 2);
+                        // if maximum number of repetitions is exceeded: set default number of repetitions and increase number of sets by 1
                         if (e.getSets() < 15) {
+                            e.setRepetitions((int) Math.round((double)(repsHelpIncrease * e.getSets())/(e.getSets() + 1)));
                             e.setSets(e.getSets() + 1);
+                        } else {
+                            e.setRepetitions(100);
                         }
                     } else {
                         e.setRepetitions(repsHelpIncrease);
@@ -702,7 +706,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     if (repsHelpDecrease <= 1) {
                         if (e.getSets() > 1) {
                             e.setSets(e.getSets() - 1);
-                            e.setRepetitions(10);
+                            // repetitions stay the same, sets get decreased
                         }
                     } else {
                         e.setRepetitions(repsHelpDecrease);
@@ -740,6 +744,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException {
         LOGGER.debug("Entering copy old trainingSchedule");
+
         List<WorkoutExerciseDone> waExDoneHelp = new ArrayList<>();
         List<WorkoutExercise> copyWaEx = new ArrayList<>();
         List<TrainingScheduleWorkout> copyTsWa = new ArrayList<>();

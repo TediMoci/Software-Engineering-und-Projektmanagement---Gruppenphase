@@ -6,13 +6,13 @@ export class Statistics {
     public dudeId: number,
     public trainingScheduleId: number,
     public trainingScheduleVersion: number,
-    public trainingSchedule: TrainingSchedule,
     public totalHours: number,
     public totalDays: number,
     public totalCalorieConsumption: number,
     public totalIntervalRepetitions: number,
     public strengthPercent: number,
     public endurancePercent: number,
-    public otherPercent: number
+    public otherPercent: number,
+    public trainingSchedule: TrainingSchedule
   ) {}
 }

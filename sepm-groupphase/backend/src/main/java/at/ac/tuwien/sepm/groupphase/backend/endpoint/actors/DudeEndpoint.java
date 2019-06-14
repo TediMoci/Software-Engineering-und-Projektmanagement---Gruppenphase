@@ -345,6 +345,7 @@ public class DudeEndpoint {
         FinishedTrainingScheduleStatsDto[] statsDtos = new FinishedTrainingScheduleStatsDto[stats.size()];
         for (int i = 0; i < stats.size(); i++) {
             statsDtos[i] = statsMapper.finishedTrainingScheduleStatsToFinishedTrainingScheduleStatsDto(stats.get(i));
+            LOGGER.debug("STATS INFO: " + statsDtos[i].toString() + ", " + statsDtos[i].getTrainingScheduleDto().toString());
         }
         return statsDtos;
     }

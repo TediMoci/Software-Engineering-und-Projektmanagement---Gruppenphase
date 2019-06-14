@@ -39,6 +39,8 @@ export class HistoryComponent implements OnInit {
         this.error = error;
       }
     );
+
+    console.log(this.stats);
   }
 
   setSelectedStats(element: Statistics) {
