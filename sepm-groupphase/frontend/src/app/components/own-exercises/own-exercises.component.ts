@@ -29,7 +29,9 @@ export class OwnExercisesComponent implements OnInit {
     this.ownExercisesService.getAllExercisesOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all exercises created by dude with name ' + this.dude.name + ' and id ' + this.dude.id);
-        this.exercises = data.sort(function (a, b) { // sort data alphabetically
+        this.exercises = data.sort(function (a, b) {// sort data alphabetically
+          console.log('image path of exercise' + a.imagePath);
+          console.log('image path of exercise' + b.imagePath);
           if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
             return -1;
           }
@@ -43,7 +45,6 @@ export class OwnExercisesComponent implements OnInit {
         this.error = error;
       }
     );
-
   }
 
   setSelectedExercise(element: Exercise) {

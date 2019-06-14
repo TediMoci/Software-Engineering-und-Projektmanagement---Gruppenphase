@@ -192,6 +192,7 @@ public class DudeEndpoint {
         ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
         for (int i = 0; i < exercises.size(); i++) {
             if (!exercises.get(i).getHistory()) {
+                LOGGER.info("images path of exercise " + exercises.get(i).getImagePath());
                 exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
             }
         }
