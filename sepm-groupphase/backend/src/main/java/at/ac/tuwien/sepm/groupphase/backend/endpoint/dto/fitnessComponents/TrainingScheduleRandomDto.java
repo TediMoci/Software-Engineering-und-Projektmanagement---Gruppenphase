@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
+import java.util.Objects;
 
 @ApiModel(value = "TrainingScheduleRandomDto", description = "A dto for random crated training-schedule entries")
 public class TrainingScheduleRandomDto {
@@ -32,7 +33,26 @@ public class TrainingScheduleRandomDto {
     @ApiModelProperty(required = true, name = "Length of Interval of TrainingSchedule")
     @NotNull(message = "intervalLength must be given")
     @Min(value = 1, message = "Min intervalLength value is 1") @Max(value = 7, message = "Max intervalLength value is 7")
-    private Integer intervalLength = 7;
+    private Integer intervalLength;
+
+    @ApiModelProperty(required = true, name = "Duration per day of TrainingSchedule")
+    @NotNull(message = "duration must be given")
+    @Min(value = 1, message = "Min duration value is 1") @Max(value = 1440, message = "Max duration value is 7")
+    private Integer duration;
+
+    @ApiModelProperty(required = true, name = "Minimum amount of calories per day of TrainingSchedule")
+    @NotNull(message = "minTarget must be given")
+    @Min(value = 1, message = "Min maxTarget value is 1")
+    private double minTarget;
+
+    @ApiModelProperty(required = true, name = "Maximum amount of calories per day of TrainingSchedule")
+    @NotNull(message = "maxTarget must be given")
+    @Min(value = 1, message = "Min maxTarget value is 1")
+    private double maxTarget;
+
+    @ApiModelProperty(required = true, name = "Allow workouts of lower difficulty")
+    @NotNull(message = "lowerDifficulty must be given")
+    private boolean lowerDifficulty;
 
     @ApiModelProperty(name = "Rating of TrainingSchedule")
     @Min(1) @Max(5)
@@ -105,6 +125,38 @@ public class TrainingScheduleRandomDto {
         this.creatorId = creatorId;
     }
 
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public double getMinTarget() {
+        return minTarget;
+    }
+
+    public void setMinTarget(double minTarget) {
+        this.minTarget = minTarget;
+    }
+
+    public double getMaxTarget() {
+        return maxTarget;
+    }
+
+    public void setMaxTarget(double maxTarget) {
+        this.maxTarget = maxTarget;
+    }
+
+    public boolean isLowerDifficulty() {
+        return lowerDifficulty;
+    }
+
+    public void setLowerDifficulty(boolean lowerDifficulty) {
+        this.lowerDifficulty = lowerDifficulty;
+    }
+
     @Override
     public String toString() {
         return "TrainingScheduleRandomDto{" +
@@ -114,6 +166,10 @@ public class TrainingScheduleRandomDto {
             ", description='" + description + '\'' +
             ", difficulty=" + difficulty +
             ", intervalLength=" + intervalLength +
+            ", duration=" + duration +
+            ", minTarget=" + minTarget +
+            ", maxTarget=" + maxTarget +
+            ", lowerDifficulty=" + lowerDifficulty +
             ", rating=" + rating +
             ", creatorId=" + creatorId +
             '}';
@@ -124,27 +180,23 @@ public class TrainingScheduleRandomDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TrainingScheduleRandomDto that = (TrainingScheduleRandomDto) o;
-        return id.equals(that.id) &&
-            version.equals(that.version) &&
-            name.equals(that.name) &&
-            description.equals(that.description) &&
-            difficulty.equals(that.difficulty) &&
-            intervalLength.equals(that.intervalLength) &&
-            rating.equals(that.rating) &&
-            creatorId.equals(that.creatorId);
+        return Double.compare(that.getMinTarget(), getMinTarget()) == 0 &&
+            Double.compare(that.getMaxTarget(), getMaxTarget()) == 0 &&
+            isLowerDifficulty() == that.isLowerDifficulty() &&
+            getId().equals(that.getId()) &&
+            getVersion().equals(that.getVersion()) &&
+            getName().equals(that.getName()) &&
+            getDescription().equals(that.getDescription()) &&
+            getDifficulty().equals(that.getDifficulty()) &&
+            getIntervalLength().equals(that.getIntervalLength()) &&
+            getDuration().equals(that.getDuration()) &&
+            getRating().equals(that.getRating()) &&
+            getCreatorId().equals(that.getCreatorId());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (version != null ? version.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
-        result = 31 * result + (intervalLength != null ? intervalLength.hashCode() : 0);
-        result = 31 * result + (rating != null ? rating.hashCode() : 0);
-        result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getVersion(), getName(), getDescription(), getDifficulty(), getIntervalLength(), getDuration(), getMinTarget(), getMaxTarget(), isLowerDifficulty(), getRating(), getCreatorId());
     }
 
     public static TrainingScheduleRandomDtoBuilder builder() {

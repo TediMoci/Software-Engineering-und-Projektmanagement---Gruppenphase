@@ -34,19 +34,20 @@ public class TrainingScheduleEndpoint {
         this.trainingScheduleMapper = trainingScheduleMapper;
     }
 
-    @RequestMapping(value = "/{days}/{duration}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
+    @RequestMapping(value = "/random", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new random Training Schedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto saveRandom(
-        @PathVariable("days") int days, @PathVariable("duration") int duration,
-        @PathVariable("minTarget") double minTarget, @PathVariable("maxTarget") double maxTarget,
-        @RequestParam(value = "lowerDifficulty", defaultValue = "false") boolean lowerDifficulty,
-        @Valid @RequestBody TrainingScheduleRandomDto trainingScheduleRandomDto) {
+    public TrainingScheduleDto saveRandom(@Valid @RequestBody TrainingScheduleRandomDto trainingScheduleRandomDto) {
         LOGGER.info("Entering save for: " + trainingScheduleRandomDto);
-        trainingScheduleRandomDto.setIntervalLength(days);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleRandomDtoToTrainingSchedule(trainingScheduleRandomDto);
         try {
-            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,duration,minTarget,maxTarget,trainingSchedule,lowerDifficulty));
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(
+                trainingScheduleRandomDto.getIntervalLength(),
+                trainingScheduleRandomDto.getDuration(),
+                trainingScheduleRandomDto.getMinTarget(),
+                trainingScheduleRandomDto.getMaxTarget(),
+                trainingSchedule,
+                trainingScheduleRandomDto.isLowerDifficulty()));
         } catch (ServiceException e) {
             LOGGER.error("Could not save: " + trainingScheduleRandomDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
