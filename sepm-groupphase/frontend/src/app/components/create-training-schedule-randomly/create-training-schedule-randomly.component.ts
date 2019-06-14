@@ -3,8 +3,7 @@ import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Dude} from '../../dtos/dude';
 import {FindService} from '../../services/find.service';
-import {CreateTrainingScheduleService} from '../../services/create-training-schedule.service';
-import {CreateTraingsPlanRandom} from '../../dtos/create-traings-plan-random';
+import {CreateTrainingScheduleRandom} from '../../dtos/create-training-schedule-random';
 import {CreateTrainingScheduleRandomService} from '../../services/create-training-schedule-random.service';
 
 @Component({
@@ -19,9 +18,8 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
   dude: Dude;
   error: any;
   submitted: boolean = false;
-  interval: number = 1;
   tsForm: FormGroup;
-  traingSchedule: CreateTraingsPlanRandom;
+  trainingSchedule: CreateTrainingScheduleRandom;
 
   intervalDays: string[] = [
     '1 Day',
@@ -41,10 +39,10 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
 
     this.tsForm = this.formBuilder.group({
       tsName: ['', [Validators.required]],
-      tsMinTarget: ['', [Validators.required]],
-      tsMaxTarget: ['', [Validators.required]],
+      tsMinTarget: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
+      tsMaxTarget: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
       tsInterval: ['', [Validators.required]],
-      tsRepetitions: ['', Validators.required],
+      tsDuration: ['', [Validators.required, Validators.min(1), Validators.max(1440)]],
       tsOnlyMyDifficulty: [false]
     });
   }
@@ -57,29 +55,29 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
       return;
     }
 
-    this.traingSchedule = new CreateTraingsPlanRandom(
+    this.trainingSchedule = new CreateTrainingScheduleRandom(
       this.tsForm.controls.tsName.value,
       'No description given',
       this.dude.selfAssessment,
       this.dude.id,
       this.tsForm.controls.tsInterval.value,
-      this.tsForm.controls.tsRepetitions.value,
+      this.tsForm.controls.tsDuration.value,
       this.tsForm.controls.tsMinTarget.value,
       this.tsForm.controls.tsMaxTarget.value,
       this.tsForm.controls.tsOnlyMyDifficulty.value.toString()
     );
 
-    console.log('Trying to create random training schedule ' + JSON.stringify(this.traingSchedule));
+    console.log('Trying to create random training schedule ' + JSON.stringify(this.trainingSchedule));
 
-    this.createTrainingScheduleRandomService.addRandomTrainingSchedule(this.traingSchedule).subscribe(
+    this.createTrainingScheduleRandomService.addRandomTrainingSchedule(this.trainingSchedule).subscribe(
       () => {
+        this.router.navigate(['/create']);
       },
       (error) => {
         this.error = error;
       }
     );
 
-    return null;
   }
   vanishError() {
     this.error = false;
