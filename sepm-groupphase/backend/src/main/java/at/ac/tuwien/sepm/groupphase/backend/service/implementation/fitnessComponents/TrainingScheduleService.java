@@ -135,6 +135,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
 
         activeTrainingSchedule.setStartDate(LocalDate.now());
+        List<Boolean> hasBeenAdapted = new ArrayList<>();
+        for (int i = 0; i < activeTrainingSchedule.getIntervalRepetitions()-1; i++) {
+            hasBeenAdapted.add(false);
+        }
+        activeTrainingSchedule.setHasBeenAdapted(hasBeenAdapted);
         ActiveTrainingSchedule savedActiveTrainingSchedule;
         try {
             savedActiveTrainingSchedule = iActiveTrainingScheduleRepository.save(activeTrainingSchedule);
@@ -629,6 +634,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         builderATs.startDate(activeSchedule.getStartDate());
         builderATs.intervalRepetitions(activeSchedule.getIntervalRepetitions());
         builderATs.isAdaptive(true);
+
+        List<Boolean> hasBeenAdapted = activeSchedule.getHasBeenAdapted();
+        LocalDate tempDate = LocalDate.from(activeSchedule.getStartDate());
+        hasBeenAdapted.set((int)(tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / ts.getIntervalLength())-1, true);
+
         try {
             LOGGER.debug("update current ActiveTrainingSchedule in database");
             return iActiveTrainingScheduleRepository.save(builderATs.build());
