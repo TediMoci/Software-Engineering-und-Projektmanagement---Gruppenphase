@@ -297,9 +297,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             totalIntervalRepetitions = (int)startDate.until(LocalDate.now(), ChronoUnit.DAYS)/activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
 
             FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder result = new FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder();
-            result.dudeId(activeTrainingSchedule.getDude().getId());
-            result.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
-            result.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
             result.trainingSchedule(activeTrainingSchedule.getTrainingSchedule());
             result.dude(activeTrainingSchedule.getDude());
             result.totalHours(totalHours);

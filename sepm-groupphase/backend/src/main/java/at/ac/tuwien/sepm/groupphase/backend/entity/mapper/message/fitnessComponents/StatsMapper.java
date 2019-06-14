@@ -14,9 +14,9 @@ public class StatsMapper implements IStatsMapper {
         FinishedTrainingScheduleStatsDto.FinishedTrainingScheduleStatsDtoBuilder builder = new FinishedTrainingScheduleStatsDto.FinishedTrainingScheduleStatsDtoBuilder();
 
         builder.id(stats.getId());
-        builder.dudeId(stats.getDudeId());
-        builder.trainingScheduleId(stats.getTrainingScheduleId());
-        builder.trainingScheduleVersion(stats.getTrainingScheduleVersion());
+        builder.dudeId(stats.getDude().getId());
+        builder.trainingScheduleId(stats.getTrainingSchedule().getId());
+        builder.trainingScheduleVersion(stats.getTrainingSchedule().getVersion());
 
         TrainingSchedule ts = stats.getTrainingSchedule();
         TrainingScheduleDto.TrainingScheduleDtoBuilder builderTs = new TrainingScheduleDto.TrainingScheduleDtoBuilder();
