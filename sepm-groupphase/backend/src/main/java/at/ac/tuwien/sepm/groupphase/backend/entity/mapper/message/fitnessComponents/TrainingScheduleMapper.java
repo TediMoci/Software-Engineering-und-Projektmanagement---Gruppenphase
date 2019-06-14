@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDoneDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.TrainingScheduleWorkoutDtoOut;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
@@ -144,6 +141,30 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.startDate(activeTrainingSchedule.getStartDate());
         builder.intervalRepetitions(activeTrainingSchedule.getIntervalRepetitions());
         builder.isAdaptive(activeTrainingSchedule.getAdaptive());
+
+        return builder.build();
+    }
+
+    @Override
+    public TrainingSchedule trainingScheduleRandomDtoToTrainingSchedule(TrainingScheduleRandomDto trainingScheduleRandomDto) {
+        TrainingSchedule.TrainingScheduleBuilder builder = new TrainingSchedule.TrainingScheduleBuilder();
+
+        builder.id(trainingScheduleRandomDto.getId());
+        builder.version(trainingScheduleRandomDto.getVersion());
+        builder.name(trainingScheduleRandomDto.getName());
+        builder.description(trainingScheduleRandomDto.getDescription());
+        builder.difficulty(trainingScheduleRandomDto.getDifficulty());
+        builder.intervalLength(trainingScheduleRandomDto.getIntervalLength());
+        builder.rating(trainingScheduleRandomDto.getRating());
+        builder.isHistory(false);
+
+        List<TrainingScheduleWorkout> trainingScheduleWorkouts = new ArrayList<>();
+        builder.workouts(trainingScheduleWorkouts);
+
+        Dude.DudeBuilder dudeBuilder = new Dude.DudeBuilder();
+        dudeBuilder.id(trainingScheduleRandomDto.getCreatorId());
+        Dude dude = dudeBuilder.build();
+        builder.creator(dude);
 
         return builder.build();
     }

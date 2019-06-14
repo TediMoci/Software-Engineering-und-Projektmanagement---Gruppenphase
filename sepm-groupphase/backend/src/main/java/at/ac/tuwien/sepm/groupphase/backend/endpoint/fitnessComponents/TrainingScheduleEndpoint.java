@@ -41,13 +41,14 @@ public class TrainingScheduleEndpoint {
         @PathVariable("days") int days, @PathVariable("duration") int duration,
         @PathVariable("minTarget") double minTarget, @PathVariable("maxTarget") double maxTarget,
         @RequestParam(value = "lowerDifficulty", defaultValue = "false") boolean lowerDifficulty,
-        @Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
-        LOGGER.info("Entering save for: " + trainingScheduleDto);
-        TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
+        @Valid @RequestBody TrainingScheduleRandomDto trainingScheduleRandomDto) {
+        LOGGER.info("Entering save for: " + trainingScheduleRandomDto);
+        trainingScheduleRandomDto.setIntervalLength(days);
+        TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleRandomDtoToTrainingSchedule(trainingScheduleRandomDto);
         try {
             return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,duration,minTarget,maxTarget,trainingSchedule,lowerDifficulty));
         } catch (ServiceException e) {
-            LOGGER.error("Could not save: " + trainingScheduleDto);
+            LOGGER.error("Could not save: " + trainingScheduleRandomDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
