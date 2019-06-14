@@ -53,9 +53,46 @@
               <button class="hideButton" mat-flat-button (click)="selectedWorkout = []">Hide details</button>
             </section>
 
-          </div>
+            <section >
+              <mat-card class="detailsContent">
+                <h2>{{selectedWorkout.name}}</h2>
+                <p>Difficulty: {{convertDifficulty(selectedWorkout.difficulty)}}</p>
+                <p>Calorie Consumption: {{selectedWorkout.calorieConsumption}}</p>
+                <hr>
+                <p>"{{selectedWorkout.description}}"</p>
+                <hr>
+                <mat-accordion>
+                  <mat-expansion-panel *ngFor='let exercise of exercisesForWorkouts'>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large">
+                        {{exercise.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Category: {{exercise.category}}</p>
+                    <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                    <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
+                    <hr>
+                    <p>Repetitions: {{exercise.repetitions}}</p>
+                    <p>Sets: {{exercise.sets}}</p>
+                    <hr>
+                    <p>Duration: {{exercise.exDuration}}</p>
+                    <p>Equipment: {{exercise.equipment}}</p>
+                    <hr>
+                    <p>"{{exercise.description}}"</p>
 
-    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </mat-card>
+            </section>
+
+            <section>
+              <button class="hideButton" mat-flat-button (click)="selectedWorkout = []">Hide details</button>
+            </section>
+
+          </div>
+        </div>
+
   </div>
 
 </div>

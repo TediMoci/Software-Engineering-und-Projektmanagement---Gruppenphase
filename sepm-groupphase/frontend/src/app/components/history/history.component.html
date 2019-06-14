@@ -20,7 +20,7 @@
         <p>Click on a name to see your Training Schedule together with Training Schedule statistics. Scroll to see more Training Schedules!</p>
         <ul>
           <li *ngFor='let element of stats'>
-            <a [routerLink]="['/statistics']" (click)="setSelectedStats(element)" class="btn2 btn-link">{{element.trainingSchedule.name}}</a>
+            <a [routerLink]="['/statistics']" (click)="setSelectedStats(element)" class="btn2 btn-link">{{element.trainingScheduleDto.name}}</a>
             </li>
         </ul>
       </div>

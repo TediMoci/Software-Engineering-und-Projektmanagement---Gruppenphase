@@ -1,4 +1,4 @@
-import {TrainingSchedule} from './trainingSchedule';
+import {TrainingScheduleDto} from './trainingSchedule-dto';
 
 export class Statistics {
   constructor(
@@ -13,6 +13,6 @@ export class Statistics {
     public strengthPercent: number,
     public endurancePercent: number,
     public otherPercent: number,
-    public trainingSchedule: TrainingSchedule
+    public trainingScheduleDto: TrainingScheduleDto
   ) {}
 }

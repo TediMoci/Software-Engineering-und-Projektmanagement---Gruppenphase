@@ -6,6 +6,7 @@ import {FormControl} from '@angular/forms';
 import {Workout} from '../../dtos/workout';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
 import {WorkoutService} from '../../services/workout.service';
+import {TrainingScheduleDto} from '../../dtos/trainingSchedule-dto';
 
 @Component({
   selector: 'app-statistic-trainingschedule',
@@ -31,7 +32,7 @@ export class StatisticTrainingscheduleComponent implements OnInit {
   tabs: Array<string>;
   tabContent: any;
   selected = new FormControl(0);
-  trainingSchedule: TrainingSchedule;
+  trainingSchedule: TrainingScheduleDto;
   tsWorkouts: any;
   exercisesForWorkouts: any;
   selectedWorkout: any = [];
@@ -47,7 +48,7 @@ export class StatisticTrainingscheduleComponent implements OnInit {
 
     this.statistics = JSON.parse(localStorage.getItem('selectedStatistics'));
 
-    this.nameOfStatistic = this.statistics.trainingSchedule.name;
+    this.nameOfStatistic = this.statistics.trainingScheduleDto.name;
     this.totalHours = this.statistics.totalHours;
     this.totalDays = this.statistics.totalDays;
     this.totalCalories = this.statistics.totalCalorieConsumption;
@@ -55,9 +56,9 @@ export class StatisticTrainingscheduleComponent implements OnInit {
     this.strengthPercent = this.statistics.strengthPercent;
     this.endurancePercent = this.statistics.endurancePercent;
     this.otherPercent = this.statistics.otherPercent;
+    this.trainingSchedule = this.statistics.trainingScheduleDto;
 
     this.tabs = this.initTabs(this.trainingSchedule.intervalLength);
-    console.log(this.trainingSchedule.trainingScheduleWorkouts);
 
     this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(this.trainingSchedule.id, this.trainingSchedule.version).subscribe(
       (data) => {

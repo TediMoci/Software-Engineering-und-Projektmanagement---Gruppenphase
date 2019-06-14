@@ -26,10 +26,10 @@ export class HistoryComponent implements OnInit {
       (data) => {
         console.log('get all statistics of formerly active training schedules of dude with name ' + this.dude.name + ' and id ' + this.dude.id);
         this.stats = data.sort(function (a, b) { // sort data alphabetically
-          if (a.trainingSchedule.name.toLocaleLowerCase() < b.trainingSchedule.name.toLocaleLowerCase()) {
+          if (a.trainingScheduleDto.name.toLocaleLowerCase() < b.trainingScheduleDto.name.toLocaleLowerCase()) {
             return -1;
           }
-          if (a.trainingSchedule.name > b.trainingSchedule.name) {
+          if (a.trainingScheduleDto.name > b.trainingScheduleDto.name) {
             return 1;
           }
           return 0;
@@ -39,8 +39,6 @@ export class HistoryComponent implements OnInit {
         this.error = error;
       }
     );
-
-    console.log(this.stats);
   }
 
   setSelectedStats(element: Statistics) {
