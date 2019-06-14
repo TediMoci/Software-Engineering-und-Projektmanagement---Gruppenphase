@@ -270,14 +270,24 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         double totalHours;
         int totalDays ;
         int totalIntervalRepetitions;
+        TrainingSchedule originalTs = new TrainingSchedule();
+        boolean foundOriginal = false;
 
         try {
             activeTrainingSchedule = iDudeRepository.findById(dudeId).get().getActiveTrainingSchedule();
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        try{
+
+        try {
+            // delete exerciseDone from to delete activeTrainingSchedule
+            List<TrainingSchedule> copiedTs = new ArrayList<>();
             for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++) {
+                int maxDayNotChosen = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
+                if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule())) && (activeTrainingSchedule.getDone().get(i).getDay() > maxDayNotChosen)) {
+                    copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
+                }
+
                 if (activeTrainingSchedule.getDone().get(i).getDone()){
                     totalCalories += activeTrainingSchedule.getDone().get(i).getWorkout().getCalorieConsumption();
                     totalDuration += activeTrainingSchedule.getDone().get(i).getWorkoutExercise().getExDuration();
@@ -291,6 +301,13 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         other++;
                     }
                 }
+
+                if(!foundOriginal && activeTrainingSchedule.getDone().get(i).getDay() == 1) {
+                    originalTs = activeTrainingSchedule.getDone().get(i).getTrainingSchedule();
+                    foundOriginal = true;
+                }
+
+                iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
             }
 
             totalHours = totalDuration/60.0;
@@ -299,10 +316,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             endurancePercent = ((double)endurance/ activeTrainingSchedule.getDone().size())*100.0;
             otherPercent = ((double)other/ activeTrainingSchedule.getDone().size())*100.0;
             LocalDate startDate = LocalDate.from(activeTrainingSchedule.getStartDate());
-            totalIntervalRepetitions = (int)startDate.until(LocalDate.now(), ChronoUnit.DAYS)/activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
+            totalIntervalRepetitions = (int)startDate.until(LocalDate.now(), ChronoUnit.DAYS)/originalTs.getIntervalLength();
 
             FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder result = new FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder();
-            result.trainingSchedule(activeTrainingSchedule.getTrainingSchedule());
+            result.trainingSchedule(originalTs);
             result.dude(activeTrainingSchedule.getDude());
             result.totalHours(totalHours);
             result.totalDays(totalDays);
@@ -313,23 +330,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             result.otherPercent(otherPercent);
 
             iFinishedTrainingScheduleRepository.save(result.build());
-        } catch (DataAccessException e) {
-            throw new ServiceException(e.getMessage());
-        }
 
-        try {
-            // delete exerciseDone from to delete activeTrainingSchedule
-            List<TrainingSchedule> copiedTs = new ArrayList<>();
-            for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++) {
-                int maxDayNotChosen = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
-                if ((activeTrainingSchedule.getAdaptive()) && (!copiedTs.contains(activeTrainingSchedule.getDone().get(i).getTrainingSchedule())) && (activeTrainingSchedule.getDone().get(i).getDay() > maxDayNotChosen)) {
-                    copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
-                }
-                iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
-            }
             for (TrainingSchedule t : copiedTs) {
                 LOGGER.debug("delete trainingSchedule with id " + t.getId());
-                iTrainingScheduleRepository.deleteById(t.getId());
+               // iTrainingScheduleRepository.deleteById(t.getId());
             }
             iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
         } catch (DataAccessException e) {
