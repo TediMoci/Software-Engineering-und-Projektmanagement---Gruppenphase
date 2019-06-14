@@ -17,8 +17,7 @@ export class CreateExerciseComponent implements OnInit {
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
-  muscleGroup: string[] = ['Other', 'Traps', 'Shoulders', 'Chest', 'Lats', 'Abdominals', 'Biceps', 'Triceps', 'Forearms', 'Quads',
-    'Glutes', 'Claves'];
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves'];
 
   constructor(private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }

@@ -63,8 +63,7 @@ export class FindComponent implements OnInit {
   followedFP: String;
 
   // Enums
-  muscleGroup: string[] = ['None', 'Other', 'Traps', 'Shoulders', 'Chest', 'Lats', 'Abdominals', 'Biceps', 'Triceps', 'Forearms', 'Quads',
-    'Glutes', 'Claves'];
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves'];
 
   constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
 
