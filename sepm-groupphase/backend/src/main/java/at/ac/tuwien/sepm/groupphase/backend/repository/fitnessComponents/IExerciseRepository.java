@@ -38,14 +38,14 @@ public interface IExerciseRepository extends JpaRepository<Exercise, ExerciseKey
      * @return Exercises with name beginning with the given name-string
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
-    @Query("SELECT e FROM Exercise e WHERE e.name LIKE ?1% AND e.isHistory=false")
+    @Query("SELECT e FROM Exercise e WHERE e.name LIKE ?1% AND e.isHistory=false AND e.isPrivate=false")
     List<Exercise> findByName(String name) throws DataAccessException;
 
     /**
      * @return all Exercises in the database
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
-    @Query("SELECT e FROM Exercise e WHERE e.isHistory=false ORDER BY e.id")
+    @Query("SELECT e FROM Exercise e WHERE e.isHistory=false AND e.isPrivate=false ORDER BY e.id")
     List<Exercise> findAll() throws DataAccessException;
 
     /**
@@ -55,7 +55,7 @@ public interface IExerciseRepository extends JpaRepository<Exercise, ExerciseKey
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
     @Query("SELECT e FROM Exercise e WHERE (e.name LIKE %?1% OR e.description LIKE %?1% OR e.equipment LIKE %?1%" +
-        " OR e.muscleGroup LIKE %?1%) AND e.category=?2 AND e.isHistory=false")
+        " OR e.muscleGroup LIKE %?1%) AND e.category=?2 AND e.isHistory=false AND e.isPrivate=false")
     List<Exercise> findByFilterWithCategory(String filter, Category category) throws DataAccessException;
 
     /**
@@ -64,7 +64,7 @@ public interface IExerciseRepository extends JpaRepository<Exercise, ExerciseKey
      * @throws DataAccessException if an error occurred while trying to find the Exercises in the database
      */
     @Query("SELECT e FROM Exercise e WHERE (e.name LIKE %?1% OR e.description LIKE %?1% OR e.equipment LIKE %?1%" +
-        " OR e.muscleGroup LIKE %?1%) AND e.isHistory=false")
+        " OR e.muscleGroup LIKE %?1%) AND e.isHistory=false AND e.isPrivate=false")
     List<Exercise> findByFilterWithoutCategory(String filter) throws DataAccessException;
 
     /**

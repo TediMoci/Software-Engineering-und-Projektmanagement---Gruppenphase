@@ -63,6 +63,6 @@ public interface ITrainingScheduleRepository extends JpaRepository<TrainingSched
      * @return TrainingSchedules with name beginning with the given name-string
      * @throws DataAccessException if an error occurred while trying to find the TrainingSchedules in the database
      */
-    @Query("SELECT t FROM TrainingSchedule t WHERE t.name LIKE ?1% AND t.isHistory=false")
+    @Query("SELECT t FROM TrainingSchedule t WHERE t.name LIKE ?1% AND t.isHistory=false AND t.isPrivate=false")
     List<TrainingSchedule> findByName(String name) throws DataAccessException;
 }

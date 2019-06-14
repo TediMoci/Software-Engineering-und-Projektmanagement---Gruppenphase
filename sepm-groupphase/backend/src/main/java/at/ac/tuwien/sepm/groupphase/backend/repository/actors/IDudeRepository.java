@@ -29,6 +29,7 @@ public interface IDudeRepository extends JpaRepository<Dude, Long> {
      *
      * @return
      */
+    @Query("SELECT d FROM Dude d WHERE d.isPrivate=false")
     List<Dude> findAll();
 
     @Query("SELECT d FROM Dude d WHERE (d.name LIKE %?1%) AND d.selfAssessment=?2 AND d.isPrivate=false")

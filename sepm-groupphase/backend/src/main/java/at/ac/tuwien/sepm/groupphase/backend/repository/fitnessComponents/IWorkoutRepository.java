@@ -38,14 +38,14 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
      * @return Workouts with name beginning with the given name-string
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE w.name LIKE ?1% AND w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE w.name LIKE ?1% AND w.isHistory=false AND w.isPrivate=false")
     List<Workout> findByName(String name) throws DataAccessException;
 
     /**
      * @return all Workouts in the database
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE w.isHistory=false ORDER BY w.id")
+    @Query("SELECT w FROM Workout w WHERE w.isHistory=false AND w.isPrivate=false ORDER BY w.id")
     List<Workout> findAll() throws DataAccessException;
 
     /**
@@ -56,7 +56,7 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
      * @return all Workouts in the database according to the given filters
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.difficulty=?2 AND w.calorieConsumption>=?3 AND w.calorieConsumption<=?4 AND w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.difficulty=?2 AND w.calorieConsumption>=?3 AND w.calorieConsumption<=?4 AND w.isHistory=false AND w.isPrivate=false")
     List<Workout> findByFilterWithDifficulty(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws DataAccessException;
 
     /**
@@ -66,7 +66,7 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
      * @return all Workouts in the database according to the given filters
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.calorieConsumption>=?2 AND w.calorieConsumption<=?3 AND w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.calorieConsumption>=?2 AND w.calorieConsumption<=?3 AND w.isHistory=false AND w.isPrivate=false")
     List<Workout> findByFilterWithoutDifficulty(String filter, Double calorieLower, Double calorieUpper) throws DataAccessException;
 
     /**
