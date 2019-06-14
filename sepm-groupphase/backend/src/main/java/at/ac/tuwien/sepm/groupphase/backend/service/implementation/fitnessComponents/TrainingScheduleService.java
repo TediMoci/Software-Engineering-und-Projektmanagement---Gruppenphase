@@ -153,11 +153,18 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
-    public TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException {
+    public TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule, boolean lowerDifficulty) throws ServiceException {
         LOGGER.info("Entering save for: " + trainingSchedule);
         trainingSchedule.setWorkouts(null);
+        List<Workout> workouts = new ArrayList<>();
 
-        List<Workout> workouts = iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty());
+        if (lowerDifficulty){
+            workouts.addAll(iWorkoutRepository.findByLowerDifficulty(trainingSchedule.getDifficulty()));
+        }
+        else{
+            workouts.addAll(iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty()));
+        }
+
         sum_up(workouts,minTarget,maxTarget,days,duration);
 
         TrainingSchedule savedTrainingSchedule;

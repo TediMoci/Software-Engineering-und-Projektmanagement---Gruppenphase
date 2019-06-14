@@ -85,6 +85,14 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
     @Query("SELECT w FROM Workout w WHERE w.difficulty=?1 AND w.isHistory=false ORDER BY w.id")
     List<Workout> findByDifficulty(Integer difficulty) throws DataAccessException;
 
+    /**
+     * @param difficulty of Workouts to be found
+     * @return all non-deleted Workouts in the database with difficulty equal or lower  to the given value
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE w.difficulty<=?1 AND w.isHistory=false ORDER BY w.id")
+    List<Workout> findByLowerDifficulty(Integer difficulty) throws DataAccessException;
+
 
     /**
      * @param myId -> ID of the workout that is updated

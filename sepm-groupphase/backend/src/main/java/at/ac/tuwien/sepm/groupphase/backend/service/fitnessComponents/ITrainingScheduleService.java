@@ -38,7 +38,7 @@ public interface ITrainingScheduleService {
      * @return the saved TrainingSchedule
      * @throws ServiceException if an error occurred while trying to save the TrainingSchedule in the system
      */
-    TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException;
+    TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule, boolean lowerDifficulty) throws ServiceException;
 
     /**
      * @param id of TrainingSchedule to be found
