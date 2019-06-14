@@ -120,9 +120,10 @@ public class FitnessProviderService implements IFitnessProviderService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        fitnessProvider.setImagePath(fileName);
+        String imagePath = "http://localhost:8080/downloadImage/" + fileName;
+        fitnessProvider.setImagePath(imagePath);
         iFitnessProviderRepository.save(fitnessProvider);
-        return fileName;
+        return imagePath;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class Course {
     private String description = "No description given.";
 
     @Column(nullable = false)
-    private String imagePath = "exercise.png";
+    private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fitness_provider_id")

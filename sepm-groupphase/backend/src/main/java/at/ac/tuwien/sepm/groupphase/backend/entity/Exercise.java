@@ -41,7 +41,7 @@ public class Exercise {
     private Boolean isHistory = false;
 
     @Column(nullable = false)
-    private String imagePath = "exercise.png";
+    private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
