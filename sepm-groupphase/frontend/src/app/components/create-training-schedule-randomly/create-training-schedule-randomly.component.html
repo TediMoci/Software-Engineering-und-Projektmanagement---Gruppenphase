@@ -41,7 +41,7 @@
             <div class="form-group-sh">
               <!--start - field-->
               <label for="tsMinTarget">Minimum Calorie Consumption*</label>
-              <input type="number" name="tsMinTarget"min="0" max="1000" class="form-control" id="tsMinTarget"
+              <input type="number" name="tsMinTarget"min="1" max="1000" class="form-control" id="tsMinTarget"
                      formControlName="tsMinTarget"
                      aria-describedby="tsMinTargetHelp">
               <div *ngIf="submitted && !!tsForm.controls.tsMinTarget.errors" class="error">
@@ -52,7 +52,7 @@
               <!--end - field-->
               <!--start - field-->
               <label for="tsMaxTarget">Maximum Calorie Consumption*</label>
-              <input type="number" name="tsMaxTarget" min="0" max="1000" class="form-control" id="tsMaxTarget"
+              <input type="number" name="tsMaxTarget" min="1" max="1000" class="form-control" id="tsMaxTarget"
                      formControlName="tsMaxTarget"
                      aria-describedby="tsMaxTargetHelp">
               <div *ngIf="submitted && !!tsForm.controls.tsMaxTarget.errors" class="error">
@@ -73,7 +73,7 @@
               <mat-form-field>
                 <mat-label>Interval Lenght*</mat-label>
                 <mat-select formControlName="tsInterval">
-                  <mat-option *ngFor="let days of intervalDays" [value]="days">
+                  <mat-option *ngFor="let days of intervalDays" [value]="intervalDays.indexOf(days)+1">
                     {{days}}
                   </mat-option>
                 </mat-select>
@@ -83,7 +83,7 @@
               </div>
               <!--end - field-->
               <!--start - field-->
-              <mat-checkbox color="primary" class= "RadioButton" formControlName="tsOnlyMyDifficulty">Only exercises for my skill level</mat-checkbox>
+              <mat-checkbox color="primary" class= "RadioButton" formControlName="tsOnlyMyDifficulty">Consider also easier workouts</mat-checkbox>
               <!--end - field-->
             </div>
           </form>

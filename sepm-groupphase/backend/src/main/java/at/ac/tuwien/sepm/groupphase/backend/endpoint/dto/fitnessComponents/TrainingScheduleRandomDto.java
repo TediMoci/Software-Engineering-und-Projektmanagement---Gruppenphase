@@ -42,7 +42,7 @@ public class TrainingScheduleRandomDto {
 
     @ApiModelProperty(required = true, name = "Minimum amount of calories per day of TrainingSchedule")
     @NotNull(message = "minTarget must be given")
-    @Min(value = 1, message = "Min maxTarget value is 1")
+    @Min(value = 1, message = "Min minTarget value is 1")
     private double minTarget;
 
     @ApiModelProperty(required = true, name = "Maximum amount of calories per day of TrainingSchedule")

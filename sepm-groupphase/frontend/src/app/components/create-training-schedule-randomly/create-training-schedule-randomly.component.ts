@@ -52,15 +52,21 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
   createTrainingSchedule() {
     this.submitted = true;
 
+    if (this.tsForm.invalid) {
+      console.log('input is invalid');
+      return;
+    }
+
     this.traingSchedule = new CreateTraingsPlanRandom(
       this.tsForm.controls.tsName.value,
       'No description given',
       this.dude.selfAssessment,
-      this.tsForm.controls.tsMinTarget.value,
-      this.tsForm.controls.tsMaxTarget.value,
+      this.dude.id,
       this.tsForm.controls.tsInterval.value,
       this.tsForm.controls.tsRepetitions.value,
-      this.tsForm.controls.tsOnlyMyDifficulty.value
+      this.tsForm.controls.tsMinTarget.value,
+      this.tsForm.controls.tsMaxTarget.value,
+      this.tsForm.controls.tsOnlyMyDifficulty.value.toString()
     );
 
     console.log('Trying to create random training schedule ' + JSON.stringify(this.traingSchedule));
@@ -77,5 +83,13 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
   }
   vanishError() {
     this.error = false;
+  }
+
+  convertDifficultyBack(element: string) {
+    switch (element) {
+      case 'Beginner': return 1;
+      case 'Advanced': return 2;
+      case 'Pro': return 3;
+    }
   }
 }

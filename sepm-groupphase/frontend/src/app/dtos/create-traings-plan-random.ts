@@ -3,10 +3,11 @@ export class CreateTraingsPlanRandom {
     public name: string,
     public description: string,
     public difficulty: number,
+    public creatorId: number,
+    public intervalLength: number,
+    public duration: number,
     public minTarget: number,
     public maxTarget: number,
-    public interval: number,
-    public repetitions: number,
-    public onlyMyDifficulty: boolean
+    public lowerDifficulty: boolean
   ) {}
 }

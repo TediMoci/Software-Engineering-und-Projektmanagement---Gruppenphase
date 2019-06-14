@@ -15,25 +15,8 @@ export class CreateTrainingScheduleRandomService {
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
   addRandomTrainingSchedule(rts: CreateTraingsPlanRandom): Observable<TrainingSchedule> {
-
-    let params = new HttpParams();
-    if (rts.onlyMyDifficulty) {
-      params = params.set('duration', '' + rts.onlyMyDifficulty);
-    }
-
-    const ts = new TrainingSchedule(
-      null,
-      null,
-      rts.name,
-      rts.description,
-      rts.difficulty,
-      null,
-      null,
-      null,
-    );
-
     console.log('add trainingSchedule with params ' + JSON.stringify(rts));
     return this.httpClient.post<TrainingSchedule>(
-      this.trainingScheduleBaseUri + '/' + rts.interval + '/' + rts.repetitions + '/' + rts.minTarget + '/' + rts.maxTarget, ts, {params: params});
+      this.trainingScheduleBaseUri + '/random',  rts);
   }
 }
