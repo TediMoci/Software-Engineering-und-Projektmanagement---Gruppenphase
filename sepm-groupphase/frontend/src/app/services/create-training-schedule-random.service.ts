@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {TrainingSchedule} from '../dtos/trainingSchedule';
@@ -15,8 +15,25 @@ export class CreateTrainingScheduleRandomService {
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
   addRandomTrainingSchedule(rts: CreateTraingsPlanRandom): Observable<TrainingSchedule> {
+
+    let params = new HttpParams();
+    if (rts.onlyMyDifficulty) {
+      params = params.set('duration', '' + rts.onlyMyDifficulty);
+    }
+
+    const ts = new TrainingSchedule(
+      null,
+      null,
+      rts.name,
+      rts.description,
+      rts.difficulty,
+      null,
+      null,
+      null,
+    );
+
     console.log('add trainingSchedule with params ' + JSON.stringify(rts));
     return this.httpClient.post<TrainingSchedule>(
-      this.trainingScheduleBaseUri + '/' + rts.interval + '/' + rts.repetitions + '/' + rts.minTarget + '/' + rts.maxTarget, rts);
+      this.trainingScheduleBaseUri + '/' + rts.interval + '/' + rts.repetitions + '/' + rts.minTarget + '/' + rts.maxTarget, ts, {params: params});
   }
 }

@@ -27,8 +27,20 @@
             <span class="anchor" id="formRegister"></span>
 
             <div class="form-group">
+              <label for="tsName">Name*</label>
+              <input type="text" name="tsName" maxlength="50" class="form-control" id="tsName"
+                     formControlName="tsName"
+                     aria-describedby="tsNameHelp" placeholder="Enter name">
+              <div *ngIf="submitted && !!tsForm.controls.tsName.errors" class="error">
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsName.errors.required">Name is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group-sh">
               <!--start - field-->
-              <label for="tsMinTarget">MinTarget*</label>
+              <label for="tsMinTarget">Minimum Calorie Consumption*</label>
               <input type="number" name="tsMinTarget"min="0" max="1000" class="form-control" id="tsMinTarget"
                      formControlName="tsMinTarget"
                      aria-describedby="tsMinTargetHelp">
@@ -39,7 +51,7 @@
               </div>
               <!--end - field-->
               <!--start - field-->
-              <label for="tsMaxTarget">MaxTarget*</label>
+              <label for="tsMaxTarget">Maximum Calorie Consumption*</label>
               <input type="number" name="tsMaxTarget" min="0" max="1000" class="form-control" id="tsMaxTarget"
                      formControlName="tsMaxTarget"
                      aria-describedby="tsMaxTargetHelp">
@@ -51,7 +63,7 @@
               <!--end - field-->
               <!--start - field-->
               <label for="tsRepetitions">Repetitions*</label>
-              <input type="number" min="0" max="100" name="tsRepetitions" class="form-control" id="tsRepetitions" formControlName="tsRepetitions"
+              <input type="number" min="1" max="100" name="tsRepetitions" class="form-control" id="tsRepetitions" formControlName="tsRepetitions"
                      aria-describedby="repetitionsHelp">
               <div *ngIf="submitted && !!tsForm.controls.tsRepetitions.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsRepetitions.errors.required">Repetitions is required!</small>
