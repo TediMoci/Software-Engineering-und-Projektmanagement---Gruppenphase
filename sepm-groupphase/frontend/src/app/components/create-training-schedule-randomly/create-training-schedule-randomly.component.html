@@ -43,7 +43,7 @@
               <label for="tsMinTarget">Minimum Calorie Consumption*</label>
               <input type="number" name="tsMinTarget" class="form-control" id="tsMinTarget"
                      formControlName="tsMinTarget"
-                     aria-describedby="tsMinTargetHelp">
+                     aria-describedby="tsMinTargetHelp" placeholder="Enter minimum calories">
               <div *ngIf="submitted && !!tsForm.controls.tsMinTarget.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.required">Minimum calorie consumption is
                   required!
@@ -60,7 +60,7 @@
               <label for="tsMaxTarget">Maximum Calorie Consumption*</label>
               <input type="number" name="tsMaxTarget" class="form-control" id="tsMaxTarget"
                      formControlName="tsMaxTarget"
-                     aria-describedby="tsMaxTargetHelp">
+                     aria-describedby="tsMaxTargetHelp" placeholder="Enter maximum calories">
               <div *ngIf="submitted && !!tsForm.controls.tsMaxTarget.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.required">Maximum calorie consumption is
                   required!
@@ -76,7 +76,7 @@
               <!--start - field-->
               <label for="tsDuration">Maximum duration per day in minutes*</label>
               <input type="number" name="tsDuration" class="form-control" id="tsDuration" formControlName="tsDuration"
-                     aria-describedby="tsDurationHelp">
+                     aria-describedby="tsDurationHelp" placeholder="Enter maximum duration">
               <div *ngIf="submitted && !!tsForm.controls.tsDuration.errors" class="error">
                 <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.required">Maximum duration is required!</small>
               <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.min">Maximum duration must
