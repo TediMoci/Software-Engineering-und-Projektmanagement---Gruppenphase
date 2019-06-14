@@ -17,6 +17,7 @@ export class CreateExerciseComponent implements OnInit {
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves'];
 
   constructor(private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
@@ -29,7 +30,7 @@ export class CreateExerciseComponent implements OnInit {
       equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
       descriptionForExercise: ['', [Validators.required]],
-      muscleGroupExercise: ['']
+      muscleGroupExercise: ['', [Validators.required]]
     });
   }
 

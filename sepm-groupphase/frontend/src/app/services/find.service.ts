@@ -31,6 +31,9 @@ export class FindService {
     if (exerciseFilter.category != null) {
       params = params.set('category', exerciseFilter.category);
     }
+    if (exerciseFilter.muscle != null) {
+      params = params.set('muscleGroup', exerciseFilter.muscle);
+    }
 
     console.log('get all exercises with params: ' + params.toString());
 

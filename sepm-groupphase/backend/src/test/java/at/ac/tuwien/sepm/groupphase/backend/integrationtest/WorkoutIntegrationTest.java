@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.Exerc
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutExerciseDtoIn;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -63,13 +64,13 @@ public class WorkoutIntegrationTest {
         exerciseDto1.setName("Exercise1");
         exerciseDto1.setDescription("Description1");
         exerciseDto1.setEquipment("Equipment1");
-        exerciseDto1.setMuscleGroup("MuscleGroup1");
+        exerciseDto1.setMuscleGroup(MuscleGroup.Other);
         exerciseDto1.setCategory(Category.Strength);
 
         exerciseDto2.setName("Exercise2");
         exerciseDto2.setDescription("Description2");
         exerciseDto2.setEquipment("Equipment2");
-        exerciseDto2.setMuscleGroup("MuscleGroup2");
+        exerciseDto2.setMuscleGroup(MuscleGroup.Other);
         exerciseDto2.setCategory(Category.Endurance);
 
         validWorkoutDto1.setName("Workout1");

@@ -29,6 +29,7 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMin: string = '';
   public filterWorkoutCaloriesMax: string = '';
   public filterDudeSelfAssessment: string = 'None';
+  public filterExerciseMuscle: string = 'None';
 
   // Transfer Variables
   public inputTextActual: any;
@@ -37,6 +38,7 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMinActual: string = '';
   public filterWorkoutCaloriesMaxActual: string = '';
   public filterDudeSelfAssessmentActual: string = 'None';
+  public filterExerciseMuscleActual: string = 'None';
 
   entries: Array<any>;
   exercisesForWorkouts: any;
@@ -59,6 +61,9 @@ export class FindComponent implements OnInit {
   selectedFP: FitnessProvider;
 
   followedFP: String;
+
+  // Enums
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves'];
 
   constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
 
@@ -94,9 +99,17 @@ export class FindComponent implements OnInit {
           this.filterExerciseCategoryActual = this.filterExerciseCategory;
         }
 
+        if (this.filterExerciseMuscle === 'None') {
+          this.filterExerciseMuscleActual = null;
+        } else {
+          this.filterExerciseMuscleActual = this.filterExerciseMuscle;
+        }
+
         this.exerciseFilter = new ExerciseFilter(
           this.inputTextActual,
-          this.filterExerciseCategoryActual);
+          this.filterExerciseCategoryActual,
+          this.filterExerciseMuscleActual
+        );
         console.log('name: ' + this.exerciseFilter.filter);
         this.findService.getAllExercisesFilterd(this.exerciseFilter).subscribe(
           (data) => {
