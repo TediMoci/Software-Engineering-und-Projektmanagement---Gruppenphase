@@ -264,16 +264,18 @@ export class DudeProfileComponent implements OnInit {
         this.error = error;
       }
     );
-    this.authService.getUserByNameFromDude(this.dude.name).subscribe(data => {
-        console.log('set new image path ' + data.imagePath);
-        this.dude.imagePath = data.imagePath;
-        this.setLinkPicture(this.dude.imagePath);
-        localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
-      },
-      error => {
-        this.error = error;
-      }
-    );
+    this.delay(100).then( any => {
+      this.authService.getUserByNameFromDude(this.dude.name).subscribe(data => {
+          console.log('set new image path ' + data.imagePath);
+          this.dude.imagePath = data.imagePath;
+          this.setLinkPicture(this.dude.imagePath);
+          localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
+        },
+        error => {
+          this.error = error;
+        }
+      );
+    });
   }
 
    getLinkPicture() {
@@ -283,8 +285,12 @@ export class DudeProfileComponent implements OnInit {
     return this.imagePath;
   }
 
-  public setLinkPicture(url: string) {
+   setLinkPicture(url: string) {
     this.imagePath = url;
     this.timeStamp = (new Date()).getTime();
+  }
+
+  async delay(ms: number) {
+    await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
   }
 }
