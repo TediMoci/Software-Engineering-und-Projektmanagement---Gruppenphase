@@ -1,0 +1,53 @@
+.container {
+  padding: 0;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  background: white;
+  min-height: 700px;
+}
+
+.container-tsPlanning {
+  padding: 50px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  background: white;
+  min-height: 700px;
+}
+
+.img-fluid {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  width: 200px;
+  height: 200px;
+}
+
+.col-sm-3 {
+  background: lightskyblue;
+  min-height: 700px;
+}
+
+.row-sm-10 h4 {
+  padding: 20px;
+  margin-bottom: 50px;
+  margin-top: 9px;
+  text-align: center;
+  color: black;
+  line-height: 10px;
+}
+
+.form-group {
+  max-width: 500px;
+}
+
+.form-group-sh {
+  max-width:250px;
+}
+.col-sm-9 {
+  padding: 40px;
+  .row {
+    margin-left: 10px;
+    margin-top: 20px;
+  }
+}

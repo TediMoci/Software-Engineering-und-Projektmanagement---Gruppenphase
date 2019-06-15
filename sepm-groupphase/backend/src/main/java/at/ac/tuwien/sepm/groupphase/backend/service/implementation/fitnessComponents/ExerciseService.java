@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessCompo
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ExerciseBookmarkRepository;
@@ -83,13 +84,21 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
-    public List<Exercise> findByFilter(String filter, Category category, Long dudeId) throws ServiceException {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category + "; dudeId: " + dudeId);
+    public List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category + "; dudeId: " + dudeId);
         try {
             if (category != null) {
-                return iExerciseRepository.findByFilterWithCategory(filter, category);
+                if (muscleGroup != null) {
+                    return iExerciseRepository.findByFilterWithMuscleGroupAndWithCategory(filter, muscleGroup, category);
+                } else {
+                    return iExerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory(filter, category);
+                }
             } else {
-                return iExerciseRepository.findByFilterWithoutCategory(filter);
+                if (muscleGroup != null) {
+                    return iExerciseRepository.findByFilterWithMuscleGroupAndWithoutCategory(filter, muscleGroup);
+                } else {
+                    return iExerciseRepository.findByFilterWithoutMuscleGroupAndWithoutCategory(filter);
+                }
             }
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());

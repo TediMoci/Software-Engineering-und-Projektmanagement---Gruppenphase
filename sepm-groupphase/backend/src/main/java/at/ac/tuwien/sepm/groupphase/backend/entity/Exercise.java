@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,8 +30,8 @@ public class Exercise {
     @Column(nullable = false, length = 300)
     private String equipment = "No needed equipment given.";
 
-    @Column(nullable = false, length = 100, name = "muscle_group")
-    private String muscleGroup = "No muscle group given";
+    @Column(nullable = false, name = "muscle_group")
+    private MuscleGroup muscleGroup;
 
     @Column(nullable = false)
     private Double rating = 1.0;
@@ -97,11 +98,11 @@ public class Exercise {
         this.equipment = equipment;
     }
 
-    public String getMuscleGroup() {
+    public MuscleGroup getMuscleGroup() {
         return muscleGroup;
     }
 
-    public void setMuscleGroup(String muscleGroup) {
+    public void setMuscleGroup(MuscleGroup muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
 
@@ -181,10 +182,12 @@ public class Exercise {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", equipment='" + equipment + '\'' +
-            ", muscleGroup='" + muscleGroup + '\'' +
+            ", muscleGroup=" + muscleGroup +
             ", rating=" + rating +
             ", category=" + category +
             ", isHistory=" + isHistory +
+            ", workouts=" + workouts +
+            ", creator=" + creator +
             '}';
     }
 
@@ -201,12 +204,12 @@ public class Exercise {
         if (description != null ? !description.equals(exercise.description) : exercise.description != null)
             return false;
         if (equipment != null ? !equipment.equals(exercise.equipment) : exercise.equipment != null) return false;
-        if (muscleGroup != null ? !muscleGroup.equals(exercise.muscleGroup) : exercise.muscleGroup != null)
-            return false;
+        if (muscleGroup != exercise.muscleGroup) return false;
         if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
         if (category != exercise.category) return false;
-        return isHistory != null ? isHistory.equals(exercise.isHistory) : exercise.isHistory == null;
-
+        if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
+        if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
+        return creator != null ? creator.equals(exercise.creator) : exercise.creator == null;
     }
 
     @Override
@@ -220,6 +223,8 @@ public class Exercise {
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
+        result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
+        result = 31 * result + (creator != null ? creator.hashCode() : 0);
         return result;
     }
 
@@ -229,7 +234,7 @@ public class Exercise {
         private String name;
         private String description;
         private String equipment;
-        private String muscleGroup;
+        private MuscleGroup muscleGroup;
         private Double rating;
         private Category category;
         private Boolean isHistory;
@@ -267,7 +272,7 @@ public class Exercise {
             return this;
         }
 
-        public ExerciseBuilder muscleGroup(String muscleGroup) {
+        public ExerciseBuilder muscleGroup(MuscleGroup muscleGroup) {
             this.muscleGroup = muscleGroup;
             return this;
         }

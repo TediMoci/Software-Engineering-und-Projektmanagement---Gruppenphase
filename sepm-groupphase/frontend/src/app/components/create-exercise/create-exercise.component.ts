@@ -22,6 +22,8 @@ export class CreateExerciseComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
+
   constructor(private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
@@ -36,7 +38,7 @@ export class CreateExerciseComponent implements OnInit {
       equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
       descriptionForExercise: ['', [Validators.required]],
-      muscleGroupExercise: ['']
+      muscleGroupExercise: ['', [Validators.required]]
     });
   }
 

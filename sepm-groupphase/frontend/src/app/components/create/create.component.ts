@@ -11,6 +11,7 @@ export class CreateComponent implements OnInit {
   imagePath: string;
   userName: string;
   dude: Dude;
+  error: any;
   constructor() { }
 
   ngOnInit() {

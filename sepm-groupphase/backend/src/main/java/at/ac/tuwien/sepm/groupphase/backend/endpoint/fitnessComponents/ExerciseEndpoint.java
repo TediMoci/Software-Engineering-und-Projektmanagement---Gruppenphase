@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.Exerc
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
@@ -100,14 +101,14 @@ public class ExerciseEndpoint {
 
     @RequestMapping(value = "/filtered/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Exercises by filters", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Category category,
-                                      @PathVariable Long dudeId) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category + "; dudeId: " + dudeId);
+    public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) MuscleGroup muscleGroup,
+                                      @RequestParam(required = false) Category category, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category + "; dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findByFilter(filter, category, dudeId);
+            exercises = iExerciseService.findByFilter(filter, muscleGroup, category, dudeId);
         } catch (ServiceException e) {
-            LOGGER.error("Could not findByFilter with filter: " + filter + "; and category: " + category);
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];

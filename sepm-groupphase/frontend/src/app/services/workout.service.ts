@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Dude} from '../dtos/dude';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
-import {CreateExercise} from '../dtos/create-exercise';
 import {WorkoutExercise} from '../dtos/workoutExercise';
 
 @Injectable({

@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ExerciseDto;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
@@ -65,19 +66,19 @@ public class ExerciseIntegrationTest {
         validExerciseDto1.setName("Exercise1");
         validExerciseDto1.setDescription("Description1");
         validExerciseDto1.setEquipment("Equipment1");
-        validExerciseDto1.setMuscleGroup("MuscleGroup1");
+        validExerciseDto1.setMuscleGroup(MuscleGroup.Other);
         validExerciseDto1.setCategory(Category.Strength);
 
         validExerciseDto2.setName("Exercise2");
         validExerciseDto2.setDescription("Description2");
         validExerciseDto2.setEquipment("Equipment2");
-        validExerciseDto2.setMuscleGroup("MuscleGroup2");
+        validExerciseDto2.setMuscleGroup(MuscleGroup.Other);
         validExerciseDto2.setCategory(Category.Endurance);
 
         invalidExerciseDto1.setName("Exercise3");
         invalidExerciseDto1.setDescription("Description3");
         invalidExerciseDto1.setEquipment("Equipment3");
-        invalidExerciseDto1.setMuscleGroup("MuscleGroup3");
+        invalidExerciseDto1.setMuscleGroup(MuscleGroup.Other);
         invalidExerciseDto1.setCategory(null);
     }
 
@@ -148,7 +149,7 @@ public class ExerciseIntegrationTest {
 
     @Test(expected = HttpClientErrorException.class)
     public void givenNothing_whenFindExerciseByIdAndVersion_thenHttpClientErrorException(){
-        REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/1/1", ExerciseDto.class);
+        REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/100/100", ExerciseDto.class);
     }
 
     @Test
@@ -191,7 +192,7 @@ public class ExerciseIntegrationTest {
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
     public void givenNothing_whenDeleteOneExercise_then400BadRequest(){
-        REST_TEMPLATE.delete(BASE_URL + port + EXERCISE_ENDPOINT + "/11");
+        REST_TEMPLATE.delete(BASE_URL + port + EXERCISE_ENDPOINT + "/110");
     }
 
     @Test

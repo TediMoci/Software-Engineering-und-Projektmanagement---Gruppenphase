@@ -197,7 +197,7 @@ public class CourseIntegrationTest {
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
     public void givenNothing_whenDeleteOneCourse_then400BadRequest(){
-        REST_TEMPLATE.delete(BASE_URL + port + COURSE_ENDPOINT + "/11");
+        REST_TEMPLATE.delete(BASE_URL + port + COURSE_ENDPOINT + "/110");
     }
 
     @Test

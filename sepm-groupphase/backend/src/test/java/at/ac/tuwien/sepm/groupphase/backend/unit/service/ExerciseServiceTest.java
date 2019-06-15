@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ExerciseBookmarkRepository;
@@ -61,7 +62,7 @@ public class ExerciseServiceTest {
         validExercise1.setCategory(Category.Strength);
         validExercise1.setDescription("Description1");
         validExercise1.setEquipment("Equipment1");
-        validExercise1.setMuscleGroup("Muscles1");
+        validExercise1.setMuscleGroup(MuscleGroup.Other);
         validExercise1.setRating(1.0);
         validExercise1.setCreator(dude);
 
@@ -72,7 +73,7 @@ public class ExerciseServiceTest {
         validExercise2.setCategory(Category.Endurance);
         validExercise2.setDescription("Description2");
         validExercise2.setEquipment("Equipment2");
-        validExercise2.setMuscleGroup("Muscles2");
+        validExercise2.setMuscleGroup(MuscleGroup.Other);
         validExercise2.setRating(1.0);
         validExercise2.setCreator(dude);
 
@@ -190,9 +191,9 @@ public class ExerciseServiceTest {
     }
     @Test
     public void whenFindByFilter_thenGetExerciseWhereFilterTrueAndNotExerciseWhereFilterFalse(){
-        Mockito.when(exerciseRepository.findByFilterWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
-        assertEquals(exerciseRepository.findByFilterWithCategory("2",Category.Endurance), validExercises2);
-        assertFalse(exerciseRepository.findByFilterWithCategory("2",Category.Endurance).contains(validExercise1));
+        Mockito.when(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
+        assertEquals(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance), validExercises2);
+        assertFalse(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance).contains(validExercise1));
     }
 
     @Test
