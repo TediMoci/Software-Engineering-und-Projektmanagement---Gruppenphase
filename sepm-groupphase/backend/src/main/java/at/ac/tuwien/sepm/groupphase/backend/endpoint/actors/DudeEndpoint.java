@@ -297,19 +297,20 @@ public class DudeEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your active training schedule has expired.");
         }
         if (activeTrainingSchedule.getAdaptive()
-            && ((tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) > 0)
-            && !activeTrainingSchedule.getHasBeenAdapted().get((int)(tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength())-1)) {
+            && ((tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) > 0)) {
 
-            Dude dude;
-            try {
-                dude = iDudeService.findDudeById(id);
-            } catch (ServiceException e) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find dude with id " + id);
-            }
-            try {
-                return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude));
-            } catch (ServiceException e) {
-                throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Could not adapt activeTrainingSchedule with id " + activeTrainingSchedule.getId());
+            if (!activeTrainingSchedule.getHasBeenAdapted().get((int)(tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength())-1)) {
+                Dude dude;
+                try {
+                    dude = iDudeService.findDudeById(id);
+                } catch (ServiceException e) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find dude with id " + id);
+                }
+                try {
+                    return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude));
+                } catch (ServiceException e) {
+                    throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Could not adapt activeTrainingSchedule with id " + activeTrainingSchedule.getId());
+                }
             }
         }
         return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(activeTrainingSchedule);

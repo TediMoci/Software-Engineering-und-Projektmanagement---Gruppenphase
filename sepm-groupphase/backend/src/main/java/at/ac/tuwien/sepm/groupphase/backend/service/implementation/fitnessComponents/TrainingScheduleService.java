@@ -642,6 +642,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         List<Boolean> hasBeenAdapted = activeSchedule.getHasBeenAdapted();
         LocalDate tempDate = LocalDate.from(activeSchedule.getStartDate());
         hasBeenAdapted.set((int)(tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / ts.getIntervalLength())-1, true);
+        builderATs.hasBeenAdapted(hasBeenAdapted);
 
         try {
             LOGGER.debug("update current ActiveTrainingSchedule in database");
