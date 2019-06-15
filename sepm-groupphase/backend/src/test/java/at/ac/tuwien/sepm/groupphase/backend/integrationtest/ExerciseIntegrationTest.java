@@ -149,7 +149,7 @@ public class ExerciseIntegrationTest {
 
     @Test(expected = HttpClientErrorException.class)
     public void givenNothing_whenFindExerciseByIdAndVersion_thenHttpClientErrorException(){
-        REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/1/1", ExerciseDto.class);
+        REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/100/100", ExerciseDto.class);
     }
 
     @Test

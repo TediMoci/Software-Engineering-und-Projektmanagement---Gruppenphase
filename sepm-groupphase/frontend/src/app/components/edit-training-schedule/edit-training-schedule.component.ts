@@ -35,10 +35,6 @@ export class EditTrainingScheduleComponent implements OnInit {
 
   oldTrainingSchedule: TrainingSchedule;
 
-  beginner: boolean = false;
-  advanced: boolean = false;
-  pro: boolean = false;
-
   generalTSData: boolean;
 
   searchRes: any;
@@ -94,87 +90,262 @@ export class EditTrainingScheduleComponent implements OnInit {
       difficultyLevelEditTS: [this.difficulty, [Validators.required]],
       descriptionForEditTS: ['', [Validators.required]],
     });
-
-    if (this.oldTrainingSchedule.difficulty === 1) {
-      this.beginner = true;
-    } else if (this.oldTrainingSchedule.difficulty === 2) {
-      this.advanced = true;
-    } else {
-      this.pro = true;
-    }
     this.getAllWorkoutsPerDay();
   }
 
   logFormEditTS() {
-      localStorage.setItem('nameForEditTS', JSON.stringify(this.editTSForm.controls.nameForEditTS.value));
-      localStorage.setItem('descriptionForEditTS', JSON.stringify(this.editTSForm.controls.descriptionForEditTS.value));
-      localStorage.setItem('difficultyLevelEditTS', JSON.stringify(this.editTSForm.controls.difficultyLevelEditTS.value));
-      this.name = JSON.parse(localStorage.getItem('nameForEditTS'));
-      this.description = JSON.parse(localStorage.getItem('descriptionForEditTS'));
-      this.difficulty = JSON.parse(localStorage.getItem('difficultyLevelEditTS'));
-      localStorage.removeItem('nameForEditTS');
-      localStorage.removeItem('descriptionForEditTS');
-      localStorage.removeItem('difficultyLevelEditTS');
+    localStorage.setItem('nameForEditTS', JSON.stringify(this.editTSForm.controls.nameForEditTS.value));
+    localStorage.setItem('descriptionForEditTS', JSON.stringify(this.editTSForm.controls.descriptionForEditTS.value));
+    localStorage.setItem('difficultyLevelEditTS', JSON.stringify(this.editTSForm.controls.difficultyLevelEditTS.value));
+    this.name = JSON.parse(localStorage.getItem('nameForEditTS'));
+    this.description = JSON.parse(localStorage.getItem('descriptionForEditTS'));
+    this.difficulty = JSON.parse(localStorage.getItem('difficultyLevelEditTS'));
+    localStorage.removeItem('nameForEditTS');
+    localStorage.removeItem('descriptionForEditTS');
+    localStorage.removeItem('difficultyLevelEditTS');
   }
 
-
   getAllWorkoutsPerDay() {
-    this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
-      (data1) => {
-        this.d1 = data1;
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 2).subscribe(
-      (data2) => {
-        this.d2 = data2;
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 3).subscribe(
-      (data3) => {
-        this.d3 = data3;
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 4).subscribe(
-      (data4) => {
-        this.d4 = data4;
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 5).subscribe(
-      (data5) => {
-        this.d5 = data5;
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 6).subscribe(
-      (data6) => {
-        this.d6 = data6;
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 7).subscribe(
-      (data7) => {
-        this.d7 = data7;
-      },
-      error => {
-        this.error = error;
-      }
-    );
+    switch (this.oldTrainingSchedule.intervalLength) {
+      case 1:
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 2:
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 3:
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 4:
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 5:
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 6:
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 6).subscribe(
+          (data6) => {
+            this.d6 = data6;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 7:
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 6).subscribe(
+          (data6) => {
+            this.d6 = data6;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(this.oldTrainingSchedule.id, this.oldTrainingSchedule.version, 7).subscribe(
+          (data7) => {
+            this.d7 = data7;
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+    }
   }
 
   changeView() {
