@@ -9,6 +9,7 @@ import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
 import {WorkoutService} from '../../services/workout.service';
 import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-dude-profile',
@@ -37,6 +38,7 @@ export class DudeProfileComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;
+  timeStamp: any;
 
   // Active Schedule variables
   activeTs: GetActiveTrainingSchedule;
@@ -59,13 +61,14 @@ export class DudeProfileComponent implements OnInit {
   // Display variables
   tabs: Array<string>;
 
-  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService) {}
+  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private authService: AuthService,  private router: Router) {}
   ngOnInit() {
     this.dateNow = new Date();
     console.log('Current Date: ' + this.dateNow);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-    this.imagePath = this.dude.imagePath;
+    this.setLinkPicture(this.dude.imagePath);
+    console.log(this.imagePath);
     if (this.dude.selfAssessment === 1) {
       this.skill = 'Beginner';
     } else if (this.dude.selfAssessment === 2) {
@@ -212,7 +215,6 @@ export class DudeProfileComponent implements OnInit {
       .subscribe(() => {
           console.log('ended schedule successfully');
           this.tsTrue = false;
-          this.ngOnInit();
         },
         error => {
           this.error = error;
@@ -257,8 +259,15 @@ export class DudeProfileComponent implements OnInit {
     }
     const imageFile = new File([this.croppedImage.file], 'file', { type: this.croppedImage.file.type });
     this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe(data => {
-        console.log('upload picture' + data);
-        this.dude.imagePath = data;
+      },
+      error => {
+        this.error = error;
+      }
+    );
+    this.authService.getUserByNameFromDude(this.dude.name).subscribe(data => {
+        console.log('set new image path ' + data.imagePath);
+        this.dude.imagePath = data.imagePath;
+        this.setLinkPicture(this.dude.imagePath);
         localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
       },
       error => {
@@ -267,4 +276,15 @@ export class DudeProfileComponent implements OnInit {
     );
   }
 
+   getLinkPicture() {
+    if (this.timeStamp) {
+      return this.imagePath + '?' + this.timeStamp;
+    }
+    return this.imagePath;
+  }
+
+  public setLinkPicture(url: string) {
+    this.imagePath = url;
+    this.timeStamp = (new Date()).getTime();
+  }
 }

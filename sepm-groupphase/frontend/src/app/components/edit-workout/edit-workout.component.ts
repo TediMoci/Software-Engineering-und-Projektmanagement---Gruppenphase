@@ -110,15 +110,19 @@ export class EditWorkoutComponent implements OnInit {
     } else {
       this.newAddedExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
 
-      for (let counter = 0; counter < this.newAddedExercises.length; counter++) {
-        const currentEx = this.newAddedExercises[counter].exercise;
-        this.newAddedExercisesIn.push(new WorkoutExerciseDtoIn(
-          currentEx.id,
-          currentEx.version,
-          this.newAddedExercises[counter].exDuration,
-          this.newAddedExercises[counter].repetitions,
-          this.newAddedExercises[counter].sets
-        ));
+      if (this.newAddedExercises === null) {
+        this.newAddedExercisesIn = [];
+      } else {
+        for (let counter = 0; counter < this.newAddedExercises.length; counter++) {
+          const currentEx = this.newAddedExercises[counter].exercise;
+          this.newAddedExercisesIn.push(new WorkoutExerciseDtoIn(
+            currentEx.id,
+            currentEx.version,
+            this.newAddedExercises[counter].exDuration,
+            this.newAddedExercises[counter].repetitions,
+            this.newAddedExercises[counter].sets
+          ));
+        }
       }
       console.log(this.newAddedExercisesIn);
     }

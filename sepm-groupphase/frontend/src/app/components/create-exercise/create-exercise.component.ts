@@ -26,7 +26,7 @@ export class CreateExerciseComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.createExerciseService.getFileStorage());
+    this.createExerciseService.setFileStorage(undefined);
     localStorage.removeItem('exerciseID');
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.imagePath = this.dude.imagePath;
@@ -63,6 +63,7 @@ export class CreateExerciseComponent implements OnInit {
     this.createExerciseService.addExercise(exercise).subscribe(
       (data) => {
         if (this.createExerciseService.getFileStorage() !== undefined) {
+          console.log('execute upload picture method');
           console.log(this.createExerciseService.getFileStorage());
           this.createExerciseService.uploadPictureForExercise(data.id, 1, this.createExerciseService.getFileStorage()).subscribe(
             () => {

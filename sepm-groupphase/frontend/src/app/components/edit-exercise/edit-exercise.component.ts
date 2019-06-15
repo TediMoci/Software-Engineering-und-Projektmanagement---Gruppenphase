@@ -39,6 +39,7 @@ export class EditExerciseComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.oldExercise = JSON.parse(localStorage.getItem('selectedExercise'));
+    this.editExerciseService.setFileStorage(undefined);
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
     this.imagePath2 = this.oldExercise.imagePath;
@@ -98,7 +99,7 @@ export class EditExerciseComponent implements OnInit {
           );
         }
         console.log('2');
-        this.router.navigate(['/myExercises']);
+        this.router.navigate(['/myContent']);
       },
       error => {
         this.error = error;
