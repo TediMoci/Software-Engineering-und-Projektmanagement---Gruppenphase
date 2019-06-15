@@ -86,23 +86,31 @@ public class ExerciseService implements IExerciseService {
     @Override
     public List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category, Long dudeId) throws ServiceException {
         LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Exercise> exercises;
         try {
             if (category != null) {
                 if (muscleGroup != null) {
-                    return iExerciseRepository.findByFilterWithMuscleGroupAndWithCategory(filter, muscleGroup, category);
+                    exercises = iExerciseRepository.findByFilterWithMuscleGroupAndWithCategory(filter, muscleGroup, category);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithMuscleGroupAndWithCategory(filter, muscleGroup, category, dude));
                 } else {
-                    return iExerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory(filter, category);
+                    exercises = iExerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory(filter, category);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithoutMuscleGroupAndWithCategory(filter, category, dude));
                 }
             } else {
                 if (muscleGroup != null) {
-                    return iExerciseRepository.findByFilterWithMuscleGroupAndWithoutCategory(filter, muscleGroup);
+                    exercises = iExerciseRepository.findByFilterWithMuscleGroupAndWithoutCategory(filter, muscleGroup);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithMuscleGroupAndWithoutCategory(filter, muscleGroup, dude));
                 } else {
-                    return iExerciseRepository.findByFilterWithoutMuscleGroupAndWithoutCategory(filter);
+                    exercises = iExerciseRepository.findByFilterWithoutMuscleGroupAndWithoutCategory(filter);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithoutMuscleGroupAndWithoutCategory(filter, dude));
                 }
             }
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return exercises;
     }
 
     @Override
