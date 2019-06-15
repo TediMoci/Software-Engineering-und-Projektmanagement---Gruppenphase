@@ -258,23 +258,21 @@ export class DudeProfileComponent implements OnInit {
       return;
     }
     const imageFile = new File([this.croppedImage.file], 'file', { type: this.croppedImage.file.type });
-    this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe(data => {
+    this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe((data) => {
+      console.log('i am here ' + data);
       },
       error => {
         this.error = error;
       }
     );
-    this.delay(100).then( any => {
-      this.authService.getUserByNameFromDude(this.dude.name).subscribe(data => {
-          console.log('set new image path ' + data.imagePath);
-          this.dude.imagePath = data.imagePath;
-          this.setLinkPicture(this.dude.imagePath);
-          localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
+    this.authService.getUserByNameFromDude(this.dude.name).subscribe(data => {
+      console.log('set new image path ' + data.imagePath);
+      this.dude.imagePath = data.imagePath;
+      this.setLinkPicture(this.dude.imagePath);
+      localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
         },
         error => {
           this.error = error;
-        }
-      );
     });
   }
 
@@ -288,9 +286,5 @@ export class DudeProfileComponent implements OnInit {
    setLinkPicture(url: string) {
     this.imagePath = url;
     this.timeStamp = (new Date()).getTime();
-  }
-
-  async delay(ms: number) {
-    await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
   }
 }
