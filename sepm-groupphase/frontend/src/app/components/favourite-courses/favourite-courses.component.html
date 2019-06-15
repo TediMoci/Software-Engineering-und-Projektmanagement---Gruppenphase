@@ -19,11 +19,37 @@
       </div>
       <div class="col-sm-9">
         <h1><i class="far fa-heart"></i> Favourite Courses </h1>
+        <p>Click on a name to see your bookmarked course. Scroll to see more courses!</p>
+        <ul>
+          <li *ngFor='let element of favCourses'>
+            <a [routerLink]="['/course-dude-view']" (click)="setSelectedCourse(element)" class="btn2 btn-link">{{element.name}}</a>
+             <button type="button" (click)="setToDeleteCourseBookmark(element)" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash"></i></button>
+          </li>
+        </ul>
       </div>
 
     </div>
   </div>
 
 </div>
+
+<!-- modal for deleting exercise bookmark -->
+<div class="modal" id="deleteModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure you want to delete your bookmark of course "{{toDeleteCourseBookmark}}"?</h4>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="button" (click)="deleteBookmark()" class="btn btn-success" data-dismiss="modal">Yes, delete</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 

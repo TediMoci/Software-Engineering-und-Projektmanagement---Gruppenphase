@@ -3,6 +3,7 @@ import {Dude} from '../../dtos/dude';
 import {FavouritesService} from '../../services/favourites.service';
 import {Course} from '../../dtos/course';
 import {BookmarksService} from '../../services/bookmarks.service';
+import {FitnessProviderCoursesService} from '../../services/fitness-provider-courses.service';
 
 @Component({
   selector: 'app-favourite-courses',
@@ -17,7 +18,7 @@ export class FavouriteCoursesComponent implements OnInit {
   error: any;
   favCourses: Course[];
   toDeleteCourseBookmark: string;
-  constructor(private favouritesService: FavouritesService, private bookmarksService: BookmarksService) { }
+  constructor(private favouritesService: FavouritesService, private fitnessProviderCoursesService: FitnessProviderCoursesService, private bookmarksService: BookmarksService) { }
 
   ngOnInit() {
 
@@ -48,6 +49,7 @@ export class FavouriteCoursesComponent implements OnInit {
 
   setSelectedCourse(element: Course) {
     localStorage.setItem('selectedCourse', JSON.stringify(element));
+    localStorage.setItem('selectedFitnessProvider', JSON.stringify(this.fitnessProviderCoursesService.getFitnessProviderById(element.creatorId)));
   }
 
   setToDeleteCourseBookmark(element: Course) {
