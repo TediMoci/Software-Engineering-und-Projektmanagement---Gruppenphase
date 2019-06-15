@@ -234,4 +234,28 @@ public class TrainingScheduleEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{trainingScheduleId}/{trainingScheduleVersion}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Dude with given id bookmarks TrainingSchedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void saveTrainingScheduleBookmark(@PathVariable Long dudeId, @PathVariable Long trainingScheduleId, @PathVariable Integer trainingScheduleVersion) {
+        LOGGER.info("Entering saveTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            iTrainingScheduleService.saveTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{trainingScheduleId}/{trainingScheduleVersion}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with given id deletes bookmark for TrainingSchedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteTrainingScheduleBookmark(@PathVariable Long dudeId, @PathVariable Long trainingScheduleId, @PathVariable Integer trainingScheduleVersion) {
+        LOGGER.info("Entering deleteTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            iTrainingScheduleService.deleteTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 }

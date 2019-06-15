@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CourseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.ICourseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
@@ -12,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessCompone
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import io.swagger.annotations.Api;
@@ -22,7 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -37,21 +42,25 @@ public class DudeEndpoint {
 
     private final IDudeService iDudeService;
     private final ITrainingScheduleService iTrainingScheduleService;
+    private final IFileStorageService iFileStorageService;
     private final IDudeMapper dudeMapper;
     private final IFitnessProviderMapper fitnessProviderMapper;
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private final IExerciseMapper exerciseMapper;
     private final IWorkoutMapper workoutMapper;
+    private final ICourseMapper courseMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
+    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IFileStorageService iFileStorageService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper, ICourseMapper courseMapper) {
         this.iDudeService = iDudeService;
         this.iTrainingScheduleService = iTrainingScheduleService;
+        this.iFileStorageService = iFileStorageService;
         this.dudeMapper = dudeMapper;
         this.fitnessProviderMapper = fitnessProviderMapper;
         this.trainingScheduleMapper = trainingScheduleMapper;
         this.exerciseMapper = exerciseMapper;
         this.workoutMapper = workoutMapper;
+        this.courseMapper = courseMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -246,23 +255,6 @@ public class DudeEndpoint {
         return trainingScheduleDtos;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
-    @ApiOperation(value = "Get Workouts by filters", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
-        List<Dude> dudes;
-        try {
-            dudes = iDudeService.findByFilter(filter, selfAssessment);
-        } catch (ServiceException e) {
-            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-        DudeDto[] dudeDtos = new DudeDto[dudes.size()];
-        for (int i = 0; i < dudes.size(); i++) {
-            dudeDtos[i] = dudeMapper.dudeToDudeDto(dudes.get(i));
-        }
-        return dudeDtos;
-    }
 
     @RequestMapping(value = "/{id}/activeTrainingSchedule", method = RequestMethod.GET)
     @ApiOperation(value = "Get active training schedule of dude", authorizations = {@Authorization(value = "apiKey")})
@@ -312,5 +304,116 @@ public class DudeEndpoint {
         }
         return exerciseDoneDtos;
     }
+
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Workouts by filters", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
+        List<Dude> dudes;
+        try {
+            dudes = iDudeService.findByFilter(filter, selfAssessment);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        DudeDto[] dudeDtos = new DudeDto[dudes.size()];
+        for (int i = 0; i < dudes.size(); i++) {
+            dudeDtos[i] = dudeMapper.dudeToDudeDto(dudes.get(i));
+        }
+        return dudeDtos;
+    }
+
+    @PostMapping("/{id}/uploadImage")
+    @ApiOperation(value = "Upload image for Dude", authorizations = {@Authorization(value = "apiKey")})
+    public String uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("Entering uploadImage with id: " + id);
+        String fileName = "dude_" + id;
+        if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
+            fileName += ".png";
+        } else {
+            fileName += ".jpg";
+        }
+        iFileStorageService.storeFile(fileName, file);
+
+        try {
+            return iDudeService.updateImagePath(id, fileName);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not updateImagePath with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/courses", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked courses of dude", authorizations = {@Authorization(value = "apiKey")})
+    public CourseDto[] getBookmarkedCourses(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedCourses with id: " + id);
+        List<Course> courses;
+        try {
+            courses = iDudeService.findDudeById(id).getCourseBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedCourses with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        CourseDto[] courseDtos = new CourseDto[courses.size()];
+        for (int i = 0; i < courses.size(); i++) {
+            courseDtos[i] = courseMapper.courseToCourseDto(courses.get(i));
+        }
+        return courseDtos;
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/exercises", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked exercises of dude", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto[] getBookmarkedExercises(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedExercises with id: " + id);
+        List<Exercise> exercises;
+        try {
+            exercises = iDudeService.findDudeById(id).getExerciseBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedExercises with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
+        }
+        return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/workouts", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked workouts of dude", authorizations = {@Authorization(value = "apiKey")})
+    public WorkoutDto[] getBookmarkedWorkouts(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedWorkouts with id: " + id);
+        List<Workout> workouts;
+        try {
+            workouts = iDudeService.findDudeById(id).getWorkoutBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedWorkouts with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        WorkoutDto[] workoutDtos = new WorkoutDto[workouts.size()];
+        for (int i = 0; i < workouts.size(); i++) {
+            workoutDtos[i] = workoutMapper.workoutToWorkoutDto(workouts.get(i));
+        }
+        return workoutDtos;
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/trainingSchedules", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked training schedules of dude", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleDto[] getBookmarkedTrainingSchedules(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedTrainingSchedules with id: " + id);
+        List<TrainingSchedule> trainingSchedules;
+        try {
+            trainingSchedules = iDudeService.findDudeById(id).getTrainingScheduleBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedTrainingSchedules with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        TrainingScheduleDto[] trainingScheduleDtos = new TrainingScheduleDto[trainingSchedules.size()];
+        for (int i = 0; i < trainingSchedules.size(); i++) {
+            trainingScheduleDtos[i] = trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(trainingSchedules.get(i));
+        }
+        return trainingScheduleDtos;
+    }
+
 }
 

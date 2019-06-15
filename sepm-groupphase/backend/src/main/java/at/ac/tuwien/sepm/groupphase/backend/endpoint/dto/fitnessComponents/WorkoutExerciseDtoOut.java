@@ -45,6 +45,9 @@ public class WorkoutExerciseDtoOut {
     @ApiModelProperty(name = "Sets of Exercise")
     private Integer sets;
 
+    @ApiModelProperty(name = "Path of image of Exercise")
+    private String imagePath;
+
     public Long getId() {
         return id;
     }
@@ -145,6 +148,14 @@ public class WorkoutExerciseDtoOut {
         return new WorkoutExerciseDtoOutBuilder();
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public String toString() {
         return "WorkoutExerciseDtoOut{" +
@@ -215,6 +226,7 @@ public class WorkoutExerciseDtoOut {
         private Integer exDuration;
         private Integer repetitions;
         private Integer sets;
+        private String imagePath;
 
         public WorkoutExerciseDtoOutBuilder() {
         }
@@ -279,6 +291,11 @@ public class WorkoutExerciseDtoOut {
             return this;
         }
 
+        public WorkoutExerciseDtoOutBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public WorkoutExerciseDtoOut build() {
             WorkoutExerciseDtoOut workoutExerciseDtoOut = new WorkoutExerciseDtoOut();
             workoutExerciseDtoOut.setId(id);
@@ -293,6 +310,7 @@ public class WorkoutExerciseDtoOut {
             workoutExerciseDtoOut.setExDuration(exDuration);
             workoutExerciseDtoOut.setRepetitions(repetitions);
             workoutExerciseDtoOut.setSets(sets);
+            workoutExerciseDtoOut.setImagePath(imagePath);
             return workoutExerciseDtoOut;
         }
     }

@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ExerciseBookmarkRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,10 +21,14 @@ import java.util.NoSuchElementException;
 public class ExerciseService implements IExerciseService {
 
     private final IExerciseRepository iExerciseRepository;
+    private final ExerciseBookmarkRepository exerciseBookmarkRepository;
+    private final IDudeRepository iDudeRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(ExerciseService.class);
 
-    public ExerciseService(IExerciseRepository iExerciseRepository) {
+    public ExerciseService(IExerciseRepository iExerciseRepository, ExerciseBookmarkRepository exerciseBookmarkRepository, IDudeRepository iDudeRepository) {
         this.iExerciseRepository = iExerciseRepository;
+        this.exerciseBookmarkRepository = exerciseBookmarkRepository;
+        this.iDudeRepository = iDudeRepository;
     }
 
     @Override
@@ -106,6 +113,7 @@ public class ExerciseService implements IExerciseService {
             oldExercise.setHistory(true);
             newExercise.setId(id);
             newExercise.setVersion(oldExercise.getVersion()+1);
+            newExercise.setImagePath(oldExercise.getImagePath());
             iExerciseRepository.save(oldExercise);
             Long dbID = iExerciseRepository.save(newExercise).getId();
             iExerciseRepository.updateNew(newExercise.getId(), dbID);
@@ -123,6 +131,57 @@ public class ExerciseService implements IExerciseService {
             if (exercise == null) throw new ServiceException("Could not find exercise with id: " + id);
             iExerciseRepository.delete(id);
         } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String updateImagePath(Long id, Integer version, String fileName) throws ServiceException {
+        LOGGER.info("Entering updateImagePath with id: " + id + "; version: " + version + "; fileName: " + fileName);
+        Exercise exercise;
+        try {
+            exercise = iExerciseRepository.findByIdAndVersion(id, version).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        String imagePath = "/assets/img/" + fileName;
+        exercise.setImagePath(imagePath);
+        iExerciseRepository.save(exercise);
+        return imagePath;
+    }
+
+    @Override
+    public void saveExerciseBookmark(Long dudeId, Long exerciseId, Integer exerciseVersion) throws ServiceException {
+        LOGGER.info("Entering saveExerciseBookmark with dudeId: " + dudeId + "; exerciseId: " + exerciseId + "; exerciseVersion: " + exerciseVersion);
+        try {
+            if (iDudeRepository.findById(dudeId).isEmpty()) {
+                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
+            } else if (iExerciseRepository.findByIdAndVersion(exerciseId, exerciseVersion).isEmpty()) {
+                throw new NoSuchElementException("Could not find Exercise with id: " + exerciseId);
+            }
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            if (exerciseBookmarkRepository.checkExerciseBookmark(dudeId, exerciseId, exerciseVersion) != 0) {
+                throw new ServiceException("You already have this exercise bookmarked!");
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            exerciseBookmarkRepository.saveExerciseBookmark(dudeId, exerciseId, exerciseVersion);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteExerciseBookmark(Long dudeId, Long exerciseId, Integer exerciseVersion) throws ServiceException {
+        LOGGER.info("Entering deleteExerciseBookmark with dudeId: " + dudeId + "; exerciseId: " + exerciseId + "; exerciseVersion: " + exerciseVersion);
+        try {
+            exerciseBookmarkRepository.deleteExerciseBookmark(dudeId, exerciseId, exerciseVersion);
+        } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage());
         }
     }

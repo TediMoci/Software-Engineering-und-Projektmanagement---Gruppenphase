@@ -19,8 +19,8 @@ import {TrainingScheduleService} from '../../services/training-schedule.service'
   styleUrls: ['./edit-training-schedule.component.scss']
 })
 export class EditTrainingScheduleComponent implements OnInit {
+  imagePath: string;
   error: any;
-  imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   submitted: boolean = false;
 
@@ -69,6 +69,7 @@ export class EditTrainingScheduleComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.prevRoute = JSON.parse(localStorage.getItem('previousRoute'));
 
     this.d1 = [];

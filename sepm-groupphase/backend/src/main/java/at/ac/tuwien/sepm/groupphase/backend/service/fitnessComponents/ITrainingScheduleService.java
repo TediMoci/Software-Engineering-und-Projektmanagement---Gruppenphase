@@ -90,4 +90,20 @@ public interface ITrainingScheduleService {
      * @throws ServiceException
      */
     List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param trainingScheduleId of the TrainingSchedule that the Dude wants to bookmark
+     * @param trainingScheduleVersion of the TrainingSchedule that the Dude wants to bookmark
+     * @throws ServiceException if an error occurred while trying to bookmark the TrainingSchedule
+     */
+    void saveTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param trainingScheduleId of the TrainingSchedule that the Dude wants to delete the bookmark for
+     * @param trainingScheduleVersion of the TrainingSchedule that the Dude wants to delete the bookmark for
+     * @throws ServiceException if an error occurred while trying to delete the bookmark for the TrainingSchedule
+     */
+    void deleteTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException;
 }

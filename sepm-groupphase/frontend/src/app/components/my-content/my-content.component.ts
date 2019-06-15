@@ -7,7 +7,7 @@ import {Dude} from '../../dtos/dude';
   styleUrls: ['./my-content.component.scss']
 })
 export class MyContentComponent implements OnInit {
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   constructor() { }
@@ -28,6 +28,7 @@ export class MyContentComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
   }
 
 }

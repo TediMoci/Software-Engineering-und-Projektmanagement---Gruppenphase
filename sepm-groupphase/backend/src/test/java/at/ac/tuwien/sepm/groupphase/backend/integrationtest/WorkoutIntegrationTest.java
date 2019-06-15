@@ -161,6 +161,7 @@ public class WorkoutIntegrationTest {
         responseWorkoutDto.setId(2L);
         responseWorkoutDto.setVersion(1);
         responseWorkoutDto.setWorkoutExercises(validWorkoutDto2.getWorkoutExercises());
+        responseWorkoutDto.setId(null);
         assertEquals(validWorkoutDto2, responseWorkoutDto);
     }
 
@@ -185,6 +186,26 @@ public class WorkoutIntegrationTest {
         ResponseEntity<WorkoutDto[]> response3 = REST_TEMPLATE
             .exchange(BASE_URL + port + WORKOUT_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, WorkoutDto[].class);
         assertEquals(1, response3.getBody() == null ? 0 : response3.getBody().length);
+    }
+
+    @Test
+    public void givenDudeAndWorkout_whenDudeBookmarksWorkout_thenWorkoutInBookmarkedWorkouts() {
+        HttpEntity<WorkoutDto> workoutRequest = new HttpEntity<>(validWorkoutDto1);
+        ResponseEntity<WorkoutDto> workoutResponse = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest, WorkoutDto.class);
+        Long workoutId = workoutResponse.getBody().getId();
+
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/bookmark/" + 1 + "/" + workoutId + "/1", HttpMethod.PUT, null, Void.class);
+
+        ResponseEntity<WorkoutDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + 1 + "/bookmarks/workouts", HttpMethod.GET, null, WorkoutDto[].class);
+        assertEquals(1, response.getBody().length);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/bookmark/" + 1 + "/" + workoutId + "/1", HttpMethod.DELETE, null, Void.class);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void givenDude_whenDudeBookmarksNonExistingWorkout_then400BadRequest() {
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/bookmark/" + 1 + "/" + 0 + "/1", HttpMethod.PUT, null, Void.class);
     }
 
 }

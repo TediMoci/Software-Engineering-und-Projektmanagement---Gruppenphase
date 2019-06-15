@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {CreateExercise} from '../../dtos/create-exercise';
 import {Dude} from '../../dtos/dude';
+import {Exercise} from '../../dtos/exercise';
 
 @Component({
   selector: 'app-exercise',
@@ -9,22 +9,25 @@ import {Dude} from '../../dtos/dude';
 })
 export class ExerciseComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
-  imagePath2: string = '/assets/img/exercise.png';
+  imagePath: string;
+  imagePath2: string;
   userName: string;
   exerciseName: string;
   equipment: string;
   category: string;
   muscleGroup: string;
   description: string;
-  exercise: CreateExercise;
+  exercise: Exercise;
   dude: Dude;
   constructor() { }
 
   ngOnInit() {
 
     this.exercise = JSON.parse(localStorage.getItem('selectedExercise'));
+    console.log(this.exercise);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
+    this.imagePath = this.dude.imagePath;
+    this.imagePath2 = this.exercise.imagePath;
     this.userName = this.dude.name;
     this.exerciseName = this.exercise.name;
     this.equipment = this.exercise.equipment;

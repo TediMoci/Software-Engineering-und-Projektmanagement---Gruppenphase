@@ -26,4 +26,11 @@ public interface IFitnessProviderService {
 
 
     List<FitnessProvider> findByFilter(String filter) throws ServiceException;
+    /**
+     * @param id of the FitnessProvider
+     * @param fileName of the image in the path
+     * @return the full image-path
+     * @throws ServiceException if something went wrong while updating the imagePath in the system
+     */
+    String updateImagePath(Long id, String fileName) throws ServiceException;
 }

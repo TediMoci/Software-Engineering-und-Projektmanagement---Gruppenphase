@@ -10,6 +10,12 @@ application:
     overlap-duration: 300
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
   jpa:
     show-sql: true
     hibernate:
@@ -23,3 +29,6 @@ spring:
     console:
       enabled: true
       access-matcher: "hasIpAddress('10.0.0.0/16') or hasIpAddress('127.0.0.0/8') or hasIpAddress('::1')"
+
+file:
+  upload-dir: ../frontend/src/assets/img

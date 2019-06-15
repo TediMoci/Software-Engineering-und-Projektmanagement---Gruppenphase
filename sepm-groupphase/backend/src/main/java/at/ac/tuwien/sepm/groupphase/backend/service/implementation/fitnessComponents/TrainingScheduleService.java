@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -24,6 +26,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     private final ITrainingScheduleRepository iTrainingScheduleRepository;
     private final ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository;
+    private final TrainingScheduleBookmarkRepository trainingScheduleBookmarkRepository;
     private final IWorkoutRepository iWorkoutRepository;
     private final IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository;
     private final IExerciseDoneRepository iExerciseDoneRepository;
@@ -34,9 +37,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private static Map<Integer, List<Workout>> finalList = new HashMap<Integer, List<Workout>>();
     private static Integer listPosition = 0;
 
-    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, IDudeRepository iDudeRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, TrainingScheduleBookmarkRepository trainingScheduleBookmarkRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, IDudeRepository iDudeRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
+        this.trainingScheduleBookmarkRepository = trainingScheduleBookmarkRepository;
         this.iWorkoutRepository = iWorkoutRepository;
         this.iActiveTrainingScheduleRepository = iActiveTrainingScheduleRepository;
         this.iExerciseDoneRepository = iExerciseDoneRepository;
@@ -356,5 +360,40 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         return allDuration;
     }
 
+    @Override
+    public void saveTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException {
+        LOGGER.info("Entering saveTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            if (iDudeRepository.findById(dudeId).isEmpty()) {
+                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
+            } else if (iTrainingScheduleRepository.findByIdAndVersion(trainingScheduleId, trainingScheduleVersion).isEmpty()) {
+                throw new NoSuchElementException("Could not find TrainingSchedule with id: " + trainingScheduleId);
+            }
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            if (trainingScheduleBookmarkRepository.checkTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion) != 0) {
+                throw new ServiceException("You already have this training schedule bookmarked!");
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            trainingScheduleBookmarkRepository.saveTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException {
+        LOGGER.info("Entering deleteTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            trainingScheduleBookmarkRepository.deleteTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 
 }

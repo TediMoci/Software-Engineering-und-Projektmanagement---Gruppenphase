@@ -27,6 +27,7 @@ public class CourseMapper implements ICourseMapper {
         builder.id(courseDto.getId());
         builder.name(courseDto.getName());
         builder.description(courseDto.getDescription());
+        builder.imagePath(courseDto.getImagePath());
 
         FitnessProvider.FitnessProviderBuilder fitnessProviderBuilder = new FitnessProvider.FitnessProviderBuilder();
         fitnessProviderBuilder.id(courseDto.getCreatorId());
@@ -43,6 +44,7 @@ public class CourseMapper implements ICourseMapper {
         builder.id(course.getId());
         builder.name(course.getName());
         builder.description(course.getDescription());
+        builder.imagePath(course.getImagePath());
         builder.creatorId(course.getCreator().getId());
 
         return builder.build();

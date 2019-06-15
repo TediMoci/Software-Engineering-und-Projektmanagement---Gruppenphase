@@ -1,5 +1,4 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -110,6 +109,21 @@ public class FitnessProviderService implements IFitnessProviderService {
         } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    @Override
+    public String updateImagePath(Long id, String fileName) throws ServiceException {
+        LOGGER.info("Entering updateImagePath with id: " + id + "; fileName: " + fileName);
+        FitnessProvider fitnessProvider;
+        try {
+            fitnessProvider = iFitnessProviderRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        String imagePath = "/assets/img/" + fileName;
+        fitnessProvider.setImagePath(imagePath);
+        iFitnessProviderRepository.save(fitnessProvider);
+        return imagePath;
     }
 
     @Override

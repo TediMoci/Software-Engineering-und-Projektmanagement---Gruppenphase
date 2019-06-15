@@ -77,6 +77,7 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.muscleGroup(workoutExercise.getExercise().getMuscleGroup());
         builder.rating(workoutExercise.getExercise().getRating());
         builder.category(workoutExercise.getExercise().getCategory());
+        builder.imagePath(workoutExercise.getExercise().getImagePath());
         builder.creatorName(workoutExercise.getExercise().getCreator().getName());
         builder.exDuration(workoutExercise.getExDuration());
         builder.repetitions(workoutExercise.getRepetitions());
