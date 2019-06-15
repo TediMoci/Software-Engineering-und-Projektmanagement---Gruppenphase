@@ -331,11 +331,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
             iFinishedTrainingScheduleRepository.save(result.build());
 
+            iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
             for (TrainingSchedule t : copiedTs) {
                 LOGGER.debug("delete trainingSchedule with id " + t.getId());
-               // iTrainingScheduleRepository.deleteById(t.getId());
+                iTrainingScheduleRepository.deleteById(t.getId());
             }
-            iActiveTrainingScheduleRepository.deleteByDudeId(dudeId);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
