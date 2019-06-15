@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -13,6 +14,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -51,28 +53,38 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
-    public List<Exercise> findByName(String name) throws ServiceException {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<Exercise> findByName(String name, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Exercise> exercises;
         try {
-            return iExerciseRepository.findByName(name);
+            exercises = iExerciseRepository.findByName(name);
+            exercises.addAll(iExerciseRepository.findOwnPrivateByName(name, dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return exercises;
     }
 
     @Override
-    public List<Exercise> findAll() throws ServiceException {
-        LOGGER.info("Entering findAll");
+    public List<Exercise> findAll(Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Exercise> exercises;
         try {
-            return iExerciseRepository.findAll();
+            exercises = iExerciseRepository.findAll();
+            exercises.addAll(iExerciseRepository.findOwnPrivate(dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return exercises;
     }
 
     @Override
-    public List<Exercise> findByFilter(String filter, Category category) throws ServiceException {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category);
+    public List<Exercise> findByFilter(String filter, Category category, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category + "; dudeId: " + dudeId);
         try {
             if (category != null) {
                 return iExerciseRepository.findByFilterWithCategory(filter, category);

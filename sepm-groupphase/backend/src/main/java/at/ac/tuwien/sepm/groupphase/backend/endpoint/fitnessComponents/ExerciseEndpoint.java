@@ -62,13 +62,13 @@ public class ExerciseEndpoint {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get exercises with given name", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findByName(@RequestParam String name) {
-        LOGGER.info("Entering findByName with name: " + name);
+    public ExerciseDto[] findByName(@RequestParam String name, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findByName(name);
+            exercises = iExerciseService.findByName(name, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not findByName with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -80,13 +80,13 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get all exercises", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findAll() {
-        LOGGER.info("Entering findAll");
+    public ExerciseDto[] findAll(@PathVariable Long dudeId) {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findAll();
+            exercises = iExerciseService.findAll(dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not find all exercises");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -98,13 +98,14 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @RequestMapping(value = "/filtered/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Exercises by filters", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Category category) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category);
+    public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Category category,
+                                      @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category + "; dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findByFilter(filter, category);
+            exercises = iExerciseService.findByFilter(filter, category, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not findByFilter with filter: " + filter + "; and category: " + category);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

@@ -155,13 +155,13 @@ public class ExerciseIntegrationTest {
     public void givenTwoExercises_whenFindExerciseByName_thenGetExercises(){
         postExercise(validExerciseDto1);
         postExercise(validExerciseDto1);
-        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "?name=" + validExerciseDto1.getName(), ExerciseDto[].class);
+        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/1?name=" + validExerciseDto1.getName(), ExerciseDto[].class);
         assertEquals(foundExercises.length,2);
     }
 
     @Test
     public void givenNothing_whenFindExerciseByName_thenGetEmptyArray(){
-        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "?name=" + validExerciseDto1.getName(), ExerciseDto[].class);
+        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/1?name=" + validExerciseDto1.getName(), ExerciseDto[].class);
         assertEquals(foundExercises.length,0);
     }
 
@@ -170,7 +170,7 @@ public class ExerciseIntegrationTest {
         postExercise(validExerciseDto1);
         postExercise(validExerciseDto1);
         ResponseEntity<ExerciseDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<ExerciseDto[]>() {
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<ExerciseDto[]>() {
             });
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         assertEquals(response.getBody().length, 2);
@@ -180,12 +180,12 @@ public class ExerciseIntegrationTest {
     public void givenTwoExercises_whenDeleteOneExercise_thenGetArrayWithOneExercise(){
         Long a = postExercise(validExerciseDto1);
         Long b = postExercise(validExerciseDto2);
-        ExerciseDto[] foundExercisesInitial = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all", ExerciseDto[].class);
+        ExerciseDto[] foundExercisesInitial = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all/1", ExerciseDto[].class);
         assertEquals(foundExercisesInitial.length, 2);
 
         REST_TEMPLATE.delete(BASE_URL + port + EXERCISE_ENDPOINT + "/" + a);
 
-        ExerciseDto[] foundExercisesAfter = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all", ExerciseDto[].class);
+        ExerciseDto[] foundExercisesAfter = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all/1", ExerciseDto[].class);
         assertEquals(foundExercisesAfter.length, 1);
     }
 
@@ -229,7 +229,7 @@ public class ExerciseIntegrationTest {
         e1.setId(a);
         e2.setId(b);
         ResponseEntity<ExerciseDto[]> response3 = REST_TEMPLATE
-            .exchange(BASE_URL + port + EXERCISE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, ExerciseDto[].class);
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT +"/filtered/1"+"?filter=2", HttpMethod.GET, null, ExerciseDto[].class);
         assertEquals(e2, response3.getBody() == null ? null : response3.getBody()[0]);
     }
 

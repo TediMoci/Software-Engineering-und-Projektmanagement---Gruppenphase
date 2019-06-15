@@ -128,13 +128,13 @@ public class ExerciseServiceTest {
         exercises.add(exercise);
         exercises.add(exercise);
         Mockito.when(exerciseRepository.findByName(anyString())).thenReturn(exercises);
-        assertEquals(exerciseService.findByName(exercise.getName()),exercises);
+        assertEquals(exerciseService.findByName(exercise.getName(), 1L),exercises);
     }
 
     @Test(expected = ServiceException.class)
     public void whenFindByName_ifDataAccessException_thenServiceException() throws ServiceException {
         Mockito.when(exerciseRepository.findByName(anyString())).thenThrow(Mockito.mock(DataAccessException.class));
-        exerciseService.findByName("anyName");
+        exerciseService.findByName("anyName", 1L);
     }
 
     @Test
@@ -144,13 +144,13 @@ public class ExerciseServiceTest {
         exercises.add(exercise);
         exercises.add(exercise);
         Mockito.when(exerciseRepository.findAll()).thenReturn(exercises);
-        assertEquals(exerciseService.findAll(),exercises);
+        assertEquals(exerciseService.findAll(1L),exercises);
     }
 
     @Test(expected = ServiceException.class)
     public void whenFindAll_ifDataAccessException_thenServiceException() throws ServiceException {
         Mockito.when(exerciseRepository.findAll()).thenThrow(Mockito.mock(DataAccessException.class));
-        exerciseService.findAll();
+        exerciseService.findAll(1L);
     }
 
     @Test
