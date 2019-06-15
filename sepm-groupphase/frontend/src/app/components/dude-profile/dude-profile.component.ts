@@ -59,18 +59,10 @@ export class DudeProfileComponent implements OnInit {
   // Display variables
   tabs: Array<string>;
 
-  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private authService: AuthService) {}
+  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService) {}
   ngOnInit() {
     this.dateNow = new Date();
     console.log('Current Date: ' + this.dateNow);
-    this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
-    this.authService.getUserByNameFromDude(this.dude.name).subscribe((data) => {
-      localStorage.setItem('loggedInDude', JSON.stringify(data));
-      },
-      error => {
-        this.error = error;
-      }
-    );
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
@@ -252,20 +244,6 @@ export class DudeProfileComponent implements OnInit {
     this.message = 'Only images are supported.';
 
   }
-
-  uploadPicture(files) {
-    if (files.length === 0) {
-      return;
-    }
-    const imageFile = new File([files.file], 'file', { type: files.file.type });
-    this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe(data => {
-      console.log('upload picture' + data);
-      },
-      error => {
-        this.error = error;
-      }
-    );
-  }
   fileChangeEvent(event: any): void {
     this.crop = false;
     this.imageChangedEvent = event;
@@ -274,7 +252,19 @@ export class DudeProfileComponent implements OnInit {
     this.croppedImage = image;
   }
   cropPicture() {
-    this.uploadPicture(this.croppedImage);
+    if (this.croppedImage.length === 0) {
+      return;
+    }
+    const imageFile = new File([this.croppedImage.file], 'file', { type: this.croppedImage.file.type });
+    this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe(data => {
+        console.log('upload picture' + data);
+        this.dude.imagePath = data;
+        localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
 
 }

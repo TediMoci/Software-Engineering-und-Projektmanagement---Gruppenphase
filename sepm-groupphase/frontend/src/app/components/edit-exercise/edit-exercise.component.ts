@@ -88,13 +88,16 @@ export class EditExerciseComponent implements OnInit {
     this.editExerciseService.editExercise(exercise, this.oldExercise).subscribe(
       (data) => {
         if (this.editExerciseService.getFileStorage() !== undefined) {
-          this.editExerciseService.uploadPictureForExercise(data.id, data.version, this.editExerciseService.getFileStorage()).subscribe(() => {
+          console.log('1');
+          this.editExerciseService.uploadPictureForExercise(data.id, data.version, this.editExerciseService.getFileStorage()).subscribe((dataPicture) => {
+            console.log(dataPicture);
             },
             error => {
               this.error = error;
             }
           );
         }
+        console.log('2');
         this.router.navigate(['/myExercises']);
       },
       error => {

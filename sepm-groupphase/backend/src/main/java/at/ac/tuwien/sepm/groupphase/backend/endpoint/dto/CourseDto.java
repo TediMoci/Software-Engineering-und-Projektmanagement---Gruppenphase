@@ -24,7 +24,7 @@ public class CourseDto {
     private String description = "No description given.";
 
     @ApiModelProperty(name = "Path of picture of Course")
-    private String imagePath = "/assets/img/exercise.png";
+    private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
 
     @ApiModelProperty(name = "FitnessProvider offering the Course")
     private Long creatorId;

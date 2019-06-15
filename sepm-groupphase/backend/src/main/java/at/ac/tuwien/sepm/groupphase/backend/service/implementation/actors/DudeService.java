@@ -147,6 +147,7 @@ public class DudeService implements IDudeService {
 
     @Override
     public void followFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
+        LOGGER.info("Entering followFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
         try {
             if (iDudeRepository.findById(dudeId).isEmpty()) {
                 throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
@@ -172,6 +173,7 @@ public class DudeService implements IDudeService {
 
     @Override
     public void unfollowFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
+        LOGGER.info("Entering unfollowFitnessProvider with dudeId: " + dudeId + "; fitnessProviderId: " + fitnessProviderId);
         try {
             followFitnessProviderRepository.unfollowFitnessProvider(dudeId, fitnessProviderId);
         } catch (PersistenceException e) {
@@ -202,7 +204,7 @@ public class DudeService implements IDudeService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        String imagePath = "/assets/img/" + fileName;
+        String imagePath = "http://localhost:8080/downloadImage/" + fileName;
         dude.setImagePath(imagePath);
         iDudeRepository.save(dude);
         return imagePath;

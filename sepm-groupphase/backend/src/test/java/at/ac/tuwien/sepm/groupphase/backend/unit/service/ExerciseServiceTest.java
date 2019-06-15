@@ -82,7 +82,7 @@ public class ExerciseServiceTest {
         exercise.setMuscleGroup(e.getMuscleGroup());
         exercise.setRating(e.getRating());
         exercise.setCreator(e.getCreator());
-        return e;
+        return exercise;
     }
 
     @Test
@@ -120,6 +120,40 @@ public class ExerciseServiceTest {
         exercises.add(exercise);
         Mockito.when(exerciseRepository.findByName(anyString())).thenReturn(exercises);
         assertEquals(exerciseService.findByName(exercise.getName()),exercises);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindByName_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(exerciseRepository.findByName(anyString())).thenThrow(Mockito.mock(DataAccessException.class));
+        exerciseService.findByName("anyName");
+    }
+
+    @Test
+    public void whenFindAll_thenGetFoundExercises() throws ServiceException {
+        List<Exercise> exercises = new ArrayList<>();
+        Exercise exercise = buildExercise(validExercise1);
+        exercises.add(exercise);
+        exercises.add(exercise);
+        Mockito.when(exerciseRepository.findAll()).thenReturn(exercises);
+        assertEquals(exerciseService.findAll(),exercises);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindAll_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(exerciseRepository.findAll()).thenThrow(Mockito.mock(DataAccessException.class));
+        exerciseService.findAll();
+    }
+
+    @Test
+    public void whenFindOneExerciseById_thenGetFoundExercise() throws ServiceException {
+        Mockito.when(exerciseRepository.findById(anyLong())).thenReturn(validExercise1);
+        assertEquals(exerciseService.findById(1L), validExercise1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindOneExerciseById_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(exerciseRepository.findById(anyLong())).thenThrow(Mockito.mock(DataAccessException.class));
+        exerciseService.findById(1L);
     }
 
     @Test

@@ -47,7 +47,7 @@ public class Dude {
     // in kilograms
 
     @Column(nullable = false)
-    private String imagePath = "/assets/img/kugelfisch.jpg";
+    private String imagePath = "http://localhost:8080/downloadImage/kugelfisch.jpg";
 
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {

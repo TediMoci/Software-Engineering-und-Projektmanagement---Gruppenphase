@@ -128,7 +128,7 @@ public class ExerciseService implements IExerciseService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        String imagePath = "/assets/img/" + fileName;
+        String imagePath = "http://localhost:8080/downloadImage/" + fileName;
         exercise.setImagePath(imagePath);
         iExerciseRepository.save(exercise);
         return imagePath;
