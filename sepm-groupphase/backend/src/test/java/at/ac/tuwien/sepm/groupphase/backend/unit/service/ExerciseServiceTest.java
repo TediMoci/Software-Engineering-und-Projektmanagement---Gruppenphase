@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
@@ -52,7 +53,7 @@ public class ExerciseServiceTest {
         validExercise1.setCategory(Category.Strength);
         validExercise1.setDescription("Description1");
         validExercise1.setEquipment("Equipment1");
-        validExercise1.setMuscleGroup("Muscles1");
+        validExercise1.setMuscleGroup(MuscleGroup.Other);
         validExercise1.setRating(1.0);
         validExercise1.setCreator(dude);
 
@@ -63,7 +64,7 @@ public class ExerciseServiceTest {
         validExercise2.setCategory(Category.Endurance);
         validExercise2.setDescription("Description2");
         validExercise2.setEquipment("Equipment2");
-        validExercise2.setMuscleGroup("Muscles2");
+        validExercise2.setMuscleGroup(MuscleGroup.Other);
         validExercise2.setRating(1.0);
         validExercise2.setCreator(dude);
 
@@ -82,7 +83,7 @@ public class ExerciseServiceTest {
         exercise.setMuscleGroup(e.getMuscleGroup());
         exercise.setRating(e.getRating());
         exercise.setCreator(e.getCreator());
-        return e;
+        return exercise;
     }
 
     @Test
@@ -122,6 +123,40 @@ public class ExerciseServiceTest {
         assertEquals(exerciseService.findByName(exercise.getName()),exercises);
     }
 
+    @Test(expected = ServiceException.class)
+    public void whenFindByName_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(exerciseRepository.findByName(anyString())).thenThrow(Mockito.mock(DataAccessException.class));
+        exerciseService.findByName("anyName");
+    }
+
+    @Test
+    public void whenFindAll_thenGetFoundExercises() throws ServiceException {
+        List<Exercise> exercises = new ArrayList<>();
+        Exercise exercise = buildExercise(validExercise1);
+        exercises.add(exercise);
+        exercises.add(exercise);
+        Mockito.when(exerciseRepository.findAll()).thenReturn(exercises);
+        assertEquals(exerciseService.findAll(),exercises);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindAll_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(exerciseRepository.findAll()).thenThrow(Mockito.mock(DataAccessException.class));
+        exerciseService.findAll();
+    }
+
+    @Test
+    public void whenFindOneExerciseById_thenGetFoundExercise() throws ServiceException {
+        Mockito.when(exerciseRepository.findById(anyLong())).thenReturn(validExercise1);
+        assertEquals(exerciseService.findById(1L), validExercise1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenFindOneExerciseById_ifDataAccessException_thenServiceException() throws ServiceException {
+        Mockito.when(exerciseRepository.findById(anyLong())).thenThrow(Mockito.mock(DataAccessException.class));
+        exerciseService.findById(1L);
+    }
+
     @Test
     public void whenUpdateExercise_thenGetUpdatedExercise() throws ServiceException {
         Exercise exercise1 = buildExercise(validExercise1);
@@ -147,9 +182,9 @@ public class ExerciseServiceTest {
     }
     @Test
     public void whenFindByFilter_thenGetExerciseWhereFilterTrueAndNotExerciseWhereFilterFalse(){
-        Mockito.when(exerciseRepository.findByFilterWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
-        assertEquals(exerciseRepository.findByFilterWithCategory("2",Category.Endurance), validExercises2);
-        assertFalse(exerciseRepository.findByFilterWithCategory("2",Category.Endurance).contains(validExercise1));
+        Mockito.when(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
+        assertEquals(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance), validExercises2);
+        assertFalse(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance).contains(validExercise1));
     }
 
 }

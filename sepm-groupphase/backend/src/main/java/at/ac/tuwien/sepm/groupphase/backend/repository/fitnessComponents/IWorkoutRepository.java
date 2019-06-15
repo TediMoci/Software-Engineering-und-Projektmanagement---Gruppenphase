@@ -79,12 +79,21 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
 
     /**
      * @param difficulty of Workouts to be found
-     * @return all non-deleted Workouts with the given difficulty in the database
+     * @param maxCalories maximum amount of calories for workout
+     * @return all non-deleted Workouts with the given difficulty and calories amount lower than maxCalories in the database
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE w.difficulty=?1 AND w.isHistory=false ORDER BY w.id")
-    List<Workout> findByDifficulty(Integer difficulty) throws DataAccessException;
+    @Query("SELECT w FROM Workout w WHERE w.difficulty=?1 AND w.calorieConsumption<=?2 AND w.isHistory=false ORDER BY w.id")
+    List<Workout> findByDifficulty(Integer difficulty, double maxCalories) throws DataAccessException;
 
+    /**
+     * @param difficulty of Workouts to be found
+     * @param maxCalories maximum amount of calories for workout
+     * @return all non-deleted Workouts in the database with difficulty and calorie amount equal or lower  to the given values
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE w.difficulty<=?1 AND w.calorieConsumption<=?2 AND w.isHistory=false ORDER BY w.id")
+    List<Workout> findByLowerDifficulty(Integer difficulty, double maxCalories) throws DataAccessException;
 
     /**
      * @param myId -> ID of the workout that is updated

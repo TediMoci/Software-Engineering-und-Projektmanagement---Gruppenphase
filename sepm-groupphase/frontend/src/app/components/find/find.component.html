@@ -66,6 +66,14 @@
                   <a class="dropdown-item" (click)="filterExerciseCategory ='Other'; startSearch(category)">Other</a>
                 </div>
               </div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonExerciseMuscle" data-toggle="dropdown" [(ngModel)]="filterExerciseMuscle" ngDefaultControl>
+                  Muscle Group: {{filterExerciseMuscle}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" *ngFor="let elem of muscleGroup" (click)="filterExerciseMuscle = elem; startSearch(category)">{{elem}}</a>
+                </div>
+              </div>
             </div>
 
             <div *ngSwitchCase="'Course'">
@@ -153,14 +161,15 @@
             <!--end case-->
             <!--start case-->
             <ul *ngSwitchCase="'Course'" style="list-style-type: none;" >
-              <li *ngFor='let element of entries'>
+              <li >
                 <mat-accordion>
-                  <mat-expansion-panel>
-                    <mat-expansion-panel-header>
+                  <mat-expansion-panel *ngFor='let element of entries' (opened)="setSelectedFPofCourse(element)">
+                    <mat-expansion-panel-header >
                       <mat-panel-title style="font-size: large">
                         {{element.name}}
                       </mat-panel-title>
                     </mat-expansion-panel-header>
+                    <p>Provided by: <a *ngIf="selectedFP" [routerLink]="['/fitnessProvider']" class="btn2 btn-link">{{selectedFP.name}}</a> </p>
                     <hr>
                     <p>"{{element.description}}"</p>
                   </mat-expansion-panel>
@@ -237,6 +246,7 @@
             <!--end case-->
             <!--start case-->
             <ul *ngSwitchCase="'Fitness Provider'" style="list-style-type: none;" >
+
               <li *ngFor='let element of entries'>
                 <mat-accordion>
                   <mat-expansion-panel>
@@ -252,7 +262,9 @@
                     <p>Adress: {{element.address}}</p>
                     <p>Phone: {{element.phoneNumber}}</p>
                     <hr>
+                    <div *ngIf="isDude">
                     <button type="button" (click)="followSelectedFitnessProvider(element)" class="btn btn-secondary" data-toggle="modal" data-target="#followModal">Follow</button>
+                    </div>
                     <hr>
                   </mat-expansion-panel>
                 </mat-accordion>

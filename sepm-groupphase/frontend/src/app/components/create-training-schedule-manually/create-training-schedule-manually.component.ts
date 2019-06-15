@@ -65,7 +65,10 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     '7 Days'
   ];
 
-  constructor(private router: Router, private findService: FindService, private formBuilder: FormBuilder, private workoutService: WorkoutService, private createTrainingScheduleService: CreateTrainingScheduleService) {
+  constructor(private router: Router, private findService: FindService,
+              private formBuilder: FormBuilder,
+              private workoutService: WorkoutService,
+              private createTrainingScheduleService: CreateTrainingScheduleService) {
   }
 
   ngOnInit() {

@@ -29,6 +29,7 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMin: string = '';
   public filterWorkoutCaloriesMax: string = '';
   public filterDudeSelfAssessment: string = 'None';
+  public filterExerciseMuscle: string = 'None';
 
   // Transfer Variables
   public inputTextActual: any;
@@ -37,12 +38,14 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMinActual: string = '';
   public filterWorkoutCaloriesMaxActual: string = '';
   public filterDudeSelfAssessmentActual: string = 'None';
+  public filterExerciseMuscleActual: string = 'None';
 
-  entries: any;
+  entries: Array<any>;
   exercisesForWorkouts: any;
 
   imagePath: string;
   userName: string;
+  isDude: boolean;
   error: any;
   dude: Dude;
 
@@ -54,7 +57,13 @@ export class FindComponent implements OnInit {
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
 
+  // Router Objects
+  selectedFP: FitnessProvider;
+
   followedFP: String;
+
+  // Enums
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
 
   constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
 
@@ -63,10 +72,12 @@ export class FindComponent implements OnInit {
       this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
       this.userName = this.dude.name;
       this.imagePath = '/assets/img/kugelfisch.jpg';
+      this.isDude = true;
     } if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'FITNESS_PROVIDER') {
       this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
       this.userName = this.fitnessProvider.name;
       this.imagePath = '/assets/img/kugelfisch2.jpg';
+      this.isDude = false;
     }
   }
 
@@ -88,9 +99,17 @@ export class FindComponent implements OnInit {
           this.filterExerciseCategoryActual = this.filterExerciseCategory;
         }
 
+        if (this.filterExerciseMuscle === 'None') {
+          this.filterExerciseMuscleActual = null;
+        } else {
+          this.filterExerciseMuscleActual = this.filterExerciseMuscle;
+        }
+
         this.exerciseFilter = new ExerciseFilter(
           this.inputTextActual,
-          this.filterExerciseCategoryActual);
+          this.filterExerciseCategoryActual,
+          this.filterExerciseMuscleActual
+        );
         console.log('name: ' + this.exerciseFilter.filter);
         this.findService.getAllExercisesFilterd(this.exerciseFilter).subscribe(
           (data) => {
@@ -273,6 +292,19 @@ export class FindComponent implements OnInit {
   setSelectedWorkout(element: Workout) {
     localStorage.setItem('selectedWorkout', JSON.stringify(element));
     console.log(localStorage.getItem('selectedWorkout'));
+  }
+  setSelectedFPofCourse(element: Course) {
+    this.findService.getOneFitnessProvider(element.creatorId).subscribe(
+      (data) => {
+        this.selectedFP = data;
+        console.log('Loaded FP: ' + this.selectedFP.name);
+        localStorage.setItem('selectedFitnessProvider', JSON.stringify(data));
+        console.log('FP in LS' + localStorage.getItem('selectedFitnessProvider'));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
   resetResults() {
     this.entries = null;

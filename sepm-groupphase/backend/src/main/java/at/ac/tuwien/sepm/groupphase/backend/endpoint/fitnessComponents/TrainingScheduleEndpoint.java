@@ -41,19 +41,22 @@ public class TrainingScheduleEndpoint {
         this.workoutMapper = workoutMapper;
     }
 
-    @RequestMapping(value = "/{days}/{duration}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
+    @RequestMapping(value = "/random", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new random Training Schedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto saveRandom(
-        @PathVariable("days") int days, @PathVariable("duration") int duration,
-        @PathVariable("minTarget") double minTarget, @PathVariable("maxTarget") double maxTarget,
-        @Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
-        LOGGER.info("Entering save for: " + trainingScheduleDto);
-        TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
+    public TrainingScheduleDto saveRandom(@Valid @RequestBody TrainingScheduleRandomDto trainingScheduleRandomDto) {
+        LOGGER.info("Entering save for: " + trainingScheduleRandomDto);
+        TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleRandomDtoToTrainingSchedule(trainingScheduleRandomDto);
         try {
-            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,duration,minTarget,maxTarget,trainingSchedule));
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(
+                trainingScheduleRandomDto.getIntervalLength(),
+                trainingScheduleRandomDto.getDuration(),
+                trainingScheduleRandomDto.getMinTarget(),
+                trainingScheduleRandomDto.getMaxTarget(),
+                trainingSchedule,
+                trainingScheduleRandomDto.isLowerDifficulty()));
         } catch (ServiceException e) {
-            LOGGER.error("Could not save: " + trainingScheduleDto);
+            LOGGER.error("Could not save: " + trainingScheduleRandomDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
