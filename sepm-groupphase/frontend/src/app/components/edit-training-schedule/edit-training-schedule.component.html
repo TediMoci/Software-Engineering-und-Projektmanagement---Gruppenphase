@@ -42,18 +42,18 @@
               <span class="difficultyLevelEditTS">Difficulty Level*</span>
               <div class="gap_space">
                 <div class= "custom-control custom-radio custom-control-inline">
-                  <input id="beginner" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS" [checked]="beginner">
-                  <label class="custom-control-label" for="beginner">Beginner</label>
+                  <input id="beginner2" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS">
+                  <label class="custom-control-label" for="beginner2">Beginner</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input id="advanced" type="radio" class="custom-control-input" value= 2 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS" [checked]="advanced">
-                  <label class="custom-control-label" for="advanced">Advanced</label>
+                  <input id="advanced2" type="radio" class="custom-control-input" value= 2 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS">
+                  <label class="custom-control-label" for="advanced2">Advanced</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input id="pro" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS" [checked]="pro">
-                  <label class="custom-control-label" for="pro">Pro</label>
+                  <input id="pro2" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS">
+                  <label class="custom-control-label" for="pro2">Pro</label>
                 </div>
                 <div *ngIf="submitted && !!editTSForm.controls.difficultyLevelEditTS.errors" class="error">
                   <small class="form-text text-warning" *ngIf="!!editTSForm.controls.difficultyLevelEditTS.errors.required">Difficulty level is
@@ -78,10 +78,9 @@
 
             <div class="row">
               <div class="addWA">
-                <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Check Workouts</button>
+                <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Edit Workouts</button>
               </div>
             </div>
-
 
           </form>
         </div>
@@ -103,7 +102,7 @@
       <div class="col-waPlanning">
         <!-- start of info -->
         <div class="row-info">
-          <h1>Add Workouts to your Training Schedule</h1>
+          <h1>Edit the Workouts of your Training Schedule</h1>
         </div>
         <!-- start of searchbar -->
 
