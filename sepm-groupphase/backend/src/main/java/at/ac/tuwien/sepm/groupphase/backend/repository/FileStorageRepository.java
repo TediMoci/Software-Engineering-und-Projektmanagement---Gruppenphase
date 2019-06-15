@@ -23,7 +23,7 @@ import java.nio.file.StandardCopyOption;
 public class FileStorageRepository {
 
     private final Path fileStorageLocation;
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileStorageService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileStorageRepository.class);
 
     @Autowired
     public FileStorageRepository(FileStorageProperties fileStorageProperties) {
