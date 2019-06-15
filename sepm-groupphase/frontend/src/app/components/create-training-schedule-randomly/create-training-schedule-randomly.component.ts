@@ -70,8 +70,9 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
     console.log('Trying to create random training schedule ' + JSON.stringify(this.trainingSchedule));
 
     this.createTrainingScheduleRandomService.addRandomTrainingSchedule(this.trainingSchedule).subscribe(
-      () => {
-        this.router.navigate(['/create']);
+      (data) => {
+        localStorage.setItem('selectedTrainingSchedule', JSON.stringify(data));
+        this.router.navigate(['/trainingSchedule']);
       },
       (error) => {
         this.error = error;
