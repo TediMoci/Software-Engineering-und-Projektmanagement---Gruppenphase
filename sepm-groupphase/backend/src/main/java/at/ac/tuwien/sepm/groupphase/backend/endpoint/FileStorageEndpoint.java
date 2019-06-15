@@ -29,6 +29,7 @@ public class FileStorageEndpoint {
 
     @GetMapping("/downloadImage/{fileName:.+}")
     public ResponseEntity<Resource> downloadImage(@PathVariable String fileName, HttpServletRequest request) {
+        LOGGER.info("Entering downloadImage with fileName: " + fileName);
         // Load file as Resource
         Resource resource;
         try {
