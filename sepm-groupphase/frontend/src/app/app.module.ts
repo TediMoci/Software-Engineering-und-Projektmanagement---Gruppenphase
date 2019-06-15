@@ -90,6 +90,10 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
+import { FavouriteExercisesComponent } from './components/favourite-exercises/favourite-exercises.component';
+import { FavouriteWorkoutsComponent } from './components/favourite-workouts/favourite-workouts.component';
+import { FavouriteTrainingSchedulesComponent } from './components/favourite-training-schedules/favourite-training-schedules.component';
+import { FavouriteCoursesComponent } from './components/favourite-courses/favourite-courses.component';
 
 @NgModule({
   declarations: [
@@ -139,6 +143,10 @@ import {
     CourseDudeViewComponent,
     FollowerDudeComponent,
     CreateTrainingScheduleRandomlyComponent,
+    FavouriteExercisesComponent,
+    FavouriteWorkoutsComponent,
+    FavouriteTrainingSchedulesComponent,
+    FavouriteCoursesComponent,
   ],
   imports: [
     MatAutocompleteModule,

@@ -11,6 +11,7 @@ export class FavouritesComponent implements OnInit {
   imagePath: string;
   userName: string;
   dude: Dude;
+  error: any;
   constructor() { }
 
   ngOnInit() {
@@ -18,6 +19,10 @@ export class FavouritesComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
+  }
+
+  vanishError() {
+    this.error = false;
   }
 
 }
