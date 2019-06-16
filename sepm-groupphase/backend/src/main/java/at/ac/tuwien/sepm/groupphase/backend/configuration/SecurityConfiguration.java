@@ -140,6 +140,7 @@ public class SecurityConfiguration {
                     "/trainingSchedule/{id}/{version}",
                     "/trainingSchedule/{id}/{version}/workouts",
                     "/trainingSchedule/{id}/{version}/workouts/{day}",
+                    "/trainingSchedule/filtered",
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",

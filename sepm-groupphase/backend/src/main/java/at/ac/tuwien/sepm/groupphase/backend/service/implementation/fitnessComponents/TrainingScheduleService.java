@@ -267,8 +267,25 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
-    public List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException {
-        return null;
+    public List<TrainingSchedule> findByFilter(String filter, Integer difficulty, Integer intervalLength) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength);
+        try {
+            if (difficulty != null && intervalLength != null) {
+                return iTrainingScheduleRepository.findByFilterWithDifficultyAndInterval(filter, difficulty, intervalLength);
+            }
+            else if(difficulty != null && intervalLength == null) {
+                return iTrainingScheduleRepository.findByFilterWithDifficulty(filter, difficulty);
+            }
+            else if (difficulty == null & intervalLength != null) {
+                return iTrainingScheduleRepository.findByFilterWithInterval(filter, intervalLength);
+            }
+            else {
+                return iTrainingScheduleRepository.findByFilterWithoutDifficultyAndInterval(filter);
+            }
+
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
     }
 
     private void validateTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts) throws ServiceException {

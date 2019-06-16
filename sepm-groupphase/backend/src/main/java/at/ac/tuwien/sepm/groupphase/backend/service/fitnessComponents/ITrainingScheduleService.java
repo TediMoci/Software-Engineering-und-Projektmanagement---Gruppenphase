@@ -83,13 +83,13 @@ public interface ITrainingScheduleService {
     TrainingSchedule findByIdAndVersion(Long id, Integer version) throws ServiceException;
 
     /**
-     *
-     * @param filter
-     * @param selfAssessment
-     * @return
-     * @throws ServiceException
+     * @param filter of the name or description TrainingSchedules to find
+     * @param difficulty of TrainingSchedules to find
+     * @param intervalLength of TrainingSchedules to find
+     * @return TrainingSchedules with given parameters
+     * @throws ServiceException if an error occurred while trying to find the TrainingSchedules in the database
      */
-    List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
+    List<TrainingSchedule> findByFilter(String filter, Integer difficulty, Integer intervalLength) throws ServiceException;
 
     /**
      * @param dudeId of the Dude

@@ -65,4 +65,41 @@ public interface ITrainingScheduleRepository extends JpaRepository<TrainingSched
      */
     @Query("SELECT t FROM TrainingSchedule t WHERE t.name LIKE ?1% AND t.isHistory=false AND t.isPrivate=false")
     List<TrainingSchedule> findByName(String name) throws DataAccessException;
+
+    /**
+     * @param filter of the name or description TrainingSchedules to find
+     * @param difficulty of TrainingSchedules to find
+     * @param intervalLength of TrainingSchedules to find
+     * @return TrainingSchedules with given parameters
+     * @throws DataAccessException if an error occurred while trying to find the TrainingSchedules in the database
+     */
+    @Query("SELECT t FROM TrainingSchedule t WHERE (t.name LIKE %?1% OR t.description LIKE %?1%) AND t.difficulty=?2 AND t.intervalLength=?3 AND t.isHistory=false ORDER BY t.id")
+    List<TrainingSchedule> findByFilterWithDifficultyAndInterval(String filter, Integer difficulty, Integer intervalLength) throws DataAccessException;
+
+    /**
+     * @param filter of the name or description TrainingSchedules to find
+     * @param difficulty of TrainingSchedules to find
+     * @return TrainingSchedules with given parameters
+     * @throws DataAccessException if an error occurred while trying to find the TrainingSchedules in the database
+     */
+    @Query("SELECT t FROM TrainingSchedule t WHERE (t.name LIKE %?1% OR t.description LIKE %?1%) AND t.difficulty=?2 AND t.isHistory=false ORDER BY t.id")
+    List<TrainingSchedule> findByFilterWithDifficulty(String filter, Integer difficulty) throws DataAccessException;
+
+    /**
+     * @param filter of the name or description TrainingSchedules to find
+     * @param intervalLength of TrainingSchedules to find
+     * @return TrainingSchedules with given parameters
+     * @throws DataAccessException if an error occurred while trying to find the TrainingSchedules in the database
+     */
+    @Query("SELECT t FROM TrainingSchedule t WHERE (t.name LIKE %?1% OR t.description LIKE %?1%) AND t.intervalLength=?2 AND t.isHistory=false ORDER BY t.id")
+    List<TrainingSchedule> findByFilterWithInterval(String filter, Integer intervalLength) throws DataAccessException;
+
+    /**
+     * @param filter of the name or description TrainingSchedules to find
+     * @return TrainingSchedules with given parameters
+     * @throws DataAccessException if an error occurred while trying to find the TrainingSchedules in the database
+     */
+    @Query("SELECT t FROM TrainingSchedule t WHERE (t.name LIKE %?1% OR t.description LIKE %?1%) AND t.isHistory=false ORDER BY t.id")
+    List<TrainingSchedule> findByFilterWithoutDifficultyAndInterval(String filter) throws DataAccessException;
+
 }

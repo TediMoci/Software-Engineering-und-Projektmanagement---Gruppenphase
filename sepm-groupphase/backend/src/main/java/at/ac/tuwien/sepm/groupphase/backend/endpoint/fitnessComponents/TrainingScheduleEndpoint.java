@@ -197,14 +197,16 @@ public class TrainingScheduleEndpoint {
 
     @RequestMapping(value = "/filtered", method = RequestMethod.GET)
     @ApiOperation(value = "Get Training Schedule by filters", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
-        //todo: change Request Params
+    public TrainingScheduleDto[] findByFilter(
+        @RequestParam(defaultValue = "") String filter,
+        @RequestParam(required = false) Integer difficulty,
+        @RequestParam(required = false) Integer intervalLength) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength);
         List<TrainingSchedule> trainingSchedules;
         try {
-            trainingSchedules = iTrainingScheduleService.findByFilter(filter, selfAssessment);
+            trainingSchedules = iTrainingScheduleService.findByFilter(filter, difficulty, intervalLength);
         } catch (ServiceException e) {
-            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         TrainingScheduleDto[] trainingScheduleDtos = new TrainingScheduleDto[trainingSchedules.size()];
