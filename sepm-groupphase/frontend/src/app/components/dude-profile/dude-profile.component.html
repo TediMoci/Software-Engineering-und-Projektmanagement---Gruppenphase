@@ -90,20 +90,20 @@
                       [matTooltipShowDelay]="1000"
                       *ngFor='let workout of workoutsPerDay[tabs.indexOf(element)]'
                       [value]="workout"
-                      (click)="selectedWorkout = workout; getSelectedWorkoutExercises(selectedWorkout)">
+                      (click)="selectedWorkout = workout; getSelectedWorkoutExercises(selectedWorkout); selectedDay = 1 + tabs.indexOf(element) + prog(tsIntervalLenght, globalTimeDelta) ">
                 {{workout.name}}
               </button>
             </mat-card>
           </div>
-          <div class="details" *ngIf="selectedWorkout.length != 0">
+          <div class="details" *ngIf="selectedWorkout != null">
 
             <section>
-              <button class="hideButton" mat-flat-button (click)="selectedWorkout = []">Hide details</button>
+              <button class="hideButton" mat-flat-button (click)="selectedWorkout = null">Hide details</button>
             </section>
 
             <section>
               <mat-card class="detailsContent">
-                <h2>{{selectedWorkout.name}}</h2>
+                <h2>{{selectedWorkout.name}} for day {{selectedDay}}</h2>
                 <p>Difficulty: {{convertDifficulty(selectedWorkout.difficulty)}}</p>
                 <p>Calorie Consumption: {{selectedWorkout.calorieConsumption}}</p>
                 <hr>
@@ -116,6 +116,15 @@
                         {{exercise.name}}
                       </mat-panel-title>
                     </mat-expansion-panel-header>
+                    <mat-checkbox
+                      class="myCheckbox"
+                      color="primary"
+                      [disabled]="!(selectedDay == globalTimeDelta + 1)"
+                      [ngModel]="getExercisesStatus(exercise.id, selectedDay)"
+                      (ngModelChange)="setExercisesStatus(exercise.id, exercise.version, selectedDay, $event)">Done
+                    </mat-checkbox>
+                    <hr>
+                    {{doneChecked}}
                     <hr>
                     <p>Category: {{exercise.category}}</p>
                     <p>Muscle Group: {{exercise.muscleGroup}}</p>
@@ -135,7 +144,7 @@
             </section>
 
             <section>
-              <button class="hideButton" mat-flat-button (click)="selectedWorkout = []">Hide details</button>
+              <button class="hideButton" mat-flat-button (click)="selectedWorkout = null">Hide details</button>
             </section>
           </div>
         </div>

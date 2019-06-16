@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {GetActiveTrainingSchedule} from '../dtos/get-active-training-schedule';
+import {ExerciseDone} from '../dtos/exercise-done';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,10 @@ export class ProfileService {
   getActiveSchedule(id: number): Observable<GetActiveTrainingSchedule> {
     console.log('checking for active training schedule for Dude with id ' + id);
     return this.httpClient.get<GetActiveTrainingSchedule>(this.dudeBaseUri + '/' + id + '/activeTrainingSchedule');
+  }
 
+  getExercisesDoneByDudeId(id: number): Observable<ExerciseDone[]> {
+    return this.httpClient.get<ExerciseDone[]>(this.dudeBaseUri + '/' + id + '/activeTrainingSchedule/done');
   }
 
 }
