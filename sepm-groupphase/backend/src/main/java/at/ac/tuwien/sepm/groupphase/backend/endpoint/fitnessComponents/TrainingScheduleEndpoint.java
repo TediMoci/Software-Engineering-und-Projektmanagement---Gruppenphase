@@ -146,13 +146,13 @@ public class TrainingScheduleEndpoint {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get training schedules by name", authorizations = {@Authorization(value = "apiKey")})
-    public List<TrainingScheduleDto> findByName(@RequestParam String name) {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<TrainingScheduleDto> findByName(@RequestParam String name, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
         List<TrainingSchedule> trainingSchedules;
         try {
-            trainingSchedules = iTrainingScheduleService.findByName(name);
+            trainingSchedules = iTrainingScheduleService.findByName(name, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not find training schedules with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -195,16 +195,17 @@ public class TrainingScheduleEndpoint {
         return trainingScheduleWorkoutDtoOuts;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @RequestMapping(value = "/filtered/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Training Schedule by filters", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleDto[] findByFilter(
         @RequestParam(defaultValue = "") String filter,
         @RequestParam(required = false) Integer difficulty,
-        @RequestParam(required = false) Integer intervalLength) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength);
+        @RequestParam(required = false) Integer intervalLength,
+        @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength + "; dudeId: " + dudeId);
         List<TrainingSchedule> trainingSchedules;
         try {
-            trainingSchedules = iTrainingScheduleService.findByFilter(filter, difficulty, intervalLength);
+            trainingSchedules = iTrainingScheduleService.findByFilter(filter, difficulty, intervalLength, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

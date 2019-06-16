@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
@@ -223,13 +224,18 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
-    public List<TrainingSchedule> findByName(String name) throws ServiceException {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<TrainingSchedule> findByName(String name, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<TrainingSchedule> trainingSchedules;
         try {
-            return iTrainingScheduleRepository.findByName(name);
+            trainingSchedules = iTrainingScheduleRepository.findByName(name);
+            trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByName(name, dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return trainingSchedules;
     }
 
     @Override
@@ -267,25 +273,32 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
-    public List<TrainingSchedule> findByFilter(String filter, Integer difficulty, Integer intervalLength) throws ServiceException {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength);
+    public List<TrainingSchedule> findByFilter(String filter, Integer difficulty, Integer intervalLength, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<TrainingSchedule> trainingSchedules;
         try {
             if (difficulty != null && intervalLength != null) {
-                return iTrainingScheduleRepository.findByFilterWithDifficultyAndInterval(filter, difficulty, intervalLength);
+                trainingSchedules = iTrainingScheduleRepository.findByFilterWithDifficultyAndInterval(filter, difficulty, intervalLength);
+                trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithDifficultyAndInterval(filter, difficulty, intervalLength, dude));
             }
             else if(difficulty != null && intervalLength == null) {
-                return iTrainingScheduleRepository.findByFilterWithDifficulty(filter, difficulty);
+                trainingSchedules = iTrainingScheduleRepository.findByFilterWithDifficulty(filter, difficulty);
+                trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithDifficulty(filter, difficulty, dude));
             }
             else if (difficulty == null & intervalLength != null) {
-                return iTrainingScheduleRepository.findByFilterWithInterval(filter, intervalLength);
+                trainingSchedules = iTrainingScheduleRepository.findByFilterWithInterval(filter, intervalLength);
+                trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithInterval(filter, intervalLength, dude));
             }
             else {
-                return iTrainingScheduleRepository.findByFilterWithoutDifficultyAndInterval(filter);
+                trainingSchedules = iTrainingScheduleRepository.findByFilterWithoutDifficultyAndInterval(filter);
+                trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithoutDifficultyAndInterval(filter, dude));
             }
-
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return trainingSchedules;
     }
 
     private void validateTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts) throws ServiceException {

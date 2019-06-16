@@ -69,10 +69,11 @@ public interface ITrainingScheduleService {
 
     /**
      * @param name of the TrainingSchedules to find
+     * @param dudeId of the Dude that called the method
      * @return TrainingSchedules with name beginning with the given name-string
      * @throws ServiceException if an error occurred while trying to find the TrainingSchedules in the system
      */
-    List<TrainingSchedule> findByName(String name) throws ServiceException;
+    List<TrainingSchedule> findByName(String name, Long dudeId) throws ServiceException;
 
     /**
      * @param id of the TrainingSchedule to find
@@ -86,10 +87,11 @@ public interface ITrainingScheduleService {
      * @param filter of the name or description TrainingSchedules to find
      * @param difficulty of TrainingSchedules to find
      * @param intervalLength of TrainingSchedules to find
+     * @param dudeId of the Dude that called the method
      * @return TrainingSchedules with given parameters
      * @throws ServiceException if an error occurred while trying to find the TrainingSchedules in the database
      */
-    List<TrainingSchedule> findByFilter(String filter, Integer difficulty, Integer intervalLength) throws ServiceException;
+    List<TrainingSchedule> findByFilter(String filter, Integer difficulty, Integer intervalLength, Long dudeId) throws ServiceException;
 
     /**
      * @param dudeId of the Dude
