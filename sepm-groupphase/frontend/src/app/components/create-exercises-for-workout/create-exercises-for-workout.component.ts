@@ -23,9 +23,8 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   submitted: boolean = false;
   dude: Dude;
   currentChosenExercises: WorkoutEx[];
-  message: string;
   muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
-
+  message: string;
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;

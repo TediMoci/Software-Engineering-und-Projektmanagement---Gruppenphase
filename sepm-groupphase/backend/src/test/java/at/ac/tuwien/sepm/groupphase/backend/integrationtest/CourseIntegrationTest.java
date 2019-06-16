@@ -23,9 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDate;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -117,7 +115,7 @@ public class CourseIntegrationTest {
         return responseDude.getBody().getId();
     }
 
-    private CourseDto courseDtoBuilder(CourseDto d){
+    private CourseDto courseDtoBuilder(CourseDto d) {
         CourseDto courseDto = new CourseDto();
         courseDto.setName(d.getName());
         courseDto.setDescription(d.getDescription());
@@ -154,7 +152,7 @@ public class CourseIntegrationTest {
 
     @Test(expected = HttpClientErrorException.class)
     public void givenNothing_whenFindCourseById_thenHttpClientErrorException(){
-        REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/1", CourseDto.class);
+        REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/100", CourseDto.class);
     }
 
     @Test

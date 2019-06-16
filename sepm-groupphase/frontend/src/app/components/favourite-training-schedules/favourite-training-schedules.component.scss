@@ -37,13 +37,6 @@
     -webkit-overflow-scrolling: touch;
     font-size: 30px;
   }
-  .col-sm-3 {
-    background: magenta;
-    min-height: 50px;
-  }
-  .col{
-    margin-top: 15px;
-  }
   .btn {
     margin: 5px;
     cursor: pointer;
@@ -60,15 +53,4 @@
 
 .modal-header {
   text-align: center;
-}
-
-.btn-favourite {
-  background: pink;
-  color: white;
-  text-align: center;
-  -webkit-text-size-adjust: auto;
-}
-
-.btn-favourite:hover {
-  background: palevioletred;
 }
