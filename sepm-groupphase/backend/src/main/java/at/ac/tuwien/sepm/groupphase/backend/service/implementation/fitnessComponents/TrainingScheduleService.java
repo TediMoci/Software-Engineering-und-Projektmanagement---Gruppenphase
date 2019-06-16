@@ -268,7 +268,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         double totalCalories = 0;
         double totalDuration = 0;
         double totalHours;
-        int totalDays ;
+        int totalDays = 0;
         int totalIntervalRepetitions;
         TrainingSchedule originalTs = new TrainingSchedule();
         boolean foundOriginal = false;
@@ -291,6 +291,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 if (activeTrainingSchedule.getDone().get(i).getDone()){
                     totalCalories += activeTrainingSchedule.getDone().get(i).getWorkout().getCalorieConsumption();
                     totalDuration += activeTrainingSchedule.getDone().get(i).getWorkoutExercise().getExDuration();
+                    totalDays++;
                     if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Strength){
                         strength++;
                     }
@@ -311,10 +312,9 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             }
 
             totalHours = totalDuration/60.0;
-            totalDays = (int)totalHours/24;
-            strengthPercent = ((double)strength/ activeTrainingSchedule.getDone().size())*100.0;
-            endurancePercent = ((double)endurance/ activeTrainingSchedule.getDone().size())*100.0;
-            otherPercent = ((double)other/ activeTrainingSchedule.getDone().size())*100.0;
+            strengthPercent = ((double)strength/ totalDays)*100.0;
+            endurancePercent = ((double)endurance/ totalDays)*100.0;
+            otherPercent = ((double)other/ totalDays)*100.0;
             LocalDate startDate = LocalDate.from(activeTrainingSchedule.getStartDate());
             totalIntervalRepetitions = (int)startDate.until(LocalDate.now(), ChronoUnit.DAYS)/originalTs.getIntervalLength();
 
@@ -484,6 +484,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException {
 
+        resetVariables();
         // old trainingSchedule
         TrainingSchedule oldTs = activeSchedule.getTrainingSchedule();
         LocalDate startDate = activeSchedule.getStartDate();
@@ -677,8 +678,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         allWorkouts.add(builderWaH.build());
     }
 
-    // TODO: reps and sets decrease/increase
-    // TODO: save exerciseDone more often than necessary
     private void applyAdaptiveChange(List<WorkoutExerciseDone> ex, double percentPerExDay, int day) {
         LOGGER.debug("entering applyAdaptiveChange");
         int repsHelpIncrease;
@@ -712,7 +711,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         }
                     } else {
                         e.setRepetitions(repsHelpIncrease);
-                        e.setExDuration(calculateDurationPerRepetition * e.getRepetitions());
+                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions(): 1440);
                     }
                 } else {
                     if (repsHelpDecrease <= 1) {
@@ -722,7 +721,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         }
                     } else {
                         e.setRepetitions(repsHelpDecrease);
-                        e.setExDuration(calculateDurationPerRepetition * e.getRepetitions());
+                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) > 1 ? calculateDurationPerRepetition * e.getRepetitions(): 1);
                     }
                 }
 
@@ -745,6 +744,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 totalCalories += workoutHelp.getCaloriesConsumption() * ex.getRepetitions() * ex.getSets();
             }
             totalCalories = Math.round(totalCalories);
+            totalCalories = totalCalories < 1? 1 : totalCalories;
+            totalCalories = totalCalories > 9999? 9999 : totalCalories;
             workoutHelp.getWorkout().setCalorieConsumption(totalCalories);
             totalCalories = 0;
             LOGGER.debug("Update workout after adaptive change");
@@ -865,6 +866,29 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             throw new ServiceException(e.getMessage());
         }
 
+    }
+
+    private void resetVariables() {
+        this.waExDay1.clear();
+        this.waExDay2.clear();
+        this.waExDay3.clear();
+        this.waExDay4.clear();
+        this.waExDay5.clear();
+        this.waExDay6.clear();
+        this.waExDay7.clear();
+        this.allExercises.clear();
+        this.allWorkouts.clear();
+        this.t = 0;
+        this.a = 0;
+        this.s = 0;
+        this.totalChangePerDayInPercent = 0;
+        this.k = 0;
+        this.bt = 0;
+        this.totalEx = 0;
+        this.categoryStrength = 0;
+        this.intervalLength = 0;
+        this.selfAssessment = 0;
+        this.numOfExPerDay = new int[]{0, 0, 0, 0, 0, 0, 0};
     }
 
     // ----------------------------------------- end of methods for adapting training schedule automatically -----------------------------------------
