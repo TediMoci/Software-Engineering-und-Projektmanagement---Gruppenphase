@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -67,13 +68,13 @@ public class TrainingScheduleIntegrationTest {
         exerciseDto1.setName("Exercise1");
         exerciseDto1.setDescription("Description1");
         exerciseDto1.setEquipment("Equipment1");
-        exerciseDto1.setMuscleGroup("MuscleGroup1");
+        exerciseDto1.setMuscleGroup(MuscleGroup.Chest);
         exerciseDto1.setCategory(Category.Strength);
 
         exerciseDto2.setName("Exercise2");
         exerciseDto2.setDescription("Description2");
         exerciseDto2.setEquipment("Equipment2");
-        exerciseDto2.setMuscleGroup("MuscleGroup2");
+        exerciseDto2.setMuscleGroup(MuscleGroup.Arms);
         exerciseDto2.setCategory(Category.Endurance);
 
         workoutDto1.setName("Workout1");

@@ -91,7 +91,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     // ----------------------------------------- end of variables for training schedule adaption -----------------------------------------
 
-    public TrainingScheduleService(IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository, ITrainingScheduleBookmarkRepository iTrainingScheduleBookmarkRepository, IWorkoutBookmarkRepository iWorkoutBookmarkRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository, TrainingScheduleBookmarkRepository trainingScheduleBookmarkRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.workoutService = workoutService;
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
@@ -755,8 +755,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         if (e.getSets() < 15) {
                             e.setRepetitions((int) Math.round((double) (repsHelpIncrease * e.getSets()) / (e.getSets() + 1)));
                             e.setSets(e.getSets() + 1);
+                            e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions() : 1440);
                         } else {
                             e.setRepetitions(100);
+                            e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions() : 1440);
                         }
                     } else {
                         e.setRepetitions(repsHelpIncrease);
@@ -767,6 +769,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         if (e.getSets() > 1) {
                             e.setSets(e.getSets() - 1);
                             // repetitions stay the same, sets get decreased
+                            e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) > 1 ? calculateDurationPerRepetition * e.getRepetitions() : 1);
                         }
                     } else {
                         e.setRepetitions(repsHelpDecrease);
