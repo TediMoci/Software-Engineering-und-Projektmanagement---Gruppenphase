@@ -1,10 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
-import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
-import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
-import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
-import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
@@ -28,19 +25,21 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private final IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository;
     private final IExerciseDoneRepository iExerciseDoneRepository;
     private final IDudeRepository iDudeRepository;
+    private final ITrainingScheduleRatingRepository iTrainingScheduleRatingRepository;
     private final TrainingScheduleValidator trainingScheduleValidator;
     private final TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleService.class);
     private static Map<Integer, List<Workout>> finalList = new HashMap<Integer, List<Workout>>();
     private static Integer listPosition = 0;
 
-    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, IDudeRepository iDudeRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, IDudeRepository iDudeRepository, ITrainingScheduleRatingRepository iTrainingScheduleRatingRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
         this.iWorkoutRepository = iWorkoutRepository;
         this.iActiveTrainingScheduleRepository = iActiveTrainingScheduleRepository;
         this.iExerciseDoneRepository = iExerciseDoneRepository;
         this.iDudeRepository = iDudeRepository;
+        this.iTrainingScheduleRatingRepository = iTrainingScheduleRatingRepository;
         this.trainingScheduleValidator = trainingScheduleValidator;
         this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
     }
@@ -246,6 +245,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             if (oldTraining == null) throw new ServiceException("Could not find training schedule with id: " + id);
             newTraining.setId(id);
             newTraining.setVersion(1+oldTraining.getVersion());
+            newTraining.setRatingNum(oldTraining.getRatingNum());
+            newTraining.setRatingSum(oldTraining.getRatingSum());
 
             List<TrainingScheduleWorkout> trainingWorkouts = newTraining.getWorkouts();
             newTraining.setWorkouts(null);
@@ -265,6 +266,69 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     @Override
     public List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException {
         return null;
+    }
+
+    @Override
+    public void saveTrainingScheduleRating(Long dudeId, Long trainingScheduleId, Integer rating) throws ServiceException {
+        LOGGER.info("Entering saveTrainingScheduleRating with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; rating: " + rating);
+        // checks that rating is between 1 and 5
+        try {
+            if (rating < 1 || rating > 5) throw new ValidationException("Rating must be between 1 and 5");
+        } catch (ValidationException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        checkDudeTrainingScheduleExist(dudeId,trainingScheduleId);
+
+        TrainingScheduleRating trainingScheduleRating = new TrainingScheduleRating();
+        trainingScheduleRating.setDudeId(dudeId);
+        trainingScheduleRating.setTrainingScheduleId(trainingScheduleId);
+        trainingScheduleRating.setRating(rating);
+
+        TrainingSchedule trainingSchedule = iTrainingScheduleRepository.findById(trainingScheduleId);
+
+        // checks that dude is not rating own content
+        if (trainingSchedule.getCreator().getId().equals(dudeId)){
+            throw new ServiceException("You cannot rate your own content");
+        }
+
+        // checks if dude has rated this content before or not
+        if (iTrainingScheduleRatingRepository.findRating(dudeId,trainingScheduleId)==null){
+            trainingSchedule.setRatingSum(rating+trainingSchedule.getRatingSum());
+            trainingSchedule.setRatingNum(1+trainingSchedule.getRatingNum());
+
+            iTrainingScheduleRatingRepository.save(trainingScheduleRating);
+            iTrainingScheduleRepository.save(trainingSchedule);
+            System.out.println("Dude with id: " + dudeId + " rated TrainingSchedule with id: " + trainingScheduleId + " with new rating: " + rating);
+        } else{
+            TrainingScheduleRating foundRating = iTrainingScheduleRatingRepository.findRating(dudeId, trainingScheduleId);
+            trainingSchedule.setRatingSum(rating + trainingSchedule.getRatingSum() - foundRating.getRating());
+
+            iTrainingScheduleRatingRepository.save(trainingScheduleRating);
+            iTrainingScheduleRepository.save(trainingSchedule);
+            System.out.println("Dude with id: " + dudeId + " rated TrainingSchedule with id: " + trainingScheduleId + " with updated rating: " + rating);
+        }
+    }
+
+    @Override
+    public void deleteTrainingScheduleRating(Long dudeId, Long trainingScheduleId) throws ServiceException {
+        LOGGER.info("Entering deleteTrainingScheduleRating with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId);
+        TrainingScheduleRating trainingScheduleRating = iTrainingScheduleRatingRepository.findRating(dudeId,trainingScheduleId);
+
+        if (trainingScheduleRating==null){
+            throw new ServiceException("Could not find rating to delete with dude id: " + dudeId + " and trainingSchedule " + trainingScheduleId);
+        } else{
+            checkDudeTrainingScheduleExist(dudeId,trainingScheduleId);
+            TrainingSchedule trainingSchedule = iTrainingScheduleRepository.findById(trainingScheduleId);
+            trainingSchedule.setRatingSum(trainingSchedule.getRatingSum() - trainingScheduleRating.getRating());
+            trainingSchedule.setRatingNum(trainingSchedule.getRatingNum() - 1);
+
+            try {
+                iTrainingScheduleRatingRepository.delete(trainingScheduleRating);
+                iTrainingScheduleRepository.save(trainingSchedule);
+            } catch (DataAccessException e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
     }
 
     private void validateTrainingScheduleWorkouts(List<TrainingScheduleWorkout> trainingScheduleWorkouts) throws ServiceException {
@@ -356,5 +420,16 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         return allDuration;
     }
 
+    private void checkDudeTrainingScheduleExist(Long dudeId, Long trainingScheduleId) throws ServiceException {
+        try {
+            if (iDudeRepository.findById(dudeId).isEmpty()) {
+                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
+            } else if (iTrainingScheduleRepository.findById(trainingScheduleId)==null) {
+                throw new NoSuchElementException("Could not find Workout with id: " + trainingScheduleId);
+            }
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 
 }

@@ -90,4 +90,19 @@ public interface ITrainingScheduleService {
      * @throws ServiceException
      */
     List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param trainingScheduleId of the Training Schedule that the Dude wants to rate
+     * @param rating given by Dude to TrainingSchedule
+     * @throws ServiceException if an error occurred while trying to rate the TrainingSchedule
+     */
+    void saveTrainingScheduleRating(Long dudeId, Long trainingScheduleId, Integer rating) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param trainingScheduleId of the TrainingSchedule that the Dude wants to rate
+     * @throws ServiceException if an error occurred while trying to rate the TrainingSchedule
+     */
+    void deleteTrainingScheduleRating(Long dudeId, Long trainingScheduleId) throws ServiceException;
 }

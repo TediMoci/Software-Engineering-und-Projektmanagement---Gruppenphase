@@ -24,7 +24,8 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingScheduleDto.getDescription());
         builder.difficulty(trainingScheduleDto.getDifficulty());
         builder.intervalLength(trainingScheduleDto.getIntervalLength());
-        builder.rating(trainingScheduleDto.getRating());
+        builder.ratingNum(0);
+        builder.ratingSum(0);
         builder.isHistory(false);
 
         List<TrainingScheduleWorkout> trainingScheduleWorkouts = new ArrayList<>();
@@ -58,7 +59,13 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingSchedule.getDescription());
         builder.difficulty(trainingSchedule.getDifficulty());
         builder.intervalLength(trainingSchedule.getIntervalLength());
-        builder.rating(trainingSchedule.getRating());
+
+        if (trainingSchedule.getRatingNum()==0){
+            builder.rating(0.0);
+        } else {
+            builder.rating(roundToOne((double)(trainingSchedule.getRatingSum())/(double)(trainingSchedule.getRatingNum())));
+        }
+
         builder.creatorId(trainingSchedule.getCreator().getId());
 
         return builder.build();
@@ -74,7 +81,13 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingScheduleWorkout.getWorkout().getDescription());
         builder.difficulty(trainingScheduleWorkout.getWorkout().getDifficulty());
         builder.calorieConsumption(trainingScheduleWorkout.getWorkout().getCalorieConsumption());
-        builder.rating(trainingScheduleWorkout.getWorkout().getRating());
+
+        if (trainingScheduleWorkout.getWorkout().getRatingNum()==0){
+            builder.rating(0.0);
+        } else {
+            builder.rating(roundToOne((double)(trainingScheduleWorkout.getWorkout().getRatingSum())/(double)(trainingScheduleWorkout.getWorkout().getRatingNum())));
+        }
+
         builder.creatorName(trainingScheduleWorkout.getWorkout().getCreator().getName());
         builder.day(trainingScheduleWorkout.getDay());
 
@@ -155,7 +168,8 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingScheduleRandomDto.getDescription());
         builder.difficulty(trainingScheduleRandomDto.getDifficulty());
         builder.intervalLength(trainingScheduleRandomDto.getIntervalLength());
-        builder.rating(trainingScheduleRandomDto.getRating());
+        builder.ratingNum(0);
+        builder.ratingSum(0);
         builder.isHistory(false);
 
         List<TrainingScheduleWorkout> trainingScheduleWorkouts = new ArrayList<>();
@@ -168,4 +182,9 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
 
         return builder.build();
     }
+
+    private double roundToOne(double value){
+        return Math.round(value * 10.0) / 10.0;
+    }
+
 }

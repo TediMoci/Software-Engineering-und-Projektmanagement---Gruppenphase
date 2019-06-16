@@ -17,8 +17,9 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.name(exerciseDto.getName());
         builder.description(exerciseDto.getDescription());
         builder.equipment(exerciseDto.getEquipment());
+        builder.ratingNum(0);
+        builder.ratingSum(0);
         builder.muscleGroup(exerciseDto.getMuscleGroup());
-        builder.rating(exerciseDto.getRating());
         builder.category(exerciseDto.getCategory());
         builder.isHistory(false);
         builder.version(exerciseDto.getVersion());
@@ -40,11 +41,21 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.description(exercise.getDescription());
         builder.equipment(exercise.getEquipment());
         builder.muscleGroup(exercise.getMuscleGroup());
-        builder.rating(exercise.getRating());
+
+        if (exercise.getRatingNum()==0){
+            builder.rating(0.0);
+        } else {
+            builder.rating(roundToOne((double)(exercise.getRatingSum())/(double)(exercise.getRatingNum())));
+        }
+
         builder.category(exercise.getCategory());
         builder.version(exercise.getVersion());
         builder.creatorId(exercise.getCreator().getId());
 
         return builder.build();
+    }
+
+    private double roundToOne(double value){
+        return Math.round(value * 10.0) / 10.0;
     }
 }

@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.Set;
 
 @Entity
@@ -33,7 +34,12 @@ public class Exercise {
     private MuscleGroup muscleGroup;
 
     @Column(nullable = false)
-    private Double rating = 1.0;
+    @Min(0)
+    private Integer ratingSum = 0;
+
+    @Column(nullable = false)
+    @Min(0)
+    private Integer ratingNum = 0;
 
     @Column(nullable = false)
     private Category category;
@@ -96,14 +102,6 @@ public class Exercise {
         this.muscleGroup = muscleGroup;
     }
 
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
-
     public Category getCategory() {
         return category;
     }
@@ -136,6 +134,22 @@ public class Exercise {
         isHistory = history;
     }
 
+    public Integer getRatingSum() {
+        return ratingSum;
+    }
+
+    public void setRatingSum(Integer ratingSum) {
+        this.ratingSum = ratingSum;
+    }
+
+    public Integer getRatingNum() {
+        return ratingNum;
+    }
+
+    public void setRatingNum(Integer ratingNum) {
+        this.ratingNum = ratingNum;
+    }
+
     public static ExerciseBuilder builder() {
         return new ExerciseBuilder();
     }
@@ -149,7 +163,8 @@ public class Exercise {
             ", description='" + description + '\'' +
             ", equipment='" + equipment + '\'' +
             ", muscleGroup=" + muscleGroup +
-            ", rating=" + rating +
+            ", ratingNum=" + ratingNum +
+            ", ratingSum=" + ratingSum +
             ", category=" + category +
             ", isHistory=" + isHistory +
             ", workouts=" + workouts +
@@ -171,7 +186,8 @@ public class Exercise {
             return false;
         if (equipment != null ? !equipment.equals(exercise.equipment) : exercise.equipment != null) return false;
         if (muscleGroup != exercise.muscleGroup) return false;
-        if (rating != null ? !rating.equals(exercise.rating) : exercise.rating != null) return false;
+        if (ratingNum != null ? !ratingNum.equals(exercise.ratingNum) : exercise.ratingNum != null) return false;
+        if (ratingSum != null ? !ratingSum.equals(exercise.ratingSum) : exercise.ratingSum != null) return false;
         if (category != exercise.category) return false;
         if (isHistory != null ? !isHistory.equals(exercise.isHistory) : exercise.isHistory != null) return false;
         if (workouts != null ? !workouts.equals(exercise.workouts) : exercise.workouts != null) return false;
@@ -186,7 +202,8 @@ public class Exercise {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
         result = 31 * result + (muscleGroup != null ? muscleGroup.hashCode() : 0);
-        result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (ratingNum != null ? ratingNum.hashCode() : 0);
+        result = 31 * result + (ratingSum != null ? ratingSum.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
         result = 31 * result + (workouts != null ? workouts.hashCode() : 0);
@@ -201,7 +218,8 @@ public class Exercise {
         private String description;
         private String equipment;
         private MuscleGroup muscleGroup;
-        private Double rating;
+        private Integer ratingNum;
+        private Integer ratingSum;
         private Category category;
         private Boolean isHistory;
         private Set<WorkoutExercise> workouts;
@@ -240,8 +258,13 @@ public class Exercise {
             return this;
         }
 
-        public ExerciseBuilder rating(Double rating) {
-            this.rating = rating;
+        public ExerciseBuilder ratingNum(Integer ratingNum) {
+            this.ratingNum = ratingNum;
+            return this;
+        }
+
+        public ExerciseBuilder ratingSum(Integer ratingSum) {
+            this.ratingSum = ratingSum;
             return this;
         }
 
@@ -274,7 +297,8 @@ public class Exercise {
             exercise.setDescription(description);
             exercise.setEquipment(equipment);
             exercise.setMuscleGroup(muscleGroup);
-            exercise.setRating(rating);
+            exercise.setRatingNum(ratingNum);
+            exercise.setRatingNum(ratingSum);
             exercise.setCategory(category);
             exercise.setHistory(isHistory);
             exercise.setWorkouts(workouts);

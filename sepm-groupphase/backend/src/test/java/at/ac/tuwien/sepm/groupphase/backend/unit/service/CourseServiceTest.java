@@ -49,11 +49,15 @@ public class CourseServiceTest {
         course1.setName("Course1");
         course1.setDescription("Description1");
         course1.setCreator(fitnessProvider);
+        course1.setRatingNum(1);
+        course1.setRatingSum(1);
 
         course2.setId(2L);
         course2.setName("Course2");
         course2.setDescription("Description2");
         course2.setCreator(fitnessProvider);
+        course2.setRatingNum(1);
+        course2.setRatingSum(1);
 
         courses2.add(course2);
     }

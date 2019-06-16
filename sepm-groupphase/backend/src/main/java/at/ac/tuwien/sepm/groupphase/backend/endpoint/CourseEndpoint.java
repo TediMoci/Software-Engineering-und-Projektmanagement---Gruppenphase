@@ -135,4 +135,28 @@ public class CourseEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
+    @RequestMapping(value = "/rating/{dudeId}/{courseId}/{rating}", method = RequestMethod.POST)
+    @ApiOperation(value = "Dude with id rates course with id", authorizations = {@Authorization(value = "apiKey")})
+    public void saveCourseRating(@PathVariable Long dudeId, @PathVariable Long courseId, @PathVariable Integer rating) {
+        LOGGER.info("Entering saveCourseRating with dudeId: " + dudeId + "; courseId: " + courseId + "; rating: " + rating);
+        try {
+            iCourseService.saveCourseRating(dudeId, courseId, rating);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveCourseRating with dudeId: " + dudeId + "; courseId: " + courseId + "; rating: " + rating);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/rating/{dudeId}/{courseId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with id deleted rating from Exercise with id", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteCourseRating(@PathVariable Long dudeId, @PathVariable Long courseId) {
+        LOGGER.info("Entering deleteCourseRating with dudeId: " + dudeId + "; courseId: " + courseId);
+        try {
+            iCourseService.deleteCourseRating(dudeId, courseId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteCourseRating with dudeId: " + dudeId + "; courseId: " + courseId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 }

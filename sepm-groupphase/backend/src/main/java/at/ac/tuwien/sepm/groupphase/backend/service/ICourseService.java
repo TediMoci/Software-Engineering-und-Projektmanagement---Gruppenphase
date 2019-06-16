@@ -55,4 +55,18 @@ public interface ICourseService {
      */
     void delete(long id) throws ServiceException;
 
+    /**
+     * @param dudeId of the Dude
+     * @param courseId of the course that the Dude wants to rate
+     * @param rating given by Dude to Course
+     * @throws ServiceException if an error occurred while trying to rate the CourseRating
+     */
+    void saveCourseRating(Long dudeId, Long courseId, Integer rating) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param courseId of the Course that the Dude wants to delete the rating
+     * @throws ServiceException if an error occurred while trying to rate the Course rating
+     */
+    void deleteCourseRating(Long dudeId, Long courseId) throws ServiceException;
 }

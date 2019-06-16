@@ -23,7 +23,8 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.description(workoutDto.getDescription());
         builder.difficulty(workoutDto.getDifficulty());
         builder.calorieConsumption(workoutDto.getCalorieConsumption());
-        builder.rating(workoutDto.getRating());
+        builder.ratingNum(0);
+        builder.ratingSum(0);
         builder.isHistory(false);
 
         List<WorkoutExercise> workoutExercises = new ArrayList<>();
@@ -59,7 +60,13 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.description(workout.getDescription());
         builder.difficulty(workout.getDifficulty());
         builder.calorieConsumption(workout.getCalorieConsumption());
-        builder.rating(workout.getRating());
+
+        if (workout.getRatingNum()==0){
+            builder.rating(0.0);
+        } else {
+            builder.rating(roundToOne((double)(workout.getRatingSum())/(double)(workout.getRatingNum())));
+        }
+
         builder.creatorId(workout.getCreator().getId());
 
         return builder.build();
@@ -75,7 +82,13 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.description(workoutExercise.getExercise().getDescription());
         builder.equipment(workoutExercise.getExercise().getEquipment());
         builder.muscleGroup(workoutExercise.getExercise().getMuscleGroup());
-        builder.rating(workoutExercise.getExercise().getRating());
+
+        if (workoutExercise.getExercise().getRatingNum()==0){
+            builder.rating(0.0);
+        } else {
+            builder.rating(roundToOne((double)(workoutExercise.getExercise().getRatingSum())/(double)(workoutExercise.getExercise().getRatingNum())));
+        }
+
         builder.category(workoutExercise.getExercise().getCategory());
         builder.creatorName(workoutExercise.getExercise().getCreator().getName());
         builder.exDuration(workoutExercise.getExDuration());
@@ -83,6 +96,10 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.sets(workoutExercise.getSets());
 
         return builder.build();
+    }
+
+    private double roundToOne(double value){
+        return Math.round(value * 10.0) / 10.0;
     }
 
 }

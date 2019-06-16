@@ -71,12 +71,16 @@ public class WorkoutServiceTest {
         validWorkout1.setCalorieConsumption(100.0);
         validWorkout1.setCreator(dude);
         validWorkout1.setExercises(validWorkoutExercises1);
+        validWorkout1.setRatingNum(1);
+        validWorkout1.setRatingSum(1);
 
         validWorkout2.setName("Workout2");
         validWorkout2.setDifficulty(2);
         validWorkout2.setCalorieConsumption(200.0);
         validWorkout2.setCreator(dude);
         validWorkout2.setExercises(validWorkoutExercises1);
+        validWorkout2.setRatingNum(1);
+        validWorkout2.setRatingSum(1);
 
         invalidWorkout1.setName("Workout3");
         invalidWorkout1.setDifficulty(3);
@@ -96,7 +100,8 @@ public class WorkoutServiceTest {
         workout.setDifficulty(w.getDifficulty());
         workout.setDescription(w.getDescription());
         workout.setCalorieConsumption(w.getCalorieConsumption());
-        workout.setRating(w.getRating());
+        workout.setRatingNum(w.getRatingNum());
+        workout.setRatingSum(w.getRatingSum());
         workout.setCreator(w.getCreator());
         workout.setExercises(w.getExercises());
         return workout;

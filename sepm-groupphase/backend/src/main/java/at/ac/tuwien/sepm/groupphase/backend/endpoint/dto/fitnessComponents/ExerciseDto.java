@@ -44,7 +44,6 @@ public class ExerciseDto {
     @NotNull(message = "Category must not be null")
     private Category category;
 
-
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
 

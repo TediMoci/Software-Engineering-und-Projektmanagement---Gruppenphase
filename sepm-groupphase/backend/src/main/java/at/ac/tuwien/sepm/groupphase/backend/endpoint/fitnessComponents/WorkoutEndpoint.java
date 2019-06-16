@@ -157,4 +157,28 @@ public class WorkoutEndpoint {
         return workoutExerciseDtoOuts;
     }
 
+    @RequestMapping(value = "/rating/{dudeId}/{workoutId}/{rating}", method = RequestMethod.POST)
+    @ApiOperation(value = "Dude with id rates workout with id", authorizations = {@Authorization(value = "apiKey")})
+    public void saveWorkoutRating(@PathVariable Long dudeId, @PathVariable Long workoutId, @PathVariable Integer rating) {
+        LOGGER.info("Entering saveWorkoutRating with dudeId: " + dudeId + "; workoutId: " + workoutId + "; rating: " + rating);
+        try {
+            iWorkoutService.saveWorkoutRating(dudeId, workoutId, rating);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveWorkoutRating with dudeId: " + dudeId + "; workoutId: " + workoutId + "; rating: " + rating);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/rating/{dudeId}/{workoutId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with id deleted rating from Workout with id", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteWorkoutRating(@PathVariable Long dudeId, @PathVariable Long workoutId) {
+        LOGGER.info("Entering deleteWorkoutRating with dudeId: " + dudeId + "; workoutId: " + workoutId);
+        try {
+            iWorkoutService.deleteWorkoutRating(dudeId, workoutId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteWorkoutRating with dudeId: " + dudeId + "; workoutId: " + workoutId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
 }

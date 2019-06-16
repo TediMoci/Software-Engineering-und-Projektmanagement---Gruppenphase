@@ -37,7 +37,6 @@ public class WorkoutExerciseDtoOut {
 
     @ApiModelProperty(name = "Duration of Exercise")
     private Integer exDuration;
-    // in seconds
 
     @ApiModelProperty(name = "Repetitions of Exercise")
     private Integer repetitions;

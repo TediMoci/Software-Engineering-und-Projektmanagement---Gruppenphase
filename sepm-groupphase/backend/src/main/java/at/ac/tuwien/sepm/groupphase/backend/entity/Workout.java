@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingSchedul
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,12 @@ public class Workout {
     private Double calorieConsumption = 0.0;
 
     @Column(nullable = false)
-    private Double rating = 1.0;
+    @Min(0)
+    private Integer ratingSum = 0;
+
+    @Column(nullable = false)
+    @Min(0)
+    private Integer ratingNum = 0;
 
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
@@ -96,12 +102,20 @@ public class Workout {
         this.calorieConsumption = calorieConsumption;
     }
 
-    public Double getRating() {
-        return rating;
+    public Integer getRatingSum() {
+        return ratingSum;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setRatingSum(Integer ratingSum) {
+        this.ratingSum = ratingSum;
+    }
+
+    public Integer getRatingNum() {
+        return ratingNum;
+    }
+
+    public void setRatingNum(Integer ratingNum) {
+        this.ratingNum = ratingNum;
     }
 
     public Boolean getHistory() {
@@ -149,7 +163,8 @@ public class Workout {
             ", description='" + description + '\'' +
             ", difficulty=" + difficulty +
             ", calorieConsumption=" + calorieConsumption +
-            ", rating=" + rating +
+            ", ratingNum=" + ratingNum +
+            ", ratingSum=" + ratingSum +
             ", isHistory=" + isHistory +
             '}';
     }
@@ -168,7 +183,8 @@ public class Workout {
         if (difficulty != null ? !difficulty.equals(workout.difficulty) : workout.difficulty != null) return false;
         if (calorieConsumption != null ? !calorieConsumption.equals(workout.calorieConsumption) : workout.calorieConsumption != null)
             return false;
-        if (rating != null ? !rating.equals(workout.rating) : workout.rating != null) return false;
+        if (ratingNum != null ? !ratingNum.equals(workout.ratingNum) : workout.ratingNum != null) return false;
+        if (ratingSum != null ? !ratingSum.equals(workout.ratingSum) : workout.ratingSum != null) return false;
         return isHistory != null ? isHistory.equals(workout.isHistory) : workout.isHistory == null;
 
     }
@@ -181,7 +197,8 @@ public class Workout {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (calorieConsumption != null ? calorieConsumption.hashCode() : 0);
-        result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (ratingNum != null ? ratingNum.hashCode() : 0);
+        result = 31 * result + (ratingSum != null ? ratingSum.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
         return result;
     }
@@ -193,7 +210,8 @@ public class Workout {
         private String description;
         private Integer difficulty;
         private Double calorieConsumption;
-        private Double rating;
+        private Integer ratingNum;
+        private Integer ratingSum;
         private Boolean isHistory;
         private List<WorkoutExercise> exercises;
         private List<TrainingScheduleWorkout> trainingSchedules;
@@ -232,8 +250,13 @@ public class Workout {
             return this;
         }
 
-        public WorkoutBuilder rating(Double rating) {
-            this.rating = rating;
+        public WorkoutBuilder ratingNum(Integer ratingNum) {
+            this.ratingNum = ratingNum;
+            return this;
+        }
+
+        public WorkoutBuilder ratingSum(Integer ratingSum) {
+            this.ratingSum = ratingSum;
             return this;
         }
 
@@ -265,7 +288,8 @@ public class Workout {
             workout.setDescription(description);
             workout.setDifficulty(difficulty);
             workout.setCalorieConsumption(calorieConsumption);
-            workout.setRating(rating);
+            workout.setRatingNum(ratingNum);
+            workout.setRatingNum(ratingSum);
             workout.setHistory(isHistory);
             workout.setExercises(exercises);
             workout.setTrainingSchedules(trainingSchedules);

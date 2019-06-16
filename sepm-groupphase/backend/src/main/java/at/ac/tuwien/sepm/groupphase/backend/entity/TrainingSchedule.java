@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingS
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,12 @@ public class TrainingSchedule {
     private Integer intervalLength;
 
     @Column(nullable = false)
-    private Double rating = 1.0;
+    @Min(0)
+    private Integer ratingSum = 0;
+
+    @Column(nullable = false)
+    @Min(0)
+    private Integer ratingNum = 0;
 
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
@@ -96,12 +102,20 @@ public class TrainingSchedule {
         this.intervalLength = intervalLength;
     }
 
-    public Double getRating() {
-        return rating;
+    public Integer getRatingSum() {
+        return ratingSum;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setRatingSum(Integer ratingSum) {
+        this.ratingSum = ratingSum;
+    }
+
+    public Integer getRatingNum() {
+        return ratingNum;
+    }
+
+    public void setRatingNum(Integer ratingNum) {
+        this.ratingNum = ratingNum;
     }
 
     public Boolean getHistory() {
@@ -149,7 +163,8 @@ public class TrainingSchedule {
             ", description='" + description + '\'' +
             ", difficulty=" + difficulty +
             ", intervalLength=" + intervalLength +
-            ", rating=" + rating +
+            ", ratingNum=" + ratingNum +
+            ", ratingSum=" + ratingSum +
             ", isHistory=" + isHistory +
             '}';
     }
@@ -168,7 +183,8 @@ public class TrainingSchedule {
         if (difficulty != null ? !difficulty.equals(that.difficulty) : that.difficulty != null) return false;
         if (intervalLength != null ? !intervalLength.equals(that.intervalLength) : that.intervalLength != null)
             return false;
-        if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
+        if (ratingNum != null ? !ratingNum.equals(that.ratingNum) : that.ratingNum != null) return false;
+        if (ratingSum != null ? !ratingSum.equals(that.ratingSum) : that.ratingSum != null) return false;
         return isHistory != null ? isHistory.equals(that.isHistory) : that.isHistory == null;
 
     }
@@ -181,7 +197,8 @@ public class TrainingSchedule {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (intervalLength != null ? intervalLength.hashCode() : 0);
-        result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (ratingNum != null ? ratingNum.hashCode() : 0);
+        result = 31 * result + (ratingSum != null ? ratingSum.hashCode() : 0);
         result = 31 * result + (isHistory != null ? isHistory.hashCode() : 0);
         return result;
     }
@@ -193,7 +210,8 @@ public class TrainingSchedule {
         private String description;
         private Integer difficulty;
         private Integer intervalLength;
-        private Double rating;
+        private Integer ratingNum;
+        private Integer ratingSum;
         private Boolean isHistory;
         private List<TrainingScheduleWorkout> workouts;
         private Dude creator;
@@ -232,8 +250,13 @@ public class TrainingSchedule {
             return this;
         }
 
-        public TrainingScheduleBuilder rating(Double rating) {
-            this.rating = rating;
+        public TrainingScheduleBuilder ratingNum(Integer ratingNum) {
+            this.ratingNum = ratingNum;
+            return this;
+        }
+
+        public TrainingScheduleBuilder ratingSum(Integer ratingSum) {
+            this.ratingSum = ratingSum;
             return this;
         }
 
@@ -264,7 +287,8 @@ public class TrainingSchedule {
             trainingSchedule.setDescription(description);
             trainingSchedule.setDifficulty(difficulty);
             trainingSchedule.setIntervalLength(intervalLength);
-            trainingSchedule.setRating(rating);
+            trainingSchedule.setRatingNum(ratingNum);
+            trainingSchedule.setRatingNum(ratingSum);
             trainingSchedule.setHistory(isHistory);
             trainingSchedule.setWorkouts(workouts);
             trainingSchedule.setCreator(creator);

@@ -47,7 +47,6 @@ public class WorkoutExercise {
     @Column(nullable = false, name = "ex_duration")
     @Min(1)
     private Integer exDuration = 1;
-    // in seconds
 
     @Column(nullable = false)
     @Min(1)

@@ -27,6 +27,8 @@ public class CourseMapper implements ICourseMapper {
         builder.id(courseDto.getId());
         builder.name(courseDto.getName());
         builder.description(courseDto.getDescription());
+        builder.ratingNum(0);
+        builder.ratingSum(0);
 
         FitnessProvider.FitnessProviderBuilder fitnessProviderBuilder = new FitnessProvider.FitnessProviderBuilder();
         fitnessProviderBuilder.id(courseDto.getCreatorId());
@@ -45,6 +47,17 @@ public class CourseMapper implements ICourseMapper {
         builder.description(course.getDescription());
         builder.creatorId(course.getCreator().getId());
 
+        if (course.getRatingNum()==0){
+            builder.rating(0.0);
+        } else {
+            builder.rating(roundToOne((double)(course.getRatingSum())/(double)(course.getRatingNum())));
+        }
+
         return builder.build();
     }
+
+    private double roundToOne(double value){
+        return Math.round(value * 10.0) / 10.0;
+    }
+
 }

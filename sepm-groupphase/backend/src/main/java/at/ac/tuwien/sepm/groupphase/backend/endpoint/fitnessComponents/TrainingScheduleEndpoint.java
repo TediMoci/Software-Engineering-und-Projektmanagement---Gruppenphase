@@ -234,4 +234,28 @@ public class TrainingScheduleEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
+    @RequestMapping(value = "/rating/{dudeId}/{trainingScheduleId}/{rating}", method = RequestMethod.POST)
+    @ApiOperation(value = "Dude with id rates TrainingSchedule with id", authorizations = {@Authorization(value = "apiKey")})
+    public void saveTrainingScheduleRating(@PathVariable Long dudeId, @PathVariable Long trainingScheduleId, @PathVariable Integer rating) {
+        LOGGER.info("Entering saveTrainingScheduleRating with dudeId: " + dudeId + "; trainingSchedule: " + trainingScheduleId + "; rating: " + rating);
+        try {
+            iTrainingScheduleService.saveTrainingScheduleRating(dudeId, trainingScheduleId, rating);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveTrainingScheduleRating with dudeId: " + dudeId + "; trainingSchedule: " + trainingScheduleId + "; rating: " + rating);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/rating/{dudeId}/{trainingScheduleId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with id deleted rating from trainingSchedule with id", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteTrainingScheduleRating(@PathVariable Long dudeId, @PathVariable Long trainingScheduleId) {
+        LOGGER.info("Entering deleteTrainingScheduleRating with dudeId: " + dudeId + "; trainingSchedule: " + trainingScheduleId);
+        try {
+            iTrainingScheduleService.deleteTrainingScheduleRating(dudeId, trainingScheduleId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteTrainingScheduleRating with dudeId: " + dudeId + "; trainingSchedule: " + trainingScheduleId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 }

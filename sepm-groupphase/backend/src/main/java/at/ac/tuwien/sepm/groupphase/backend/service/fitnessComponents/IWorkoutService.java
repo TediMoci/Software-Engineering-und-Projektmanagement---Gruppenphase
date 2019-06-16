@@ -66,4 +66,18 @@ public interface IWorkoutService {
      */
     void delete(long id) throws ServiceException;
 
+    /**
+     * @param dudeId of the Dude
+     * @param workoutId of the Workout that the Dude wants to rate
+     * @param rating given by Dude to Workout
+     * @throws ServiceException if an error occurred while trying to rate the Workout
+     */
+    void saveWorkoutRating(Long dudeId, Long workoutId, Integer rating) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param workoutId of the Workout that the Dude wants to rate
+     * @throws ServiceException if an error occurred while trying to rate the Workout
+     */
+    void deleteWorkoutRating(Long dudeId, Long workoutId) throws ServiceException;
 }

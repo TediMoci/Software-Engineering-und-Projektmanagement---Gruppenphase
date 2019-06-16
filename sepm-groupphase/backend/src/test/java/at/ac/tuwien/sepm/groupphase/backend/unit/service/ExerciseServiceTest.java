@@ -54,7 +54,8 @@ public class ExerciseServiceTest {
         validExercise1.setDescription("Description1");
         validExercise1.setEquipment("Equipment1");
         validExercise1.setMuscleGroup(MuscleGroup.Other);
-        validExercise1.setRating(1.0);
+        validExercise1.setRatingNum(1);
+        validExercise1.setRatingSum(1);
         validExercise1.setCreator(dude);
 
         validExercise2.setId(2L);
@@ -65,7 +66,8 @@ public class ExerciseServiceTest {
         validExercise2.setDescription("Description2");
         validExercise2.setEquipment("Equipment2");
         validExercise2.setMuscleGroup(MuscleGroup.Other);
-        validExercise2.setRating(1.0);
+        validExercise2.setRatingNum(1);
+        validExercise2.setRatingSum(1);
         validExercise2.setCreator(dude);
 
         validExercises2.add(validExercise2);
@@ -81,7 +83,8 @@ public class ExerciseServiceTest {
         exercise.setDescription(e.getDescription());
         exercise.setEquipment(e.getEquipment());
         exercise.setMuscleGroup(e.getMuscleGroup());
-        exercise.setRating(e.getRating());
+        exercise.setRatingSum(e.getRatingSum());
+        exercise.setRatingNum(e.getRatingNum());
         exercise.setCreator(e.getCreator());
         return exercise;
     }

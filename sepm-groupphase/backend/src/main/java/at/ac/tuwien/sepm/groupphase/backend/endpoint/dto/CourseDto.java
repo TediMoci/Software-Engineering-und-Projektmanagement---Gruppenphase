@@ -4,9 +4,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Arrays;
+import java.util.Objects;
 
 @ApiModel(value = "CourseDto", description = "A dto for course entries via rest")
 public class CourseDto {
@@ -22,6 +25,10 @@ public class CourseDto {
     @ApiModelProperty(name = "Description of Course")
     @Size(max = 3000, message = "Max description length is 3000")
     private String description = "No description given.";
+
+    @ApiModelProperty(name = "Rating of Exercise")
+    @Min(1) @Max(5)
+    private Double rating = 1.0;
 
     @ApiModelProperty(name = "FitnessProvider offering the Course")
     private Long creatorId;
@@ -53,6 +60,14 @@ public class CourseDto {
         this.description = description;
     }
 
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
     public Long getCreatorId() {
         return creatorId;
     }
@@ -79,35 +94,30 @@ public class CourseDto {
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
+            ", rating=" + rating +
             ", creatorId=" + creatorId +
             ", dudeDtos=" + Arrays.toString(dudeDtos) +
             '}';
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         CourseDto courseDto = (CourseDto) o;
-
-        if (id != null ? !id.equals(courseDto.id) : courseDto.id != null) return false;
-        if (name != null ? !name.equals(courseDto.name) : courseDto.name != null) return false;
-        if (description != null ? !description.equals(courseDto.description) : courseDto.description != null)
-            return false;
-        if (creatorId != null ? !creatorId.equals(courseDto.creatorId) : courseDto.creatorId != null) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(dudeDtos, courseDto.dudeDtos);
-
+        return Objects.equals(getId(), courseDto.getId()) &&
+            Objects.equals(getName(), courseDto.getName()) &&
+            Objects.equals(getDescription(), courseDto.getDescription()) &&
+            Objects.equals(getRating(), courseDto.getRating()) &&
+            Objects.equals(getCreatorId(), courseDto.getCreatorId()) &&
+            Arrays.equals(getDudeDtos(), courseDto.getDudeDtos());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(dudeDtos);
+        int result = Objects.hash(getId(), getName(), getDescription(), getRating(), getCreatorId());
+        result = 31 * result + Arrays.hashCode(getDudeDtos());
         return result;
     }
 
@@ -115,6 +125,7 @@ public class CourseDto {
         private Long id;
         private String name;
         private String description;
+        private Double rating;
         private Long creatorId;
         private DudeDto[] dudeDtos;
 
@@ -136,6 +147,11 @@ public class CourseDto {
             return this;
         }
 
+        public CourseDtoBuilder rating(Double rating) {
+            this.rating = rating;
+            return this;
+        }
+
         public CourseDtoBuilder creatorId(Long creatorId) {
             this.creatorId = creatorId;
             return this;
@@ -151,6 +167,7 @@ public class CourseDto {
             courseDto.setId(id);
             courseDto.setName(name);
             courseDto.setDescription(description);
+            courseDto.setRating(rating);
             courseDto.setCreatorId(creatorId);
             courseDto.setDudeDtos(dudeDtos);
             return courseDto;

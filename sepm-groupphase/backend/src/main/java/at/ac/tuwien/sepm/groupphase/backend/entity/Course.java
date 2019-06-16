@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Course {
@@ -16,6 +18,14 @@ public class Course {
 
     @Column(nullable = false, length = 3000)
     private String description = "No description given.";
+
+    @Column(nullable = false)
+    @Min(0)
+    private Integer ratingSum = 0;
+
+    @Column(nullable = false)
+    @Min(0)
+    private Integer ratingNum = 0;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fitness_provider_id")
@@ -64,6 +74,22 @@ public class Course {
         this.dudes = dudes;
     }
 
+    public Integer getRatingSum() {
+        return ratingSum;
+    }
+
+    public void setRatingSum(Integer ratingSum) {
+        this.ratingSum = ratingSum;
+    }
+
+    public Integer getRatingNum() {
+        return ratingNum;
+    }
+
+    public void setRatingNum(Integer ratingNum) {
+        this.ratingNum = ratingNum;
+    }
+
     public static CourseBuilder builder() {
         return new CourseBuilder();
     }
@@ -74,6 +100,10 @@ public class Course {
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
+            ", ratingSum=" + ratingSum +
+            ", ratingNum=" + ratingNum +
+            ", creator=" + creator +
+            ", dudes=" + dudes +
             '}';
     }
 
@@ -81,27 +111,27 @@ public class Course {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Course course = (Course) o;
-
-        if (id != null ? !id.equals(course.id) : course.id != null) return false;
-        if (name != null ? !name.equals(course.name) : course.name != null) return false;
-        return description != null ? description.equals(course.description) : course.description == null;
-
+        return Objects.equals(getId(), course.getId()) &&
+            Objects.equals(getName(), course.getName()) &&
+            Objects.equals(getDescription(), course.getDescription()) &&
+            Objects.equals(getRatingSum(), course.getRatingSum()) &&
+            Objects.equals(getRatingNum(), course.getRatingNum()) &&
+            Objects.equals(getCreator(), course.getCreator()) &&
+            Objects.equals(getDudes(), course.getDudes());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getName(), getDescription(), getRatingSum(), getRatingNum(), getCreator(), getDudes());
     }
 
     public static final class CourseBuilder {
         private Long id;
         private String name;
         private String description;
+        private Integer ratingNum;
+        private Integer ratingSum;
         private FitnessProvider creator;
         private List<Dude> dudes;
 
@@ -128,6 +158,16 @@ public class Course {
             return this;
         }
 
+        public CourseBuilder ratingNum(Integer ratingNum) {
+            this.ratingNum = ratingNum;
+            return this;
+        }
+
+        public CourseBuilder ratingSum(Integer ratingSum) {
+            this.ratingSum = ratingSum;
+            return this;
+        }
+
         public CourseBuilder dudes(List<Dude> dudes) {
             this.dudes = dudes;
             return this;
@@ -138,6 +178,8 @@ public class Course {
             course.setId(id);
             course.setName(name);
             course.setDescription(description);
+            course.setRatingNum(ratingNum);
+            course.setRatingNum(ratingSum);
             course.setCreator(creator);
             course.setDudes(dudes);
             return course;
