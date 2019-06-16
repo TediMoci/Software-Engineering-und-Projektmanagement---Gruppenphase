@@ -24,26 +24,29 @@ public interface IWorkoutService {
 
     /**
      * @param name of the Workouts to find
+     * @param dudeId of the Dude that called the method
      * @return Workouts with name beginning with the given name-string
      * @throws ServiceException if an error occurred while trying to find the Workouts in the system
      */
-    List<Workout> findByName(String name) throws ServiceException;
+    List<Workout> findByName(String name, Long dudeId) throws ServiceException;
 
     /**
+     * @param dudeId of the Dude that called the method
      * @return all Workouts in the system
      * @throws ServiceException if an error occurred while trying to find the Workouts in the system
      */
-    List<Workout> findAll() throws ServiceException;
+    List<Workout> findAll(Long dudeId) throws ServiceException;
 
     /**
      * @param filter containing the string to be filtered for across all string-values of the entity
      * @param difficulty to be filtered for
      * @param calorieLower lower bound for calorieConsumption
      * @param calorieUpper upper bound for calorieConsumption
+     * @param dudeId of the Dude that called the method
      * @return all Workouts in the system according to the given filters
      * @throws ServiceException if an error occurred while trying to find the Workouts in the system
      */
-    List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws ServiceException;
+    List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper, Long dudeId) throws ServiceException;
 
     /**
      * @param id of Workout to be found

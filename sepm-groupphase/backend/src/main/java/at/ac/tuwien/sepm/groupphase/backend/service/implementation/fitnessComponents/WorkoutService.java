@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -68,38 +69,54 @@ public class WorkoutService implements IWorkoutService {
     }
 
     @Override
-    public List<Workout> findByName(String name) throws ServiceException {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<Workout> findByName(String name, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Workout> workouts;
         try {
-            return iWorkoutRepository.findByName(name);
+            workouts = iWorkoutRepository.findByName(name);
+            workouts.addAll(iWorkoutRepository.findOwnPrivateByName(name, dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return workouts;
     }
 
     @Override
-    public List<Workout> findAll() throws ServiceException {
-        LOGGER.info("Entering findAll");
+    public List<Workout> findAll(Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Workout> workouts;
         try {
-            return iWorkoutRepository.findAll();
+            workouts = iWorkoutRepository.findAll();
+            workouts.addAll(iWorkoutRepository.findOwnPrivate(dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return workouts;
     }
 
     @Override
-    public List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws ServiceException {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper);
+    public List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Workout> workouts;
         try {
             if (difficulty != null) {
-                return iWorkoutRepository.findByFilterWithDifficulty(filter, difficulty, calorieLower, calorieUpper);
+                workouts = iWorkoutRepository.findByFilterWithDifficulty(filter, difficulty, calorieLower, calorieUpper);
+                workouts.addAll(iWorkoutRepository.findOwnPrivateByFilterWithDifficulty(filter, difficulty, calorieLower, calorieUpper, dude));
             } else {
-                return iWorkoutRepository.findByFilterWithoutDifficulty(filter, calorieLower, calorieUpper);
+                workouts = iWorkoutRepository.findByFilterWithoutDifficulty(filter, calorieLower, calorieUpper);
+                workouts.addAll(iWorkoutRepository.findOwnPrivateByFilterWithoutDifficulty(filter, calorieLower, calorieUpper, dude));
             }
 
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return workouts;
     }
 
     @Override
