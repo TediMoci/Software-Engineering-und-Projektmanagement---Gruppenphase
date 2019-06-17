@@ -56,8 +56,8 @@ public class TrainingScheduleIntegrationTest {
 
     @BeforeClass
     public static void beforeClass() {
-        dudeDto.setName("Dude1");
-        dudeDto.setPassword("qqqqqqqq");
+        dudeDto.setName("DudeTS1");
+        dudeDto.setPassword("1234567890");
         dudeDto.setEmail("test@email.com");
         dudeDto.setSex(Sex.Male);
         dudeDto.setSelfAssessment(1);
@@ -116,6 +116,9 @@ public class TrainingScheduleIntegrationTest {
             ResponseEntity<DudeDto> response = REST_TEMPLATE
                 .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
             Long dudeId = response.getBody().getId();
+
+            System.out.println("Created Dude: " + response.getBody());
+
             exerciseDto1.setCreatorId(dudeId);
             exerciseDto2.setCreatorId(dudeId);
             trainingScheduleDto.setCreatorId(dudeId);
@@ -130,26 +133,39 @@ public class TrainingScheduleIntegrationTest {
             Integer exercise1Version = exerciseResponse1.getBody().getVersion();
             Long exercise2Id = exerciseResponse2.getBody().getId();
             Integer exercise2Version = exerciseResponse2.getBody().getVersion();
+
+            System.out.println("Created exerciseResponse1: " + exerciseResponse1.getBody());
+            System.out.println("Created exerciseResponse2: " + exerciseResponse2.getBody());
+
+
             workoutExerciseDtoIn1.setExerciseId(exercise1Id);
             workoutExerciseDtoIn1.setExerciseVersion(exercise1Version);
             workoutExerciseDtoIn2.setExerciseId(exercise2Id);
             workoutExerciseDtoIn2.setExerciseVersion(exercise2Version);
+
             WorkoutExerciseDtoIn[] workoutExerciseDtoIns = new WorkoutExerciseDtoIn[]{workoutExerciseDtoIn1, workoutExerciseDtoIn2};
             workoutDto1.setWorkoutExercises(workoutExerciseDtoIns);
             workoutDto2.setWorkoutExercises(workoutExerciseDtoIns);
+            workoutDto1.setCreatorId(dudeId);
+            workoutDto2.setCreatorId(dudeId);
+
+            System.out.println("Creating workoutDto1: " + workoutDto1);
+            System.out.println("Creating workoutDto2: " + workoutDto2);
+
             HttpEntity<WorkoutDto> workoutRequest = new HttpEntity<>(workoutDto1);
             ResponseEntity<WorkoutDto> workoutResponse1 = REST_TEMPLATE
                 .exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest, WorkoutDto.class);
             HttpEntity<WorkoutDto> workoutRequest2 = new HttpEntity<>(workoutDto2);
             ResponseEntity<WorkoutDto> workoutResponse2 = REST_TEMPLATE
                 .exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest2, WorkoutDto.class);
+
             trainingScheduleWorkoutDtoIn1.setWorkoutId(workoutResponse1.getBody().getId());
             trainingScheduleWorkoutDtoIn1.setWorkoutVersion(workoutResponse1.getBody().getVersion());
             trainingScheduleWorkoutDtoIn2.setWorkoutId(workoutResponse2.getBody().getId());
             trainingScheduleWorkoutDtoIn2.setWorkoutVersion(workoutResponse2.getBody().getVersion());
             trainingScheduleWorkoutDtoIn1.setWorkoutId(workoutResponse1.getBody().getId());
             trainingScheduleWorkoutDtoIn1.setWorkoutVersion(workoutResponse1.getBody().getVersion());
-            TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts = new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1, trainingScheduleWorkoutDtoIn2, trainingScheduleWorkoutDtoIn3};
+            TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts = new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1, trainingScheduleWorkoutDtoIn2};
             trainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
 
             initialized = true;
