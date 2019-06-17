@@ -9,10 +9,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.ICourseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IStatsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.FinishedTrainingScheduleStats;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +52,10 @@ public class DudeEndpoint {
     private final IExerciseMapper exerciseMapper;
     private final IWorkoutMapper workoutMapper;
     private final ICourseMapper courseMapper;
+    private final IStatsMapper statsMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IFileStorageService iFileStorageService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper, ICourseMapper courseMapper) {
+    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IFileStorageService iFileStorageService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper, ICourseMapper courseMapper, IStatsMapper statsMapper) {
         this.iDudeService = iDudeService;
         this.iTrainingScheduleService = iTrainingScheduleService;
         this.iFileStorageService = iFileStorageService;
@@ -61,6 +65,7 @@ public class DudeEndpoint {
         this.exerciseMapper = exerciseMapper;
         this.workoutMapper = workoutMapper;
         this.courseMapper = courseMapper;
+        this.statsMapper = statsMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -70,7 +75,7 @@ public class DudeEndpoint {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.save(dude));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -81,10 +86,10 @@ public class DudeEndpoint {
         List<DudeDto> dudeListDTO = new ArrayList<>();
         try {
             List<Dude> dudeList = iDudeService.findAll();
-            for (int i=0; i< dudeList.size(); i++){
+            for (int i = 0; i < dudeList.size(); i++) {
                 dudeListDTO.add(dudeMapper.dudeToDudeDto(dudeList.get(i)));
             }
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         return dudeListDTO;
@@ -95,7 +100,7 @@ public class DudeEndpoint {
     public DudeDto findDudeById(@PathVariable("id") Long id) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findDudeById(id));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -105,20 +110,20 @@ public class DudeEndpoint {
     public DudeDto findDudeByName(String name) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findByName(name));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
     @RequestMapping(value = "/bmi", method = RequestMethod.GET)
     @ApiOperation(value = "Get BMI of dude", authorizations = {@Authorization(value = "apiKey")})
-    public Double getBmi(Double height, Double weight){
+    public Double getBmi(Double height, Double weight) {
         return iDudeService.calculateBMI(height, weight);
     }
 
     @RequestMapping(value = "/age", method = RequestMethod.GET)
     @ApiOperation(value = "Get age of dude", authorizations = {@Authorization(value = "apiKey")})
-    public Integer getAge(@RequestParam("birthday")@DateTimeFormat(pattern = "\"yyyy-MM-dd\"") LocalDate birthday){
+    public Integer getAge(@RequestParam("birthday") @DateTimeFormat(pattern = "\"yyyy-MM-dd\"") LocalDate birthday) {
         return iDudeService.calculateAge(birthday);
     }
 
@@ -128,7 +133,7 @@ public class DudeEndpoint {
     public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -283,6 +288,50 @@ public class DudeEndpoint {
             }
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your active training schedule has expired.");
         }
+        if (activeTrainingSchedule.getAdaptive()
+            && ((tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) > 0)) {
+
+            if (!activeTrainingSchedule.getHasBeenAdapted().get((int) (tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) - 1)) {
+                Dude dude;
+                try {
+                    dude = iDudeService.findDudeById(id);
+                } catch (ServiceException e) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find dude with id " + id);
+                }
+                try {
+                    // check if previous intervals have been skipped - user has not been logged in and previous exDone and adaptive change have to be generated
+                    List<ExerciseDone> allExDone = activeTrainingSchedule.getDone();
+                    List<ExerciseDone> exDoneForIntervalOne = new ArrayList<>();
+                    int intervalLength = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
+                    int maxDay = 0;
+                    for (ExerciseDone eDone : allExDone) {
+                        if (eDone.getDay() > maxDay) {
+                            maxDay = eDone.getDay();
+                        }
+                        if (eDone.getDay() <= intervalLength) {
+                            exDoneForIntervalOne.add(eDone);
+                        }
+                    }
+                    int currentInterval = ((Period.between(activeTrainingSchedule.getStartDate(), LocalDate.now()).getDays()) / intervalLength) + 1;
+                    if (!(allExDone.size() == (exDoneForIntervalOne.size() * (currentInterval - 1)))) {
+                        int lastInterval = maxDay / intervalLength;
+                        lastInterval = lastInterval <= 0? 1 : lastInterval;
+                        for (int i = lastInterval + 1; i < currentInterval; i++) {
+                            LOGGER.debug("Update trainingSchedule for missed intervals");
+                            activeTrainingSchedule = iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude, i);
+                            activeTrainingSchedule.setDude(dude);
+                            activeTrainingSchedule.setDone(iTrainingScheduleService.findExDoneByActiveTrainingScheduleId(activeTrainingSchedule.getId()));
+                            activeTrainingSchedule.setTrainingSchedule(iTrainingScheduleService.findByIdAndVersion(activeTrainingSchedule.getTrainingScheduleId(), activeTrainingSchedule.getTrainingScheduleVersion()));
+                        }
+                    }
+                    LOGGER.debug("Update schedule for current interval");
+                    return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude, currentInterval));
+
+                } catch (ServiceException e) {
+                    throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Could not adapt activeTrainingSchedule with id " + activeTrainingSchedule.getId());
+                }
+            }
+        }
         return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(activeTrainingSchedule);
     }
 
@@ -415,5 +464,24 @@ public class DudeEndpoint {
         return trainingScheduleDtos;
     }
 
+
+    @RequestMapping(value = "/{id}/statistics", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all statistics of formerly active training schedules of Dude", authorizations = {@Authorization(value = "apiKey")})
+    public FinishedTrainingScheduleStatsDto[] getStatisticsByDudeId(@PathVariable Long id) {
+        LOGGER.info("Entering getStatisticsByDudeId with id " + id);
+        List<FinishedTrainingScheduleStats> stats;
+        try {
+            stats = iDudeService.findDudeById(id).getFinishedTrainingScheduleStats();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getStatisticsByDudeId with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        FinishedTrainingScheduleStatsDto[] statsDtos = new FinishedTrainingScheduleStatsDto[stats.size()];
+        for (int i = 0; i < stats.size(); i++) {
+            statsDtos[i] = statsMapper.finishedTrainingScheduleStatsToFinishedTrainingScheduleStatsDto(stats.get(i));
+            LOGGER.debug("STATS INFO: " + statsDtos[i].toString() + ", " + statsDtos[i].getTrainingScheduleDto().toString());
+        }
+        return statsDtos;
+    }
 }
 

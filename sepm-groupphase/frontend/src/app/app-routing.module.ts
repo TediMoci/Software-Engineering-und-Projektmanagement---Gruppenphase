@@ -49,6 +49,7 @@ import {FavouriteCoursesComponent} from './components/favourite-courses/favourit
 import {FavouriteExercisesComponent} from './components/favourite-exercises/favourite-exercises.component';
 import {FavouriteWorkoutsComponent} from './components/favourite-workouts/favourite-workouts.component';
 import {FavouriteTrainingSchedulesComponent} from './components/favourite-training-schedules/favourite-training-schedules.component';
+import {StatisticTrainingscheduleComponent} from './components/statistic-trainingschedule/statistic-trainingschedule.component';
 
 const routes: Routes = [
 
@@ -97,8 +98,8 @@ const routes: Routes = [
   {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent},
   {path: 'trainingSchedule', canActivate: [AuthGuard], component: TrainingScheduleComponent},
   {path: 'edit-training-schedule', canActivate: [RoleGuard], component: EditTrainingScheduleComponent},
-  {path: 'create-trainingSchedule-r', canActivate: [RoleGuard], component: CreateTrainingScheduleRandomlyComponent}
-
+  {path: 'create-trainingSchedule-r', canActivate: [RoleGuard], component: CreateTrainingScheduleRandomlyComponent},
+  {path: 'statistics', canActivate: [RoleGuard], component: StatisticTrainingscheduleComponent}
 ];
 
 @NgModule({

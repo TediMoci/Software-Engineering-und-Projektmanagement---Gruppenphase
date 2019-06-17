@@ -60,7 +60,6 @@ export class LoginAsFitnessProviderComponent implements OnInit {
         this.router.navigate(['/fitnessProvider-profile']);
       },
       error => {
-        console.log(authRequest);
         console.log('Could not log in due to: ' + error.message);
         this.error = error;
       }

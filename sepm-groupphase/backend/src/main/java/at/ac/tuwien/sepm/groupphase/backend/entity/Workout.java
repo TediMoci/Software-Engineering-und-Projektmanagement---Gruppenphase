@@ -27,7 +27,6 @@ public class Workout {
 
     @Column(nullable = false)
     private Integer difficulty;
-    // TODO: selfAssessment enum
 
     @Column(nullable = false, name = "calorie_consumption")
     private Double calorieConsumption = 0.0;

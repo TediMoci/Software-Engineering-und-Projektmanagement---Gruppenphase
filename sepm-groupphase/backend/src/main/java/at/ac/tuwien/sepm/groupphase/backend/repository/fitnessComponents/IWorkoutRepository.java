@@ -159,4 +159,12 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
     @Query("UPDATE Workout w SET w.isHistory=true WHERE w.id=:id AND w.isHistory=false")
     void delete(@Param("id")long id) throws DataAccessException;
 
+    /**
+     * @param id of Workout to delete
+     * @throws DataAccessException if an error occured while trying to delete the Workout with given id
+     */
+    @Modifying
+    @Transactional
+    void deleteById(Long id) throws DataAccessException;
+
 }
