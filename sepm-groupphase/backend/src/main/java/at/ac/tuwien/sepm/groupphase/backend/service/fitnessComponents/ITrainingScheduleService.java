@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
@@ -9,7 +10,6 @@ import java.util.List;
 public interface ITrainingScheduleService {
 
     /**
-     *
      * @param trainingSchedule to be saved in the system
      * @return the saved TrainingSchedule
      * @throws ServiceException if an error occurred while trying to save the TrainingSchedule in the system
@@ -67,6 +67,41 @@ public interface ITrainingScheduleService {
      */
     TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException;
 
+    /**
+     *
+     * @param activeTrainingScheduleId of the ExerciseDones to be found
+     * @return List of ExerciseDone belonging to the achtiveTrainingSchedule with given id
+     * @throws ServiceException if an error occured while trying to find the ExerciseDone in the system
+     */
+    List<ExerciseDone> findExDoneByActiveTrainingScheduleId(Long activeTrainingScheduleId) throws ServiceException;
+
+        /**
+         * adapt an activeTrainingSchedule according to an adaptive change algorithm
+         * @param activeSchedule on which the adaptive change should be applied
+         * @param dude who the activeSchedule belongs to
+         * @param interval current repetition of the interval
+         * @return altered ActiveTrainingSchedule
+         * @throws ServiceException if an error occured while trying to change the activeTrainingSchedule adaptively
+         */
+    ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude, int interval) throws ServiceException;
+
+    /**
+     *
+     * @param activeTs activeTrainingSchedule the copy should belong to
+     * @param dudeId of the dude who the activeTrainingSchedule belongs to
+     * @param oldTs trainingSchedule used in the last interval
+     * @return copy of the given old trainingSchedule with new data that has been saved to the database containing the copied content
+     * @throws ServiceException if an error occured while trying to copy the given trainingSchedule
+     */
+    TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException;
+
+    /**
+     *
+     * @param id
+     * @param version
+     * @return
+     * @throws ServiceException
+     */
     /**
      * @param name of the TrainingSchedules to find
      * @param dudeId of the Dude that called the method

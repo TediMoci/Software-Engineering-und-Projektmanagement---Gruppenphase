@@ -64,7 +64,7 @@ public class TrainingScheduleEndpoint {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new TrainingSchedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto save(@RequestBody TrainingScheduleDto trainingScheduleDto) {
+    public TrainingScheduleDto save(@Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
         try {
@@ -128,7 +128,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Deleting Training Schedule with id " + id);
         try {
             iTrainingScheduleService.delete(id);
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             LOGGER.error("Could not delete Training Schedule with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
@@ -140,7 +140,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Updating workout with id: " + id);
         try {
             return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.update(id, trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(newTrainingSchedule)));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             LOGGER.error("Could not update Training Schedule with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
@@ -184,6 +184,24 @@ public class TrainingScheduleEndpoint {
         List<TrainingScheduleWorkout> trainingScheduleWorkouts;
         try {
             trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        TrainingScheduleWorkoutDtoOut[] trainingScheduleWorkoutDtoOuts = new TrainingScheduleWorkoutDtoOut[trainingScheduleWorkouts.size()];
+        for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
+            trainingScheduleWorkoutDtoOuts[i] = trainingScheduleMapper.trainingScheduleWorkoutToTrainingScheduleWorkoutDtoOut(trainingScheduleWorkouts.get(i));
+        }
+        return trainingScheduleWorkoutDtoOuts;
+    }
+
+    @RequestMapping(value = "/{id}/{version}/workouts/copyTs", method = RequestMethod.GET)
+    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleWorkoutDtoOut[] getAllWorkoutsByCopyTrainingScheduleIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+        List<TrainingScheduleWorkout> trainingScheduleWorkouts;
+        try {
+            trainingScheduleWorkouts = iTrainingScheduleService.findByIdAndVersion(id, version).getWorkouts();
         } catch (ServiceException e) {
             LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

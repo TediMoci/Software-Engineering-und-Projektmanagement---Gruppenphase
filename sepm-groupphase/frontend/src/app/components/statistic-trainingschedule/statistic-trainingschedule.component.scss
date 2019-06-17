@@ -28,18 +28,18 @@
   line-height: 10px;
 }
 
-.makeActive{
-  margin-left: 10px;
+.col-sm-9 {
+  padding: 40px;
 }
-.form-group{
-  margin-top: 10px;
-  margin-left: 40px;
-  .searchBar{
-    width: 100px;
-  }
-  .RadioButton{
-    margin-top: 20px;
-  }
+
+hr {
+  display: block;
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
 }
 
 .scrolling-wrapper {
@@ -70,8 +70,4 @@
     background: lightgrey;
     margin: 10px;
   }
-}
-
-.col-sm-9 {
-  padding: 40px;
 }

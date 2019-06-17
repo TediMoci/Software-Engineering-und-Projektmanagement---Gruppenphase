@@ -103,9 +103,9 @@ export class DudeProfileComponent implements OnInit {
         console.log('calculate bmi of dude with name ' + this.dude.name);
         this.bmi = data;
       },
-        error => {
+      error => {
         this.error = error;
-        }
+      }
     );
 
     this.profileService.getActiveSchedule(this.dude.id).subscribe(
@@ -120,6 +120,7 @@ export class DudeProfileComponent implements OnInit {
         this.trainingScheduleService.getTrainingScheduleByIdandVersion(this.ActiveTsId, this.ActiveTsVersion)
           .subscribe(
             (data2) => {
+              console.log('This is the copied training schedule: ');
               console.log('loaded Ts: ' + JSON.stringify(data2));
               this.trainingSchedule = data2;
               this.tsTrue = true;
@@ -127,29 +128,54 @@ export class DudeProfileComponent implements OnInit {
               this.tsDiscription = this.trainingSchedule.description;
               this.tsDifficulty = this.trainingSchedule.difficulty;
               this.tsIntervalLenght = this.trainingSchedule.intervalLength;
-              this.globalTimeDelta = this.getDateDifference( this.dateNow, this.startDate);
+              this.globalTimeDelta = this.getDateDifference(this.dateNow, this.startDate);
               this.tabs = this.initTabs(this.trainingSchedule.intervalLength, this.globalTimeDelta);
-              this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(
-                this.trainingSchedule.id,
-                this.trainingSchedule.version).subscribe(
-                (data3) => {
-                  console.log('get all workouts created of training schedule with id ' + this.trainingSchedule.id);
-                  this.tsWorkouts = data3.sort(function (a, b) { // sort data alphabetically
-                    if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                      return -1;
-                    }
-                    if (a.name > b.name) {
-                      return 1;
-                    }
-                    return 0;
-                  });
-                  console.log('loaded ' + JSON.stringify(this.tsWorkouts));
-                  this.intOverview();
-                },
-                error => {
-                  this.error = error;
-                }
-              );
+              console.log('Trying to get trainingScheduleWorkouts');
+              if (this.activeTs.adaptive === true) {
+                this.trainingScheduleService.getWorkoutsOfCopyTrainingScheduleByIdAndVersion(
+                  this.trainingSchedule.id,
+                  this.trainingSchedule.version).subscribe(
+                  (data3) => {
+                    console.log('get all workouts created of training schedule with id ' + this.trainingSchedule.id);
+                    this.tsWorkouts = data3.sort(function (a, b) { // sort data alphabetically
+                      if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                        return -1;
+                      }
+                      if (a.name > b.name) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                    console.log('loaded ' + JSON.stringify(this.tsWorkouts));
+                    this.intOverview();
+                  },
+                  error => {
+                    this.error = error;
+                  }
+                );
+              } else {
+                this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(
+                  this.trainingSchedule.id,
+                  this.trainingSchedule.version).subscribe(
+                  (data3) => {
+                    console.log('get all workouts created of training schedule with id ' + this.trainingSchedule.id);
+                    this.tsWorkouts = data3.sort(function (a, b) { // sort data alphabetically
+                      if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                        return -1;
+                      }
+                      if (a.name > b.name) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                    console.log('loaded ' + JSON.stringify(this.tsWorkouts));
+                    this.intOverview();
+                  },
+                  error => {
+                    this.error = error;
+                  }
+                );
+              }
             },
             error => {
               this.error = error;
@@ -167,8 +193,12 @@ export class DudeProfileComponent implements OnInit {
       (data) => {
         console.log('get all exercises of workout ' + workout.name);
         this.exercisesForWorkouts = data.sort(function (a, b) { // sort data alphabetically
-          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
-          if (a.name > b.name) {return 1; }
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
           return 0;
         });
         console.log();
@@ -185,9 +215,9 @@ export class DudeProfileComponent implements OnInit {
 
   initTabs(interval: number, daysPassed: number) {
     const tabs: Array<string> = [];
-    for (let _i = 1 ; _i <= interval; _i++) {
+    for (let _i = 1; _i <= interval; _i++) {
       const prog = this.prog(interval, daysPassed);
-      tabs.push('Day ' + (_i + prog ));
+      tabs.push('Day ' + (_i + prog));
     }
     console.log(tabs.toString());
     return tabs;
@@ -209,9 +239,12 @@ export class DudeProfileComponent implements OnInit {
 
   convertDifficulty(element: number) {
     switch (element) {
-      case 1: return 'Beginner';
-      case 2: return 'Advanced';
-      case 3: return 'Pro';
+      case 1:
+        return 'Beginner';
+      case 2:
+        return 'Advanced';
+      case 3:
+        return 'Pro';
     }
   }
 
@@ -231,13 +264,15 @@ export class DudeProfileComponent implements OnInit {
   vanishError() {
     this.error = false;
   }
+
   getDateDifference(date1: Date, date2: Date) {
-    const diff = Math.abs(date1.getTime() - date2.getTime())
-    const delta =  Math.ceil( diff / (1000 * 3600 * 24));
+    const diff = Math.abs(date1.getTime() - date2.getTime());
+    const delta = Math.ceil(diff / (1000 * 3600 * 24));
 
     return delta - 1;
 
   }
+
   prog(interval: number, delta: number) {
     return Math.floor(delta / interval) * interval;
   }

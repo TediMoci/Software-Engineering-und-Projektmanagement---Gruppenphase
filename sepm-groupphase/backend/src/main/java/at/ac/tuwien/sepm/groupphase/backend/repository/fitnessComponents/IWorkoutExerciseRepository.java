@@ -1,10 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface IWorkoutExerciseRepository extends JpaRepository<WorkoutExercise, WorkoutExerciseKey> {
@@ -16,4 +21,19 @@ public interface IWorkoutExerciseRepository extends JpaRepository<WorkoutExercis
      */
     WorkoutExercise save(WorkoutExercise workoutExercise) throws DataAccessException;
 
+    /**
+     * @param workoutId which should be used in workoutExercise
+     * @param workoutVersion which should be used in workoutExercise
+     * @return WorkoutExercises using the given workout
+     * @throws DataAccessException if an error occurred while trying to find the workoutExercises using the given workout in the database
+     */
+    List<WorkoutExercise> findByWorkoutIdAndWorkoutVersion(Long workoutId, Integer workoutVersion) throws DataAccessException;
+
+    /**
+     * @param workoutExercise to delete
+     * @throws DataAccessException if an error occurred while trying to delete the given workoutExercise
+     */
+    @Modifying
+    @Transactional
+    void delete(WorkoutExercise workoutExercise) throws DataAccessException;
 }

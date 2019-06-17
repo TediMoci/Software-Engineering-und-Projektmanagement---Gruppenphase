@@ -10,7 +10,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CreateTrainingSchedule} from '../../dtos/create-trainingSchedule';
 import {CreateTrainingScheduleService} from '../../services/create-training-schedule.service';
 import {TrainingScheduleWorkoutDtoIn} from '../../dtos/trainingScheduleWorkoutDtoIn';
-import {TrainingSchedule} from '../../dtos/trainingSchedule';
 
 @Component({
   selector: 'app-create-training-schedule-manually',
