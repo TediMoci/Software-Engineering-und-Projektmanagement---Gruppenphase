@@ -37,8 +37,8 @@ public class ExerciseDto {
     private MuscleGroup muscleGroup;
 
     @ApiModelProperty(name = "Rating of Exercise")
-    @Min(1) @Max(5)
-    private Double rating = 1.0;
+    @Min(0) @Max(5)
+    private Double rating = 0.0;
 
     @ApiModelProperty(required = true, name = "Category of Exercise")
     @NotNull(message = "Category must not be null")

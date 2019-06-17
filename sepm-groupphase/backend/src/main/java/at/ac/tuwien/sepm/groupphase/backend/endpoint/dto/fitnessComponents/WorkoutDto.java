@@ -36,8 +36,8 @@ public class WorkoutDto {
     private Double calorieConsumption = 0.0;
 
     @ApiModelProperty(name = "Rating of Workout")
-    @Min(1) @Max(5)
-    private Double rating = 1.0;
+    @Min(0) @Max(5)
+    private Double rating = 0.0;
 
     @ApiModelProperty(name = "Workout-Exercises that are part of the Workout")
     private WorkoutExerciseDtoIn[] workoutExercises;

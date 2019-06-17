@@ -27,8 +27,8 @@ public class CourseDto {
     private String description = "No description given.";
 
     @ApiModelProperty(name = "Rating of Exercise")
-    @Min(1) @Max(5)
-    private Double rating = 1.0;
+    @Min(0) @Max(5)
+    private Double rating = 0.0;
 
     @ApiModelProperty(name = "FitnessProvider offering the Course")
     private Long creatorId;

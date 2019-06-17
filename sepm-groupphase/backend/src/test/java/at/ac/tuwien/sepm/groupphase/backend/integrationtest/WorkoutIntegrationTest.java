@@ -57,7 +57,7 @@ public class WorkoutIntegrationTest {
 
     @BeforeClass
     public static void beforeClass() {
-        dudeDto.setName("Dude1");
+        dudeDto.setName("DudeWorkout1");
         dudeDto.setPassword("qqqqqqqq");
         dudeDto.setEmail("test@email.com");
         dudeDto.setSex(Sex.Male);

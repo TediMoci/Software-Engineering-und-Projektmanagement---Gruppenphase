@@ -36,8 +36,8 @@ public class TrainingScheduleDto {
     private Integer intervalLength;
 
     @ApiModelProperty(name = "Rating of TrainingSchedule")
-    @Min(1) @Max(5)
-    private Double rating = 1.0;
+    @Min(0) @Max(5)
+    private Double rating = 0.0;
 
     @ApiModelProperty(name = "TrainingSchedule-Workouts that are part of the TrainingSchedule")
     private TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts;
