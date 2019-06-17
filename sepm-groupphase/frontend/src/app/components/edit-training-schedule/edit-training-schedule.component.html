@@ -29,10 +29,12 @@
 
             <div class="form-group">
               <label for="nameForEditTS">Name*</label>
-              <input type="text" name="nameForEditTS" maxlength="50" class="form-control" id="nameForEditTS" formControlName="nameForEditTS"
+              <input type="text" name="nameForEditTS" maxlength="50" class="form-control" id="nameForEditTS"
+                     formControlName="nameForEditTS"
                      aria-describedby="nameForEditTSHelp" ngModel="{{name}}">
               <div *ngIf="submitted && !!editTSForm.controls.nameForEditTS.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!editTSForm.controls.nameForEditTS.errors.required">Name is
+                <small class="form-text text-warning" *ngIf="!!editTSForm.controls.nameForEditTS.errors.required">Name
+                  is
                   required!
                 </small>
               </div>
@@ -41,22 +43,26 @@
             <div class="form-group">
               <span class="difficultyLevelEditTS">Difficulty Level*</span>
               <div class="gap_space">
-                <div class= "custom-control custom-radio custom-control-inline">
-                  <input id="beginner2" type="radio" class="custom-control-input" value= 1 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="beginner2" type="radio" class="custom-control-input" value=1 name="difficultyLevelEditTS"
+                         formControlName="difficultyLevelEditTS">
                   <label class="custom-control-label" for="beginner2">Beginner</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input id="advanced2" type="radio" class="custom-control-input" value= 2 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS">
+                  <input id="advanced2" type="radio" class="custom-control-input" value=2 name="difficultyLevelEditTS"
+                         formControlName="difficultyLevelEditTS">
                   <label class="custom-control-label" for="advanced2">Advanced</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input id="pro2" type="radio" class="custom-control-input" value= 3 name="difficultyLevelEditTS" formControlName="difficultyLevelEditTS">
+                  <input id="pro2" type="radio" class="custom-control-input" value=3 name="difficultyLevelEditTS"
+                         formControlName="difficultyLevelEditTS">
                   <label class="custom-control-label" for="pro2">Pro</label>
                 </div>
                 <div *ngIf="submitted && !!editTSForm.controls.difficultyLevelEditTS.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!editTSForm.controls.difficultyLevelEditTS.errors.required">Difficulty level is
+                  <small class="form-text text-warning"
+                         *ngIf="!!editTSForm.controls.difficultyLevelEditTS.errors.required">Difficulty level is
                     required!
                   </small>
                 </div>
@@ -65,20 +71,36 @@
 
             <div class="form-group">
               <label for="descriptionForEditTS">Description*</label>
-              <textarea type="text" name="descriptionForEditTS" class="form-control" id="descriptionForEditTS" formControlName="descriptionForEditTS"
-                        aria-describedby="descriptionForEditTSHelp" ngModel="{{description}}" maxlength="3000"></textarea>
+              <textarea type="text" name="descriptionForEditTS" class="form-control" id="descriptionForEditTS"
+                        formControlName="descriptionForEditTS"
+                        aria-describedby="descriptionForEditTSHelp" ngModel="{{description}}"
+                        maxlength="3000"></textarea>
               <span>{{3000 - editTSForm.controls.descriptionForEditTS.value.length}} left</span>
               <div *ngIf="submitted && !!editTSForm.controls.descriptionForEditTS.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!editTSForm.controls.descriptionForEditTS.errors.required">Description is
+                <small class="form-text text-warning"
+                       *ngIf="!!editTSForm.controls.descriptionForEditTS.errors.required">Description is
                   required!
                 </small>
               </div>
             </div>
 
+            <div *ngIf="isPrivate" class="privateShow">
+              <div class="form-group">
+                <span class="isPrivate">Publish your training schedule (If the visibility is set to public, the training schedule can no longer be private.)*</span>
+                <div class="gap_space">
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input id="public" type="radio" class="custom-control-input" value=false name="isPrivate"
+                           formControlName="isPrivate">
+                    <label class="custom-control-label" for="public">Public</label>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div class="row">
               <div class="addWA">
-                <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Edit Workouts</button>
+                <button type="button" (click)="changeView()" class="btn btn-secondary float-right">Edit Workouts
+                </button>
               </div>
             </div>
 
@@ -86,7 +108,9 @@
         </div>
         <a (click)="backToMyTrainingSchedules()" class="btn btn-link">Cancel</a>
         <button type="button" (click)="editTrainingSchedule()" class="btn btn-success float-right">Create</button>
-        <p><small>Fields marked with * are mandatory!</small></p>
+        <p>
+          <small>Fields marked with * are mandatory!</small>
+        </p>
       </div>
 
     </div>

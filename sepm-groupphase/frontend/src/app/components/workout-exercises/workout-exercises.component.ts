@@ -76,7 +76,7 @@ export class WorkoutExercisesComponent implements OnInit {
 
   findExercisesByName() {
     this.exerciseName = this.registerForm.value.name;
-    this.workoutExercisesService.getExercisesByName(this.exerciseName).subscribe(
+    this.workoutExercisesService.getExercisesByName(this.exerciseName,this.dude.id).subscribe(
       (data) => {
         console.log('get all exercises by name ' + this.exerciseName);
         console.log(data);

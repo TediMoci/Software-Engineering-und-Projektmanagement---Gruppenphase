@@ -23,6 +23,8 @@ export class EditTrainingScheduleComponent implements OnInit {
   error: any;
   userName: string;
   submitted: boolean = false;
+  isPrivate: boolean;
+  isPrivateResult: boolean;
 
   editTSForm: FormGroup;
   prevRoute: string;
@@ -82,13 +84,14 @@ export class EditTrainingScheduleComponent implements OnInit {
     this.description = this.oldTrainingSchedule.description;
     this.difficulty = JSON.stringify(this.oldTrainingSchedule.difficulty);
     this.interval = this.oldTrainingSchedule.intervalLength;
-
+    this.isPrivate = this.oldTrainingSchedule.isPrivate;
     this.generalTSData = true;
 
     this.editTSForm = this.formBuilder.group({
       nameForEditTS: ['', [Validators.required]],
       difficultyLevelEditTS: [this.difficulty, [Validators.required]],
       descriptionForEditTS: ['', [Validators.required]],
+      isPrivate: ['']
     });
     this.getAllWorkoutsPerDay();
   }
@@ -398,7 +401,7 @@ export class EditTrainingScheduleComponent implements OnInit {
       this.filterWorkoutCaloriesMinActual,
       this.filterWorkoutCaloriesMaxActual);
 
-    this.findService.getAllWorkoutsFilterd(this.workoutFilter).subscribe(
+    this.findService.getAllWorkoutsFilterd(this.workoutFilter, this.dude.id).subscribe(
       (data) => {
         this.searchRes = data.sort(function (a, b) { // sort data alphabetically
           if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
@@ -493,6 +496,11 @@ export class EditTrainingScheduleComponent implements OnInit {
 
   editTrainingSchedule() {
     this.submitted = true;
+    if (this.editTSForm.controls.isPrivate.value === '') {
+      this.isPrivateResult = this.oldTrainingSchedule.isPrivate;
+    } else {
+      this.isPrivateResult = this.editTSForm.controls.isPrivate.value;
+    }
 
     switch (this.interval) {
       case 1:
@@ -771,7 +779,8 @@ export class EditTrainingScheduleComponent implements OnInit {
       this.editTSForm.controls.difficultyLevelEditTS.value,
       this.oldTrainingSchedule.intervalLength,
       this.trainingScheduleWorkouts,
-      this.oldTrainingSchedule.creatorId
+      this.oldTrainingSchedule.creatorId,
+      this.isPrivateResult
     );
 
     if (this.editTSForm.invalid) {

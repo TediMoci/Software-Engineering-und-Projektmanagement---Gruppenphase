@@ -43,7 +43,8 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
       tsMaxTarget: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
       tsInterval: ['', [Validators.required]],
       tsDuration: ['', [Validators.required, Validators.min(1), Validators.max(1440)]],
-      tsOnlyMyDifficulty: [false]
+      tsOnlyMyDifficulty: [false],
+      isPrivate: ['', [Validators.required]]
     });
   }
 
@@ -64,7 +65,8 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
       this.tsForm.controls.tsDuration.value,
       this.tsForm.controls.tsMinTarget.value,
       this.tsForm.controls.tsMaxTarget.value,
-      this.tsForm.controls.tsOnlyMyDifficulty.value.toString()
+      this.tsForm.controls.tsOnlyMyDifficulty.value.toString(),
+      this.tsForm.controls.isPrivate.value
     );
 
     console.log('Trying to create random training schedule ' + JSON.stringify(this.trainingSchedule));

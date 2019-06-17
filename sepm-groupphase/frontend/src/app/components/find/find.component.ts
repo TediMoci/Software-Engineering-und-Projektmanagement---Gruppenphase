@@ -51,7 +51,6 @@ export class FindComponent implements OnInit {
   error: any;
   errorBookmark: any;
   dude: Dude;
-
   bookmarkedName: string;
 
   // Filter Objects
@@ -116,23 +115,43 @@ export class FindComponent implements OnInit {
           this.filterExerciseMuscleActual
         );
         console.log('name: ' + this.exerciseFilter.filter);
-        this.findService.getAllExercisesFilterd(this.exerciseFilter).subscribe(
-          (data) => {
-            console.log('get all exercises');
-            this.entries = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-          },
-          error => {
-            this.error = error;
-          }
-        );
+        if (this.isDude) {
+          this.findService.getAllExercisesFilterd(this.exerciseFilter, this.dude.id).subscribe(
+            (data) => {
+              console.log('get all exercises');
+              this.entries = data.sort(function (a, b) { // sort data alphabetically
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                  return -1;
+                }
+                if (a.name > b.name) {
+                  return 1;
+                }
+                return 0;
+              });
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        } else {
+          this.findService.getAllExercisesFilterd(this.exerciseFilter, 0).subscribe(
+            (data) => {
+              console.log('get all exercises');
+              this.entries = data.sort(function (a, b) { // sort data alphabetically
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                  return -1;
+                }
+                if (a.name > b.name) {
+                  return 1;
+                }
+                return 0;
+              });
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        }
         break;
       case 'Course':
 
@@ -188,23 +207,43 @@ export class FindComponent implements OnInit {
           this.filterWorkoutCaloriesMaxActual);
 
         console.log('name: ' + this.workoutFilter.calorieLower);
-        this.findService.getAllWorkoutsFilterd(this.workoutFilter).subscribe(
-          (data) => {
-            console.log('get all courses');
-            this.entries = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-          },
-          error => {
-            this.error = error;
-          }
-        );
+        if (this.isDude) {
+          this.findService.getAllWorkoutsFilterd(this.workoutFilter, this.dude.id).subscribe(
+            (data) => {
+              console.log('get all courses');
+              this.entries = data.sort(function (a, b) { // sort data alphabetically
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                  return -1;
+                }
+                if (a.name > b.name) {
+                  return 1;
+                }
+                return 0;
+              });
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        } else {
+          this.findService.getAllWorkoutsFilterd(this.workoutFilter, 0).subscribe(
+            (data) => {
+              console.log('get all courses');
+              this.entries = data.sort(function (a, b) { // sort data alphabetically
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                  return -1;
+                }
+                if (a.name > b.name) {
+                  return 1;
+                }
+                return 0;
+              });
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        }
         break;
       case 'Dudes':
 

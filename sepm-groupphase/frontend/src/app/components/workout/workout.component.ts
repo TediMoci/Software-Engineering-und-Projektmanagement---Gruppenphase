@@ -21,7 +21,7 @@ export class WorkoutComponent implements OnInit {
   workout: Workout;
   exercises: WorkoutExercise[];
   dude: Dude;
-
+  isPrivate: boolean;
   constructor(private workoutService: WorkoutService) {
   }
 
@@ -33,6 +33,7 @@ export class WorkoutComponent implements OnInit {
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
     this.workoutName = this.workout.name;
+    this.isPrivate = this.workout.isPrivate;
     if (this.workout.difficulty === 1) {
       this.difficulty = 'Beginner';
     } if (this.workout.difficulty === 2) {
@@ -60,8 +61,15 @@ export class WorkoutComponent implements OnInit {
 
   }
 
-  setSelectedExercise(element: WorkoutExercise){
+  setSelectedExercise(element: WorkoutExercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
+  }
+  convertPrivate() {
+    if (this.isPrivate === true) {
+      return 'Private';
+    } else {
+      return 'Public';
+    }
   }
 
 }

@@ -8,6 +8,7 @@ export class CreateTrainingScheduleRandom {
     public duration: number,
     public minTarget: number,
     public maxTarget: number,
-    public lowerDifficulty: boolean
-  ) {}
+    public lowerDifficulty: boolean,
+    public isPrivate: boolean
+) {}
 }

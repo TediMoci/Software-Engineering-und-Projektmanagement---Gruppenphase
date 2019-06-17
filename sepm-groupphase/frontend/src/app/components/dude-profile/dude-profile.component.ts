@@ -29,6 +29,7 @@ export class DudeProfileComponent implements OnInit {
   bmi: number;
   description: string;
   email: string;
+  isPrivate: boolean;
   dude: Dude;
   dateNow: Date;
   globalTimeDelta: number;
@@ -87,7 +88,7 @@ export class DudeProfileComponent implements OnInit {
     this.sex = this.dude.sex;
     this.description = this.dude.description;
     this.email = this.dude.email;
-
+    this.isPrivate = this.dude.isPrivate;
     this.profileService.getAge(this.dude.birthday, this.dude.name).subscribe(
       (data) => {
         console.log('calculate age of dude with name ' + this.dude.name);
@@ -275,6 +276,13 @@ export class DudeProfileComponent implements OnInit {
   }
   cropPicture() {
     this.uploadPicture(this.croppedImage);
+  }
+  convertPrivate() {
+    if (this.isPrivate === true) {
+      return 'Private';
+    } else {
+      return 'Public';
+    }
   }
 
 }

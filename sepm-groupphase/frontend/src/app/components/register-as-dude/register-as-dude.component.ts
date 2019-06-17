@@ -27,7 +27,8 @@ export class RegisterAsDudeComponent implements OnInit {
       height: ['', [Validators.required]],
       weight: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      passwordConfirmed: ['', Validators.required]
+      passwordConfirmed: ['', Validators.required],
+      isPrivate: ['', Validators.required]
     }, {
       validator: passwordCheck('password', 'passwordConfirmed'),
     });
@@ -45,6 +46,7 @@ export class RegisterAsDudeComponent implements OnInit {
       this.registerForm.controls.birthday.value,
       this.registerForm.controls.height.value,
       this.registerForm.controls.weight.value,
+      this.registerForm.controls.isPrivate.value
     );
 
     if (this.registerForm.invalid) {

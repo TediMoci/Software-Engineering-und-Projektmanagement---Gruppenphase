@@ -12,6 +12,7 @@ export class WorkoutExercise {
     public sets: number,
     public exDuration: number,
     public creatorId: number,
-    public imagePath: string
+    public imagePath: string,
+    public isPrivate: boolean
   ) {}
 }

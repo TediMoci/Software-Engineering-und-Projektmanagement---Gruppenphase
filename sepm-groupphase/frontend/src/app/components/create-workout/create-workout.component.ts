@@ -26,6 +26,7 @@ export class CreateWorkoutComponent implements OnInit {
   description: string;
   calorie: number;
   difficulty: number;
+  isPrivate: boolean;
   prevRoute: string;
 
   constructor(private createWorkoutService: CreateWorkoutService , private formBuilder: FormBuilder, private router: Router ) {
@@ -43,19 +44,21 @@ export class CreateWorkoutComponent implements OnInit {
       this.description = JSON.parse(localStorage.getItem('descriptionForWorkout'));
       this.calorie = JSON.parse(localStorage.getItem('calorieConsumption'));
       this.difficulty = JSON.parse(localStorage.getItem('difficulty'));
-
+      this.isPrivate = JSON.parse(localStorage.getItem('visibility'));
        this.registerForm = this.formBuilder.group({
          nameForWorkout: ['', [Validators.required]],
          difficultyLevelWorkout: [this.difficulty, [Validators.required]],
          descriptionForWorkout: ['', [Validators.required]],
-         calorieConsumption: ['', [Validators.required]]
+         calorieConsumption: ['', [Validators.required]],
+         isPrivate: [this.isPrivate, [Validators.required]]
        });
     } else {
        this.registerForm = this.formBuilder.group({
          nameForWorkout: ['', [Validators.required]],
          difficultyLevelWorkout: ['', [Validators.required]],
          descriptionForWorkout: ['', [Validators.required]],
-         calorieConsumption: ['', [Validators.required]]
+         calorieConsumption: ['', [Validators.required]],
+         isPrivate: ['', [Validators.required]]
        });
      }
 
@@ -67,6 +70,7 @@ export class CreateWorkoutComponent implements OnInit {
     localStorage.setItem('descriptionForWorkout', JSON.stringify(this.registerForm.controls.descriptionForWorkout.value));
     localStorage.setItem('calorieConsumption', JSON.stringify(this.registerForm.controls.calorieConsumption.value));
     localStorage.setItem('difficulty', JSON.stringify(this.registerForm.controls.difficultyLevelWorkout.value));
+    localStorage.setItem('visibility', JSON.stringify(this.registerForm.controls.isPrivate.value));
     this.router.navigate(['/workout-exercises']);
   }
     addWorkout() {
@@ -98,7 +102,8 @@ export class CreateWorkoutComponent implements OnInit {
       this.registerForm.controls.difficultyLevelWorkout.value,
       this.registerForm.controls.calorieConsumption.value,
       this.exercisesWorkoutIn,
-      this.dude.id
+      this.dude.id,
+      this.registerForm.controls.isPrivate.value,
     );
 
     if (this.registerForm.invalid) {

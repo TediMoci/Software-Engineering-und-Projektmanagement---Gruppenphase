@@ -81,6 +81,18 @@
               </div>
             </div>
 
+            <div *ngIf="isPrivate" class="privateShow">
+              <div class="form-group">
+                <span class="isPrivate">Publish your workout (If the visibility is set to public, the workout can no longer be private.)*</span>
+                <div class="gap_space">
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input id="public" type="radio" class="custom-control-input" value=false name="isPrivate"
+                           formControlName="isPrivate">
+                    <label class="custom-control-label" for="public">Public</label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </form>
           <a [routerLink]="['/edit-workout-exercises']" (click)="editExercises()" class="btn2 btn-link">Edit Exercises</a>
         </div>
