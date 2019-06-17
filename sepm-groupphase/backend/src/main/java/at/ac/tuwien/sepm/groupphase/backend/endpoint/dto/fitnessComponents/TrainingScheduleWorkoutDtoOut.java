@@ -33,6 +33,9 @@ public class TrainingScheduleWorkoutDtoOut {
     @ApiModelProperty(name = "Day of Workout")
     private Integer day;
 
+    @ApiModelProperty(name = "Visibility of Workout")
+    private Boolean isPrivate;
+
     public Long getId() {
         return id;
     }
@@ -105,6 +108,14 @@ public class TrainingScheduleWorkoutDtoOut {
         this.day = day;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public static TrainingScheduleWorkoutDtoOutBuilder builder() {
         return new TrainingScheduleWorkoutDtoOutBuilder();
     }
@@ -168,6 +179,7 @@ public class TrainingScheduleWorkoutDtoOut {
         private Double rating;
         private String creatorName;
         private Integer day;
+        private Boolean isPrivate;
 
         public TrainingScheduleWorkoutDtoOutBuilder() {
         }
@@ -217,6 +229,11 @@ public class TrainingScheduleWorkoutDtoOut {
             return this;
         }
 
+        public TrainingScheduleWorkoutDtoOutBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public TrainingScheduleWorkoutDtoOut build() {
             TrainingScheduleWorkoutDtoOut trainingScheduleWorkoutDtoOut = new TrainingScheduleWorkoutDtoOut();
             trainingScheduleWorkoutDtoOut.setId(id);
@@ -228,6 +245,7 @@ public class TrainingScheduleWorkoutDtoOut {
             trainingScheduleWorkoutDtoOut.setRating(rating);
             trainingScheduleWorkoutDtoOut.setCreatorName(creatorName);
             trainingScheduleWorkoutDtoOut.setDay(day);
+            trainingScheduleWorkoutDtoOut.setIsPrivate(isPrivate);
             return trainingScheduleWorkoutDtoOut;
         }
     }

@@ -77,6 +77,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.difficulty(trainingScheduleWorkout.getWorkout().getDifficulty());
         builder.calorieConsumption(trainingScheduleWorkout.getWorkout().getCalorieConsumption());
         builder.rating(trainingScheduleWorkout.getWorkout().getRating());
+        builder.isPrivate(trainingScheduleWorkout.getWorkout().getIsPrivate());
         builder.creatorName(trainingScheduleWorkout.getWorkout().getCreator().getName());
         builder.day(trainingScheduleWorkout.getDay());
 
