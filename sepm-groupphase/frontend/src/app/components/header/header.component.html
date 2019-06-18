@@ -6,16 +6,29 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+
+
+      <li *ngIf="authService.isLoggedIn()" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Profile
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" class="dropdown-item"><a [routerLink]="['/dude-profile']" class="btn btn-link2">My profile</a></a>
+          <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" class="dropdown-item"><a [routerLink]="['/fitnessProvider-profile']" class="btn btn-link2">My profile</a></a>
+          <div class="dropdown-divider"></div>
+          <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" class="dropdown-item"><a [routerLink]="['/myContent']" class="btn btn-link2">My Content</a></a>
+          <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" class="dropdown-item"><a [routerLink]="['/myContent-FP']" class="btn btn-link2">My Content</a></a>
+          <div class="dropdown-divider"></div>
+          <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" class="dropdown-item"><a [routerLink]="['/favourites']" class="btn btn-link2">Favourites</a></a>
+          <div class="dropdown-divider"></div>
+          <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" class="dropdown-item"><a [routerLink]="['/history']" class="btn btn-link2">History</a></a>
+          </div>
+      </li>
       <li class="nav-item">
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/dude-profile']" class="btn btn-link">Profile</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/fitnessProvider-profile']" class="btn btn-link">Profile</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/create-for-FP']" class="btn btn-link">Create</a></a>
-        <a *ngIf="authService.isLoggedIn()" href="#"><a [routerLink]="['/find']" class="btn btn-link">Find</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/history']" class="btn btn-link">History</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/myContent']" class="btn btn-link">My Content</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'" href="#"><a [routerLink]="['/myContent-FP']" class="btn btn-link">My Content</a></a>
-        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'" href="#"><a [routerLink]="['/favourites']" class="btn btn-link">Favourites</a></a>
+
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'DUDE'"><a [routerLink]="['/create']" class="btn btn-link">Create</a></a>
+        <a *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'FITNESS_PROVIDER'"><a [routerLink]="['/create-for-FP']" class="btn btn-link">Create</a></a>
+        <a *ngIf="authService.isLoggedIn()"><a [routerLink]="['/find']" class="btn btn-link">Find</a></a>
       </li>
     </ul>
     <ul class="navbar-nav mr-5">
