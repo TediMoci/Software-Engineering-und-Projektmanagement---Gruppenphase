@@ -13,7 +13,7 @@ import {CreateTrainingScheduleRandomService} from '../../services/create-trainin
 })
 export class CreateTrainingScheduleRandomlyComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   error: any;
@@ -36,15 +36,14 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
     this.tsForm = this.formBuilder.group({
       tsName: ['', [Validators.required]],
       tsMinTarget: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
       tsMaxTarget: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
       tsInterval: ['', [Validators.required]],
       tsDuration: ['', [Validators.required, Validators.min(1), Validators.max(1440)]],
-      tsOnlyMyDifficulty: [false],
-      isPrivate: ['', [Validators.required]]
+      tsOnlyMyDifficulty: [false]
     });
   }
 
@@ -65,8 +64,7 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
       this.tsForm.controls.tsDuration.value,
       this.tsForm.controls.tsMinTarget.value,
       this.tsForm.controls.tsMaxTarget.value,
-      this.tsForm.controls.tsOnlyMyDifficulty.value.toString(),
-      this.tsForm.controls.isPrivate.value
+      this.tsForm.controls.tsOnlyMyDifficulty.value.toString()
     );
 
     console.log('Trying to create random training schedule ' + JSON.stringify(this.trainingSchedule));

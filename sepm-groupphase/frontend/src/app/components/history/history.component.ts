@@ -21,7 +21,7 @@ export class HistoryComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
     this.statisticsService.getAllStatisticsOfLoggedInDude(this.dude).subscribe(
       (data) => {
         console.log('get all statistics of formerly active training schedules of dude with name ' + this.dude.name + ' and id ' + this.dude.id);

@@ -219,6 +219,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     public TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule, boolean lowerDifficulty) throws ServiceException {
         LOGGER.info("Entering save for: " + trainingSchedule);
         trainingSchedule.setWorkouts(null);
+        trainingSchedule.setIsPrivate(true);
         List<Workout> workouts = new ArrayList<>();
 
         if (lowerDifficulty){

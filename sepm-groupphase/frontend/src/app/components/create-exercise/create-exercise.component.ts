@@ -12,8 +12,7 @@ import {CreateExerciseService} from '../../services/create-exercise.service';
 export class CreateExerciseComponent implements OnInit {
   error: any;
   imagePath: string = 'assets/img/kugelfisch.jpg';
-  imagePathExercise: string = 'assets/img/exercise.png';
-  imgURL: any;
+  imgURL: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;

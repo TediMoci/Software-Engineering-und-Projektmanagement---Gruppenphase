@@ -12,7 +12,7 @@ import {FitnessProviderCoursesService} from '../../services/fitness-provider-cou
 })
 export class FavouriteCoursesComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   error: any;
@@ -24,6 +24,7 @@ export class FavouriteCoursesComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.favouritesService.getAllCoursesBookmarkedByDudeId(this.dude.id).subscribe(
       (data) => {
         console.log('get all courses bookmarked by dude with name ' + this.dude.name + ' and id ' + this.dude.id);

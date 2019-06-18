@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {WorkoutFilter} from '../../dtos/workout-filter';
-import {Router} from '@angular/router';
 import {FindService} from '../../services/find.service';
 import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
@@ -63,7 +62,8 @@ export class EditTrainingScheduleComponent implements OnInit {
 
   trainingScheduleWorkouts: TrainingScheduleWorkoutDtoIn[] = [];
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private findService: FindService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private editTrainingScheduleService: EditTrainingScheduleService) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private findService: FindService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private editTrainingScheduleService: EditTrainingScheduleService) {
+  }
 
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
@@ -792,7 +792,7 @@ export class EditTrainingScheduleComponent implements OnInit {
     this.editTrainingScheduleService.editTrainingSchedule(trainingSchedule).subscribe(
       () => {
         console.log(trainingSchedule);
-        this.router.navigate(['myTrainingSchedules']);
+        this.router.navigate(['myContent']);
       },
       error => {
         this.error = error;
@@ -805,4 +805,5 @@ export class EditTrainingScheduleComponent implements OnInit {
     this.generalTSData = !this.generalTSData;
     this.router.navigate(['myTrainingSchedules']);
   }
+}
 
