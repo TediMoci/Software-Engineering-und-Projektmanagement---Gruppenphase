@@ -265,15 +265,9 @@ export class DudeProfileComponent implements OnInit {
         this.error = error;
       }
     );
-    this.authService.getUserByNameFromDude(this.dude.name).subscribe(data => {
-      console.log('set new image path ' + data.imagePath);
-      this.dude.imagePath = data.imagePath;
+      this.dude.imagePath = 'http://localhost:8080/downloadImage/dude_' + this.dude.id + '.png';
       this.setLinkPicture(this.dude.imagePath);
       localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
-        },
-        error => {
-          this.error = error;
-    });
   }
 
    getLinkPicture() {

@@ -141,7 +141,7 @@ export class EditTrainingScheduleComponent implements OnInit {
         localStorage.removeItem('descriptionForEditTS');
         localStorage.removeItem('chosenWorkoutsForEditTS');
         localStorage.removeItem('difficultyLevelEditTS');
-        this.router.navigate(['myTrainingSchedules']);
+        this.router.navigate(['myContent']);
       },
       error => {
         this.error = error;

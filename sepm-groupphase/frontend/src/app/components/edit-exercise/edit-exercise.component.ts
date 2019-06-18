@@ -121,7 +121,6 @@ export class EditExerciseComponent implements OnInit {
     this.message = 'Only images are supported.';
 
   }
-
   uploadPicture(files) {
     if (files.length === 0) {
       return;

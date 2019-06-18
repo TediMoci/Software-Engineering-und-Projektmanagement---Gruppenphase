@@ -77,7 +77,7 @@ export class EditCourseComponent implements OnInit {
             }
           );
         }
-        this.router.navigate(['/myCourses']);
+        this.router.navigate(['/myContent-FP']);
       },
       error => {
         this.error = error;

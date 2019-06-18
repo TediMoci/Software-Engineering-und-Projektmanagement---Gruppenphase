@@ -33,6 +33,7 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
 
   ngOnInit() {
     localStorage.setItem('previousRoute', JSON.stringify('/create-exercise-for-workout'));
+    this.createExerciseService.setFileStorage(undefined);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
@@ -77,9 +78,31 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
         if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
           console.log('newEx');
           console.log(data);
+          if (this.createExerciseService.getFileStorage() !== undefined) {
+            console.log('execute upload picture method');
+            console.log(this.createExerciseService.getFileStorage());
+            this.createExerciseService.uploadPictureForExercise(data.id, 1, this.createExerciseService.getFileStorage()).subscribe(
+              () => {
+              },
+              error => {
+                this.error = error;
+              }
+            );
+          }
           this.addToLocalStorage(data);
           this.router.navigate(['/workout-exercises']);
         } else {
+          if (this.createExerciseService.getFileStorage() !== undefined) {
+            console.log('execute upload picture method');
+            console.log(this.createExerciseService.getFileStorage());
+            this.createExerciseService.uploadPictureForExercise(data.id, 1, this.createExerciseService.getFileStorage()).subscribe(
+              () => {
+              },
+              error => {
+                this.error = error;
+              }
+            );
+          }
           this.addToLocalStorageEdit(data);
           this.router.navigate(['/edit-workout-exercises']);
         }
@@ -125,7 +148,6 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
     this.message = 'Only images are supported.';
 
   }
-
   uploadPicture(files) {
     if (files.length === 0) {
       return;

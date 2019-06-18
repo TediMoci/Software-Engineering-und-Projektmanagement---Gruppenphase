@@ -151,7 +151,7 @@ export class EditWorkoutComponent implements OnInit {
         localStorage.removeItem('calorieConsumptionForEditWorkout');
         localStorage.removeItem('chosenExercisesForEditWorkout');
         localStorage.removeItem('difficultyEdit');
-        this.router.navigate(['myWorkouts']);
+        this.router.navigate(['myContent']);
       },
       error => {
         this.error = error;
