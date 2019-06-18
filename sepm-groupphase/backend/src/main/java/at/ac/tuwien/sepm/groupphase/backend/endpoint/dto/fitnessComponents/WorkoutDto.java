@@ -39,6 +39,9 @@ public class WorkoutDto {
     @Min(1) @Max(5)
     private Double rating = 1.0;
 
+    @ApiModelProperty(name = "Visibility of Workout")
+    private Boolean isPrivate = false;
+
     @ApiModelProperty(name = "Workout-Exercises that are part of the Workout")
     private WorkoutExerciseDtoIn[] workoutExercises;
 
@@ -99,6 +102,14 @@ public class WorkoutDto {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public WorkoutExerciseDtoIn[] getWorkoutExercises() {
@@ -179,6 +190,7 @@ public class WorkoutDto {
         private Integer difficulty;
         private Double calorieConsumption;
         private Double rating;
+        private Boolean isPrivate;
         private WorkoutExerciseDtoIn[] workoutExercises;
         private Long creatorId;
 
@@ -220,6 +232,11 @@ public class WorkoutDto {
             return this;
         }
 
+        public WorkoutDtoBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public WorkoutDtoBuilder workoutExercises(WorkoutExerciseDtoIn[] workoutExercises) {
             this.workoutExercises = workoutExercises;
             return this;
@@ -239,6 +256,7 @@ public class WorkoutDto {
             workoutDto.setDifficulty(difficulty);
             workoutDto.setCalorieConsumption(calorieConsumption);
             workoutDto.setRating(rating);
+            workoutDto.setIsPrivate(isPrivate);
             workoutDto.setWorkoutExercises(workoutExercises);
             workoutDto.setCreatorId(creatorId);
             return workoutDto;

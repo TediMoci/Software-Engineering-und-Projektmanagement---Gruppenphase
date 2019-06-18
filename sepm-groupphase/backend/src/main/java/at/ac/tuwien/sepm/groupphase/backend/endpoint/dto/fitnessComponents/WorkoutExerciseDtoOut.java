@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -23,7 +24,7 @@ public class WorkoutExerciseDtoOut {
     private String equipment;
 
     @ApiModelProperty(name = "Muscle group trained by Exercise")
-    private String muscleGroup;
+    private MuscleGroup muscleGroup;
 
     @ApiModelProperty(name = "Rating of Exercise")
     private Double rating;
@@ -46,6 +47,9 @@ public class WorkoutExerciseDtoOut {
 
     @ApiModelProperty(name = "Path of image of Exercise")
     private String imagePath;
+
+    @ApiModelProperty(name = "Visibility of Exercise")
+    private Boolean isPrivate;
 
     public Long getId() {
         return id;
@@ -87,11 +91,11 @@ public class WorkoutExerciseDtoOut {
         this.equipment = equipment;
     }
 
-    public String getMuscleGroup() {
+    public MuscleGroup getMuscleGroup() {
         return muscleGroup;
     }
 
-    public void setMuscleGroup(String muscleGroup) {
+    public void setMuscleGroup(MuscleGroup muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
 
@@ -151,6 +155,18 @@ public class WorkoutExerciseDtoOut {
         this.imagePath = imagePath;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
+    public static WorkoutExerciseDtoOutBuilder builder() {
+        return new WorkoutExerciseDtoOutBuilder();
+    }
+
     @Override
     public String toString() {
         return "WorkoutExerciseDtoOut{" +
@@ -159,7 +175,7 @@ public class WorkoutExerciseDtoOut {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", equipment='" + equipment + '\'' +
-            ", muscleGroup='" + muscleGroup + '\'' +
+            ", muscleGroup=" + muscleGroup +
             ", rating=" + rating +
             ", category=" + category +
             ", creatorName='" + creatorName + '\'' +
@@ -181,7 +197,7 @@ public class WorkoutExerciseDtoOut {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (equipment != null ? !equipment.equals(that.equipment) : that.equipment != null) return false;
-        if (muscleGroup != null ? !muscleGroup.equals(that.muscleGroup) : that.muscleGroup != null) return false;
+        if (muscleGroup != that.muscleGroup) return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
         if (category != that.category) return false;
         if (creatorName != null ? !creatorName.equals(that.creatorName) : that.creatorName != null) return false;
@@ -214,7 +230,7 @@ public class WorkoutExerciseDtoOut {
         private String name;
         private String description;
         private String equipment;
-        private String muscleGroup;
+        private MuscleGroup muscleGroup;
         private Double rating;
         private Category category;
         private String creatorName;
@@ -222,6 +238,7 @@ public class WorkoutExerciseDtoOut {
         private Integer repetitions;
         private Integer sets;
         private String imagePath;
+        private Boolean isPrivate;
 
         public WorkoutExerciseDtoOutBuilder() {
         }
@@ -251,7 +268,7 @@ public class WorkoutExerciseDtoOut {
             return this;
         }
 
-        public WorkoutExerciseDtoOutBuilder muscleGroup(String muscleGroup) {
+        public WorkoutExerciseDtoOutBuilder muscleGroup(MuscleGroup muscleGroup) {
             this.muscleGroup = muscleGroup;
             return this;
         }
@@ -291,6 +308,11 @@ public class WorkoutExerciseDtoOut {
             return this;
         }
 
+        public WorkoutExerciseDtoOutBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public WorkoutExerciseDtoOut build() {
             WorkoutExerciseDtoOut workoutExerciseDtoOut = new WorkoutExerciseDtoOut();
             workoutExerciseDtoOut.setId(id);
@@ -306,6 +328,7 @@ public class WorkoutExerciseDtoOut {
             workoutExerciseDtoOut.setRepetitions(repetitions);
             workoutExerciseDtoOut.setSets(sets);
             workoutExerciseDtoOut.setImagePath(imagePath);
+            workoutExerciseDtoOut.setIsPrivate(isPrivate);
             return workoutExerciseDtoOut;
         }
     }

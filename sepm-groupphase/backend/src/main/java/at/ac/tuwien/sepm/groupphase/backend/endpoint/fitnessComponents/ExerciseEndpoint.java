@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.Exerc
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
@@ -62,13 +63,13 @@ public class ExerciseEndpoint {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get exercises with given name", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findByName(@RequestParam String name) {
-        LOGGER.info("Entering findByName with name: " + name);
+    public ExerciseDto[] findByName(@RequestParam String name, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findByName(name);
+            exercises = iExerciseService.findByName(name, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not findByName with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -80,13 +81,13 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get all exercises", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findAll() {
-        LOGGER.info("Entering findAll");
+    public ExerciseDto[] findAll(@PathVariable Long dudeId) {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findAll();
+            exercises = iExerciseService.findAll(dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not find all exercises");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -98,15 +99,16 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @RequestMapping(value = "/filtered/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Exercises by filters", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Category category) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and category: " + category);
+    public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) MuscleGroup muscleGroup,
+                                      @RequestParam(required = false) Category category, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category + "; dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findByFilter(filter, category);
+            exercises = iExerciseService.findByFilter(filter, muscleGroup, category, dudeId);
         } catch (ServiceException e) {
-            LOGGER.error("Could not findByFilter with filter: " + filter + "; and category: " + category);
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
@@ -157,6 +159,30 @@ public class ExerciseEndpoint {
             return iExerciseService.updateImagePath(id, version, fileName);
         } catch (ServiceException e) {
             LOGGER.error("Could not updateImagePath with id: " + id + "; version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{exerciseId}/{exerciseVersion}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Dude with given id bookmarks Exercise with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void saveExerciseBookmark(@PathVariable Long dudeId, @PathVariable Long exerciseId, @PathVariable Integer exerciseVersion) {
+        LOGGER.info("Entering saveExerciseBookmark with dudeId: " + dudeId + "; exerciseId: " + exerciseId + "; exerciseVersion: " + exerciseVersion);
+        try {
+            iExerciseService.saveExerciseBookmark(dudeId, exerciseId, exerciseVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveExerciseBookmark with dudeId: " + dudeId + "; exerciseId: " + exerciseId + "; exerciseVersion: " + exerciseVersion);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{exerciseId}/{exerciseVersion}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with given id deletes bookmark for Exercise with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteExerciseBookmark(@PathVariable Long dudeId, @PathVariable Long exerciseId, @PathVariable Integer exerciseVersion) {
+        LOGGER.info("Entering deleteExerciseBookmark with dudeId: " + dudeId + "; exerciseId: " + exerciseId + "; exerciseVersion: " + exerciseVersion);
+        try {
+            iExerciseService.deleteExerciseBookmark(dudeId, exerciseId, exerciseVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteExerciseBookmark with dudeId: " + dudeId + "; exerciseId: " + exerciseId + "; exerciseVersion: " + exerciseVersion);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }

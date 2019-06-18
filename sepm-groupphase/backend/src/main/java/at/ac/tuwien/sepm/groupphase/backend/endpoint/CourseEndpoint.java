@@ -160,4 +160,28 @@ public class CourseEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{courseId}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Dude with given id bookmarks Course with given id", authorizations = {@Authorization(value = "apiKey")})
+    public void saveCourseBookmark(@PathVariable Long dudeId, @PathVariable Long courseId) {
+        LOGGER.info("Entering saveCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
+        try {
+            iCourseService.saveCourseBookmark(dudeId, courseId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{courseId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with given id deletes bookmark for Course with given id", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteCourseBookmark(@PathVariable Long dudeId, @PathVariable Long courseId) {
+        LOGGER.info("Entering deleteCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
+        try {
+            iCourseService.deleteCourseBookmark(dudeId, courseId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 }

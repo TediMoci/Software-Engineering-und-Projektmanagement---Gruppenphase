@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,6 +34,10 @@ public class ActiveTrainingSchedule {
 
     @Column(nullable = false, name = "is_adaptive")
     private Boolean isAdaptive;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "has_been_adapted", joinColumns = @JoinColumn(name = "active_training_schedule_id", referencedColumnName = "id"))
+    private List<Boolean> hasBeenAdapted = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "activeTrainingSchedule")
     private List<ExerciseDone> done;
@@ -104,6 +109,14 @@ public class ActiveTrainingSchedule {
 
     public void setAdaptive(Boolean adaptive) {
         isAdaptive = adaptive;
+    }
+
+    public List<Boolean> getHasBeenAdapted() {
+        return hasBeenAdapted;
+    }
+
+    public void setHasBeenAdapted(List<Boolean> hasBeenAdapted) {
+        this.hasBeenAdapted = hasBeenAdapted;
     }
 
     public List<ExerciseDone> getDone() {
@@ -187,6 +200,7 @@ public class ActiveTrainingSchedule {
         private LocalDate startDate;
         private Integer intervalRepetitions;
         private Boolean isAdaptive;
+        private List<Boolean> hasBeenAdapted = new ArrayList<>();
         private List<ExerciseDone> done;
         private Dude dude;
         private TrainingSchedule trainingSchedule;
@@ -229,6 +243,11 @@ public class ActiveTrainingSchedule {
             return this;
         }
 
+        public ActiveTrainingScheduleBuilder hasBeenAdapted(List<Boolean> hasBeenAdapted) {
+            this.hasBeenAdapted = hasBeenAdapted;
+            return this;
+        }
+
         public ActiveTrainingScheduleBuilder done(List<ExerciseDone> done) {
             this.done = done;
             return this;
@@ -253,6 +272,7 @@ public class ActiveTrainingSchedule {
             activeTrainingSchedule.setStartDate(startDate);
             activeTrainingSchedule.setIntervalRepetitions(intervalRepetitions);
             activeTrainingSchedule.setAdaptive(isAdaptive);
+            activeTrainingSchedule.setHasBeenAdapted(hasBeenAdapted);
             activeTrainingSchedule.setDone(done);
             activeTrainingSchedule.setDude(dude);
             activeTrainingSchedule.setTrainingSchedule(trainingSchedule);

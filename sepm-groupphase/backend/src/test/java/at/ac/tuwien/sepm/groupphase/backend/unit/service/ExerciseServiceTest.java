@@ -3,7 +3,10 @@ package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ExerciseBookmarkRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IExerciseService;
 import org.junit.BeforeClass;
@@ -20,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,10 +39,16 @@ public class ExerciseServiceTest {
     private final static List<Exercise> validExercises2 = new ArrayList<Exercise>();
 
     @MockBean
-    IExerciseRepository exerciseRepository;
+    private IExerciseRepository exerciseRepository;
+
+    @MockBean
+    private ExerciseBookmarkRepository exerciseBookmarkRepository;
+
+    @MockBean
+    private IDudeRepository dudeRepository;
 
     @Autowired
-    IExerciseService exerciseService;
+    private IExerciseService exerciseService;
 
     @BeforeClass
     public static void beforeClass() {
@@ -52,7 +62,7 @@ public class ExerciseServiceTest {
         validExercise1.setCategory(Category.Strength);
         validExercise1.setDescription("Description1");
         validExercise1.setEquipment("Equipment1");
-        validExercise1.setMuscleGroup("Muscles1");
+        validExercise1.setMuscleGroup(MuscleGroup.Other);
         validExercise1.setRating(1.0);
         validExercise1.setCreator(dude);
 
@@ -63,7 +73,7 @@ public class ExerciseServiceTest {
         validExercise2.setCategory(Category.Endurance);
         validExercise2.setDescription("Description2");
         validExercise2.setEquipment("Equipment2");
-        validExercise2.setMuscleGroup("Muscles2");
+        validExercise2.setMuscleGroup(MuscleGroup.Other);
         validExercise2.setRating(1.0);
         validExercise2.setCreator(dude);
 
@@ -119,13 +129,13 @@ public class ExerciseServiceTest {
         exercises.add(exercise);
         exercises.add(exercise);
         Mockito.when(exerciseRepository.findByName(anyString())).thenReturn(exercises);
-        assertEquals(exerciseService.findByName(exercise.getName()),exercises);
+        assertEquals(exerciseService.findByName(exercise.getName(), 1L),exercises);
     }
 
     @Test(expected = ServiceException.class)
     public void whenFindByName_ifDataAccessException_thenServiceException() throws ServiceException {
         Mockito.when(exerciseRepository.findByName(anyString())).thenThrow(Mockito.mock(DataAccessException.class));
-        exerciseService.findByName("anyName");
+        exerciseService.findByName("anyName", 1L);
     }
 
     @Test
@@ -135,13 +145,13 @@ public class ExerciseServiceTest {
         exercises.add(exercise);
         exercises.add(exercise);
         Mockito.when(exerciseRepository.findAll()).thenReturn(exercises);
-        assertEquals(exerciseService.findAll(),exercises);
+        assertEquals(exerciseService.findAll(1L),exercises);
     }
 
     @Test(expected = ServiceException.class)
     public void whenFindAll_ifDataAccessException_thenServiceException() throws ServiceException {
         Mockito.when(exerciseRepository.findAll()).thenThrow(Mockito.mock(DataAccessException.class));
-        exerciseService.findAll();
+        exerciseService.findAll(1L);
     }
 
     @Test
@@ -181,9 +191,33 @@ public class ExerciseServiceTest {
     }
     @Test
     public void whenFindByFilter_thenGetExerciseWhereFilterTrueAndNotExerciseWhereFilterFalse(){
-        Mockito.when(exerciseRepository.findByFilterWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
-        assertEquals(exerciseRepository.findByFilterWithCategory("2",Category.Endurance), validExercises2);
-        assertFalse(exerciseRepository.findByFilterWithCategory("2",Category.Endurance).contains(validExercise1));
+        Mockito.when(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance)).thenReturn(validExercises2);
+        assertEquals(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance), validExercises2);
+        assertFalse(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance).contains(validExercise1));
+    }
+
+    @Test
+    public void whenBookmarkOneExercise_thenSuccess() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<Exercise> optionalExercise = Optional.of(validExercise1);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(exerciseRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalExercise);
+        Mockito.when(exerciseBookmarkRepository.checkExerciseBookmark(1L, 1L, 1)).thenReturn(0);
+        exerciseService.saveExerciseBookmark(1L, 1L, 1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenBookmarkOneAlreadyBookmarkedExercise_thenServiceException() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<Exercise> optionalExercise = Optional.of(validExercise1);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(exerciseRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalExercise);
+        Mockito.when(exerciseBookmarkRepository.checkExerciseBookmark(1L, 1L, 1)).thenReturn(1);
+        exerciseService.saveExerciseBookmark(1L, 1L, 1);
     }
 
 }

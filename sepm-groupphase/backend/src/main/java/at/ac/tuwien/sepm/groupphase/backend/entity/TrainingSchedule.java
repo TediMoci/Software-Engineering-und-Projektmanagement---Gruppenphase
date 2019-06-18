@@ -38,6 +38,9 @@ public class TrainingSchedule {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "trainingSchedule")
     private List<TrainingScheduleWorkout> workouts;
 
@@ -47,6 +50,9 @@ public class TrainingSchedule {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "trainingSchedule")
     private List<ActiveTrainingSchedule> activeUsages;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "trainingScheduleBookmarks")
+    private List<Dude> bookmarkDudes;
 
     public Long getId() {
         return id;
@@ -112,6 +118,14 @@ public class TrainingSchedule {
         isHistory = history;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public List<TrainingScheduleWorkout> getWorkouts() {
         return workouts;
     }
@@ -134,6 +148,14 @@ public class TrainingSchedule {
 
     public void setActiveUsages(List<ActiveTrainingSchedule> activeUsages) {
         this.activeUsages = activeUsages;
+    }
+
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
+    }
+
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
     }
 
     public static TrainingScheduleBuilder builder() {
@@ -195,9 +217,11 @@ public class TrainingSchedule {
         private Integer intervalLength;
         private Double rating;
         private Boolean isHistory;
+        private Boolean isPrivate;
         private List<TrainingScheduleWorkout> workouts;
         private Dude creator;
         private List<ActiveTrainingSchedule> activeUsages;
+        private List<Dude> bookmarkDudes;
 
         public TrainingScheduleBuilder() {
         }
@@ -242,6 +266,11 @@ public class TrainingSchedule {
             return this;
         }
 
+        public TrainingScheduleBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public TrainingScheduleBuilder workouts(List<TrainingScheduleWorkout> workouts) {
             this.workouts = workouts;
             return this;
@@ -257,6 +286,11 @@ public class TrainingSchedule {
             return this;
         }
 
+        public TrainingScheduleBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
+            return this;
+        }
+
         public TrainingSchedule build() {
             TrainingSchedule trainingSchedule = new TrainingSchedule();
             trainingSchedule.setId(id);
@@ -266,9 +300,11 @@ public class TrainingSchedule {
             trainingSchedule.setIntervalLength(intervalLength);
             trainingSchedule.setRating(rating);
             trainingSchedule.setHistory(isHistory);
+            trainingSchedule.setIsPrivate(isPrivate);
             trainingSchedule.setWorkouts(workouts);
             trainingSchedule.setCreator(creator);
             trainingSchedule.setActiveUsages(activeUsages);
+            trainingSchedule.setBookmarkDudes(bookmarkDudes);
             return trainingSchedule;
         }
     }

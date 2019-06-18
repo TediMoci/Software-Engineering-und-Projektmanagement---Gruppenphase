@@ -80,10 +80,42 @@
               </div>
 
               <div class="form-group">
-                <label for="muscleGroupExercise">Muscle Group</label>
-                <input type="text" name="muscleGroupExercise" class="form-control" id="muscleGroupExercise" formControlName="muscleGroupExercise"
-                       aria-describedby="muscleGroupExercise" ngModel="No muscle group given">
+                <mat-form-field>
+                  <mat-label>Muscle Group*</mat-label >
+                  <mat-select formControlName="muscleGroupExercise">
+                    <mat-option *ngFor="let muscle of muscleGroup" [value]="muscle">
+                      {{muscle}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div *ngIf="submitted && !!registerForm.controls.muscleGroupExercise.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.muscleGroupExercise.errors.required">Muscle Group is
+                    required!
+                  </small>
+                </div>
               </div>
+
+            <div class="form-group">
+              <span class="isPrivate">Visibility of your exercise*</span>
+              <div class="gap_space">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="public" type="radio" class="custom-control-input" value=false name="isPrivate"
+                         formControlName="isPrivate">
+                  <label class="custom-control-label" for="public">Public</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="private" type="radio" class="custom-control-input" value=true name="isPrivate"
+                         formControlName="isPrivate">
+                  <label class="custom-control-label" for="private">Private</label>
+                </div>
+                <div *ngIf="submitted && !!registerForm.controls.isPrivate.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.isPrivate.errors.required">Visibility of your profile is required!
+                  </small>
+                </div>
+              </div>
+            </div>
+
           </form>
 
           <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal" (change)="fileChangeEvent($event)" />

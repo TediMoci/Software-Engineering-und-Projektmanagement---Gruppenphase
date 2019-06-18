@@ -11,12 +11,14 @@ import {CreateExerciseService} from '../../services/create-exercise.service';
 })
 export class CreateExerciseComponent implements OnInit {
   error: any;
-  imagePath: string;
-  imgURL: string = 'assets/img/exercise.png';
+  imagePath: string = 'assets/img/kugelfisch.jpg';
+  imagePathExercise: string = 'assets/img/exercise.png';
+  imgURL: any;
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
   exerciseID: number;
   message: string;
   imageChangedEvent: any = '';
@@ -36,7 +38,8 @@ export class CreateExerciseComponent implements OnInit {
       equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
       descriptionForExercise: ['', [Validators.required]],
-      muscleGroupExercise: ['']
+      muscleGroupExercise: ['', [Validators.required]],
+      isPrivate: ['', [Validators.required]]
     });
   }
 
@@ -53,6 +56,7 @@ export class CreateExerciseComponent implements OnInit {
       this.registerForm.controls.descriptionForExercise.value,
       this.registerForm.controls.muscleGroupExercise.value,
       this.dude.id,
+      this.registerForm.controls.isPrivate.value
     );
 
     if (this.registerForm.invalid) {

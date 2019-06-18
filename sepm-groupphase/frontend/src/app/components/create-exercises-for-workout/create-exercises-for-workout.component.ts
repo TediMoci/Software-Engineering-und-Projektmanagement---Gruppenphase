@@ -23,8 +23,8 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   submitted: boolean = false;
   dude: Dude;
   currentChosenExercises: WorkoutEx[];
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
   message: string;
-
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;
@@ -42,7 +42,8 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
       descriptionForExercise: ['', [Validators.required]],
-      muscleGroupExercise: ['']
+      muscleGroupExercise: ['',  [Validators.required]],
+      isPrivate: ['', [Validators.required]]
     });
 
     if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
@@ -66,7 +67,8 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       this.registerForm.controls.categoryExercise.value,
       this.registerForm.controls.descriptionForExercise.value,
       this.registerForm.controls.muscleGroupExercise.value,
-      this.dude.id
+      this.dude.id,
+      this.registerForm.controls.isPrivate.value
     );
 
     if (this.registerForm.invalid) {

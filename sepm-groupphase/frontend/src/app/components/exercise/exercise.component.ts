@@ -19,6 +19,7 @@ export class ExerciseComponent implements OnInit {
   description: string;
   exercise: Exercise;
   dude: Dude;
+  isPrivate: boolean;
   constructor() { }
 
   ngOnInit() {
@@ -34,6 +35,15 @@ export class ExerciseComponent implements OnInit {
     this.muscleGroup = this.exercise.muscleGroup;
     this.category = this.exercise.category;
     this.description = this.exercise.description;
+    this.isPrivate = this.exercise.isPrivate;
+  }
+
+  convertPrivate() {
+    if (this.isPrivate === true) {
+      return 'Private';
+    } else {
+      return 'Public';
+    }
   }
 
 }

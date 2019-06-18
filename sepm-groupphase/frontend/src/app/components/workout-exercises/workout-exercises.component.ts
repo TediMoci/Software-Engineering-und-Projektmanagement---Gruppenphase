@@ -56,7 +56,7 @@ export class WorkoutExercisesComponent implements OnInit {
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
     this.workoutExForm = this.formBuilder.group({
-      repetitions: ['', [Validators.required, Validators.max(200)]],
+      repetitions: ['', [Validators.required, Validators.max(100)]],
       sets: ['', [Validators.required, Validators.max(15)]],
       duration: ['', [Validators.required, Validators.max(1440)]]
     });
@@ -76,7 +76,7 @@ export class WorkoutExercisesComponent implements OnInit {
 
   findExercisesByName() {
     this.exerciseName = this.registerForm.value.name;
-    this.workoutExercisesService.getExercisesByName(this.exerciseName).subscribe(
+    this.workoutExercisesService.getExercisesByName(this.exerciseName,this.dude.id).subscribe(
       (data) => {
         console.log('get all exercises by name ' + this.exerciseName);
         console.log(data);

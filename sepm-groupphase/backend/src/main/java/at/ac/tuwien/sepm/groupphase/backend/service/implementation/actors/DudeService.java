@@ -137,6 +137,7 @@ public class DudeService implements IDudeService {
             oldDude.setBirthday(newDude.getBirthday());
             oldDude.setHeight(newDude.getHeight());
             oldDude.setWeight(newDude.getWeight());
+            oldDude.setIsPrivate(newDude.getIsPrivate());
             dudeValidator.validateDude(oldDude);
             return iDudeRepository.save(oldDude);
 
@@ -144,6 +145,16 @@ public class DudeService implements IDudeService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public Boolean updateIsPrivate(String name, Boolean isPrivate) throws ServiceException {
+        Dude dude = findByName(name);
+        if (dude==null) throw new ServiceException("There is no dude with that name in the database.");
+        dude.setIsPrivate(isPrivate);
+        iDudeRepository.save(dude);
+        return isPrivate;
+    }
+
 
     @Override
     public void followFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {

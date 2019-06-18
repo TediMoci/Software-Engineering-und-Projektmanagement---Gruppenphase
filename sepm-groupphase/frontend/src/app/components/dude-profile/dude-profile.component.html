@@ -27,6 +27,7 @@
           </p>
           <p>Description: {{description}}</p>
           <p>E-Mail: {{email}}</p>
+          <p>Visibility: {{convertPrivate()}}</p>
         </div>
         <div class="row-sm-1">
           <a [routerLink]="['/edit-dude']" class="btn btn-link">Edit Profile</a>

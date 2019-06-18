@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 import java.util.List;
@@ -25,24 +26,28 @@ public interface IExerciseService {
 
     /**
      * @param name of the Exercises to find
+     * @param dudeId of the Dude that called the method
      * @return Exercises with name beginning with the given name-string
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
-    List<Exercise> findByName(String name) throws ServiceException;
+    List<Exercise> findByName(String name, Long dudeId) throws ServiceException;
 
     /**
+     * @param dudeId of the Dude that called the method
      * @return all Exercises in the system
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
-    List<Exercise> findAll() throws ServiceException;
+    List<Exercise> findAll(Long dudeId) throws ServiceException;
 
     /**
      * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param muscleGroup to be filtered for
      * @param category to be filtered for
+     * @param dudeId of the Dude that called the method
      * @return all Exercises in the system according to the given filters
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
-    List<Exercise> findByFilter(String filter, Category category) throws ServiceException;
+    List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category, Long dudeId) throws ServiceException;
 
     /**
      * @param id of Exercise to be found
@@ -73,4 +78,20 @@ public interface IExerciseService {
      * @throws ServiceException if something went wrong while updating the imagePath in the system
      */
     String updateImagePath(Long id, Integer version, String fileName) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param exerciseId of the Exercise that the Dude wants to bookmark
+     * @param exerciseVersion of the Exercise that the Dude wants to bookmark
+     * @throws ServiceException if an error occurred while trying to bookmark the Exercise
+     */
+    void saveExerciseBookmark(Long dudeId, Long exerciseId, Integer exerciseVersion) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param exerciseId of the Exercise that the Dude wants to delete the bookmark for
+     * @param exerciseVersion of the Exercise that the Dude wants to delete the bookmark for
+     * @throws ServiceException if an error occurred while trying to delete the bookmark for the Exercise
+     */
+    void deleteExerciseBookmark(Long dudeId, Long exerciseId, Integer exerciseVersion) throws ServiceException;
 }

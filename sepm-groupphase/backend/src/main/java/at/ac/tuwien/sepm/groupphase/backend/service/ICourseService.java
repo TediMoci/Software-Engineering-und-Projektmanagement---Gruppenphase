@@ -63,4 +63,18 @@ public interface ICourseService {
      */
     String updateImagePath(Long id, String fileName) throws ServiceException;
 
+    /**
+     * @param dudeId of the Dude
+     * @param courseId of the Course that the Dude wants to bookmark
+     * @throws ServiceException if an error occurred while trying to bookmark the Course
+     */
+    void saveCourseBookmark(Long dudeId, Long courseId) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param courseId of the Course that the Dude wants to delete the bookmark for
+     * @throws ServiceException if an error occurred while trying to delete the bookmark for the Course
+     */
+    void deleteCourseBookmark(Long dudeId, Long courseId) throws ServiceException;
+
 }

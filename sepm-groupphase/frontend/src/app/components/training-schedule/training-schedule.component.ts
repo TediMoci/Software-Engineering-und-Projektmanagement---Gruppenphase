@@ -26,6 +26,7 @@ export class TrainingScheduleComponent implements OnInit {
   trainingSchedule: TrainingSchedule;
   tsWorkouts: any;
   error: any;
+  isPrivate: boolean;
   exercisesForWorkouts: any;
   toSaveActiveTs: ActiveTrainingSchedule;
   newActiveTs: GetActiveTrainingSchedule;
@@ -48,6 +49,7 @@ export class TrainingScheduleComponent implements OnInit {
     this.tsName = this.trainingSchedule.name;
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
+    this.isPrivate = this.trainingSchedule.isPrivate;
     this.tabs = this.initTabs(this.trainingSchedule.intervalLength);
     console.log(this.trainingSchedule.trainingScheduleWorkouts);
 
@@ -155,6 +157,14 @@ export class TrainingScheduleComponent implements OnInit {
       case 1: return 'Beginner';
       case 2: return 'Advanced';
       case 3: return 'Pro';
+    }
+  }
+
+  convertPrivate() {
+    if (this.isPrivate === true) {
+      return 'Private';
+    } else {
+      return 'Public';
     }
   }
   vanishError() {

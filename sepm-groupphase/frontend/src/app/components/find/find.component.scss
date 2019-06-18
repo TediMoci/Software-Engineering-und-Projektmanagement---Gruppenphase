@@ -61,3 +61,14 @@
 .modal-header {
   text-align: center;
 }
+
+.btn-favourite {
+  background: pink;
+  color: white;
+  text-align: center;
+  -webkit-text-size-adjust: auto;
+}
+
+.btn-favourite:hover {
+  background: palevioletred;
+}

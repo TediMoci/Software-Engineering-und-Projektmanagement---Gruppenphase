@@ -7,6 +7,7 @@ export class RegisterAsDude {
     public selfAssessment: number,
     public birthday: Date,
     public height: number,
-    public weight: number
+    public weight: number,
+    public isPrivate: boolean
   ) {}
 }

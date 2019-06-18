@@ -6,8 +6,7 @@ import {TrainingScheduleWo} from '../dtos/training-schedule-wo';
 import {TrainingSchedule} from '../dtos/trainingSchedule';
 import {ActiveTrainingSchedule} from '../dtos/active-training-schedule';
 import {GetActiveTrainingSchedule} from '../dtos/get-active-training-schedule';
-import {WorkoutExercise} from '../dtos/workoutExercise';
-import {TrainingScheduleWorkout} from '../dtos/trainingScheduleWorkout';
+import {Workout} from '../dtos/workout';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +19,12 @@ export class TrainingScheduleService {
     console.log('get all workouts belonging to the training schedule with id ' + trainingScheduleId);
     return this.httpClient.get<TrainingScheduleWo[]>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion + '/workouts');
   }
+
+  getWorkoutsOfCopyTrainingScheduleByIdAndVersion(trainingScheduleId: number, trainingScheduleVersion: number): Observable<TrainingScheduleWo[]> {
+    console.log('get all workouts belongig to a copied training schedule used for adaptive trainingSchedule change with id ' + trainingScheduleId);
+    return this.httpClient.get<TrainingScheduleWo[]>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion + '/workouts/copyTs');
+  }
+
   getTrainingScheduleByIdandVersion(trainingScheduleId: number, trainingScheduleVersion: number): Observable<TrainingSchedule> {
     console.log('get training schedule with id ' + trainingScheduleId);
     return this.httpClient.get<TrainingSchedule>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion);
@@ -32,5 +37,10 @@ export class TrainingScheduleService {
   saveActiveSchedule(activeTs: ActiveTrainingSchedule): Observable<GetActiveTrainingSchedule> {
     console.log('save active training schedule: ' + JSON.stringify(activeTs));
     return this.httpClient.post<GetActiveTrainingSchedule>(this.BaseUri + '/active', activeTs);
+  }
+
+  getAllWorkoutsByDay(trainingScheduleId: number, trainingScheduleVersion: number, day: number): Observable<Workout[]> {
+    console.log('get all workouts belonging to the training schedule with id ' + trainingScheduleId + ' on day ' + day);
+    return this.httpClient.get<Workout[]>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion + '/workouts/' + day);
   }
 }

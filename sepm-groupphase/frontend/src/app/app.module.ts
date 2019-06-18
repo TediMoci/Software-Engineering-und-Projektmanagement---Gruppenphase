@@ -46,6 +46,17 @@ import { CourseComponent } from './components/course/course.component';
 import { EditCourseComponent } from './components/edit-course/edit-course.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { OwnCoursesComponent } from './components/own-courses/own-courses.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { CreateExercisesForWorkoutComponent } from './components/create-exercises-for-workout/create-exercises-for-workout.component';
+import { EditWorkoutExercisesComponent } from './components/edit-workout-exercises/edit-workout-exercises.component';
+import { CreateTrainingScheduleManuallyComponent } from './components/create-training-schedule-manually/create-training-schedule-manually.component';
+import { TrainingScheduleComponent } from './components/training-schedule/training-schedule.component';
+import { EditTrainingScheduleComponent } from './components/edit-training-schedule/edit-training-schedule.component';
+import { FitnessProviderComponent } from './components/fitness-provider/fitness-provider.component';
+import { CourseDudeViewComponent } from './components/course-dude-view/course-dude-view.component';
+import { FollowerDudeComponent } from './components/follower-dude/follower-dude.component';
+import { CreateTrainingScheduleRandomlyComponent } from './components/create-training-schedule-randomly/create-training-schedule-randomly.component';
+
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -79,16 +90,11 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import { CreateExercisesForWorkoutComponent } from './components/create-exercises-for-workout/create-exercises-for-workout.component';
-import { EditWorkoutExercisesComponent } from './components/edit-workout-exercises/edit-workout-exercises.component';
-import { CreateTrainingScheduleManuallyComponent } from './components/create-training-schedule-manually/create-training-schedule-manually.component';
-import { TrainingScheduleComponent } from './components/training-schedule/training-schedule.component';
-import { EditTrainingScheduleComponent } from './components/edit-training-schedule/edit-training-schedule.component';
-import { FitnessProviderComponent } from './components/fitness-provider/fitness-provider.component';
-import { CourseDudeViewComponent } from './components/course-dude-view/course-dude-view.component';
-import { FollowerDudeComponent } from './components/follower-dude/follower-dude.component';
-import { EditTrainingScheduleWorkoutsComponent } from './components/edit-training-schedule-workouts/edit-training-schedule-workouts.component';
+import { FavouriteExercisesComponent } from './components/favourite-exercises/favourite-exercises.component';
+import { FavouriteWorkoutsComponent } from './components/favourite-workouts/favourite-workouts.component';
+import { FavouriteTrainingSchedulesComponent } from './components/favourite-training-schedules/favourite-training-schedules.component';
+import { FavouriteCoursesComponent } from './components/favourite-courses/favourite-courses.component';
+import {StatisticTrainingscheduleComponent} from './components/statistic-trainingschedule/statistic-trainingschedule.component';
 
 @NgModule({
   declarations: [
@@ -137,7 +143,12 @@ import { EditTrainingScheduleWorkoutsComponent } from './components/edit-trainin
     FitnessProviderComponent,
     CourseDudeViewComponent,
     FollowerDudeComponent,
-    EditTrainingScheduleWorkoutsComponent,
+    CreateTrainingScheduleRandomlyComponent,
+    FavouriteExercisesComponent,
+    FavouriteWorkoutsComponent,
+    FavouriteTrainingSchedulesComponent,
+    FavouriteCoursesComponent,
+    StatisticTrainingscheduleComponent
   ],
   imports: [
     MatAutocompleteModule,

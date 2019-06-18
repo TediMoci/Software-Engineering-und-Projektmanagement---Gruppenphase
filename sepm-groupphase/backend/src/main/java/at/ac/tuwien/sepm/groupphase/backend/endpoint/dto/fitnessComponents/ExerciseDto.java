@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
+import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -32,8 +33,8 @@ public class ExerciseDto {
     private String equipment = "No needed equipment given.";
 
     @ApiModelProperty(name = "Muscle group trained by Exercise")
-    @Size(max = 100, message = "Max muscleGroup length is 100")
-    private String muscleGroup = "No muscle group given";
+    @NotNull(message = "MuscleGroup must not be null")
+    private MuscleGroup muscleGroup;
 
     @ApiModelProperty(name = "Rating of Exercise")
     @Min(1) @Max(5)
@@ -45,6 +46,9 @@ public class ExerciseDto {
 
     @ApiModelProperty(name = "Path of picture of Exercise")
     private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
+
+    @ApiModelProperty(name = "Visibility of Exercise")
+    private Boolean isPrivate = false;
 
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
@@ -92,11 +96,11 @@ public class ExerciseDto {
         this.equipment = equipment;
     }
 
-    public String getMuscleGroup() {
+    public MuscleGroup getMuscleGroup() {
         return muscleGroup;
     }
 
-    public void setMuscleGroup(String muscleGroup) {
+    public void setMuscleGroup(MuscleGroup muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
 
@@ -122,6 +126,14 @@ public class ExerciseDto {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public Set<WorkoutExercise> getWorkouts() {
@@ -152,7 +164,7 @@ public class ExerciseDto {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", equipment='" + equipment + '\'' +
-            ", muscleGroup='" + muscleGroup + '\'' +
+            ", muscleGroup=" + muscleGroup +
             ", rating=" + rating +
             ", category=" + category +
             ", workouts=" + workouts +
@@ -172,11 +184,12 @@ public class ExerciseDto {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (equipment != null ? !equipment.equals(that.equipment) : that.equipment != null) return false;
-        if (muscleGroup != null ? !muscleGroup.equals(that.muscleGroup) : that.muscleGroup != null) return false;
+        if (muscleGroup != that.muscleGroup) return false;
         if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
         if (category != that.category) return false;
         if (workouts != null ? !workouts.equals(that.workouts) : that.workouts != null) return false;
         return creatorId != null ? creatorId.equals(that.creatorId) : that.creatorId == null;
+
     }
 
     @Override
@@ -200,10 +213,11 @@ public class ExerciseDto {
         private String name;
         private String description;
         private String equipment;
-        private String muscleGroup;
+        private MuscleGroup muscleGroup;
         private Double rating;
         private Category category;
         private String imagePath;
+        private Boolean isPrivate;
         private Set<WorkoutExercise> workouts;
         private Long creatorId;
 
@@ -235,7 +249,7 @@ public class ExerciseDto {
             return this;
         }
 
-        public ExerciseDtoBuilder muscleGroup(String muscleGroup) {
+        public ExerciseDtoBuilder muscleGroup(MuscleGroup muscleGroup) {
             this.muscleGroup = muscleGroup;
             return this;
         }
@@ -252,6 +266,11 @@ public class ExerciseDto {
 
         public ExerciseDtoBuilder imagePath(String imagePath) {
             this.imagePath = imagePath;
+            return this;
+        }
+
+        public ExerciseDtoBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
             return this;
         }
 
@@ -276,6 +295,7 @@ public class ExerciseDto {
             exerciseDto.setRating(rating);
             exerciseDto.setCategory(category);
             exerciseDto.setImagePath(imagePath);
+            exerciseDto.setIsPrivate(isPrivate);
             exerciseDto.setWorkouts(workouts);
             exerciseDto.setCreatorId(creatorId);
             return exerciseDto;

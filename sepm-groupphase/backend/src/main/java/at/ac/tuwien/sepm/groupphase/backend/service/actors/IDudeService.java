@@ -55,6 +55,14 @@ public interface IDudeService {
     Dude update(String name, Dude newDude) throws ServiceException;
 
     /**
+     * @param name of the Dude
+     * @param isPrivate gives if the Dude wants his profile to be private or not
+     * @return the updated value of isPrivate
+     * @throws ServiceException if something went wrong while updating isPrivate in the system
+     */
+    Boolean updateIsPrivate(String name, Boolean isPrivate) throws ServiceException;
+
+    /**
      * @param id of the Dude
      * @param fileName of the image in the path
      * @return the full image-path

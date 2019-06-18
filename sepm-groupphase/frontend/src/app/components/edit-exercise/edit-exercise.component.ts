@@ -27,7 +27,8 @@ export class EditExerciseComponent implements OnInit {
   equipment: string;
   description: string;
   muscleGroup: string;
-
+  isPrivate: boolean;
+  isPrivateResult: boolean;
   message: string;
   imageChangedEvent: any = '';
   croppedImage: any = '';
@@ -43,12 +44,14 @@ export class EditExerciseComponent implements OnInit {
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
     this.imagePath2 = this.oldExercise.imagePath;
+    this.isPrivate = this.oldExercise.isPrivate;
     this.editExForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       equipment: ['', [Validators.required]],
       category: [this.oldExercise.category, [Validators.required]],
       description: [''],
-      muscleGroup: ['']
+      muscleGroup: [''],
+      isPrivate: ['']
     });
 
     this.name = this.oldExercise.name;
@@ -68,7 +71,11 @@ export class EditExerciseComponent implements OnInit {
 
   editExercise() {
     this.submitted = true;
-
+    if (this.editExForm.controls.isPrivate.value === '') {
+      this.isPrivateResult = this.oldExercise.isPrivate;
+    } else {
+      this.isPrivateResult = this.editExForm.controls.isPrivate.value;
+    }
     const exercise: Exercise = new Exercise(
       this.oldExercise.id,
       this.oldExercise.version,
@@ -78,7 +85,8 @@ export class EditExerciseComponent implements OnInit {
       this.editExForm.controls.muscleGroup.value,
       this.editExForm.controls.category.value,
       this.oldExercise.creatorId,
-      this.oldExercise.imagePath
+      this.oldExercise.imagePath,
+      this.isPrivateResult
     );
 
     if (this.editExForm.invalid) {

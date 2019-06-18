@@ -44,8 +44,12 @@ import {EditTrainingScheduleComponent} from './components/edit-training-schedule
 import {FitnessProviderComponent} from './components/fitness-provider/fitness-provider.component';
 import {CourseDudeViewComponent} from './components/course-dude-view/course-dude-view.component';
 import {FollowerDudeComponent} from './components/follower-dude/follower-dude.component';
-import {EditTrainingScheduleWorkoutsComponent} from './components/edit-training-schedule-workouts/edit-training-schedule-workouts.component';
-
+import {CreateTrainingScheduleRandomlyComponent} from './components/create-training-schedule-randomly/create-training-schedule-randomly.component';
+import {FavouriteCoursesComponent} from './components/favourite-courses/favourite-courses.component';
+import {FavouriteExercisesComponent} from './components/favourite-exercises/favourite-exercises.component';
+import {FavouriteWorkoutsComponent} from './components/favourite-workouts/favourite-workouts.component';
+import {FavouriteTrainingSchedulesComponent} from './components/favourite-training-schedules/favourite-training-schedules.component';
+import {StatisticTrainingscheduleComponent} from './components/statistic-trainingschedule/statistic-trainingschedule.component';
 
 const routes: Routes = [
 
@@ -70,6 +74,10 @@ const routes: Routes = [
   {path: 'myContent', canActivate: [RoleGuard], component: MyContentComponent},
   {path: 'myContent-FP', canActivate: [FitnessProviderRoleGuard], component: MyContentFitnessProviderComponent},
   {path: 'favourites', canActivate: [RoleGuard], component: FavouritesComponent},
+  {path: 'favourite-courses', canActivate: [RoleGuard], component: FavouriteCoursesComponent},
+  {path: 'favourite-exercises', canActivate: [RoleGuard], component: FavouriteExercisesComponent},
+  {path: 'favourite-workouts', canActivate: [RoleGuard], component: FavouriteWorkoutsComponent},
+  {path: 'favourite-trainingSchedules', canActivate: [RoleGuard], component: FavouriteTrainingSchedulesComponent},
   {path: 'edit-dude', canActivate: [RoleGuard], component: EditProfileComponent},
   {path: 'edit-fitnessProvider', canActivate: [FitnessProviderRoleGuard], component: EditFitnessProviderProfileComponent},
   {path: 'fitnessProvider-profile', canActivate: [AuthGuard], component: FitnessProviderProfileComponent},
@@ -90,7 +98,8 @@ const routes: Routes = [
   {path: 'course', canActivate: [FitnessProviderRoleGuard], component: CourseComponent},
   {path: 'trainingSchedule', canActivate: [AuthGuard], component: TrainingScheduleComponent},
   {path: 'edit-training-schedule', canActivate: [RoleGuard], component: EditTrainingScheduleComponent},
-  {path: 'edit-training-workouts', canActivate: [RoleGuard], component: EditTrainingScheduleWorkoutsComponent}
+  {path: 'create-trainingSchedule-r', canActivate: [RoleGuard], component: CreateTrainingScheduleRandomlyComponent},
+  {path: 'statistics', canActivate: [RoleGuard], component: StatisticTrainingscheduleComponent}
 ];
 
 @NgModule({
