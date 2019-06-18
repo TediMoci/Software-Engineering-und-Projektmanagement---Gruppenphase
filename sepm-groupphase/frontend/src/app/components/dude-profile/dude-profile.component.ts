@@ -9,7 +9,6 @@ import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
 import {WorkoutService} from '../../services/workout.service';
 import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-dude-profile',
@@ -62,7 +61,7 @@ export class DudeProfileComponent implements OnInit {
   // Display variables
   tabs: Array<string>;
 
-  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private authService: AuthService,  private router: Router) {}
+  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private authService: AuthService) {}
   ngOnInit() {
     this.dateNow = new Date();
     console.log('Current Date: ' + this.dateNow);
@@ -301,9 +300,15 @@ export class DudeProfileComponent implements OnInit {
         this.error = error;
       }
     );
-      this.dude.imagePath = 'http://localhost:8080/downloadImage/dude_' + this.dude.id + '.png';
-      this.setLinkPicture(this.dude.imagePath);
-      localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
+    this.authService.getUserByNameFromDude(this.dude.name).subscribe((data) => {
+        this.dude.imagePath = data.imagePath;
+        this.setLinkPicture(this.dude.imagePath);
+        localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
 
    getLinkPicture() {
@@ -323,5 +328,6 @@ export class DudeProfileComponent implements OnInit {
    setLinkPicture(url: string) {
     this.imagePath = url;
     this.timeStamp = (new Date()).getTime();
+    console.log(this.timeStamp);
   }
 }

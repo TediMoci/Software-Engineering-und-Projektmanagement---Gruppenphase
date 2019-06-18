@@ -34,7 +34,7 @@ export class EditCourseComponent implements OnInit {
 
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.oldCourse = JSON.parse(localStorage.getItem('selectedCourse'));
-
+    this.editCourseService.setFileStorage(undefined);
     this.userName = this.fitnessProvider.name;
     this.imagePath = this.fitnessProvider.imagePath;
     this.imagePath2 = this.oldCourse.imagePath;
