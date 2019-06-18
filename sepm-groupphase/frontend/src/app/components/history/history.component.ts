@@ -47,7 +47,6 @@ export class HistoryComponent implements OnInit {
 
   vanishError() {
     this.error = false;
-    this.imagePath = this.dude.imagePath;
   }
 
 }

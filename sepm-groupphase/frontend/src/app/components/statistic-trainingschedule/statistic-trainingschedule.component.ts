@@ -25,7 +25,7 @@ export class StatisticTrainingscheduleComponent implements OnInit {
   nameOfStatistic: string;
   statistics: Statistics;
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
 
@@ -45,7 +45,7 @@ export class StatisticTrainingscheduleComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
     this.statistics = JSON.parse(localStorage.getItem('selectedStatistics'));
 
     this.nameOfStatistic = this.statistics.trainingScheduleDto.name;
