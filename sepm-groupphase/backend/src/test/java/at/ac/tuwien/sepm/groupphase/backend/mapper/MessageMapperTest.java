@@ -1,3 +1,4 @@
+/**
 package at.ac.tuwien.sepm.groupphase.backend.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.DetailedMessageDTO;
@@ -101,3 +102,4 @@ public class MessageMapperTest {
     }
 
 }
+**/
