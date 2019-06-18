@@ -253,7 +253,7 @@ public class TrainingScheduleIntegrationTest {
     public void givenTwoTrainingSchedules_whenFindTrainingSchedulesByName_thenGetTrainingSchedules(){
         TrainingScheduleDto a = postTrainingSchedule(trainingScheduleDto).getBody();
         TrainingScheduleDto b = postTrainingSchedule(trainingScheduleDto2).getBody();
-        TrainingScheduleDto[] foundTrainingSchedules = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "?name=" + a.getName(), TrainingScheduleDto[].class);
+        TrainingScheduleDto[] foundTrainingSchedules = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1?name=" + a.getName(), TrainingScheduleDto[].class);
         for (TrainingScheduleDto tDto : foundTrainingSchedules) {
             assertEquals(tDto.getName(), a.getName());
         }
@@ -264,7 +264,7 @@ public class TrainingScheduleIntegrationTest {
     @Test
     public void whenFindTrainingSchedulesByName_whenNameNotFound_thenGetEmptyArrayList(){
         ResponseEntity<List<TrainingScheduleDto>> foundTrainingSchedules = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "?name=TestNameThatDoesntExist", HttpMethod.GET, null, new ParameterizedTypeReference<List<TrainingScheduleDto>>() {});
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1?name=TestNameThatDoesntExist", HttpMethod.GET, null, new ParameterizedTypeReference<List<TrainingScheduleDto>>() {});
         assertEquals(0, foundTrainingSchedules.getBody() != null? foundTrainingSchedules.getBody().size() : 0);
     }
 
