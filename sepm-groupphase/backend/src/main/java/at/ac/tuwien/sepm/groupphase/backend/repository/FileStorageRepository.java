@@ -3,15 +3,18 @@ package at.ac.tuwien.sepm.groupphase.backend.repository;
 import at.ac.tuwien.sepm.groupphase.backend.configuration.properties.FileStorageProperties;
 import at.ac.tuwien.sepm.groupphase.backend.exception.FileStorageException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.MyFileNotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.service.implementation.FileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -45,6 +48,16 @@ public class FileStorageRepository {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", e);
+        }
+    }
+
+    public MultipartFile loadMultipartFile(String fileName) {
+        LOGGER.info("Entering loadMultipartFile with fileName: " + fileName);
+        try {
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            return new MockMultipartFile("file", fileName, "image/png", Files.readAllBytes(filePath));
+        } catch (IOException e) {
+            throw new FileStorageException("Could not load file " + fileName, e);
         }
     }
 
