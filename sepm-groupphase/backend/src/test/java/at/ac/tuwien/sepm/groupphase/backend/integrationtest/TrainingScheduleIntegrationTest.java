@@ -2,15 +2,22 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleRepository;
+import org.apache.http.HttpResponse;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -21,9 +28,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,6 +45,7 @@ public class TrainingScheduleIntegrationTest {
     private static final String TRAININGSCHEDULE_ENDPOINT = "/trainingSchedule";
     private static final DudeDto dudeDto = new DudeDto();
     private static final TrainingScheduleDto trainingScheduleDto = new TrainingScheduleDto();
+    private static final TrainingScheduleDto trainingScheduleDto2 = new TrainingScheduleDto();
     private static final TrainingScheduleDto invalidTrainingScheduleDto = new TrainingScheduleDto();
     private static final TrainingScheduleWorkoutDtoIn trainingScheduleWorkoutDtoIn1 = new TrainingScheduleWorkoutDtoIn();
     private static final TrainingScheduleWorkoutDtoIn trainingScheduleWorkoutDtoIn2 = new TrainingScheduleWorkoutDtoIn();
@@ -53,6 +61,9 @@ public class TrainingScheduleIntegrationTest {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    ITrainingScheduleRepository trainingScheduleRepository;
 
     @BeforeClass
     public static void beforeClass() {
@@ -105,6 +116,12 @@ public class TrainingScheduleIntegrationTest {
         trainingScheduleDto.setIntervalLength(3);
         trainingScheduleDto.setRating(3.0);
 
+        trainingScheduleDto2.setName("TrainingsSchedule2");
+        trainingScheduleDto2.setDescription("Description2");
+        trainingScheduleDto2.setDifficulty(2);
+        trainingScheduleDto2.setIntervalLength(2);
+        trainingScheduleDto2.setRating(4.7);
+
         invalidTrainingScheduleDto.setName("TrainingScheduleInvalid");
     }
 
@@ -122,6 +139,7 @@ public class TrainingScheduleIntegrationTest {
             exerciseDto1.setCreatorId(dudeId);
             exerciseDto2.setCreatorId(dudeId);
             trainingScheduleDto.setCreatorId(dudeId);
+            trainingScheduleDto2.setCreatorId(dudeId);
 
             HttpEntity<ExerciseDto> exerciseRequest1 = new HttpEntity<>(exerciseDto1);
             ResponseEntity<ExerciseDto> exerciseResponse1 = REST_TEMPLATE
@@ -167,29 +185,100 @@ public class TrainingScheduleIntegrationTest {
             trainingScheduleWorkoutDtoIn1.setWorkoutVersion(workoutResponse1.getBody().getVersion());
             TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts = new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1, trainingScheduleWorkoutDtoIn2};
             trainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
+            trainingScheduleDto2.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1});
 
             initialized = true;
         }
     }
 
+    public void clearRepository(){
+        ResponseEntity<TrainingScheduleDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/1/trainingSchedules", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleDto[]>() {});
+        if (response != null && response.getBody() != null) {
+            for (TrainingScheduleDto t: response.getBody()) {
+                trainingScheduleRepository.delete(t.getId());
+            }
+        }
+    }
+
+    private ResponseEntity<TrainingScheduleDto> postTrainingSchedule(TrainingScheduleDto trainingSchedule) {
+        HttpEntity<TrainingScheduleDto> trainingScheduleRequest = new HttpEntity<>(trainingSchedule);
+        ResponseEntity<TrainingScheduleDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT, HttpMethod.POST, trainingScheduleRequest, TrainingScheduleDto.class);
+        return response;
+    }
+
      @Test
     public void whenSaveTrainingScheduleManually_then201CreatedAndGetSavedTrainingSchedule() {
-        HttpEntity<TrainingScheduleDto> trainingScheduleRequest = new HttpEntity<>(trainingScheduleDto);
-        ResponseEntity<TrainingScheduleDto> TrainingScheduleResponse = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT, HttpMethod.POST, trainingScheduleRequest, TrainingScheduleDto.class);
-        assertEquals(HttpStatus.CREATED, TrainingScheduleResponse.getStatusCode());
-        TrainingScheduleDto responseTrainingScheduleDto = TrainingScheduleResponse.getBody();
+        HttpEntity<TrainingScheduleDto> trainingScheduleResponse = postTrainingSchedule(trainingScheduleDto);
+        assertEquals(HttpStatus.CREATED, ((ResponseEntity<TrainingScheduleDto>) trainingScheduleResponse).getStatusCode());
+        TrainingScheduleDto responseTrainingScheduleDto = trainingScheduleResponse.getBody();
         assertNotNull(responseTrainingScheduleDto.getId());
         responseTrainingScheduleDto.setId(1L);
         trainingScheduleDto.setId(1L);
         responseTrainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleDto.getTrainingScheduleWorkouts());
         assertEquals(trainingScheduleDto, responseTrainingScheduleDto);
-    }
+        clearRepository();
+     }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
     public void whenSaveOneInvalidTrainingSchedule_then400BadRequest() {
         HttpEntity<TrainingScheduleDto> trainingScheduleRequest = new HttpEntity<>(invalidTrainingScheduleDto);
         REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT, HttpMethod.POST, trainingScheduleRequest, TrainingScheduleDto.class);
     }
+
+    @Test
+    public void givenTrainingSchedule_whenFindTrainingScheduleByIdAndVersion_thenGetTrainingScheduleAndStatusOK(){
+        TrainingScheduleDto t = postTrainingSchedule(trainingScheduleDto).getBody();
+        ResponseEntity<TrainingScheduleDto> ts = REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + t.getId() + "/1", HttpMethod.GET, null, TrainingScheduleDto.class);
+        TrainingScheduleDto foundTrainingSchedule = ts.getBody();
+        assertEquals(foundTrainingSchedule.getName(), t.getName());
+        assertEquals(foundTrainingSchedule.getDescription(), t.getDescription());
+        assertEquals(foundTrainingSchedule.getDifficulty(), t.getDifficulty());
+        assertEquals(foundTrainingSchedule.getIntervalLength(), t.getIntervalLength());
+        assertEquals(foundTrainingSchedule.getRating(), t.getRating());
+        assertEquals(foundTrainingSchedule.getCreatorId(), t.getCreatorId());
+        assertEquals(foundTrainingSchedule.getTrainingScheduleWorkouts() != null? foundTrainingSchedule.getTrainingScheduleWorkouts().length : 0, t.getTrainingScheduleWorkouts() != null? t.getTrainingScheduleWorkouts().length : 0);
+        assertEquals(HttpStatus.OK, ts.getStatusCode());
+        clearRepository();
+    }
+
+    @Test(expected = HttpClientErrorException.NotFound.class)
+    public void whenFindTrainingScheduleByIdAndVersion_ifTrainingScheduleNotFound_thenHttpClientErrorException(){
+        REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100/100", TrainingScheduleDto.class);
+        clearRepository();
+    }
+
+    @Test
+    public void givenTwoTrainingSchedules_whenFindTrainingSchedulesByName_thenGetTrainingSchedules(){
+        TrainingScheduleDto a = postTrainingSchedule(trainingScheduleDto).getBody();
+        TrainingScheduleDto b = postTrainingSchedule(trainingScheduleDto2).getBody();
+        TrainingScheduleDto[] foundTrainingSchedules = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "?name=" + a.getName(), TrainingScheduleDto[].class);
+        for (TrainingScheduleDto tDto : foundTrainingSchedules) {
+            assertEquals(tDto.getName(), a.getName());
+        }
+        assertEquals(1, foundTrainingSchedules.length);
+        clearRepository();
+    }
+
+    @Test
+    public void whenFindTrainingSchedulesByName_whenNameNotFound_thenGetEmptyArrayList(){
+        ResponseEntity<List<TrainingScheduleDto>> foundTrainingSchedules = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "?name=TestNameThatDoesntExist", HttpMethod.GET, null, new ParameterizedTypeReference<List<TrainingScheduleDto>>() {});
+        assertEquals(0, foundTrainingSchedules.getBody() != null? foundTrainingSchedules.getBody().size() : 0);
+    }
+
+    // TODO: uncomment when findByFilter for TrainingSchedules has been implemented
+    /*
+     @Test()
+    public void whenSaveTwoTrainingSchedulesOfDifferentDifficultyAndFilterByDifficulty2_thenGetOneResult(){
+        TrainingScheduleDto a = postTrainingSchedule(trainingScheduleDto).getBody();
+        TrainingScheduleDto b = postTrainingSchedule(trainingScheduleDto2).getBody();
+        ResponseEntity<TrainingScheduleDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, TrainingScheduleDto[].class);
+        assertEquals(1, response.getBody() == null ? 0 : response.getBody().length);
+        clearRepository();
+    }
+     */
 
 }

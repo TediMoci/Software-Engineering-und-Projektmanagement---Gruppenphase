@@ -138,6 +138,7 @@ public class SecurityConfiguration {
                     "/workout/{id}/{version}",
                     "/workout/{id}/{version}/exercises",
                     "/trainingSchedule",
+                    "/trainingSchedule/filtered",
                     "/trainingSchedule/{id}/{version}",
                     "/trainingSchedule/{id}/{version}/workouts",
                     "/trainingSchedule/{id}/{version}/workouts/{day}",
