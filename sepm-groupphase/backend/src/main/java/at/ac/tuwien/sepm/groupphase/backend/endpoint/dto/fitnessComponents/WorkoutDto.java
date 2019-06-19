@@ -29,7 +29,6 @@ public class WorkoutDto {
     @NotNull(message = "Difficulty must be given")
     @Min(value = 1, message = "Min difficulty value is 1") @Max(value = 3, message = "Max difficulty value is 3")
     private Integer difficulty;
-    // TODO: selfAssessment enum
 
     @ApiModelProperty(name = "Calorie consumption of Workout")
     @Min(value = 0, message = "Min for calorieConsumption is 0") @Max(value = 10000, message = "Max value for calorieConsumption is 10000")

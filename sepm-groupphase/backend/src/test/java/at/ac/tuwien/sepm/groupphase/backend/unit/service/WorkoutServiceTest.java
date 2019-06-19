@@ -238,6 +238,7 @@ public class WorkoutServiceTest {
         }
         workoutService.update(1L, workout);
     }
+
     @Test
     public void whenFindByFilter_thenGetWorkoutWhereFilterTrueAndNotWorkoutWhereFilterFalse(){
         Mockito.when(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null)).thenReturn(validWorkouts2);

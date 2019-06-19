@@ -481,7 +481,15 @@ export class EditTrainingScheduleComponent implements OnInit {
     } else {
       // remove item when dragged outside of the dragging areas
       console.log('delete entry');
-      event.previousContainer.data.splice(event.previousIndex, 1);
+      if (!(event.previousContainer.id === 'searchRes1' ||
+        event.previousContainer.id === 'searchRes2' ||
+        event.previousContainer.id === 'searchRes3' ||
+        event.previousContainer.id === 'searchRes4' ||
+        event.previousContainer.id === 'searchRes5' ||
+        event.previousContainer.id === 'searchRes6' ||
+        event.previousContainer.id === 'searchRes7')) {
+        event.previousContainer.data.splice(event.previousIndex, 1);
+      }
     }
   }
 
