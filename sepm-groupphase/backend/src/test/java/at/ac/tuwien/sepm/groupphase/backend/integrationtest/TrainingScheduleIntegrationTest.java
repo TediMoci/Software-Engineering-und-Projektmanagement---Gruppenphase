@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
@@ -383,4 +384,40 @@ public class TrainingScheduleIntegrationTest {
         REST_TEMPLATE.exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + trainingScheduleDto.getCreatorId() + "/activeTrainingSchedule",
             HttpMethod.GET, null, ActiveTrainingScheduleDto.class);
     }
+    @Test
+    public void whenGetAllWorkoutsByTrainingScheduleIdAndVersion_thenGetWorkoutsAndStatusOK(){
+        TrainingScheduleDto t = postTrainingSchedule(trainingScheduleDto).getBody();
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + t.getId() + "/" + t.getVersion() + "/workouts", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+        assertEquals(HttpStatus.OK, foundTrainingScheduleWorkouts.getStatusCode());
+        assertEquals(trainingScheduleDto.getTrainingScheduleWorkouts().length, (foundTrainingScheduleWorkouts.getBody() != null? foundTrainingScheduleWorkouts.getBody().length : 0));
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenGetAllWorkoutsByTrainingScheduleIdAndVersion_withInvalidIdAndVersion_thenStatusBAD_REQUEST(){
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100/100/workouts", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+    }
+
+    @Test
+    public void whenGetAllWorkoutsByTrainingScheduleIdAndVersionAndDay_thenGetWorkoutsAndStatusOK(){
+        TrainingScheduleDto t = postTrainingSchedule(trainingScheduleDto).getBody();
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + t.getId() + "/" + t.getVersion() + "/workouts/1", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+        assertEquals(1, foundTrainingScheduleWorkouts.getBody() != null? foundTrainingScheduleWorkouts.getBody().length : 0);
+        assertEquals(HttpStatus.OK, foundTrainingScheduleWorkouts.getStatusCode());
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenGetAllWorkoutsByTrainingScheduleIdAndVersionAndDay_withInvalidIdAndVersion_thenStatusBAD_REQUEST(){
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100/100/workouts/1", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenGetAllWorkoutsByTrainingScheduleIdAndVersionAndDay_withInvalidDay_thenStatusBAD_REQUEST(){
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1/1/workouts/100", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+    }
+
 }
