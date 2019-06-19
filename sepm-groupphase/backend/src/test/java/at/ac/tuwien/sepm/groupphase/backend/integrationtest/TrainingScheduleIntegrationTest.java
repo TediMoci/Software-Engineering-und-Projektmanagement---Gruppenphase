@@ -414,10 +414,11 @@ public class TrainingScheduleIntegrationTest {
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100/100/workouts/1", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
     }
 
-    @Test(expected = HttpClientErrorException.BadRequest.class)
-    public void whenGetAllWorkoutsByTrainingScheduleIdAndVersionAndDay_withInvalidDay_thenStatusBAD_REQUEST(){
+    @Test
+    public void whenGetAllWorkoutsByTrainingScheduleIdAndVersionAndDay_withInvalidDay_thenResponseArrayEmpty(){
         ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1/1/workouts/100", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+        assertEquals(0, foundTrainingScheduleWorkouts.getBody().length);
     }
 
 }
