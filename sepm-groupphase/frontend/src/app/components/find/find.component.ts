@@ -70,6 +70,22 @@ export class FindComponent implements OnInit {
   dudeFilter: DudeFilter;
   trainingScheduleFilter: TrainingScheduleFilter;
 
+  interval: number;
+  d1: any = [];
+  d2: any = [];
+  d3: any = [];
+  d4: any = [];
+  d5: any = [];
+  d6: any = [];
+  d7: any = [];
+  exercisesForWorkouts1: any;
+  exercisesForWorkouts2: any;
+  exercisesForWorkouts3: any;
+  exercisesForWorkouts4: any;
+  exercisesForWorkouts5: any;
+  exercisesForWorkouts6: any;
+  exercisesForWorkouts7: any;
+
   // Router Objects
   selectedFP: FitnessProvider;
 
@@ -92,6 +108,13 @@ export class FindComponent implements OnInit {
       this.imagePath = this.fitnessProvider.imagePath;
       this.isDude = false;
     }
+    this.d1 = [];
+    this.d2 = [];
+    this.d3 = [];
+    this.d4 = [];
+    this.d5 = [];
+    this.d6 = [];
+    this.d7 = [];
   }
 
   startSearch(category: string) {
@@ -310,7 +333,7 @@ export class FindComponent implements OnInit {
         );
         break;
       case 'Training Schedule':
-        console.log('difficulty: ' + this.filterTrainingDifficulty)
+        console.log('difficulty: ' + this.filterTrainingDifficulty);
         console.log('interval: ' + this.filterTrainingInterval);
 
         switch (this.filterTrainingDifficulty) {
@@ -395,41 +418,154 @@ export class FindComponent implements OnInit {
   }
 
   getSelectedTrainingScheduleWorkouts(trainingSchedule: TrainingSchedule) {
-    this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(trainingSchedule.id, trainingSchedule.version).subscribe(
-      (data) => {
-        console.log('get all workouts of trainingSchedule ' + trainingSchedule.name);
-        this.workoutsForTrainingSchedules = data.sort(function (a, b) { // sort data alphabetically
-          if (a.day < b.day) {return -1; }
-          if (a.day > b.day) {return 1; }
-          return 0;
-        });
-        for (let counter = 0; counter < data.length; counter++) {
-          this.getSelectedTSWorkoutExercises(data[counter].id, data[counter].version);
-        }
-        console.log(this.workoutsForTrainingSchedules.toString().toString());
-      },
-      error => {
-        this.error = error;
-      }
-    );
+    this.interval = trainingSchedule.intervalLength;
+    this.getAllWorkoutsPerDay(trainingSchedule);
   }
 
-    getSelectedTSWorkoutExercises(id: number, version: number) {
-      this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-        (data) => {
-          console.log('get all exercises of workout ' + id);
-          this.exercisesForWorkouts = data.sort(function (a, b) { // sort data alphabetically
-            if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
-            if (a.name > b.name) {return 1; }
-            return 0;
-          });
-          console.log(this.exercisesForWorkouts.toString().toString());
-        },
-        error => {
-          this.error = error;
-        }
-      );
+  getSelectedTSWorkoutExercises(list: number, id: number, version: number) {
+    switch (list) {
+      case 1:
+        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+          (data) => {
+            console.log('get all exercises of workout ' + id);
+            this.exercisesForWorkouts1 = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+            console.log(this.exercisesForWorkouts1.toString().toString());
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 2:
+        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+          (data) => {
+            console.log('get all exercises of workout ' + id);
+            this.exercisesForWorkouts2 = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+            console.log(this.exercisesForWorkouts2.toString().toString());
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 3:
+        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+          (data) => {
+            console.log('get all exercises of workout ' + id);
+            this.exercisesForWorkouts3 = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+            console.log(this.exercisesForWorkouts3.toString().toString());
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 4:
+        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+          (data) => {
+            console.log('get all exercises of workout ' + id);
+            this.exercisesForWorkouts4 = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+            console.log(this.exercisesForWorkouts4.toString().toString());
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 5:
+        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+          (data) => {
+            console.log('get all exercises of workout ' + id);
+            this.exercisesForWorkouts5 = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+            console.log(this.exercisesForWorkouts5.toString().toString());
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 6:
+        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+          (data) => {
+            console.log('get all exercises of workout ' + id);
+            this.exercisesForWorkouts6 = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+            console.log(this.exercisesForWorkouts6.toString().toString());
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 7:
+        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+          (data) => {
+            console.log('get all exercises of workout ' + id);
+            this.exercisesForWorkouts7 = data.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+            console.log(this.exercisesForWorkouts7.toString().toString());
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
     }
+  }
 
   convertDifficulty(element: any) {
     switch (element) {
@@ -505,6 +641,7 @@ export class FindComponent implements OnInit {
       }
     );
   }
+
   resetResults() {
     this.entries = null;
   }
@@ -522,4 +659,330 @@ export class FindComponent implements OnInit {
     this.errorBookmark = false;
   }
 
+  getAllWorkoutsPerDay(trainingSchedule: TrainingSchedule) {
+    switch (trainingSchedule.intervalLength) {
+      case 1:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+            for (let counter = 0; counter < data1.length; counter++) {
+              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 2:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+            for (let counter = 0; counter < data1.length; counter++) {
+              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+            for (let counter = 0; counter < data2.length; counter++) {
+              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 3:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+            for (let counter = 0; counter < data1.length; counter++) {
+              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+            for (let counter = 0; counter < data2.length; counter++) {
+              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+            for (let counter = 0; counter < data3.length; counter++) {
+              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 4:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+            for (let counter = 0; counter < data1.length; counter++) {
+              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+            for (let counter = 0; counter < data2.length; counter++) {
+              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+            for (let counter = 0; counter < data3.length; counter++) {
+              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+            for (let counter = 0; counter < data4.length; counter++) {
+              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 5:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+            for (let counter = 0; counter < data1.length; counter++) {
+              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+            for (let counter = 0; counter < data2.length; counter++) {
+              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+            for (let counter = 0; counter < data3.length; counter++) {
+              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+            for (let counter = 0; counter < data4.length; counter++) {
+              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5;
+            for (let counter = 0; counter < data5.length; counter++) {
+              this.getSelectedTSWorkoutExercises(5, data5[counter].id, data5[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 6:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+            for (let counter = 0; counter < data1.length; counter++) {
+              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+            for (let counter = 0; counter < data2.length; counter++) {
+              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+            for (let counter = 0; counter < data3.length; counter++) {
+              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+            for (let counter = 0; counter < data4.length; counter++) {
+              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5;
+            for (let counter = 0; counter < data5.length; counter++) {
+              this.getSelectedTSWorkoutExercises(5, data5[counter].id, data5[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
+          (data6) => {
+            this.d6 = data6;
+            for (let counter = 0; counter < data6.length; counter++) {
+              this.getSelectedTSWorkoutExercises(6, data6[counter].id, data6[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 7:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1;
+            for (let counter = 0; counter < data1.length; counter++) {
+              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2;
+            for (let counter = 0; counter < data2.length; counter++) {
+              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3;
+            for (let counter = 0; counter < data3.length; counter++) {
+              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4;
+            for (let counter = 0; counter < data4.length; counter++) {
+              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5;
+            for (let counter = 0; counter < data5.length; counter++) {
+              this.getSelectedTSWorkoutExercises(5, data5[counter].id, data5[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
+          (data6) => {
+            this.d6 = data6;
+            for (let counter = 0; counter < data6.length; counter++) {
+              this.getSelectedTSWorkoutExercises(6, data6[counter].id, data6[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 7).subscribe(
+          (data7) => {
+            this.d7 = data7;
+            for (let counter = 0; counter < data7.length; counter++) {
+              this.getSelectedTSWorkoutExercises(7, data7[counter].id, data7[counter].version);
+            }
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+    }
+  }
 }
