@@ -104,25 +104,25 @@ public class TrainingScheduleServiceTest {
     }
 
     @Test
-    public void whenBookmarkOneWorkout_thenSuccess() throws ServiceException {
+    public void whenBookmarkOneTs_thenSuccess() throws ServiceException {
         Dude dude = new Dude();
         dude.setId(1L);
         Optional<Dude> optionalDude = Optional.of(dude);
-        Optional<TrainingSchedule> optionalTS = Optional.of(validTrainingSchedule);
+        Optional<TrainingSchedule> optionalTs = Optional.of(validTrainingSchedule);
         Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
-        Mockito.when(trainingScheduleRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalTS);
+        Mockito.when(trainingScheduleRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalTs);
         Mockito.when(trainingScheduleBookmarkRepository.checkTrainingScheduleBookmark(1L, 1L, 1)).thenReturn(0);
         trainingScheduleService.saveTrainingScheduleBookmark(1L, 1L, 1);
     }
 
     @Test(expected = ServiceException.class)
-    public void whenBookmarkOneAlreadyBookmarkedWorkout_thenServiceException() throws ServiceException {
+    public void whenBookmarkOneAlreadyBookmarkedTs_thenServiceException() throws ServiceException {
         Dude dude = new Dude();
         dude.setId(1L);
         Optional<Dude> optionalDude = Optional.of(dude);
-        Optional<TrainingSchedule> optionalTS = Optional.of(validTrainingSchedule);
+        Optional<TrainingSchedule> optionalTs = Optional.of(validTrainingSchedule);
         Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
-        Mockito.when(trainingScheduleRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalTS);
+        Mockito.when(trainingScheduleRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalTs);
         Mockito.when(trainingScheduleBookmarkRepository.checkTrainingScheduleBookmark(1L, 1L, 1)).thenReturn(1);
         trainingScheduleService.saveTrainingScheduleBookmark(1L, 1L, 1);
     }

@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IActiveTrainingScheduleRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleRepository;
 import org.apache.http.HttpResponse;
 import org.junit.After;
@@ -56,6 +57,7 @@ public class TrainingScheduleIntegrationTest {
     private static final WorkoutExerciseDtoIn workoutExerciseDtoIn2 = new WorkoutExerciseDtoIn();
     private static final ExerciseDto exerciseDto1 = new ExerciseDto();
     private static final ExerciseDto exerciseDto2 = new ExerciseDto();
+    private static final ActiveTrainingScheduleDto activeTsDto = new ActiveTrainingScheduleDto();
 
     private static boolean initialized = false;
 
@@ -64,6 +66,9 @@ public class TrainingScheduleIntegrationTest {
 
     @Autowired
     ITrainingScheduleRepository trainingScheduleRepository;
+
+    @Autowired
+    IActiveTrainingScheduleRepository activeTrainingScheduleRepository;
 
     @BeforeClass
     public static void beforeClass() {
@@ -121,6 +126,10 @@ public class TrainingScheduleIntegrationTest {
         trainingScheduleDto2.setDifficulty(2);
         trainingScheduleDto2.setIntervalLength(2);
         trainingScheduleDto2.setRating(4.7);
+
+        activeTsDto.setStartDate(LocalDate.now());
+        activeTsDto.setIntervalRepetitions(2);
+        activeTsDto.setAdaptive(false);
 
         invalidTrainingScheduleDto.setName("TrainingScheduleInvalid");
     }
@@ -187,10 +196,13 @@ public class TrainingScheduleIntegrationTest {
             trainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
             trainingScheduleDto2.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1});
 
+            activeTsDto.setDudeId(dudeId);
+
             initialized = true;
         }
     }
 
+    @After
     public void clearRepository(){
         ResponseEntity<TrainingScheduleDto[]> response = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/1/trainingSchedules", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleDto[]>() {});
@@ -199,12 +211,24 @@ public class TrainingScheduleIntegrationTest {
                 trainingScheduleRepository.delete(t.getId());
             }
         }
+        activeTrainingScheduleRepository.deleteAll();
     }
 
     private ResponseEntity<TrainingScheduleDto> postTrainingSchedule(TrainingScheduleDto trainingSchedule) {
         HttpEntity<TrainingScheduleDto> trainingScheduleRequest = new HttpEntity<>(trainingSchedule);
         ResponseEntity<TrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT, HttpMethod.POST, trainingScheduleRequest, TrainingScheduleDto.class);
+        return response;
+    }
+
+    private ResponseEntity<ActiveTrainingScheduleDto> postTsAndActiveTs() {
+        ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDto);
+        activeTsDto.setTrainingScheduleId(tsResponse.getBody().getId());
+        activeTsDto.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
+
+        HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsDto);
+        ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
         return response;
     }
 
@@ -218,7 +242,6 @@ public class TrainingScheduleIntegrationTest {
         trainingScheduleDto.setId(1L);
         responseTrainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleDto.getTrainingScheduleWorkouts());
         assertEquals(trainingScheduleDto, responseTrainingScheduleDto);
-        clearRepository();
      }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
@@ -240,13 +263,11 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(foundTrainingSchedule.getCreatorId(), t.getCreatorId());
         assertEquals(foundTrainingSchedule.getTrainingScheduleWorkouts() != null? foundTrainingSchedule.getTrainingScheduleWorkouts().length : 0, t.getTrainingScheduleWorkouts() != null? t.getTrainingScheduleWorkouts().length : 0);
         assertEquals(HttpStatus.OK, ts.getStatusCode());
-        clearRepository();
     }
 
     @Test(expected = HttpClientErrorException.NotFound.class)
     public void whenFindTrainingScheduleByIdAndVersion_ifTrainingScheduleNotFound_thenHttpClientErrorException(){
         REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100/100", TrainingScheduleDto.class);
-        clearRepository();
     }
 
     @Test
@@ -258,7 +279,6 @@ public class TrainingScheduleIntegrationTest {
             assertEquals(tDto.getName(), a.getName());
         }
         assertEquals(1, foundTrainingSchedules.length);
-        clearRepository();
     }
 
     @Test
@@ -282,8 +302,7 @@ public class TrainingScheduleIntegrationTest {
      */
 
     @Test
-    public void givenDudeAndTS_whenDudeBookmarksTS_thenTSInBookmarkedTSs() {
-        HttpEntity<TrainingScheduleDto> tsRequest = new HttpEntity<>(trainingScheduleDto);
+    public void givenDudeAndTs_whenDudeBookmarksTs_thenTsInBookmarkedTss() {
         ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDto);
         Long tsId = tsResponse.getBody().getId();
         Long dudeId = tsResponse.getBody().getCreatorId();
@@ -295,11 +314,72 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(1, response.getBody().length);
         REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/bookmark/" + dudeId + "/" + tsId + "/1", HttpMethod.DELETE, null, Void.class);
         trainingScheduleRepository.delete(tsId);
-        clearRepository();
     }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
-    public void givenDude_whenDudeBookmarksNonExistingTS_then400BadRequest() {
+    public void givenDude_whenDudeBookmarksNonExistingTs_then400BadRequest() {
         REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/bookmark/" + 1 + "/" + 0 + "/1", HttpMethod.PUT, null, Void.class);
+    }
+
+    @Test
+    public void whenSaveOneActiveTs_then201CreatedAndReturnThisActiveTs() {
+        ResponseEntity<ActiveTrainingScheduleDto> activeTsResponse = postTsAndActiveTs();
+        assertEquals(HttpStatus.CREATED, activeTsResponse.getStatusCode());
+        ActiveTrainingScheduleDto activeTsResponseBody = activeTsResponse.getBody();
+        activeTsResponseBody.setId(null);
+        assertEquals(activeTsDto, activeTsResponseBody);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenSaveOneInvalidActiveTs_then400BadRequest() {
+        ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDto);
+
+        ActiveTrainingScheduleDto invalidActiveTsDto = new ActiveTrainingScheduleDto();
+        invalidActiveTsDto.setTrainingScheduleId(tsResponse.getBody().getId());
+        invalidActiveTsDto.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
+        invalidActiveTsDto.setDudeId(activeTsDto.getDudeId());
+        invalidActiveTsDto.setStartDate(activeTsDto.getStartDate());
+        invalidActiveTsDto.setAdaptive(activeTsDto.getAdaptive());
+        invalidActiveTsDto.setIntervalRepetitions(0);
+
+        HttpEntity<ActiveTrainingScheduleDto> invalidActiveTsRequest = new HttpEntity<>(invalidActiveTsDto);
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, invalidActiveTsRequest, ActiveTrainingScheduleDto.class);
+    }
+
+    @Test
+    public void givenOneActiveTS_whenDeleteThisActiveTs_then200Ok() {
+        postTsAndActiveTs();
+        assertEquals(HttpStatus.OK,
+            REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/" + activeTsDto.getDudeId(),
+                HttpMethod.DELETE, null, Void.class).getStatusCode());
+    }
+
+    @Test
+    public void givenOneActiveTS_whenGetActiveTsOfDude_then200OkAndReturnThatActiveTs() {
+        postTsAndActiveTs();
+        ResponseEntity<ActiveTrainingScheduleDto> activeDudeTsResponse = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsDto.getDudeId() + "/activeTrainingSchedule",
+            HttpMethod.GET, null, ActiveTrainingScheduleDto.class);
+        assertEquals(HttpStatus.OK, activeDudeTsResponse.getStatusCode());
+        ActiveTrainingScheduleDto activeDudeTsResponseBody = activeDudeTsResponse.getBody();
+        activeDudeTsResponseBody.setId(null);
+        assertEquals(activeTsDto, activeDudeTsResponseBody);
+    }
+
+    @Test
+    public void givenOneActiveTS_whenGetExerciseDonesOfDude_then200OkAndReturnThoseExerciseDones() {
+        ResponseEntity<ActiveTrainingScheduleDto> activeTsResponse = postTsAndActiveTs();
+        ResponseEntity<ExerciseDoneDto[]> exerciseDoneResponse = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsDto.getDudeId() + "/activeTrainingSchedule/done",
+                HttpMethod.GET, null, ExerciseDoneDto[].class);
+        assertEquals(HttpStatus.OK, exerciseDoneResponse.getStatusCode());
+        ExerciseDoneDto[] exerciseDoneResponseBody = exerciseDoneResponse.getBody();
+        assertEquals(8, exerciseDoneResponseBody.length);
+    }
+
+    @Test(expected = HttpClientErrorException.NotFound.class)
+    public void whenGetNonExistingActiveTsOfDude_then404NotFound() {
+        REST_TEMPLATE.exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + trainingScheduleDto.getCreatorId() + "/activeTrainingSchedule",
+            HttpMethod.GET, null, ActiveTrainingScheduleDto.class);
     }
 }
