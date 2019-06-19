@@ -97,6 +97,7 @@ public class FitnessProviderIntegrationTest {
         FitnessProviderDto fitnessProviderResponse = response.getBody();
         fitnessProvider.setId(fitnessProviderResponse.getId());
         fitnessProvider.setPassword(fitnessProviderResponse.getPassword());
+        fitnessProvider.setImagePath(fitnessProviderResponse.getImagePath());
         assertEquals(fitnessProvider,fitnessProviderResponse);
     }
 
