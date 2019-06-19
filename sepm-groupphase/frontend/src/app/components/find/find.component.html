@@ -341,7 +341,7 @@
                       <p style="font-size: medium">Day 1:</p>
                       <div *ngFor='let workout of d1'>
                         <mat-accordion>
-                          <mat-expansion-panel>
+                          <mat-expansion-panel (opened)="getSelectedTSWorkoutExercises(workout.id, workout.version)" (closed)="closeExercises()">
                             <mat-expansion-panel-header>
                               <mat-panel-title style="font-size: large">
                                 {{workout.name}}
@@ -353,19 +353,19 @@
                             <hr>
                           <p>"{{workout.description}}"</p>
 
-                          <p style="font-size: medium">Exercises:</p>
-                          <div *ngFor='let exercise of exercisesForWorkouts1'>
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title style="font-size: large">
-                                    {{exercise.name}}
-                                  </mat-panel-title>
-                                </mat-expansion-panel-header>
-                                <hr>
-                                <p>Category: {{exercise.category}}</p>
-                                <p>Muscle Group: {{exercise.muscleGroup}}</p>
-                                <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
+                            <!--p> <button type="button" (click)="getSelectedTSWorkoutExercises(1, workout.id, workout.version)" class="btn btn-success float-right">Exercises:</button></p-->
+                           <div *ngFor='let exercise of exercisesForWorkouts'>
+                             <mat-accordion>
+                               <mat-expansion-panel>
+                                 <mat-expansion-panel-header>
+                                   <mat-panel-title style="font-size: large">
+                                     {{exercise.name}}
+                                   </mat-panel-title>
+                                 </mat-expansion-panel-header>
+                                 <hr>
+                                 <p>Category: {{exercise.category}}</p>
+                                 <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                                 <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
                                 <hr>
                                 <p>Repetitions: {{exercise.repetitions}}</p>
                                 <p>Sets: {{exercise.sets}}</p>
@@ -374,20 +374,21 @@
                                 <p>Equipment: {{exercise.equipment}}</p>
                                 <hr>
                                 <p>"{{exercise.description}}"</p>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                        </mat-expansion-panel>
-                      </mat-accordion>
+                               </mat-expansion-panel>
+                             </mat-accordion>
+                           </div>
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </div>
                     </div>
-                    </div>
+
 
                     <div *ngIf="interval >= 2">
                       <hr>
                     <p style="font-size: medium">Day 2:</p>
                     <div *ngFor='let workout of d2'>
                       <mat-accordion>
-                        <mat-expansion-panel>
+                        <mat-expansion-panel (opened)="getSelectedTSWorkoutExercises(workout.id, workout.version)" (closed)="closeExercises()">
                           <mat-expansion-panel-header>
                             <mat-panel-title style="font-size: large">
                               {{workout.name}}
@@ -401,7 +402,7 @@
                           <p>"{{workout.description}}"</p>
 
                           <p style="font-size: medium">Exercises:</p>
-                          <div *ngFor='let exercise of exercisesForWorkouts2'>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
                             <mat-accordion>
                               <mat-expansion-panel>
                                 <mat-expansion-panel-header>
@@ -434,7 +435,7 @@
                     <p style="font-size: medium">Day 3:</p>
                     <div *ngFor='let workout of d3'>
                       <mat-accordion>
-                        <mat-expansion-panel>
+                        <mat-expansion-panel (opened)="getSelectedTSWorkoutExercises(workout.id, workout.version)" (closed)="closeExercises()">
                           <mat-expansion-panel-header>
                             <mat-panel-title style="font-size: large">
                               {{workout.name}}
@@ -448,7 +449,7 @@
                           <p>"{{workout.description}}"</p>
 
                           <p style="font-size: medium">Exercises:</p>
-                          <div *ngFor='let exercise of exercisesForWorkouts3'>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
                             <mat-accordion>
                               <mat-expansion-panel>
                                 <mat-expansion-panel-header>
@@ -481,7 +482,7 @@
                     <p style="font-size: medium">Day 4:</p>
                     <div *ngFor='let workout of d4'>
                       <mat-accordion>
-                        <mat-expansion-panel>
+                        <mat-expansion-panel (opened)="getSelectedTSWorkoutExercises(workout.id, workout.version)" (closed)="closeExercises()">
                           <mat-expansion-panel-header>
                             <mat-panel-title style="font-size: large">
                               {{workout.name}}
@@ -495,7 +496,7 @@
                           <p>"{{workout.description}}"</p>
 
                           <p style="font-size: medium">Exercises:</p>
-                          <div *ngFor='let exercise of exercisesForWorkouts4'>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
                             <mat-accordion>
                               <mat-expansion-panel>
                                 <mat-expansion-panel-header>
@@ -528,7 +529,7 @@
                     <p style="font-size: medium">Day 5:</p>
                     <div *ngFor='let workout of d5'>
                       <mat-accordion>
-                        <mat-expansion-panel>
+                        <mat-expansion-panel (opened)="getSelectedTSWorkoutExercises(workout.id, workout.version)" (closed)="closeExercises()">
                           <mat-expansion-panel-header>
                             <mat-panel-title style="font-size: large">
                               {{workout.name}}
@@ -542,7 +543,7 @@
                           <p>"{{workout.description}}"</p>
 
                           <p style="font-size: medium">Exercises:</p>
-                          <div *ngFor='let exercise of exercisesForWorkouts5'>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
                             <mat-accordion>
                               <mat-expansion-panel>
                                 <mat-expansion-panel-header>
@@ -575,7 +576,7 @@
                     <p style="font-size: medium">Day 6:</p>
                     <div *ngFor='let workout of d6'>
                       <mat-accordion>
-                        <mat-expansion-panel>
+                        <mat-expansion-panel (opened)="getSelectedTSWorkoutExercises(workout.id, workout.version)" (closed)="closeExercises()">
                           <mat-expansion-panel-header>
                             <mat-panel-title style="font-size: large">
                               {{workout.name}}
@@ -589,7 +590,7 @@
                           <p>"{{workout.description}}"</p>
 
                           <p style="font-size: medium">Exercises:</p>
-                          <div *ngFor='let exercise of exercisesForWorkouts6'>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
                             <mat-accordion>
                               <mat-expansion-panel>
                                 <mat-expansion-panel-header>
@@ -622,7 +623,7 @@
                     <p style="font-size: medium">Day 7:</p>
                     <div *ngFor='let workout of d7'>
                       <mat-accordion>
-                        <mat-expansion-panel>
+                        <mat-expansion-panel (opened)="getSelectedTSWorkoutExercises(workout.id, workout.version)" (closed)="closeExercises()">
                           <mat-expansion-panel-header>
                             <mat-panel-title style="font-size: large">
                               {{workout.name}}
@@ -636,7 +637,7 @@
                           <p>"{{workout.description}}"</p>
 
                           <p style="font-size: medium">Exercises:</p>
-                          <div *ngFor='let exercise of exercisesForWorkouts7'>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
                             <mat-accordion>
                               <mat-expansion-panel>
                                 <mat-expansion-panel-header>

@@ -71,13 +71,13 @@ export class FindComponent implements OnInit {
   trainingScheduleFilter: TrainingScheduleFilter;
 
   interval: number;
-  d1: any = [];
-  d2: any = [];
-  d3: any = [];
-  d4: any = [];
-  d5: any = [];
-  d6: any = [];
-  d7: any = [];
+  d1: Array<any>;
+  d2: Array<any>
+  d3: Array<any>
+  d4: Array<any>
+  d5: Array<any>
+  d6: Array<any>
+  d7: Array<any>
   exercisesForWorkouts1: any;
   exercisesForWorkouts2: any;
   exercisesForWorkouts3: any;
@@ -85,6 +85,7 @@ export class FindComponent implements OnInit {
   exercisesForWorkouts5: any;
   exercisesForWorkouts6: any;
   exercisesForWorkouts7: any;
+  empty: any;
 
   // Router Objects
   selectedFP: FitnessProvider;
@@ -108,13 +109,6 @@ export class FindComponent implements OnInit {
       this.imagePath = this.fitnessProvider.imagePath;
       this.isDude = false;
     }
-    this.d1 = [];
-    this.d2 = [];
-    this.d3 = [];
-    this.d4 = [];
-    this.d5 = [];
-    this.d6 = [];
-    this.d7 = [];
   }
 
   startSearch(category: string) {
@@ -422,149 +416,24 @@ export class FindComponent implements OnInit {
     this.getAllWorkoutsPerDay(trainingSchedule);
   }
 
-  getSelectedTSWorkoutExercises(list: number, id: number, version: number) {
-    switch (list) {
-      case 1:
-        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-          (data) => {
-            console.log('get all exercises of workout ' + id);
-            this.exercisesForWorkouts1 = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            console.log(this.exercisesForWorkouts1.toString().toString());
-          },
-          error => {
-            this.error = error;
+  getSelectedTSWorkoutExercises(id: number, version: number) {
+    this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+      (data) => {
+        console.log('get all exercises of workout ' + id);
+        this.exercisesForWorkouts = data.sort(function (a, b) { // sort data alphabetically
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
           }
-        );
-        break;
-      case 2:
-        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-          (data) => {
-            console.log('get all exercises of workout ' + id);
-            this.exercisesForWorkouts2 = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            console.log(this.exercisesForWorkouts2.toString().toString());
-          },
-          error => {
-            this.error = error;
+          if (a.name > b.name) {
+            return 1;
           }
-        );
-        break;
-      case 3:
-        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-          (data) => {
-            console.log('get all exercises of workout ' + id);
-            this.exercisesForWorkouts3 = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            console.log(this.exercisesForWorkouts3.toString().toString());
-          },
-          error => {
-            this.error = error;
-          }
-        );
-        break;
-      case 4:
-        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-          (data) => {
-            console.log('get all exercises of workout ' + id);
-            this.exercisesForWorkouts4 = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            console.log(this.exercisesForWorkouts4.toString().toString());
-          },
-          error => {
-            this.error = error;
-          }
-        );
-        break;
-      case 5:
-        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-          (data) => {
-            console.log('get all exercises of workout ' + id);
-            this.exercisesForWorkouts5 = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            console.log(this.exercisesForWorkouts5.toString().toString());
-          },
-          error => {
-            this.error = error;
-          }
-        );
-        break;
-      case 6:
-        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-          (data) => {
-            console.log('get all exercises of workout ' + id);
-            this.exercisesForWorkouts6 = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            console.log(this.exercisesForWorkouts6.toString().toString());
-          },
-          error => {
-            this.error = error;
-          }
-        );
-        break;
-      case 7:
-        this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
-          (data) => {
-            console.log('get all exercises of workout ' + id);
-            this.exercisesForWorkouts7 = data.sort(function (a, b) { // sort data alphabetically
-              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            console.log(this.exercisesForWorkouts7.toString().toString());
-          },
-          error => {
-            this.error = error;
-          }
-        );
-        break;
-    }
+          return 0;
+        });
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
 
   convertDifficulty(element: any) {
@@ -573,6 +442,10 @@ export class FindComponent implements OnInit {
       case 2: return 'Advanced';
       case 3: return 'Pro';
     }
+  }
+
+  closeExercises() {
+    this.exercisesForWorkouts = this.empty;
   }
 
   setSelectedExercise(element: Exercise) {
@@ -664,10 +537,7 @@ export class FindComponent implements OnInit {
       case 1:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = data1;
-            for (let counter = 0; counter < data1.length; counter++) {
-              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
-            }
+            this.d1 = Array.from(data1);
           },
           error => {
             this.error = error;
@@ -677,10 +547,7 @@ export class FindComponent implements OnInit {
       case 2:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = data1;
-            for (let counter = 0; counter < data1.length; counter++) {
-              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
-            }
+            this.d1 = Array.from(data1);
           },
           error => {
             this.error = error;
@@ -688,10 +555,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = data2;
-            for (let counter = 0; counter < data2.length; counter++) {
-              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
-            }
+            this.d2 = Array.from(data2);
           },
           error => {
             this.error = error;
@@ -701,10 +565,7 @@ export class FindComponent implements OnInit {
       case 3:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = data1;
-            for (let counter = 0; counter < data1.length; counter++) {
-              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
-            }
+            this.d1 = Array.from(data1);
           },
           error => {
             this.error = error;
@@ -712,10 +573,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = data2;
-            for (let counter = 0; counter < data2.length; counter++) {
-              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
-            }
+            this.d2 = Array.from(data2);
           },
           error => {
             this.error = error;
@@ -723,10 +581,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = data3;
-            for (let counter = 0; counter < data3.length; counter++) {
-              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
-            }
+            this.d3 = Array.from(data3);
           },
           error => {
             this.error = error;
@@ -736,10 +591,7 @@ export class FindComponent implements OnInit {
       case 4:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = data1;
-            for (let counter = 0; counter < data1.length; counter++) {
-              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
-            }
+            this.d1 = Array.from(data1);
           },
           error => {
             this.error = error;
@@ -747,10 +599,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = data2;
-            for (let counter = 0; counter < data2.length; counter++) {
-              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
-            }
+            this.d2 = Array.from(data2);
           },
           error => {
             this.error = error;
@@ -758,10 +607,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = data3;
-            for (let counter = 0; counter < data3.length; counter++) {
-              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
-            }
+            this.d3 = Array.from(data3);
           },
           error => {
             this.error = error;
@@ -769,10 +615,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = data4;
-            for (let counter = 0; counter < data4.length; counter++) {
-              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
-            }
+            this.d4 = Array.from(data4);
           },
           error => {
             this.error = error;
@@ -782,10 +625,7 @@ export class FindComponent implements OnInit {
       case 5:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = data1;
-            for (let counter = 0; counter < data1.length; counter++) {
-              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
-            }
+            this.d1 = Array.from(data1);
           },
           error => {
             this.error = error;
@@ -793,10 +633,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = data2;
-            for (let counter = 0; counter < data2.length; counter++) {
-              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
-            }
+            this.d2 = Array.from(data2);
           },
           error => {
             this.error = error;
@@ -804,10 +641,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = data3;
-            for (let counter = 0; counter < data3.length; counter++) {
-              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
-            }
+            this.d3 = Array.from(data3);
           },
           error => {
             this.error = error;
@@ -815,10 +649,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = data4;
-            for (let counter = 0; counter < data4.length; counter++) {
-              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
-            }
+            this.d4 = Array.from(data4);
           },
           error => {
             this.error = error;
@@ -826,10 +657,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
           (data5) => {
-            this.d5 = data5;
-            for (let counter = 0; counter < data5.length; counter++) {
-              this.getSelectedTSWorkoutExercises(5, data5[counter].id, data5[counter].version);
-            }
+            this.d5 = Array.from(data5);
           },
           error => {
             this.error = error;
@@ -839,10 +667,7 @@ export class FindComponent implements OnInit {
       case 6:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = data1;
-            for (let counter = 0; counter < data1.length; counter++) {
-              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
-            }
+            this.d1 = Array.from(data1);
           },
           error => {
             this.error = error;
@@ -850,10 +675,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = data2;
-            for (let counter = 0; counter < data2.length; counter++) {
-              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
-            }
+            this.d2 = Array.from(data2);
           },
           error => {
             this.error = error;
@@ -861,10 +683,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = data3;
-            for (let counter = 0; counter < data3.length; counter++) {
-              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
-            }
+            this.d3 = Array.from(data3);
           },
           error => {
             this.error = error;
@@ -872,10 +691,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = data4;
-            for (let counter = 0; counter < data4.length; counter++) {
-              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
-            }
+            this.d4 = Array.from(data4);
           },
           error => {
             this.error = error;
@@ -883,10 +699,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
           (data5) => {
-            this.d5 = data5;
-            for (let counter = 0; counter < data5.length; counter++) {
-              this.getSelectedTSWorkoutExercises(5, data5[counter].id, data5[counter].version);
-            }
+            this.d5 = Array.from(data5);
           },
           error => {
             this.error = error;
@@ -894,10 +707,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
           (data6) => {
-            this.d6 = data6;
-            for (let counter = 0; counter < data6.length; counter++) {
-              this.getSelectedTSWorkoutExercises(6, data6[counter].id, data6[counter].version);
-            }
+            this.d6 = Array.from(data6);
           },
           error => {
             this.error = error;
@@ -907,10 +717,7 @@ export class FindComponent implements OnInit {
       case 7:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = data1;
-            for (let counter = 0; counter < data1.length; counter++) {
-              this.getSelectedTSWorkoutExercises(1, data1[counter].id, data1[counter].version);
-            }
+            this.d1 = Array.from(data1);
           },
           error => {
             this.error = error;
@@ -918,10 +725,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = data2;
-            for (let counter = 0; counter < data2.length; counter++) {
-              this.getSelectedTSWorkoutExercises(2, data2[counter].id, data2[counter].version);
-            }
+            this.d2 = Array.from(data2);
           },
           error => {
             this.error = error;
@@ -929,10 +733,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = data3;
-            for (let counter = 0; counter < data3.length; counter++) {
-              this.getSelectedTSWorkoutExercises(3, data3[counter].id, data3[counter].version);
-            }
+            this.d3 = Array.from(data3);
           },
           error => {
             this.error = error;
@@ -940,10 +741,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = data4;
-            for (let counter = 0; counter < data4.length; counter++) {
-              this.getSelectedTSWorkoutExercises(4, data4[counter].id, data4[counter].version);
-            }
+            this.d4 = Array.from(data4);
           },
           error => {
             this.error = error;
@@ -951,10 +749,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
           (data5) => {
-            this.d5 = data5;
-            for (let counter = 0; counter < data5.length; counter++) {
-              this.getSelectedTSWorkoutExercises(5, data5[counter].id, data5[counter].version);
-            }
+            this.d5 = Array.from(data5);
           },
           error => {
             this.error = error;
@@ -962,10 +757,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
           (data6) => {
-            this.d6 = data6;
-            for (let counter = 0; counter < data6.length; counter++) {
-              this.getSelectedTSWorkoutExercises(6, data6[counter].id, data6[counter].version);
-            }
+            this.d6 = Array.from(data6);
           },
           error => {
             this.error = error;
@@ -973,10 +765,7 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 7).subscribe(
           (data7) => {
-            this.d7 = data7;
-            for (let counter = 0; counter < data7.length; counter++) {
-              this.getSelectedTSWorkoutExercises(7, data7[counter].id, data7[counter].version);
-            }
+            this.d7 = Array.from(data7);
           },
           error => {
             this.error = error;
