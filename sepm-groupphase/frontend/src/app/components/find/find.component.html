@@ -33,11 +33,17 @@
                 <input ngbButton type="radio"(click)="resetResults()" value="Workout"> Workout
               </label>
               <label ngbButtonLabel class="btn-secondary">
+                <input ngbButton type="radio" (click)="resetResults()" value="Training Schedule"> Training Schedule
+              </label>
+
+              <label ngbButtonLabel class="btn-secondary">
                 <input ngbButton type="radio"(click)="resetResults()"  value="Dudes"> Dudes
               </label>
               <label ngbButtonLabel class="btn-secondary">
                 <input ngbButton type="radio"(click)="resetResults()"  value="Fitness Provider"> Fitness Provider
               </label>
+
+
             </div>
             <div class="card-body row no-gutters align-items-center">
               <!-- Search form -->
@@ -131,6 +137,36 @@
                 </div>
               </div>
               <!--end dropdown-->
+            </div>
+
+            <div *ngSwitchCase="'Training Schedule'">
+              <p>Filter for Training Schedule</p>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonTSDifficulty" data-toggle="dropdown" [(ngModel)]="filterTrainingDifficulty" ngDefaultControl>
+                  Category: {{filterTrainingDifficulty}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterTrainingDifficulty ='None' ; startSearch(category)">None</a>
+                  <a class="dropdown-item" (click)="filterTrainingDifficulty ='Beginner' ; startSearch(category)">Beginner</a>
+                  <a class="dropdown-item" (click)="filterTrainingDifficulty ='Advanced' ; startSearch(category)">Advanced</a>
+                  <a class="dropdown-item" (click)="filterTrainingDifficulty ='Pro' ; startSearch(category)">Pro</a>
+                </div>
+              </div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonTSInterval" data-toggle="dropdown" [(ngModel)]="filterTrainingInterval" ngDefaultControl>
+                  Interval Length: {{filterTrainingInterval}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='None' ; startSearch(category)">None</a>
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='1' ; startSearch(category)">1</a>
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='2' ; startSearch(category)">2</a>
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='3' ; startSearch(category)">3</a>
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='4' ; startSearch(category)">4</a>
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='5' ; startSearch(category)">5</a>
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='6' ; startSearch(category)">6</a>
+                  <a class="dropdown-item" (click)="filterTrainingInterval ='7' ; startSearch(category)">7</a>
+                </div>
+              </div>
             </div>
           </div>
           <!--end of col-->
@@ -274,6 +310,74 @@
                     <button type="button" (click)="followSelectedFitnessProvider(element)" class="btn btn-secondary" data-toggle="modal" data-target="#followModal">Follow</button>
                     </div>
                     <hr>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </li>
+            </ul>
+            <!--end case-->
+            <!--start case-->
+            <ul *ngSwitchCase="'Training Schedule'" style="list-style-type: none;">
+              <li>
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="getSelectedTrainingScheduleWorkouts(element)" *ngFor='let element of entriesTS'>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title style="font-size: large;">
+                        {{element.name}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
+                    <p>Interval Length: {{element.intervalLength}}</p>
+                    <hr>
+                    <p>"{{element.description}}"</p>
+                    <div *ngIf="isDude" class="fav">
+                      <button type="button" (click)="bookmarkTrainingSchedule(element)" class="btn btn-favourite" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-heart"></i></button>
+                    </div>
+                    <hr>
+                    <p style="font-size: medium">Workouts:</p>
+                    <div *ngFor='let workout of workoutsForTrainingSchedules'>
+                      <mat-accordion>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title style="font-size: large">
+                              {{workout.name}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <hr>
+                          <p>Calorie Consumption: {{workout.calorieConsumption}}</p>
+                          <p>Day: {{workout.day}}</p>
+                          <!--p>Difficulty: {{convertDifficulty(workout.difficulty_level)}}</p-->
+                          <hr>
+                          <p>"{{workout.description}}"</p>
+
+                          <p style="font-size: medium">Exercises:</p>
+                          <div *ngFor='let exercise of exercisesForWorkouts'>
+                            <mat-accordion>
+                              <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                  <mat-panel-title style="font-size: large">
+                                    {{exercise.name}}
+                                  </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <hr>
+                                <p>Category: {{exercise.category}}</p>
+                                <p>Muscle Group: {{exercise.muscleGroup}}</p>
+                                <!--p>Difficulty: {{convertDifficulty(exercise.difficulty_level)}}</p-->
+                                <hr>
+                                <p>Repetitions: {{exercise.repetitions}}</p>
+                                <p>Sets: {{exercise.sets}}</p>
+                                <hr>
+                                <p>Duration: {{exercise.exDuration}} minutes</p>
+                                <p>Equipment: {{exercise.equipment}}</p>
+                                <hr>
+                                <p>"{{exercise.description}}"</p>
+                              </mat-expansion-panel>
+                            </mat-accordion>
+                          </div>
+
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    </div>
                   </mat-expansion-panel>
                 </mat-accordion>
               </li>

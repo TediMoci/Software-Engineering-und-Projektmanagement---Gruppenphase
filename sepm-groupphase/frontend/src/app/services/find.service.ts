@@ -12,6 +12,8 @@ import {Workout} from '../dtos/workout';
 import {FitnessProvider} from '../dtos/fitness-provider';
 import {FitnessProviderFilter} from '../dtos/fitness-provider-filter';
 import {DudeFilter} from '../dtos/dude-filter';
+import {TrainingScheduleFilter} from '../dtos/training-schedule-filter';
+import {TrainingSchedule} from '../dtos/trainingSchedule';
 
 @Injectable({
   providedIn: 'root'
@@ -105,5 +107,23 @@ export class FindService {
   getOneFitnessProvider(creatorId: number): Observable<FitnessProvider> {
     console.log('Get creator of Course with id: ' + creatorId + ', ' + this.BaseUri + '/fitnessProvider/' + creatorId);
     return  this.httpClient.get<FitnessProvider>(this.BaseUri + '/fitnessProvider/' + creatorId);
+  }
+
+  getAllTrainingSchedulesFiltered(trainingScheduleFilter: TrainingScheduleFilter, dudeId: number): Observable<TrainingSchedule[]> {
+    console.log('get all training schedules');
+    let params = new HttpParams();
+    if (trainingScheduleFilter.filter != null) {
+      params = params.set('filter', trainingScheduleFilter.filter);
+    }
+    if (trainingScheduleFilter.difficulty != null) {
+      params = params.set('difficulty', trainingScheduleFilter.difficulty);
+    }
+    if (trainingScheduleFilter.intervalLength != null) {
+      params = params.set('intervalLength', trainingScheduleFilter.intervalLength);
+    }
+
+    console.log('get all training schedules with params: ' + params.toString());
+
+    return this.httpClient.get<TrainingSchedule[]>(this.BaseUri + '/trainingSchedule/filtered' + '/' + dudeId, {params: params});
   }
 }
