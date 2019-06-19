@@ -48,10 +48,9 @@ export class DudeProfileComponent implements OnInit {
   // original Schedule
   trainingSchedule: TrainingSchedule;
   tsName: string;
-  tsDiscription: string;
+  tsDescription: string;
   tsDifficulty: number;
   tsWorkouts: any;
-  tsDuration: number;
   tsIntervalLenght: number;
   tsTrue: boolean = false;
   // Sorted Workouts by day
@@ -120,7 +119,7 @@ export class DudeProfileComponent implements OnInit {
               this.trainingSchedule = data2;
               this.tsTrue = true;
               this.tsName = this.trainingSchedule.name;
-              this.tsDiscription = this.trainingSchedule.description;
+              this.tsDescription = this.trainingSchedule.description;
               this.tsDifficulty = this.trainingSchedule.difficulty;
               this.tsIntervalLenght = this.trainingSchedule.intervalLength;
               this.globalTimeDelta = this.getDateDifference(this.dateNow, this.startDate);
