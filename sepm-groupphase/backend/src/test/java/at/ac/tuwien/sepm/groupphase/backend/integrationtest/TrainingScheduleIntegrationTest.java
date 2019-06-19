@@ -7,8 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IActiveTrainingScheduleRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.ITrainingScheduleRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.*;
 import org.apache.http.HttpResponse;
 import org.junit.After;
 import org.junit.Before;
@@ -204,13 +203,6 @@ public class TrainingScheduleIntegrationTest {
 
     @After
     public void clearRepository(){
-        ResponseEntity<TrainingScheduleDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/1/trainingSchedules", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleDto[]>() {});
-        if (response != null && response.getBody() != null) {
-            for (TrainingScheduleDto t: response.getBody()) {
-                trainingScheduleRepository.delete(t.getId());
-            }
-        }
         activeTrainingScheduleRepository.deleteAll();
     }
 
@@ -272,8 +264,17 @@ public class TrainingScheduleIntegrationTest {
 
     @Test
     public void givenTwoTrainingSchedules_whenFindTrainingSchedulesByName_thenGetTrainingSchedules(){
-        TrainingScheduleDto a = postTrainingSchedule(trainingScheduleDto).getBody();
-        TrainingScheduleDto b = postTrainingSchedule(trainingScheduleDto2).getBody();
+        TrainingScheduleDto tsDto = new TrainingScheduleDto();
+        tsDto.setName("TrainingsSchedule1_SpecialName");
+        tsDto.setDescription(trainingScheduleDto.getDescription());
+        tsDto.setDifficulty(trainingScheduleDto.getDifficulty());
+        tsDto.setIntervalLength(trainingScheduleDto.getIntervalLength());
+        tsDto.setRating(trainingScheduleDto.getRating());
+        tsDto.setCreatorId(trainingScheduleDto.getCreatorId());
+        tsDto.setTrainingScheduleWorkouts(trainingScheduleDto.getTrainingScheduleWorkouts());
+
+        TrainingScheduleDto a = postTrainingSchedule(tsDto).getBody();
+        postTrainingSchedule(trainingScheduleDto2).getBody();
         TrainingScheduleDto[] foundTrainingSchedules = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1?name=" + a.getName(), TrainingScheduleDto[].class);
         for (TrainingScheduleDto tDto : foundTrainingSchedules) {
             assertEquals(tDto.getName(), a.getName());
