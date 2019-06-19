@@ -537,7 +537,11 @@ export class FindComponent implements OnInit {
       case 1:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = Array.from(data1);
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -547,7 +551,11 @@ export class FindComponent implements OnInit {
       case 2:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = Array.from(data1);
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -555,7 +563,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = Array.from(data2);
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -565,7 +577,11 @@ export class FindComponent implements OnInit {
       case 3:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = Array.from(data1);
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -573,7 +589,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = Array.from(data2);
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -581,7 +601,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = Array.from(data3);
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -591,7 +615,11 @@ export class FindComponent implements OnInit {
       case 4:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = Array.from(data1);
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -599,7 +627,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = Array.from(data2);
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -607,7 +639,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = Array.from(data3);
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -615,7 +651,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = Array.from(data4);
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -625,7 +665,11 @@ export class FindComponent implements OnInit {
       case 5:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = Array.from(data1);
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -633,7 +677,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = Array.from(data2);
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -641,7 +689,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = Array.from(data3);
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -649,7 +701,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = Array.from(data4);
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -657,7 +713,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
           (data5) => {
-            this.d5 = Array.from(data5);
+            this.d5 = data5.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -667,7 +727,11 @@ export class FindComponent implements OnInit {
       case 6:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = Array.from(data1);
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -675,7 +739,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = Array.from(data2);
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -683,7 +751,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = Array.from(data3);
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -691,7 +763,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = Array.from(data4);
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -699,7 +775,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
           (data5) => {
-            this.d5 = Array.from(data5);
+            this.d5 = data5.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });Array.from(data5);
           },
           error => {
             this.error = error;
@@ -707,7 +787,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
           (data6) => {
-            this.d6 = Array.from(data6);
+            this.d6 = data6.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -717,7 +801,11 @@ export class FindComponent implements OnInit {
       case 7:
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
           (data1) => {
-            this.d1 = Array.from(data1);
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -725,7 +813,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
           (data2) => {
-            this.d2 = Array.from(data2);
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -733,7 +825,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
           (data3) => {
-            this.d3 = Array.from(data3);
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -741,7 +837,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
           (data4) => {
-            this.d4 = Array.from(data4);
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -749,7 +849,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
           (data5) => {
-            this.d5 = Array.from(data5);
+            this.d5 = data5.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -757,7 +861,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
           (data6) => {
-            this.d6 = Array.from(data6);
+            this.d6 = data6.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -765,7 +873,11 @@ export class FindComponent implements OnInit {
         );
         this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 7).subscribe(
           (data7) => {
-            this.d7 = Array.from(data7);
+            this.d7 = data7.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
