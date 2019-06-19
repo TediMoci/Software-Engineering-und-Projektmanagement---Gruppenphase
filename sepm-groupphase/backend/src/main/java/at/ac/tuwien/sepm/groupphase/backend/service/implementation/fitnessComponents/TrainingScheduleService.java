@@ -762,10 +762,9 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         int repsHelpIncrease;
         int repsHelpDecrease;
         WorkoutExerciseHelp.WorkoutExerciseHelpBuilder builderWaExH = new WorkoutExerciseHelp.WorkoutExerciseHelpBuilder();
-
-        int calculateDurationPerRepetition = 0;
         WorkoutExercise e;
         Exercise exc;
+        int newDuration;
 
         for (WorkoutExerciseDone eDone : ex) {
             e = eDone.getWorkoutExercise();
@@ -774,7 +773,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
             if (!((exc.getCategory() == Category.Endurance || exc.getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1)) {
                 // calculate new number of repetitions
-                calculateDurationPerRepetition = (e.getRepetitions() * e.getSets()) / e.getExDuration();
+                double calculateDurationPerRepetition = ((double)e.getExDuration())/(((double)e.getRepetitions()) * ((double)e.getSets()));
+                LOGGER.debug("Duration per Repetition: " + calculateDurationPerRepetition);
                 repsHelpIncrease = BigDecimal.valueOf(e.getRepetitions() + (percentPerExDay * e.getRepetitions())).setScale(0, RoundingMode.HALF_UP).intValue();
                 repsHelpDecrease = BigDecimal.valueOf(e.getRepetitions() - (percentPerExDay * e.getRepetitions())).setScale(0, RoundingMode.HALF_UP).intValue();
 
@@ -785,26 +785,25 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         if (e.getSets() < 15) {
                             e.setRepetitions((int) Math.round((double) (repsHelpIncrease * e.getSets()) / (e.getSets() + 1)));
                             e.setSets(e.getSets() + 1);
-                            e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions() : 1440);
                         } else {
                             e.setRepetitions(100);
-                            e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions() : 1440);
                         }
                     } else {
                         e.setRepetitions(repsHelpIncrease);
-                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions() : 1440);
                     }
+                    newDuration = (int)(calculateDurationPerRepetition * (e.getRepetitions() * e.getSets()));
+                    e.setExDuration(newDuration > 1440 ? 1440 : newDuration);
                 } else {
                     if (repsHelpDecrease <= 1) {
                         if (e.getSets() > 1) {
                             e.setSets(e.getSets() - 1);
                             // repetitions stay the same, sets get decreased
-                            e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) > 1 ? calculateDurationPerRepetition * e.getRepetitions() : 1);
                         }
                     } else {
                         e.setRepetitions(repsHelpDecrease);
-                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) > 1 ? calculateDurationPerRepetition * e.getRepetitions() : 1);
                     }
+                    newDuration = (int)(calculateDurationPerRepetition * (e.getRepetitions() * e.getSets()));
+                    e.setExDuration(newDuration > 1? newDuration : 1);
                 }
 
                 LOGGER.debug("Update workoutExercise after adaptive change");
