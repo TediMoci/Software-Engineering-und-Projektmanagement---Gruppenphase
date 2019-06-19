@@ -421,4 +421,14 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(0, foundTrainingScheduleWorkouts.getBody().length);
     }
 
+    @Test
+    public void getActiveAdaptiveTrainingScheduleWhenChangeAdaptively_thenApplyChangeAndStatusOK(){
+
+    }
+
+    @Test
+    public void getActiveAdaptiveTrainingScheduleWhenChangeAdaptivelyAndProblemAccurs_thenStatusI_AM_A_TEAPOT(){
+
+    }
+
 }

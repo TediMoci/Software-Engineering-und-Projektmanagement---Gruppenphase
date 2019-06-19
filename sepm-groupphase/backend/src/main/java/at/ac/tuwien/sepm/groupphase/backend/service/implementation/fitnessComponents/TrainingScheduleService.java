@@ -858,6 +858,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         builder.difficulty(oldTs.getDifficulty());
         builder.intervalLength(oldTs.getIntervalLength());
         builder.rating(oldTs.getRating());
+        builder.isPrivate(true);
         builder.isHistory(true);
 
         for (TrainingScheduleWorkout tsWa : oldTs.getWorkouts()) {
@@ -869,6 +870,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderWa.calorieConsumption(tsWa.getWorkout().getCalorieConsumption());
             builderWa.rating(tsWa.getWorkout().getRating());
             builderWa.creator(activeTs.getDude());
+            builderWa.isPrivate(true);
             builderWa.isHistory(true);
 
             int tsWaDay;
