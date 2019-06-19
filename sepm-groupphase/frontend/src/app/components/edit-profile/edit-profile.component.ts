@@ -76,7 +76,7 @@ export class EditProfileComponent implements OnInit {
       birthday: ['', [Validators.required]],
       height: ['', [Validators.required]],
       weight: ['', [Validators.required]],
-      isPrivate: ['', [Validators.required]],
+      isPrivate: [this.oldDude.isPrivate, [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirmed: ['', Validators.required]
     }, {

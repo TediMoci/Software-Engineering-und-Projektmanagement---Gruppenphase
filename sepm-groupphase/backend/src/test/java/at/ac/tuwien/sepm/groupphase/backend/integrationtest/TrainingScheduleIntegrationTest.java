@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.FinishedTrainingScheduleStats;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
@@ -218,7 +219,6 @@ public class TrainingScheduleIntegrationTest {
         ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDto);
         activeTsDto.setTrainingScheduleId(tsResponse.getBody().getId());
         activeTsDto.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
-
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsDto);
         ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
@@ -254,7 +254,8 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(foundTrainingSchedule.getIntervalLength(), t.getIntervalLength());
         assertEquals(foundTrainingSchedule.getRating(), t.getRating());
         assertEquals(foundTrainingSchedule.getCreatorId(), t.getCreatorId());
-        assertEquals(foundTrainingSchedule.getTrainingScheduleWorkouts() != null? foundTrainingSchedule.getTrainingScheduleWorkouts().length : 0, t.getTrainingScheduleWorkouts() != null? t.getTrainingScheduleWorkouts().length : 0);
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> tsWa = REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + ts.getBody().getId() + "/" + ts.getBody().getVersion()+ "/workouts", HttpMethod.GET, null, TrainingScheduleWorkoutDtoOut[].class);
+        assertEquals(tsWa.getBody().length, trainingScheduleDto.getTrainingScheduleWorkouts().length);
         assertEquals(HttpStatus.OK, ts.getStatusCode());
     }
 
@@ -421,4 +422,32 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(0, foundTrainingScheduleWorkouts.getBody().length);
     }
 
+    @Test
+    public void whenTrainingScheduleEnds_ThenGetCorrectlyCalculatedValuesForStatistic (){
+        ActiveTrainingScheduleDto activeTrainingScheduleDto =  postTsAndActiveTs().getBody();
+
+        ResponseEntity<ExerciseDoneDto[]> exerciseDoneResponse = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTrainingScheduleDto.getDudeId() + "/activeTrainingSchedule/done",
+                HttpMethod.GET, null, ExerciseDoneDto[].class);
+        HttpEntity<ExerciseDoneDto[]> exercisesDoneRequest = new HttpEntity<>(exerciseDoneResponse.getBody());
+
+        exerciseDoneResponse.getBody()[1].setDone(true);
+        exerciseDoneResponse.getBody()[2].setDone(true);
+        exerciseDoneResponse.getBody()[5].setDone(true);
+
+        ResponseEntity markExercises = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/done",
+                HttpMethod.PUT, exercisesDoneRequest, ExerciseDoneDto[].class);
+
+        REST_TEMPLATE.delete(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active" + "/" + activeTrainingScheduleDto.getDudeId());
+
+        ResponseEntity<FinishedTrainingScheduleStatsDto[]> stats = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTrainingScheduleDto.getDudeId() + "/statistics", HttpMethod.GET, null, new ParameterizedTypeReference<FinishedTrainingScheduleStatsDto[]>(){});
+        assertEquals(  400, stats.getBody()[0].getTotalCalorieConsumption(),0.001);
+        assertEquals(3,stats.getBody()[0].getTotalDays(),0.001);
+        assertEquals(3.4166,stats.getBody()[0].getTotalHours(),0.001);
+        assertEquals(33.3333,stats.getBody()[0].getStrengthPercent(), 0.001);
+        assertEquals(66.6666,stats.getBody()[0].getEndurancePercent(), 0.001);
+
+    }
 }
