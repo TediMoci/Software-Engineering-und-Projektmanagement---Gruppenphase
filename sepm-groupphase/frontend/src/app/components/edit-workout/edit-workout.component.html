@@ -94,10 +94,10 @@
               </div>
             </div>
           </form>
-          <a [routerLink]="['/edit-workout-exercises']" (click)="editExercises()" class="btn2 btn-link">Edit Exercises</a>
+          <button [routerLink]="['/edit-workout-exercises']" (click)="editExercises()" class="btn btn-secondary">Edit Exercises</button>
         </div>
         <button type="button" (click)="editWorkout()" class="btn btn-success float-right">Edit</button>
-        <a (click)="backToCreateWorkout()" class="btn btn-link">Cancel</a>
+        <button (click)="backToCreateWorkout()" class="btn btn-link">Cancel</button>
         <p><small>Fields marked with * are mandatory!</small></p>
       </div>
     </div>
