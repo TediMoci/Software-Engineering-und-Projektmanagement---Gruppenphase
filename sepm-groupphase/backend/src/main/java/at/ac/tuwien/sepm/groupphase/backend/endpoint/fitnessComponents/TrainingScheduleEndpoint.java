@@ -183,7 +183,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
         List<TrainingScheduleWorkout> trainingScheduleWorkouts;
         try {
-            trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
+            trainingScheduleWorkouts = iTrainingScheduleService.findByIdAndVersion(id, version).getWorkouts();
         } catch (ServiceException e) {
             LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

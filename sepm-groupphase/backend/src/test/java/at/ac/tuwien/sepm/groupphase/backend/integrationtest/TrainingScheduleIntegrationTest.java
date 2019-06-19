@@ -423,6 +423,16 @@ public class TrainingScheduleIntegrationTest {
     }
 
     @Test
+    public void getActiveAdaptiveTrainingScheduleWhenChangeAdaptively_thenApplyChangeAndStatusOK(){
+
+    }
+
+    @Test
+    public void getActiveAdaptiveTrainingScheduleWhenChangeAdaptivelyAndProblemAccurs_thenStatusI_AM_A_TEAPOT(){
+
+    }
+
+    @Test
     public void whenTrainingScheduleEnds_ThenGetCorrectlyCalculatedValuesForStatistic (){
         ActiveTrainingScheduleDto activeTrainingScheduleDto =  postTsAndActiveTs().getBody();
 
