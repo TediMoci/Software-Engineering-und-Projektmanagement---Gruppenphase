@@ -281,4 +281,25 @@ public class TrainingScheduleIntegrationTest {
     }
      */
 
+    @Test
+    public void givenDudeAndTS_whenDudeBookmarksTS_thenTSInBookmarkedTSs() {
+        HttpEntity<TrainingScheduleDto> tsRequest = new HttpEntity<>(trainingScheduleDto);
+        ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDto);
+        Long tsId = tsResponse.getBody().getId();
+        Long dudeId = tsResponse.getBody().getCreatorId();
+
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/bookmark/" + dudeId + "/" + tsId + "/1", HttpMethod.PUT, null, Void.class);
+
+        ResponseEntity<TrainingScheduleDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + dudeId + "/bookmarks/trainingSchedules", HttpMethod.GET, null, TrainingScheduleDto[].class);
+        assertEquals(1, response.getBody().length);
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/bookmark/" + dudeId + "/" + tsId + "/1", HttpMethod.DELETE, null, Void.class);
+        trainingScheduleRepository.delete(tsId);
+        clearRepository();
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void givenDude_whenDudeBookmarksNonExistingTS_then400BadRequest() {
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/bookmark/" + 1 + "/" + 0 + "/1", HttpMethod.PUT, null, Void.class);
+    }
 }

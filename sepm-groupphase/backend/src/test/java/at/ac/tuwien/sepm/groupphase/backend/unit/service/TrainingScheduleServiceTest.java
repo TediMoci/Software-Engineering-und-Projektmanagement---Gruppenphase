@@ -6,11 +6,13 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,6 +47,12 @@ public class TrainingScheduleServiceTest {
 
     @MockBean
     private IActiveTrainingScheduleRepository activeTrainingScheduleRepository;
+
+    @MockBean
+    private TrainingScheduleBookmarkRepository trainingScheduleBookmarkRepository;
+
+    @MockBean
+    private IDudeRepository dudeRepository;
 
     @Autowired
     private ITrainingScheduleService trainingScheduleService;
@@ -92,5 +101,29 @@ public class TrainingScheduleServiceTest {
         ts.setName(validTrainingSchedule.getName());
         ts.setDifficulty(validTrainingSchedule.getDifficulty());
         // to be continued
+    }
+
+    @Test
+    public void whenBookmarkOneWorkout_thenSuccess() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<TrainingSchedule> optionalTS = Optional.of(validTrainingSchedule);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(trainingScheduleRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalTS);
+        Mockito.when(trainingScheduleBookmarkRepository.checkTrainingScheduleBookmark(1L, 1L, 1)).thenReturn(0);
+        trainingScheduleService.saveTrainingScheduleBookmark(1L, 1L, 1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenBookmarkOneAlreadyBookmarkedWorkout_thenServiceException() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<TrainingSchedule> optionalTS = Optional.of(validTrainingSchedule);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(trainingScheduleRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalTS);
+        Mockito.when(trainingScheduleBookmarkRepository.checkTrainingScheduleBookmark(1L, 1L, 1)).thenReturn(1);
+        trainingScheduleService.saveTrainingScheduleBookmark(1L, 1L, 1);
     }
 }
