@@ -84,9 +84,9 @@ export class EditWorkoutExercisesComponent implements OnInit {
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
     this.workoutExForm = this.formBuilder.group({
-      repetitions: ['', [Validators.required]],
-      sets: ['', [Validators.required]],
-      duration: ['', [Validators.required]]
+      repetitions: ['', [Validators.required,  Validators.min(1), Validators.max(200)]],
+      sets: ['', [Validators.required, Validators.min(1), Validators.max(20)]],
+      duration: ['', [Validators.required, Validators.min(1), Validators.max(1440)]]
     });
   }
 
@@ -122,6 +122,7 @@ export class EditWorkoutExercisesComponent implements OnInit {
   }
 
   setExData(element: WorkoutEx) {
+    this.submitted = true;
     this.index = this.chosenExercises.indexOf(element);
     if (!(this.workoutExForm.controls.repetitions.value === '')) {
       this.chosenExercises[this.index].repetitions = this.workoutExForm.controls.repetitions.value;

@@ -71,5 +71,7 @@ export class WorkoutComponent implements OnInit {
       return 'Public';
     }
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }

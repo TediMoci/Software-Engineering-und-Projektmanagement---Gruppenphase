@@ -1,9 +1,3 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <body>
 <div class="container-fluid">
 
@@ -29,7 +23,7 @@
               <input type="text" name="nameForCourse" maxlength="50" class="form-control" id="nameForCourse" formControlName="nameForCourse"
                      aria-describedby="nameForCourseHelp" placeholder="Enter name">
               <div *ngIf="submitted && !!registerForm.controls.nameForCourse.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForCourse.errors.required">Name is
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.nameForCourse.errors.required">Name is
                   required!
                 </small>
               </div>
@@ -41,7 +35,7 @@
                      aria-describedby="descriptionForCourseHelp" placeholder="Enter description" maxlength="3000" > </textarea>
               <span>{{3000 - registerForm.controls.descriptionForCourse.value.length}} left</span>
               <div *ngIf="submitted && !!registerForm.controls.descriptionForCourse.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForCourse.errors.required">Description is
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.descriptionForCourse.errors.required">Description is
                   required!
                 </small>
               </div>
@@ -75,6 +69,13 @@
           <div>
             <button class="btn btn-upload" (click)="file.click()">Upload Picture</button>
           </div>
+
+          <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+            <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
           <button type="button" (click)="addCourse()" class="btn btn-success float-right">Add</button>
           <a [routerLink]="['/create-for-FP']" class="btn btn-link">Cancel</a>
       </div>

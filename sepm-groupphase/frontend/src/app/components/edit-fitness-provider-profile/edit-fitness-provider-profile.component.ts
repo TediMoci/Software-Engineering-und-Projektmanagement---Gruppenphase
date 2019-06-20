@@ -42,8 +42,8 @@ export class EditFitnessProviderProfileComponent implements OnInit {
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      phoneNumber: ['', [Validators.required]],
-      website: ['', [Validators.required]],
+      phoneNumber: [''],
+      website: [''],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirmed: ['', Validators.required]

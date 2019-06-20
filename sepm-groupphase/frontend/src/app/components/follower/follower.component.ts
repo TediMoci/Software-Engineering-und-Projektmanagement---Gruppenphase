@@ -45,5 +45,7 @@ export class FollowerComponent implements OnInit {
   setSelectedDude(element: Dude) {
     localStorage.setItem('selectedDude', JSON.stringify(element));
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }

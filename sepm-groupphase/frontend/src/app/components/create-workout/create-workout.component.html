@@ -1,8 +1,3 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 <body>
 <div class="container-fluid">
 
@@ -18,7 +13,7 @@
       </div>
       <div class="col-sm-9">
         <div class="form">
-          <form [formGroup]="registerForm" (ngSubmit)="addCourse()">
+          <form [formGroup]="registerForm">
             <span class="anchor" id="formRegister"></span>
             <h1>Create Workout</h1>
 
@@ -27,7 +22,7 @@
               <input type="text" name="nameForWorkout" maxlength="50" class="form-control" id="nameForWorkout" formControlName="nameForWorkout"
                      aria-describedby="nnameForWorkoutHelp" ngModel="{{name}}">
               <div *ngIf="submitted && !!registerForm.controls.nameForWorkout.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForWorkout.errors.required">Name is
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.nameForWorkout.errors.required">Name is
                   required!
                 </small>
               </div>
@@ -39,7 +34,7 @@
                      aria-describedby="descriptionForWorkoutHelp" ngModel="{{description}}" maxlength="3000"></textarea>
               <span>{{3000 - registerForm.controls.descriptionForWorkout.value.length}} left</span>
               <div *ngIf="submitted && !!registerForm.controls.descriptionForWorkout.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForWorkout.errors.required">Description is
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.descriptionForWorkout.errors.required">Description is
                   required!
                 </small>
               </div>
@@ -63,7 +58,7 @@
                   <label class="custom-control-label" for="pro">Pro</label>
                 </div>
                 <div *ngIf="submitted && !!registerForm.controls.difficultyLevelWorkout.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.difficultyLevelWorkout.errors.required">Difficulty level is
+                  <small class="form-text text-danger" *ngIf="!!registerForm.controls.difficultyLevelWorkout.errors.required">Difficulty level is
                     required!
                   </small>
                 </div>
@@ -72,11 +67,19 @@
 
             <div class="form-group">
               <label for="calorieConsumption">Calorie consumption*</label>
-              <input knifeOnlyNumbers type="text" maxlength="4" name="calorieConsumption" class="form-control" id="calorieConsumption" formControlName="calorieConsumption"
+              <input knifeOnlyNumbers type="number" name="calorieConsumption" class="form-control" id="calorieConsumption" formControlName="calorieConsumption"
                      aria-describedby="calorieConsumptionHelp" ngModel="{{calorie}}">
               <div *ngIf="submitted && !!registerForm.controls.calorieConsumption.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.calorieConsumption.errors.required">Calorie consumption is
-                  required!
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.calorieConsumption.errors.required">Calorie
+                  consumption is required!
+                </small>
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.calorieConsumption.errors.min">Minimum calorie
+                  consumption must
+                  be at least 1!
+                </small>
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.calorieConsumption.errors.max">Maximum calorie
+                  consumption can
+                  be 9999 max!
                 </small>
               </div>
             </div>
@@ -96,13 +99,17 @@
                   <label class="custom-control-label" for="private">Private</label>
                 </div>
                 <div *ngIf="submitted && !!registerForm.controls.isPrivate.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.isPrivate.errors.required">Visibility of your workout is required!
+                  <small class="form-text text-danger" *ngIf="!!registerForm.controls.isPrivate.errors.required">Visibility of your workout is required!
                   </small>
                 </div>
               </div>
             </div>
-
           </form>
+          <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+            <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
           <button (click)="addExercises()" class="btn btn-secondary">Add Exercises</button>
         </div>
         <a [routerLink]="['/create']" (click)="removeFromLocalStorage()" class="btn btn-link">Cancel</a>

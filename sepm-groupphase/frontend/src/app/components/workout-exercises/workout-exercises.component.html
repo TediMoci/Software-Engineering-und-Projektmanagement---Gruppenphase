@@ -78,16 +78,20 @@
 
                           <div class="form-group">
                             <label for="repetitions">Repetitions</label>
-                            <input type="number" name="repetitions" maxlength="50" class="form-control" id="repetitions"
+                            <input type="number" name="repetitions" class="form-control" id="repetitions"
                                    formControlName="repetitions"
                                    aria-describedby="repetitionsHelp" placeholder="Enter number of repetitions">
                             <div *ngIf="submitted && !!workoutExForm.controls.repetitions.errors" class="error">
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.repetitions.errors.required">
                                 Number of repetitions is
                                 required!
                               </small>
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.repetitions.errors?.min">
+                                The minimum number of repetitions must be at least 1!
+                              </small>
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.repetitions.errors?.max">
                                 The maximum number of repetitions can only be 200!
                               </small>
@@ -99,13 +103,17 @@
                             <input type="number" name="sets" class="form-control" id="sets" formControlName="sets"
                                    aria-describedby="setsHelp" placeholder="Enter number of sets">
                             <div *ngIf="submitted && !!workoutExForm.controls.sets.errors" class="error">
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.sets.errors.required">
                                 Number
                                 of sets is
                                 required!
                               </small>
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.sets.errors.min">
+                                The minimum number of sets must be at least 1!
+                              </small>
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.sets.errors.max">
                                 The maximum number of sets can only be 20!
                               </small>
@@ -118,12 +126,16 @@
                                    formControlName="duration"
                                    aria-describedby="durationHelp" placeholder="Enter duration of exercise in minutes">
                             <div *ngIf="submitted && !!workoutExForm.controls.duration.errors" class="error">
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.duration.errors.required">
                                 Duration exercise is
                                 required!
                               </small>
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.duration.errors.min">
+                                The duration must be at least 1 minute!
+                              </small>
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.duration.errors.max">
                                 The duration cannot exceed 1440 minutes!
                               </small>

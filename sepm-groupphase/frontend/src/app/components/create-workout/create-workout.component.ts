@@ -49,7 +49,7 @@ export class CreateWorkoutComponent implements OnInit {
          nameForWorkout: ['', [Validators.required]],
          difficultyLevelWorkout: [this.difficulty, [Validators.required]],
          descriptionForWorkout: ['', [Validators.required]],
-         calorieConsumption: ['', [Validators.required]],
+         calorieConsumption: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
          isPrivate: [this.isPrivate, [Validators.required]]
        });
     } else {
@@ -57,7 +57,7 @@ export class CreateWorkoutComponent implements OnInit {
          nameForWorkout: ['', [Validators.required]],
          difficultyLevelWorkout: ['', [Validators.required]],
          descriptionForWorkout: ['', [Validators.required]],
-         calorieConsumption: ['', [Validators.required]],
+         calorieConsumption: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
          isPrivate: ['', [Validators.required]]
        });
      }

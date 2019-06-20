@@ -70,6 +70,8 @@ export class OwnCoursesComponent implements OnInit {
         }
       );
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }
 

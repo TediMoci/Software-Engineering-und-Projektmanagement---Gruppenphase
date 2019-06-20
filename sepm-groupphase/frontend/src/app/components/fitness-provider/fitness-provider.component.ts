@@ -61,5 +61,7 @@ export class FitnessProviderComponent implements OnInit {
   setSelectedCourse(element: Course) {
     localStorage.setItem('selectedCourse', JSON.stringify(element));
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }

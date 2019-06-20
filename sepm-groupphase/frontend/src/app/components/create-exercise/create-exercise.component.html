@@ -1,9 +1,3 @@
-
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 <body>
 <div class="container-fluid">
 
@@ -15,85 +9,96 @@
         <div class="row-sm-1"></div>
         <div class="row-sm-10">
           <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
-          <img class="img-exercise" [src]="imgURL" height="200" *ngIf="imgURL" alt="exercise image" >
+          <img class="img-exercise" [src]="imgURL" height="200" *ngIf="imgURL" alt="exercise image">
         </div>
       </div>
       <div class="col-sm-9">
         <div class="form">
           <form [formGroup]="registerForm" (ngSubmit)="addExercise()">
-          <span class="anchor" id="formRegister"></span>
+            <span class="anchor" id="formRegister"></span>
             <h1>Create Exercise</h1>
 
-          <div class="form-group">
-            <label for="nameForExercise">Name*</label>
-            <input type="text" name="nameForExercise" maxlength="50" class="form-control" id="nameForExercise" formControlName="nameForExercise"
-                   aria-describedby="nameForExerciseHelp" placeholder="Enter name">
-            <div *ngIf="submitted && !!registerForm.controls.nameForExercise.errors" class="error">
-              <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForExercise.errors.required">Name is
-                required!
-              </small>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="equipmentExercise">Equipment</label>
-            <input type="text" name="equipmentExercise" class="form-control" id="equipmentExercise" formControlName="equipmentExercise"
-                   aria-describedby="equipmentExercise" ngModel = "No needed equipment given">
-          </div>
-
-          <div class="form-group">
-            <span class="categoryExercise">Category*</span>
-            <div class="gap_space">
-              <div class= "custom-control custom-radio custom-control-inline">
-                <input id="endurance" type="radio" class="custom-control-input" value= "Endurance" name="categoryExercise" formControlName="categoryExercise">
-                <label class="custom-control-label" for="endurance">Endurance</label>
-              </div>
-
-              <div class="custom-control custom-radio custom-control-inline">
-                <input id="strength" type="radio" class="custom-control-input" value= "Strength" name="categoryExercise" formControlName="categoryExercise">
-                <label class="custom-control-label" for="strength">Strength</label>
-              </div>
-
-              <div class="custom-control custom-radio custom-control-inline">
-                <input id="other" type="radio" class="custom-control-input" value= "Other" name="categoryExercise" formControlName="categoryExercise">
-                <label class="custom-control-label" for="other">Other</label>
-              </div>
-
-              <div *ngIf="submitted && !!registerForm.controls.categoryExercise.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.categoryExercise.errors.required">Category is
+            <div class="form-group">
+              <label for="nameForExercise">Name*</label>
+              <input type="text" name="nameForExercise" maxlength="50" class="form-control" id="nameForExercise"
+                     formControlName="nameForExercise"
+                     aria-describedby="nameForExerciseHelp" placeholder="Enter name">
+              <div *ngIf="submitted && !!registerForm.controls.nameForExercise.errors" class="error">
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.nameForExercise.errors.required">
+                  Name is
                   required!
                 </small>
               </div>
             </div>
-          </div>
 
-              <div class="form-group">
-                <label for="descriptionForExercise">Description*</label>
-                <textarea type="text" name="descriptionForExercise" class="form-control" id="descriptionForExercise" formControlName="descriptionForExercise"
-                       aria-describedby="descriptionForExerciseHelp" placeholder="Enter description" maxlength="3000" > </textarea>
-                <span>{{3000 - registerForm.controls.descriptionForExercise.value.length}} left</span>
-                <div *ngIf="submitted && !!registerForm.controls.descriptionForExercise.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForExercise.errors.required">Description is
+            <div class="form-group">
+              <label for="equipmentExercise">Equipment</label>
+              <input type="text" name="equipmentExercise" class="form-control" id="equipmentExercise"
+                     formControlName="equipmentExercise"
+                     aria-describedby="equipmentExercise" ngModel="No needed equipment given">
+            </div>
+
+            <div class="form-group">
+              <span class="categoryExercise">Category*</span>
+              <div class="gap_space">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="endurance" type="radio" class="custom-control-input" value="Endurance"
+                         name="categoryExercise" formControlName="categoryExercise">
+                  <label class="custom-control-label" for="endurance">Endurance</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="strength" type="radio" class="custom-control-input" value="Strength"
+                         name="categoryExercise" formControlName="categoryExercise">
+                  <label class="custom-control-label" for="strength">Strength</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="other" type="radio" class="custom-control-input" value="Other" name="categoryExercise"
+                         formControlName="categoryExercise">
+                  <label class="custom-control-label" for="other">Other</label>
+                </div>
+
+                <div *ngIf="submitted && !!registerForm.controls.categoryExercise.errors" class="error">
+                  <small class="form-text text-danger"
+                         *ngIf="!!registerForm.controls.categoryExercise.errors.required">Category is
                     required!
                   </small>
                 </div>
               </div>
+            </div>
 
-              <div class="form-group">
-                <mat-form-field>
-                  <mat-label>Muscle Group*</mat-label >
-                  <mat-select formControlName="muscleGroupExercise">
-                    <mat-option *ngFor="let muscle of muscleGroup" [value]="muscle">
-                      {{muscle}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <div *ngIf="submitted && !!registerForm.controls.muscleGroupExercise.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.muscleGroupExercise.errors.required">Muscle Group is
-                    required!
-                  </small>
-                </div>
+            <div class="form-group">
+              <label for="descriptionForExercise">Description*</label>
+              <textarea type="text" name="descriptionForExercise" class="form-control" id="descriptionForExercise"
+                        formControlName="descriptionForExercise"
+                        aria-describedby="descriptionForExerciseHelp" placeholder="Enter description"
+                        maxlength="3000"> </textarea>
+              <span>{{3000 - registerForm.controls.descriptionForExercise.value.length}} left</span>
+              <div *ngIf="submitted && !!registerForm.controls.descriptionForExercise.errors" class="error">
+                <small class="form-text text-danger"
+                       *ngIf="!!registerForm.controls.descriptionForExercise.errors.required">Description is
+                  required!
+                </small>
               </div>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field>
+                <mat-label>Muscle Group*</mat-label>
+                <mat-select formControlName="muscleGroupExercise">
+                  <mat-option *ngFor="let muscle of muscleGroup" [value]="muscle">
+                    {{muscle}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div *ngIf="submitted && !!registerForm.controls.muscleGroupExercise.errors" class="error">
+                <small class="form-text text-danger"
+                       *ngIf="!!registerForm.controls.muscleGroupExercise.errors.required">Muscle Group is
+                  required!
+                </small>
+              </div>
+            </div>
 
             <div class="form-group">
               <span class="isPrivate">Visibility of your exercise*</span>
@@ -110,7 +115,8 @@
                   <label class="custom-control-label" for="private">Private</label>
                 </div>
                 <div *ngIf="submitted && !!registerForm.controls.isPrivate.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.isPrivate.errors.required">Visibility of your exercise is required!
+                  <small class="form-text text-danger" *ngIf="!!registerForm.controls.isPrivate.errors.required">
+                    Visibility of your exercise is required!
                   </small>
                 </div>
               </div>
@@ -118,7 +124,8 @@
 
           </form>
 
-          <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal" (change)="fileChangeEvent($event)" />
+          <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal"
+                 (change)="fileChangeEvent($event)"/>
           <div class="modal" id="cropModal">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
@@ -126,7 +133,8 @@
                 <div class="modal-header">
                   <h4 class="modal-title">Select a picture to upload for the exercise</h4>
                 </div>
-                <span  style="color:orange;  position: center; margin-left: auto; margin-right: auto; " *ngIf="message && crop">{{message}}</span>
+                <span style="color:orange;  position: center; margin-left: auto; margin-right: auto; "
+                      *ngIf="message && crop">{{message}}</span>
                 <image-cropper
                   [imageChangedEvent]="imageChangedEvent"
                   [maintainAspectRatio]="true"
@@ -137,21 +145,29 @@
                 ></image-cropper>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                  <button (click)= "cropPicture()" class="btn btn-success" data-dismiss="modal" >Crop </button>
+                  <button (click)="cropPicture()" class="btn btn-success" data-dismiss="modal">Crop</button>
                 </div>
               </div>
             </div>
           </div>
 
-        <div>
-          <button class="btn btn-upload" (click)="file.click()">Upload Picture</button>
-        </div>
+          <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+            <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div>
+            <button class="btn btn-upload" (click)="file.click()">Upload Picture</button>
+          </div>
 
           <button (click)="addExercise()" class="btn btn-success float-right">Add</button>
-            <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+          <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
         </div>
-        <p><small>Fields marked with * are mandatory!</small></p>
-        </div>
+        <p>
+          <small>Fields marked with * are mandatory!</small>
+        </p>
+      </div>
     </div>
   </div>
 </div>

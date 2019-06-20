@@ -10,6 +10,13 @@
           <h4 style="text-decoration: underline;">{{userName}}</h4>
         </div>
       </div>
+
+      <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+        <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
       <div class="col-sm-9">
         <h1>My Fitness Providers</h1>
         <p>Click on a name to see the details of the fitness provider. Scroll to see more fitness providers!</p>
@@ -20,7 +27,6 @@
           </li>
         </ul>
       </div>
-
     </div>
   </div>
 

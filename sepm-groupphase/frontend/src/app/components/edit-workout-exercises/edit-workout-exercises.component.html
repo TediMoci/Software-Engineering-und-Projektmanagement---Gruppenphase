@@ -1,8 +1,3 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
       integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
@@ -72,48 +67,72 @@
                         <button type="button" (click)="setExData(element)" class="btn btn-secondary"><i
                           class="fas fa-check"></i></button>
                       </p>
-                      <div class="form">
-                        <form [formGroup]="workoutExForm" (ngSubmit)="addCourse()">
+                      <div class="form-group">
+                        <form [formGroup]="workoutExForm">
                           <span class="anchor" id="workoutExForm"></span>
 
                           <div class="form-group">
                             <label for="repetitions">Repetitions</label>
-                            <input type="number" name="repetitions" maxlength="50" class="form-control" id="repetitions"
+                            <input knifeOnlyNumbers type="number" name="repetitions" class="form-control" id="repetitions"
                                    formControlName="repetitions"
                                    aria-describedby="repetitionsHelp" placeholder="Enter number of repetitions">
                             <div *ngIf="submitted && !!workoutExForm.controls.repetitions.errors" class="error">
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.repetitions.errors.required">
                                 Number of repetitions is
                                 required!
+                              </small>
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.repetitions.errors?.min">
+                                The minimum number of repetitions must be at least 1!
+                              </small>
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.repetitions.errors?.max">
+                                The maximum number of repetitions can only be 200!
                               </small>
                             </div>
                           </div>
 
                           <div class="form-group">
                             <label for="sets">Sets</label>
-                            <input type="number" name="sets" class="form-control" id="sets" formControlName="sets"
+                            <input knifeOnlyNumbers type="number" name="sets" class="form-control" id="sets" formControlName="sets"
                                    aria-describedby="setsHelp" placeholder="Enter number of sets">
                             <div *ngIf="submitted && !!workoutExForm.controls.sets.errors" class="error">
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.sets.errors.required">
                                 Number
                                 of sets is
                                 required!
+                              </small>
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.sets.errors.min">
+                                The minimum number of sets must be at least 1!
+                              </small>
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.sets.errors.max">
+                                The maximum number of sets can only be 20!
                               </small>
                             </div>
                           </div>
 
                           <div class="form-group">
                             <label for="duration">Duration</label>
-                            <input type="number" name="duration" class="form-control" id="duration"
+                            <input knifeOnlyNumbers type="number" name="duration" class="form-control" id="duration"
                                    formControlName="duration"
                                    aria-describedby="durationHelp" placeholder="Enter duration of exercise in minutes">
                             <div *ngIf="submitted && !!workoutExForm.controls.duration.errors" class="error">
-                              <small class="form-text text-warning"
+                              <small class="form-text text-danger"
                                      *ngIf="!!workoutExForm.controls.duration.errors.required">
                                 Duration exercise is
                                 required!
+                              </small>
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.duration.errors.min">
+                                The duration must be at least 1 minute!
+                              </small>
+                              <small class="form-text text-danger"
+                                     *ngIf="!!workoutExForm.controls.duration.errors.max">
+                                The duration cannot exceed 1440 minutes!
                               </small>
                             </div>
                           </div>
@@ -130,6 +149,13 @@
             </div>
           </form>
         </div>
+
+        <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+          <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
         <a [routerLink]="['/edit-workout']" (click)="backToCreateWorkout()" class="btn btn-link">Cancel</a>
         <button type="button" [routerLink]="['/edit-workout']" (click)="saveExercisesTemporarily()"
                 class="btn btn-success float-right">Confirm
