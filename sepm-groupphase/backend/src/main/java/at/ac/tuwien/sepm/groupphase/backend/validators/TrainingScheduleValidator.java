@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.validators;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents.TrainingScheduleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,15 +9,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class TrainingScheduleValidator {
 
-    String name_is_null = "Name must be set!";
-    String name_is_blank = "Name must not be blank!";
-    String description_is_null = "Description must not be null!";
-    String description_is_blank = "Description must not be null!";
-    String description_too_long = "Description can only be 3000 characters long";
-    String difficulty_is_null = "Difficulty must not be null!";
-    String invalid_difficulty = "Invalid difficulty level!";
-    String interval_length_is_null = "Interval length must not be null!";
-    String invalid_interval_length = "Interval length must be between 1 and 7!";
+    private String name_is_null = "Name must be set!";
+    private String name_is_blank = "Name must not be blank!";
+    private String description_is_null = "Description must not be null!";
+    private String description_is_blank = "Description must not be null!";
+    private String description_too_long = "Description can only be 3000 characters long";
+    private String difficulty_is_null = "Difficulty must not be null!";
+    private String invalid_difficulty = "Invalid difficulty level!";
+    private String interval_length_is_null = "Interval length must not be null!";
+    private String invalid_interval_length = "Interval length must be between 1 and 7!";
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleValidator.class);
 
     public void validateTrainingSchedule(TrainingSchedule trainingSchedule) throws ValidationException {

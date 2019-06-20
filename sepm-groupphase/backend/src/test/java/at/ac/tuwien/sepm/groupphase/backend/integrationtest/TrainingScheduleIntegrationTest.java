@@ -554,4 +554,66 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(33.3333,stats.getBody()[0].getStrengthPercent(), 0.001);
         assertEquals(66.6666,stats.getBody()[0].getEndurancePercent(), 0.001);
     }
+
+    @Test
+    public void whenUpdateOneTrainingSchedule_then200OkAndGetUpdatedTrainingSchedule() {
+        HttpEntity<TrainingScheduleDto> trainingScheduleRequest1 = new HttpEntity<>(trainingScheduleDto);
+        ResponseEntity<TrainingScheduleDto> trainingScheduleResponse1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT, HttpMethod.POST, trainingScheduleRequest1, TrainingScheduleDto.class);
+        Long savedTrainingScheduleId = trainingScheduleResponse1.getBody().getId();
+        HttpEntity<TrainingScheduleDto> trainingScheduleRequest2 = new HttpEntity<>(trainingScheduleDto2);
+        ResponseEntity<TrainingScheduleDto> trainingScheduleResponse2 = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + savedTrainingScheduleId, HttpMethod.PUT, trainingScheduleRequest2, TrainingScheduleDto.class);
+        assertEquals(HttpStatus.OK, trainingScheduleResponse2.getStatusCode());
+        TrainingScheduleDto responseTrainingScheduleDto = trainingScheduleResponse2.getBody();
+        assertEquals(savedTrainingScheduleId, responseTrainingScheduleDto.getId());
+        assertEquals((Integer)2, responseTrainingScheduleDto.getVersion());
+        responseTrainingScheduleDto.setId(trainingScheduleDto2.getId());
+        responseTrainingScheduleDto.setVersion(trainingScheduleDto2.getVersion());
+        responseTrainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleDto2.getTrainingScheduleWorkouts());
+        responseTrainingScheduleDto.setId(null);
+        assertEquals(trainingScheduleDto2, responseTrainingScheduleDto);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenUpdateOneTrainingScheduleWithInvalidId_then400BadRequest() {
+        HttpEntity<TrainingScheduleDto> trainingScheduleRequest = new HttpEntity<>(trainingScheduleDto2);
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/101", HttpMethod.PUT, trainingScheduleRequest, TrainingScheduleDto.class);
+    }
+
+    @Test
+    public void givenFindAllTrainingSchedules_whenCreateOneMoreTrainingSchedule_thenStatus200AndGetOneMoreTrainingSchedule(){
+        postTrainingSchedule(trainingScheduleDto);
+        postTrainingSchedule(trainingScheduleDto2);
+        ResponseEntity<TrainingScheduleDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/filtered/0", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleDto[]>() {
+            });
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        int foundTrainingSchedulesLength = response.getBody().length;
+
+        postTrainingSchedule(trainingScheduleDto2);
+        ResponseEntity<TrainingScheduleDto[]> responseAfter = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/filtered/0", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleDto[]>() {
+            });
+        assertEquals(responseAfter.getBody().length, foundTrainingSchedulesLength+1);
+    }
+
+    @Test
+    public void givenAllTrainingSchedules_whenDeleteOneTraningSchedule_thenGetArrayWithOneLessTraningSchedule(){
+        ResponseEntity<TrainingScheduleDto> trainingSchedule1 = postTrainingSchedule(trainingScheduleDto);
+        ResponseEntity<TrainingScheduleDto> trainingSchedule2 = postTrainingSchedule(trainingScheduleDto2);
+        TrainingScheduleDto[] foundTrainingSchedulesInitial = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/filtered/0", TrainingScheduleDto[].class);
+        int foundSize = foundTrainingSchedulesInitial.length;
+        REST_TEMPLATE.delete(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + trainingSchedule1.getBody().getId());
+        TrainingScheduleDto[] foundAfterOneTrainingScheduleDeleted = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/filtered/0", TrainingScheduleDto[].class);
+        assertEquals(foundSize-1, foundAfterOneTrainingScheduleDeleted.length);
+        REST_TEMPLATE.delete(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + trainingSchedule2.getBody().getId());
+        TrainingScheduleDto[] foundAfterTwoTrainingSchedulesDeleted = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/filtered/0", TrainingScheduleDto[].class);
+        assertEquals(foundSize-2, foundAfterTwoTrainingSchedulesDeleted.length);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void givenNothing_whenDeleteOneTrainingSchedule_then400BadRequest(){
+        REST_TEMPLATE.delete(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100");
+    }
 }

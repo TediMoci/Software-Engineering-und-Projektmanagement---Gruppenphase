@@ -1,11 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.ActiveTrainingScheduleDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
-import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
@@ -30,11 +28,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
