@@ -15,8 +15,7 @@ import {WorkoutExerciseDtoIn} from '../../dtos/workoutExerciseDtoIn';
 export class CreateWorkoutComponent implements OnInit {
 
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
-  imagePathExercise: string = 'assets/img/exercise.png';
+  imagePath: string;
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
@@ -27,6 +26,7 @@ export class CreateWorkoutComponent implements OnInit {
   description: string;
   calorie: number;
   difficulty: number;
+  isPrivate: boolean;
   prevRoute: string;
 
   constructor(private createWorkoutService: CreateWorkoutService , private formBuilder: FormBuilder, private router: Router ) {
@@ -35,6 +35,7 @@ export class CreateWorkoutComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.prevRoute = JSON.parse(localStorage.getItem('previousRoute'));
     console.log(this.prevRoute);
 
@@ -43,19 +44,21 @@ export class CreateWorkoutComponent implements OnInit {
       this.description = JSON.parse(localStorage.getItem('descriptionForWorkout'));
       this.calorie = JSON.parse(localStorage.getItem('calorieConsumption'));
       this.difficulty = JSON.parse(localStorage.getItem('difficulty'));
-
+      this.isPrivate = JSON.parse(localStorage.getItem('visibility'));
        this.registerForm = this.formBuilder.group({
          nameForWorkout: ['', [Validators.required]],
          difficultyLevelWorkout: [this.difficulty, [Validators.required]],
          descriptionForWorkout: ['', [Validators.required]],
-         calorieConsumption: ['', [Validators.required]]
+         calorieConsumption: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
+         isPrivate: [this.isPrivate, [Validators.required]]
        });
     } else {
        this.registerForm = this.formBuilder.group({
          nameForWorkout: ['', [Validators.required]],
          difficultyLevelWorkout: ['', [Validators.required]],
          descriptionForWorkout: ['', [Validators.required]],
-         calorieConsumption: ['', [Validators.required]]
+         calorieConsumption: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
+         isPrivate: ['', [Validators.required]]
        });
      }
 
@@ -67,6 +70,7 @@ export class CreateWorkoutComponent implements OnInit {
     localStorage.setItem('descriptionForWorkout', JSON.stringify(this.registerForm.controls.descriptionForWorkout.value));
     localStorage.setItem('calorieConsumption', JSON.stringify(this.registerForm.controls.calorieConsumption.value));
     localStorage.setItem('difficulty', JSON.stringify(this.registerForm.controls.difficultyLevelWorkout.value));
+    localStorage.setItem('visibility', JSON.stringify(this.registerForm.controls.isPrivate.value));
     this.router.navigate(['/workout-exercises']);
   }
     addWorkout() {
@@ -98,7 +102,8 @@ export class CreateWorkoutComponent implements OnInit {
       this.registerForm.controls.difficultyLevelWorkout.value,
       this.registerForm.controls.calorieConsumption.value,
       this.exercisesWorkoutIn,
-      this.dude.id
+      this.dude.id,
+      this.registerForm.controls.isPrivate.value,
     );
 
     if (this.registerForm.invalid) {

@@ -13,10 +13,10 @@ export class WorkoutExercisesService {
   private dudeBaseUri: string = this.globals.backendUri + '/dudes';
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
-  getExercisesByName(name: string): Observable<Exercise[]> {
+  getExercisesByName(name: string, dudeId: number): Observable<Exercise[]> {
     console.log('get all exercises by name ' + name);
     const params = new HttpParams().set('name', name);
-    return this.httpClient.get<Exercise[]>(this.exerciseBaseUri, {params: params});
+    return this.httpClient.get<Exercise[]>(this.exerciseBaseUri + '/' + dudeId, {params: params});
   }
 
 }

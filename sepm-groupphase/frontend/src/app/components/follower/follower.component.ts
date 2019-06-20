@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 })
 export class FollowerComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch2.jpg';
+  imagePath: string;
   userName: string;
   fitnessProvider: FitnessProvider;
   followers: any;
@@ -22,6 +22,7 @@ export class FollowerComponent implements OnInit {
 
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.fitnessProvider.name;
+    this.imagePath = this.fitnessProvider.imagePath;
     this.followerService.getAllFollowersOfFP(this.fitnessProvider).subscribe(
       (data) => {
         console.log('get all followers of fitness provider with name ' + this.fitnessProvider.name + ' and id ' + this.fitnessProvider.id);
@@ -44,5 +45,7 @@ export class FollowerComponent implements OnInit {
   setSelectedDude(element: Dude) {
     localStorage.setItem('selectedDude', JSON.stringify(element));
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }

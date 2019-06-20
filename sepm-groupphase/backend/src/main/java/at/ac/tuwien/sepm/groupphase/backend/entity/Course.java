@@ -20,6 +20,9 @@ public class Course {
     private String description = "No description given.";
 
     @Column(nullable = false)
+    private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
+
+    @Column(nullable = false)
     @Min(0)
     private Integer ratingSum = 0;
 
@@ -31,8 +34,8 @@ public class Course {
     @JoinColumn(name = "fitness_provider_id")
     private FitnessProvider creator;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "courses")
-    private List<Dude> dudes;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "courseBookmarks")
+    private List<Dude> bookmarkDudes;
 
     public Long getId() {
         return id;
@@ -58,6 +61,14 @@ public class Course {
         this.description = description;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public FitnessProvider getCreator() {
         return creator;
     }
@@ -66,12 +77,12 @@ public class Course {
         this.creator = creator;
     }
 
-    public List<Dude> getDudes() {
-        return dudes;
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
     }
 
-    public void setDudes(List<Dude> dudes) {
-        this.dudes = dudes;
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
     }
 
     public Integer getRatingSum() {
@@ -123,17 +134,21 @@ public class Course {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getRatingSum(), getRatingNum(), getCreator(), getDudes());
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
     }
 
     public static final class CourseBuilder {
         private Long id;
         private String name;
         private String description;
+        private String imagePath;
         private Integer ratingNum;
         private Integer ratingSum;
         private FitnessProvider creator;
-        private List<Dude> dudes;
+        private List<Dude> bookmarkDudes;
 
         public CourseBuilder() {
         }
@@ -153,11 +168,18 @@ public class Course {
             return this;
         }
 
+        public CourseBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public CourseBuilder creator(FitnessProvider creator) {
             this.creator = creator;
             return this;
         }
 
+        public CourseBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
         public CourseBuilder ratingNum(Integer ratingNum) {
             this.ratingNum = ratingNum;
             return this;
@@ -178,10 +200,11 @@ public class Course {
             course.setId(id);
             course.setName(name);
             course.setDescription(description);
+            course.setImagePath(imagePath);
             course.setRatingNum(ratingNum);
             course.setRatingNum(ratingSum);
             course.setCreator(creator);
-            course.setDudes(dudes);
+            course.setBookmarkDudes(bookmarkDudes);
             return course;
         }
     }

@@ -27,6 +27,7 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.ratingNum(0);
         builder.ratingSum(0);
         builder.isHistory(false);
+        builder.isPrivate(trainingScheduleDto.getIsPrivate());
 
         List<TrainingScheduleWorkout> trainingScheduleWorkouts = new ArrayList<>();
         TrainingScheduleWorkout.TrainingScheduleWorkoutBuilder trainingScheduleWorkoutBuilder;
@@ -59,6 +60,8 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingSchedule.getDescription());
         builder.difficulty(trainingSchedule.getDifficulty());
         builder.intervalLength(trainingSchedule.getIntervalLength());
+        builder.rating(trainingSchedule.getRating());
+        builder.isPrivate(trainingSchedule.getIsPrivate());
 
         if (trainingSchedule.getRatingNum()==0){
             builder.rating(0.0);
@@ -81,6 +84,8 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingScheduleWorkout.getWorkout().getDescription());
         builder.difficulty(trainingScheduleWorkout.getWorkout().getDifficulty());
         builder.calorieConsumption(trainingScheduleWorkout.getWorkout().getCalorieConsumption());
+        builder.rating(trainingScheduleWorkout.getWorkout().getRating());
+        builder.isPrivate(trainingScheduleWorkout.getWorkout().getIsPrivate());
 
         if (trainingScheduleWorkout.getWorkout().getRatingNum()==0){
             builder.rating(0.0);

@@ -55,6 +55,21 @@ public interface IDudeService {
     Dude update(String name, Dude newDude) throws ServiceException;
 
     /**
+     * @param name of the Dude
+     * @param isPrivate gives if the Dude wants his profile to be private or not
+     * @return the updated value of isPrivate
+     * @throws ServiceException if something went wrong while updating isPrivate in the system
+     */
+    Boolean updateIsPrivate(String name, Boolean isPrivate) throws ServiceException;
+
+    /**
+     * @param id of the Dude
+     * @param fileName of the image in the path
+     * @return the full image-path
+     * @throws ServiceException if something went wrong while updating the imagePath in the system
+     */
+    String updateImagePath(Long id, String fileName) throws ServiceException;
+    /**
      * @param dudeId of the Dude
      * @param fitnessProviderId of the FitnessProvider that the Dude wants to follow
      * @throws ServiceException if an error occurred while trying to follow the FitnessProvider
@@ -69,4 +84,5 @@ public interface IDudeService {
     void unfollowFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException;
 
     List<Dude> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
+
 }

@@ -12,8 +12,8 @@ import {Course} from '../../dtos/course';
 })
 export class FitnessProviderComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
-  imagePath2: string = '/assets/img/exercise.png';
+  imagePath: string;
+  imagePath2: string;
   userName: string;
   fitnessProviderName: string;
   description: string;
@@ -31,7 +31,9 @@ export class FitnessProviderComponent implements OnInit {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.fitnessProvider = JSON.parse(localStorage.getItem('selectedFitnessProvider'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.fitnessProviderName = this.fitnessProvider.name;
+    this.imagePath2 = this.fitnessProvider.imagePath;
     this.description = this.fitnessProvider.description;
     this.address = this.fitnessProvider.address;
     this.email = this.fitnessProvider.email;
@@ -59,5 +61,7 @@ export class FitnessProviderComponent implements OnInit {
   setSelectedCourse(element: Course) {
     localStorage.setItem('selectedCourse', JSON.stringify(element));
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }

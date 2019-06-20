@@ -63,8 +63,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/dude-profile']);
       },
       error => {
-        console.log(authRequest);
-        console.log('Could not log in due to: ' + error.message);
+        console.log('Could not log in due to: ' + error);
         this.error = error;
       }
     );

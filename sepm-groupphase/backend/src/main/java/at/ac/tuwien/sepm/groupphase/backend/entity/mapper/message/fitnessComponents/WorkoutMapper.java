@@ -26,6 +26,7 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.ratingNum(0);
         builder.ratingSum(0);
         builder.isHistory(false);
+        builder.isPrivate(workoutDto.getIsPrivate());
 
         List<WorkoutExercise> workoutExercises = new ArrayList<>();
         WorkoutExercise.WorkoutExerciseBuilder workoutExerciseBuilder;
@@ -60,6 +61,8 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.description(workout.getDescription());
         builder.difficulty(workout.getDifficulty());
         builder.calorieConsumption(workout.getCalorieConsumption());
+        builder.rating(workout.getRating());
+        builder.isPrivate(workout.getIsPrivate());
 
         if (workout.getRatingNum()==0){
             builder.rating(0.0);
@@ -90,6 +93,8 @@ public class WorkoutMapper implements IWorkoutMapper {
         }
 
         builder.category(workoutExercise.getExercise().getCategory());
+        builder.imagePath(workoutExercise.getExercise().getImagePath());
+        builder.isPrivate(workoutExercise.getExercise().getIsPrivate());
         builder.creatorName(workoutExercise.getExercise().getCreator().getName());
         builder.exDuration(workoutExercise.getExDuration());
         builder.repetitions(workoutExercise.getRepetitions());

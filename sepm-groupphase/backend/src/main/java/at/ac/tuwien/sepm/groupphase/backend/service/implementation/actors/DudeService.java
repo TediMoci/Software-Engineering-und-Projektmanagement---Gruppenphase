@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
+import at.ac.tuwien.sepm.groupphase.backend.exception.FileStorageException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.FollowFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
 import java.math.BigDecimal;
@@ -30,14 +33,16 @@ public class DudeService implements IDudeService {
     private final IDudeRepository iDudeRepository;
     private final IFitnessProviderRepository iFitnessProviderRepository;
     private final FollowFitnessProviderRepository followFitnessProviderRepository;
+    private final FileStorageRepository fileStorageRepository;
     private final DudeValidator dudeValidator;
     private final PasswordEncoder passwordEncoder;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeService.class);
 
-    public DudeService(IDudeRepository iDudeRepository, IFitnessProviderRepository iFitnessProviderRepository, FollowFitnessProviderRepository followFitnessProviderRepository, DudeValidator dudeValidator, PasswordEncoder passwordEncoder) {
+    public DudeService(IDudeRepository iDudeRepository, IFitnessProviderRepository iFitnessProviderRepository, FollowFitnessProviderRepository followFitnessProviderRepository, FileStorageRepository fileStorageRepository, DudeValidator dudeValidator, PasswordEncoder passwordEncoder) {
         this.iDudeRepository = iDudeRepository;
         this.iFitnessProviderRepository = iFitnessProviderRepository;
         this.followFitnessProviderRepository = followFitnessProviderRepository;
+        this.fileStorageRepository = fileStorageRepository;
         this.dudeValidator = dudeValidator;
         this.passwordEncoder = passwordEncoder;
     }
@@ -78,12 +83,22 @@ public class DudeService implements IDudeService {
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
+        Dude savedDude;
         try {
-            return iDudeRepository.save(dude);
+            savedDude = iDudeRepository.save(dude);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
 
+        String fileName = "dude_" + savedDude.getId() + ".png";
+        try {
+            MultipartFile multipartFile = fileStorageRepository.loadMultipartFile("kugelfisch.png");
+            fileStorageRepository.storeFile(fileName, multipartFile);
+        } catch (FileStorageException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        savedDude.setImagePath(updateImagePath(savedDude.getId(), fileName));
+        return savedDude;
     }
 
     /**
@@ -137,6 +152,7 @@ public class DudeService implements IDudeService {
             oldDude.setBirthday(newDude.getBirthday());
             oldDude.setHeight(newDude.getHeight());
             oldDude.setWeight(newDude.getWeight());
+            oldDude.setIsPrivate(newDude.getIsPrivate());
             dudeValidator.validateDude(oldDude);
             return iDudeRepository.save(oldDude);
 
@@ -144,6 +160,16 @@ public class DudeService implements IDudeService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public Boolean updateIsPrivate(String name, Boolean isPrivate) throws ServiceException {
+        Dude dude = findByName(name);
+        if (dude==null) throw new ServiceException("There is no dude with that name in the database.");
+        dude.setIsPrivate(isPrivate);
+        iDudeRepository.save(dude);
+        return isPrivate;
+    }
+
 
     @Override
     public void followFitnessProvider(Long dudeId, Long fitnessProviderId) throws ServiceException {
@@ -193,5 +219,20 @@ public class DudeService implements IDudeService {
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    @Override
+    public String updateImagePath(Long id, String fileName) throws ServiceException {
+        LOGGER.info("Entering updateImagePath with id: " + id + "; fileName: " + fileName);
+        Dude dude;
+        try {
+            dude = iDudeRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        String imagePath = "http://localhost:8080/downloadImage/" + fileName;
+        dude.setImagePath(imagePath);
+        iDudeRepository.save(dude);
+        return imagePath;
     }
 }

@@ -8,7 +8,7 @@ import {FitnessProvider} from '../../dtos/fitness-provider';
 })
 export class CreateForFitnessProviderComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch2.jpg';
+  imagePath: string;
   userName: string;
   fitnessProvider: FitnessProvider;
   constructor() { }
@@ -17,6 +17,6 @@ export class CreateForFitnessProviderComponent implements OnInit {
 
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.fitnessProvider.name;
+    this.imagePath = this.fitnessProvider.imagePath;
   }
-
 }

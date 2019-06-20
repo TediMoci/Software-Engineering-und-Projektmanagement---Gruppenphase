@@ -12,7 +12,7 @@
       </div>
       <div class="col-sm-9">
         <h1>My Followers</h1>
-        <p>Click on a name to see the details of the follower. Scroll to see more followers!</p>
+        <p>Click on a name to see the details of the follower (private followers are not shown). Scroll to see more followers!</p>
         <ul>
           <li *ngFor='let element of followers'>
             <a [routerLink]="['/follower-dude']" (click)="setSelectedDude(element)" class="btn2 btn-link">{{element.name}}</a>
@@ -20,6 +20,11 @@
         </ul>
       </div>
 
+      <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+        <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
     </div>
   </div>
 

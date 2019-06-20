@@ -14,7 +14,7 @@ import {WorkoutExercise} from '../../dtos/workoutExercise';
 })
 export class EditWorkoutExercisesComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   registerForm: FormGroup;
@@ -61,10 +61,13 @@ export class EditWorkoutExercisesComponent implements OnInit {
                 this.gottenExercises[counter].equipment,
                 this.gottenExercises[counter].muscleGroup,
                 this.gottenExercises[counter].category,
-                this.gottenExercises[counter].creatorId),
+                this.gottenExercises[counter].creatorId,
+                this.gottenExercises[counter].imagePath,
+                this.gottenExercises[counter].isPrivate),
                 this.gottenExercises[counter].repetitions,
                 this.gottenExercises[counter].sets,
-                this.gottenExercises[counter].exDuration));
+                this.gottenExercises[counter].exDuration,
+               ));
         }
       }
       localStorage.setItem('firstAccess', JSON.stringify('false'));
@@ -79,10 +82,11 @@ export class EditWorkoutExercisesComponent implements OnInit {
     });
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.workoutExForm = this.formBuilder.group({
-      repetitions: ['', [Validators.required]],
-      sets: ['', [Validators.required]],
-      duration: ['', [Validators.required]]
+      repetitions: ['', [Validators.required,  Validators.min(1), Validators.max(200)]],
+      sets: ['', [Validators.required, Validators.min(1), Validators.max(20)]],
+      duration: ['', [Validators.required, Validators.min(1), Validators.max(1440)]]
     });
   }
 
@@ -96,7 +100,7 @@ export class EditWorkoutExercisesComponent implements OnInit {
 
   findExercisesByName() {
     this.exerciseName = this.registerForm.value.name;
-    this.workoutExercisesService.getExercisesByName(this.exerciseName).subscribe(
+    this.workoutExercisesService.getExercisesByName(this.exerciseName, this.dude.id).subscribe(
       (data) => {
         console.log('get all exercises by name ' + this.exerciseName);
         console.log(data);
@@ -118,6 +122,7 @@ export class EditWorkoutExercisesComponent implements OnInit {
   }
 
   setExData(element: WorkoutEx) {
+    this.submitted = true;
     this.index = this.chosenExercises.indexOf(element);
     if (!(this.workoutExForm.controls.repetitions.value === '')) {
       this.chosenExercises[this.index].repetitions = this.workoutExForm.controls.repetitions.value;

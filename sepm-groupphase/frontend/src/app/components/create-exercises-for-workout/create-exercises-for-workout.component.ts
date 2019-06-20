@@ -16,7 +16,7 @@ import {EditWorkoutExercisesComponent} from '../edit-workout-exercises/edit-work
 })
 export class CreateExercisesForWorkoutComponent implements OnInit {
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
+  imagePath: string;
   imagePathExercise: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
@@ -24,20 +24,26 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   dude: Dude;
   currentChosenExercises: WorkoutEx[];
   muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
-
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
   }
 
   ngOnInit() {
     localStorage.setItem('previousRoute', JSON.stringify('/create-exercise-for-workout'));
+    this.createExerciseService.setFileStorage(undefined);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.registerForm = this.formBuilder.group({
       nameForExercise: ['', [Validators.required]],
       equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
       descriptionForExercise: ['', [Validators.required]],
-      muscleGroupExercise: ['']
+      muscleGroupExercise: ['',  [Validators.required]],
+      isPrivate: ['', [Validators.required]]
     });
 
     if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
@@ -61,7 +67,8 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
       this.registerForm.controls.categoryExercise.value,
       this.registerForm.controls.descriptionForExercise.value,
       this.registerForm.controls.muscleGroupExercise.value,
-      this.dude.id
+      this.dude.id,
+      this.registerForm.controls.isPrivate.value
     );
 
     if (this.registerForm.invalid) {
@@ -73,9 +80,31 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
         if (JSON.parse(localStorage.getItem('previousPreviousRoute')) === '/workout-exercises') {
           console.log('newEx');
           console.log(data);
+          if (this.createExerciseService.getFileStorage() !== undefined) {
+            console.log('execute upload picture method');
+            console.log(this.createExerciseService.getFileStorage());
+            this.createExerciseService.uploadPictureForExercise(data.id, 1, this.createExerciseService.getFileStorage()).subscribe(
+              () => {
+              },
+              error => {
+                this.error = error;
+              }
+            );
+          }
           this.addToLocalStorage(data);
           this.router.navigate(['/workout-exercises']);
         } else {
+          if (this.createExerciseService.getFileStorage() !== undefined) {
+            console.log('execute upload picture method');
+            console.log(this.createExerciseService.getFileStorage());
+            this.createExerciseService.uploadPictureForExercise(data.id, 1, this.createExerciseService.getFileStorage()).subscribe(
+              () => {
+              },
+              error => {
+                this.error = error;
+              }
+            );
+          }
           this.addToLocalStorageEdit(data);
           this.router.navigate(['/edit-workout-exercises']);
         }
@@ -110,6 +139,36 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
 
   vanishError() {
     this.error = false;
+  }
+
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imagePathExercise = files.base64;
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
+    console.log(imageFile);
+    this.createExerciseService.setFileStorage(imageFile);
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
   }
 
 }

@@ -10,29 +10,25 @@ import {ProfileService} from '../../services/profile.service';
 })
 export class FollowerDudeComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch2.jpg';
-  imagePath2: string = 'assets/img/kugelfisch.jpg';
+  imagePath: string;
+  imagePath2: string;
   userName: string;
   fitnessProvider: FitnessProvider;
   dudeName: string;
   description: string;
-  email: string;
   sex: any;
   selfAssessment: string;
-  age: number;
-  height: number;
-  weight: number;
   dude: Dude;
-  error: any;
-  constructor(private profileService: ProfileService) { }
+  constructor() { }
 
   ngOnInit() {
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.fitnessProvider.name;
+    this.imagePath = this.fitnessProvider.imagePath;
     this.dude = JSON.parse(localStorage.getItem('selectedDude'));
     this.dudeName = this.dude.name;
+    this.imagePath2 = this.dude.imagePath;
     this.description = this.dude.description;
-    this.email = this.dude.email;
     this.sex = this.dude.sex;
     switch (this.dude.selfAssessment) {
       case 1: {
@@ -48,17 +44,6 @@ export class FollowerDudeComponent implements OnInit {
         break;
       }
     }
-    this.profileService.getAge(this.dude.birthday, this.dude.name).subscribe(
-      (data) => {
-        console.log('calculate age of dude with name ' + this.dude.name);
-        this.age = data;
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.height = this.dude.height;
-    this.weight = this.dude.weight;
   }
 
 }

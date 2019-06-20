@@ -9,6 +9,8 @@ export class Dude {
     public selfAssessment: number,
     public birthday: Date,
     public height: number,
-    public weight: number
+    public weight: number,
+    public imagePath: string,
+    public isPrivate: boolean
   ) {}
 }

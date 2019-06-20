@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.FollowFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
@@ -47,6 +48,9 @@ public class DudeServiceTest {
     @MockBean
     FollowFitnessProviderRepository followFitnessProviderRepository;
 
+    @MockBean
+    FileStorageRepository fileStorageRepository;
+
     @BeforeClass
     public static void beforeClass() {
         dude1.setId(1L);
@@ -89,7 +93,10 @@ public class DudeServiceTest {
 
     @Test
     public void TestSaveDude() throws ServiceException {
-        Mockito.when(dudeRepository.save(dude1)).thenReturn(dude1);
+        Optional<Dude> optionalDude = Optional.of(dude1);
+        Mockito.when(dudeRepository.save(anyObject())).thenReturn(dude1);
+        Mockito.when(dudeRepository.findById(dude1.getId())).thenReturn(optionalDude);
+        Mockito.when(fileStorageRepository.loadMultipartFile(anyString())).thenReturn(anyObject());
         assertEquals(dudeService.save(dude1),dude1);
     }
 

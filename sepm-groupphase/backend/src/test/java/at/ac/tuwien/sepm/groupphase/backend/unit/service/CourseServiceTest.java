@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.CourseBookmarkRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ICourseRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ICourseService;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,6 +39,12 @@ public class CourseServiceTest {
 
     @MockBean
     private ICourseRepository courseRepository;
+
+    @MockBean
+    private CourseBookmarkRepository courseBookmarkRepository;
+
+    @MockBean
+    private IDudeRepository dudeRepository;
 
     @Autowired
     private ICourseService courseService;
@@ -135,6 +144,30 @@ public class CourseServiceTest {
         Mockito.when(courseRepository.findByFilter("2")).thenReturn(courses2);
         assertEquals(courseRepository.findByFilter("2"), courses2);
         assertFalse(courseRepository.findByFilter("2").contains(course1));
+    }
+
+    @Test
+    public void whenBookmarkOneCourse_thenSuccess() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<Course> optionalCourse = Optional.of(course1);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(courseRepository.findById(1L)).thenReturn(optionalCourse);
+        Mockito.when(courseBookmarkRepository.checkCourseBookamrk(1L, 1L)).thenReturn(0);
+        courseService.saveCourseBookmark(1L, 1L);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenBookmarkOneAlreadyBookmarkedCourse_thenServiceException() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<Course> optionalCourse = Optional.of(course1);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(courseRepository.findById(1L)).thenReturn(optionalCourse);
+        Mockito.when(courseBookmarkRepository.checkCourseBookamrk(1L, 1L)).thenReturn(1);
+        courseService.saveCourseBookmark(1L, 1L);
     }
 
 }

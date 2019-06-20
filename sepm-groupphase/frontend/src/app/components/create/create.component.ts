@@ -8,7 +8,7 @@ import {Dude} from '../../dtos/dude';
 })
 export class CreateComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   error: any;
@@ -17,6 +17,7 @@ export class CreateComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     localStorage.setItem('previousRoute', JSON.stringify('/'));
     localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));
   }

@@ -1,9 +1,3 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <h3 class="editFPTitle" align="center">Edit Fitness-Provider-Profile</h3>
 
 <div class="pt-3">
@@ -17,7 +11,7 @@
           <input ngModel = "{{userName}}" formControlName="name" type="text" name="name" maxlength="50" class="form-control" id="editFPName"
                  aria-describedby="editFPNameHelp">
           <div *ngIf="submitted && !!editFPForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.name.errors.required">Your name is
+            <small class="form-text text-danger" *ngIf="!!editFPForm.controls.name.errors.required">Your name is
               required!
             </small>
           </div>
@@ -27,10 +21,10 @@
           <label for="editFPPassword">Password*</label>
           <input ngModel="{{password}}" formControlName="password" knifeNoSpaces type="password" name="password" class="form-control" id="editFPPassword">
           <div *ngIf="submitted && !!editFPForm.controls.password.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.password.errors.required">Your password is
+            <small class="form-text text-danger" *ngIf="!!editFPForm.controls.password.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.password.errors.minlength">Your password
+            <small class="form-text text-danger" *ngIf="!!editFPForm.controls.password.errors.minlength">Your password
               must be at least 8 characters long!
             </small>
           </div>
@@ -40,10 +34,10 @@
           <label for="editFPPasswordConfirmed">Password Confirmed*</label>
           <input ngModel="{{password}}" formControlName="passwordConfirmed" knifeNoSpaces type="password" name="passwordConfirmed" class="form-control" id="editFPPasswordConfirmed">
           <div *ngIf="submitted && !!editFPForm.controls.passwordConfirmed.errors" class="error">
-            <small class="form-text text-warning" *ngIf=" !!editFPForm.controls.passwordConfirmed.errors.required">Your password is
+            <small class="form-text text-danger" *ngIf=" !!editFPForm.controls.passwordConfirmed.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
+            <small class="form-text text-danger" *ngIf="!!editFPForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
             </small>
           </div>
         </div>
@@ -60,10 +54,10 @@
           <input ngModel="{{email}}" formControlName="email" type="text" name="email" class="form-control" id="editFPEmail"
                  aria-describedby="editEmailHelp">
           <div *ngIf="submitted && !!editFPForm.controls.email.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.email.errors.required">Your email is
+            <small class="form-text text-danger" *ngIf="!!editFPForm.controls.email.errors.required">Your email is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.email.errors.email">Your email is
+            <small class="form-text text-danger" *ngIf="!!editFPForm.controls.email.errors.email">Your email is
               invalid!
             </small>
           </div>
@@ -74,7 +68,7 @@
           <input ngModel="{{address}}" formControlName="address" type="text" name="address" class="form-control" id="editFPAddress"
                  aria-describedby="editAddressHelp">
           <div *ngIf="submitted && !!editFPForm.controls.address.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editFPForm.controls.address.errors.required">Your address is
+            <small class="form-text text-danger" *ngIf="!!editFPForm.controls.address.errors.required">Your address is
               required!
             </small>
           </div>
@@ -90,6 +84,12 @@
           <label for="editWebsite">Website</label>
           <input ngModel= "{{website}}" type="text" name="website" formControlName="website" maxlength="50" class="form-control" id="editWebsite"
                  aria-describedby="editWebsiteHelp">
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+          <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
 
         <button type="button" (click)="editFitnessProvider()" class="btn btn-success float-right">Submit</button>

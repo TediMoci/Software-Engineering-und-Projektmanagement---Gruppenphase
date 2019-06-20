@@ -7,6 +7,7 @@ export class CreateWorkout {
     public difficulty: number,
     public calorieConsumption: number,
     public workoutExercises: WorkoutExerciseDtoIn[],
-    public creatorId: number
+    public creatorId: number,
+    public isPrivate: boolean
   ) {}
 }

@@ -28,7 +28,6 @@ public class Workout {
 
     @Column(nullable = false)
     private Integer difficulty;
-    // TODO: selfAssessment enum
 
     @Column(nullable = false, name = "calorie_consumption")
     private Double calorieConsumption = 0.0;
@@ -44,6 +43,9 @@ public class Workout {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workout")
     private List<WorkoutExercise> exercises;
 
@@ -53,6 +55,9 @@ public class Workout {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dude_id")
     private Dude creator;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "workoutBookmarks")
+    private List<Dude> bookmarkDudes;
 
     public Long getId() {
         return id;
@@ -126,6 +131,14 @@ public class Workout {
         isHistory = history;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public List<WorkoutExercise> getExercises() {
         return exercises;
     }
@@ -148,6 +161,14 @@ public class Workout {
 
     public void setCreator(Dude creator) {
         this.creator = creator;
+    }
+
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
+    }
+
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
     }
 
     public static WorkoutBuilder builder() {
@@ -213,9 +234,11 @@ public class Workout {
         private Integer ratingNum;
         private Integer ratingSum;
         private Boolean isHistory;
+        private Boolean isPrivate;
         private List<WorkoutExercise> exercises;
         private List<TrainingScheduleWorkout> trainingSchedules;
         private Dude creator;
+        private List<Dude> bookmarkDudes;
 
         public WorkoutBuilder() {
         }
@@ -265,6 +288,11 @@ public class Workout {
             return this;
         }
 
+        public WorkoutBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public WorkoutBuilder exercises(List<WorkoutExercise> exercises) {
             this.exercises = exercises;
             return this;
@@ -280,6 +308,11 @@ public class Workout {
             return this;
         }
 
+        public WorkoutBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
+            return this;
+        }
+
         public Workout build() {
             Workout workout = new Workout();
             workout.setId(id);
@@ -291,9 +324,11 @@ public class Workout {
             workout.setRatingNum(ratingNum);
             workout.setRatingNum(ratingSum);
             workout.setHistory(isHistory);
+            workout.setIsPrivate(isPrivate);
             workout.setExercises(exercises);
             workout.setTrainingSchedules(trainingSchedules);
             workout.setCreator(creator);
+            workout.setBookmarkDudes(bookmarkDudes);
             return workout;
         }
     }

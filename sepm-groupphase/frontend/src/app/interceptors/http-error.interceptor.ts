@@ -16,7 +16,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           let errorMessage = '';
           if (error.status === 400 || error.status === 401) {
-            errorMessage = `${error.error.message}`;
+            errorMessage = error.error.message;
           }
           return throwError(errorMessage);
         })

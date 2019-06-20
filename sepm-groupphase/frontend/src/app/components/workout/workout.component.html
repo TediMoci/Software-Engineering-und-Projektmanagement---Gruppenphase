@@ -1,4 +1,4 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+<div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -22,6 +22,7 @@
             <p> Difficulty: {{difficulty}}</p>
             <p> Calorie Consumption: {{calories}} kcal</p>
             <p> Description: {{description}} </p>
+            <p> Visibility: {{convertPrivate()}}</p>
             <h3>Exercises</h3>
             <ul>
               <li *ngFor='let element of exercises'>

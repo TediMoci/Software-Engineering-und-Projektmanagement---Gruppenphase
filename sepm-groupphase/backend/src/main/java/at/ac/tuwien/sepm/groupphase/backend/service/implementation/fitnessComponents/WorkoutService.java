@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutRating;
@@ -10,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerci
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutRatingRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.WorkoutBookmarkRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.WorkoutExerciseValidator;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,17 +27,22 @@ import java.util.NoSuchElementException;
 public class WorkoutService implements IWorkoutService {
 
     private final IWorkoutRepository iWorkoutRepository;
+    private final WorkoutBookmarkRepository workoutBookmarkRepository;
     private final IExerciseRepository iExerciseRepository;
     private final IWorkoutExerciseRepository iWorkoutExerciseRepository;
+    private final IDudeRepository iDudeRepository;
     private final IDudeRepository iDudeRepository;
     private final IWorkoutRatingRepository iWorkoutRatingRepository;
     private final WorkoutExerciseValidator workoutExerciseValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkoutService.class);
 
+    public WorkoutService(IWorkoutRepository iWorkoutRepository, WorkoutBookmarkRepository workoutBookmarkRepository, IExerciseRepository iExerciseRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, WorkoutExerciseValidator workoutExerciseValidator) {
     public WorkoutService(IWorkoutRepository iWorkoutRepository, IExerciseRepository iExerciseRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IWorkoutRatingRepository iWorkoutRatingRepository, IDudeRepository iDudeRepository, WorkoutExerciseValidator workoutExerciseValidator) {
         this.iWorkoutRepository = iWorkoutRepository;
+        this.workoutBookmarkRepository = workoutBookmarkRepository;
         this.iExerciseRepository = iExerciseRepository;
         this.iWorkoutExerciseRepository = iWorkoutExerciseRepository;
+        this.iDudeRepository = iDudeRepository;
         this.iWorkoutRatingRepository = iWorkoutRatingRepository;
         this.iDudeRepository = iDudeRepository;
         this.workoutExerciseValidator = workoutExerciseValidator;
@@ -68,38 +76,54 @@ public class WorkoutService implements IWorkoutService {
     }
 
     @Override
-    public List<Workout> findByName(String name) throws ServiceException {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<Workout> findByName(String name, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Workout> workouts;
         try {
-            return iWorkoutRepository.findByName(name);
+            workouts = iWorkoutRepository.findByName(name);
+            workouts.addAll(iWorkoutRepository.findOwnPrivateByName(name, dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return workouts;
     }
 
     @Override
-    public List<Workout> findAll() throws ServiceException {
-        LOGGER.info("Entering findAll");
+    public List<Workout> findAll(Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Workout> workouts;
         try {
-            return iWorkoutRepository.findAll();
+            workouts = iWorkoutRepository.findAll();
+            workouts.addAll(iWorkoutRepository.findOwnPrivate(dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return workouts;
     }
 
     @Override
-    public List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws ServiceException {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper);
+    public List<Workout> findByFilter(String filter, Integer difficulty, Double calorieLower, Double calorieUpper, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Workout> workouts;
         try {
             if (difficulty != null) {
-                return iWorkoutRepository.findByFilterWithDifficulty(filter, difficulty, calorieLower, calorieUpper);
+                workouts = iWorkoutRepository.findByFilterWithDifficulty(filter, difficulty, calorieLower, calorieUpper);
+                workouts.addAll(iWorkoutRepository.findOwnPrivateByFilterWithDifficulty(filter, difficulty, calorieLower, calorieUpper, dude));
             } else {
-                return iWorkoutRepository.findByFilterWithoutDifficulty(filter, calorieLower, calorieUpper);
+                workouts = iWorkoutRepository.findByFilterWithoutDifficulty(filter, calorieLower, calorieUpper);
+                workouts.addAll(iWorkoutRepository.findOwnPrivateByFilterWithoutDifficulty(filter, calorieLower, calorieUpper, dude));
             }
 
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return workouts;
     }
 
     @Override
@@ -174,6 +198,42 @@ public class WorkoutService implements IWorkoutService {
             } catch (DataAccessException e) {
                 throw new ServiceException(e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public void saveWorkoutBookmark(Long dudeId, Long workoutId, Integer workoutVersion) throws ServiceException {
+        LOGGER.info("Entering saveWorkoutBookmark with dudeId: " + dudeId + "; workoutId: " + workoutId + "; workoutVersion: " + workoutVersion);
+        try {
+            if (iDudeRepository.findById(dudeId).isEmpty()) {
+                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
+            } else if (iWorkoutRepository.findByIdAndVersion(workoutId, workoutVersion).isEmpty()) {
+                throw new NoSuchElementException("Could not find Workout with id: " + workoutId);
+            }
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            if (workoutBookmarkRepository.checkWorkoutBookmark(dudeId, workoutId, workoutVersion) != 0) {
+                throw new ServiceException("You already have this workout bookmarked!");
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            workoutBookmarkRepository.saveWorkoutBookmark(dudeId, workoutId, workoutVersion);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteWorkoutBookmark(Long dudeId, Long workoutId, Integer workoutVersion) throws ServiceException {
+        LOGGER.info("Entering deleteWorkoutBookmark with dudeId: " + dudeId + "; workoutId: " + workoutId + "; workoutVersion: " + workoutVersion);
+        try {
+            workoutBookmarkRepository.deleteWorkoutBookmark(dudeId, workoutId, workoutVersion);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IFitnessProviderService;
 import org.junit.BeforeClass;
@@ -18,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyObject;
@@ -32,6 +34,9 @@ public class FitnessProviderServiceTest {
 
     @MockBean
     IFitnessProviderRepository fpRepository;
+
+    @MockBean
+    FileStorageRepository fileStorageRepository;
 
     @Autowired
     IFitnessProviderService fpService;
@@ -72,7 +77,10 @@ public class FitnessProviderServiceTest {
 
     @Test
     public void TestSaveFitnessProvider() throws ServiceException {
+        Optional<FitnessProvider> optionalFP = Optional.of(fitnessProvider1);
         Mockito.when(fpRepository.save(fitnessProvider1)).thenReturn(fitnessProvider1);
+        Mockito.when(fpRepository.findById(fitnessProvider1.getId())).thenReturn(optionalFP);
+        Mockito.when(fileStorageRepository.loadMultipartFile(anyString())).thenReturn(anyObject());
         assertEquals(fpService.save(fitnessProvider1),fitnessProvider1);
     }
 

@@ -42,8 +42,8 @@ export class EditFitnessProviderProfileComponent implements OnInit {
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      phoneNumber: ['', [Validators.required]],
-      website: ['', [Validators.required]],
+      phoneNumber: [''],
+      website: [''],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirmed: ['', Validators.required]
@@ -63,7 +63,8 @@ export class EditFitnessProviderProfileComponent implements OnInit {
       this.editFPForm.controls.description.value,
       this.editFPForm.controls.email.value,
       this.editFPForm.controls.phoneNumber.value,
-      this.editFPForm.controls.website.value
+      this.editFPForm.controls.website.value,
+      this.oldFitnessProvider.imagePath
     );
 
     if (this.editFPForm.invalid) {

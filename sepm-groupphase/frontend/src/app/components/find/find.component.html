@@ -1,11 +1,4 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <div class="container-fluid">
 
   <div class="container">
@@ -30,13 +23,13 @@
                 <input ngbButton type="radio" (click)="resetResults()" value="Course"> Course
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()" value="Workout"> Workout
+                <input ngbButton type="radio" (click)="resetResults()" value="Workout"> Workout
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()"  value="Dudes"> Dudes
+                <input ngbButton type="radio" (click)="resetResults()"  value="Dudes"> Dudes
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()"  value="Fitness Provider"> Fitness Provider
+                <input ngbButton type="radio" (click)="resetResults()"  value="Fitness Provider"> Fitness Provider
               </label>
             </div>
             <div class="card-body row no-gutters align-items-center">
@@ -44,6 +37,13 @@
               <div class="col-lg">
                 <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find '+ category" [(ngModel)]="inputText" />
               </div>
+
+              <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+                <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
               <!--end of col-->
               <div class="col-auto">
                 <button class="btn btn-md btn-success" (click)="startSearch(category)" type="submit"><i class="fas fa-search"></i></button>
@@ -154,6 +154,9 @@
                     <p>Muscle Group: {{element.muscleGroup}}</p>
                     <hr>
                     <p>"{{element.description}}"</p>
+                    <div *ngIf="isDude" class="fav">
+                      <button type="button" (click)="bookmarkExercise(element)" class="btn btn-favourite" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-heart"></i></button>
+                    </div>
                   </mat-expansion-panel>
                 </mat-accordion>
               </li>
@@ -172,6 +175,9 @@
                     <p>Provided by: <a *ngIf="selectedFP" [routerLink]="['/fitnessProvider']" class="btn2 btn-link">{{selectedFP.name}}</a> </p>
                     <hr>
                     <p>"{{element.description}}"</p>
+                    <div *ngIf="isDude" class="fav">
+                    <button type="button" (click)="bookmarkCourse(element)" class="btn btn-favourite" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-heart"></i></button>
+                    </div>
                   </mat-expansion-panel>
                 </mat-accordion>
               </li>
@@ -192,7 +198,10 @@
                     <p>Calorie Consumption: {{element.calorieConsumption}}</p>
                     <hr>
                     <p>"{{element.description}}"</p>
-                    <hr>
+                    <div *ngIf="isDude" class="fav">
+                    <button type="button" (click)="bookmarkWorkout(element)" class="btn btn-favourite" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-heart"></i></button>
+                    </div>
+                      <hr>
                     <p style="font-size: medium">Exercises:</p>
                     <div *ngFor='let exercise of exercisesForWorkouts'>
                       <mat-accordion>
@@ -214,8 +223,7 @@
                           <p>Equipment: {{exercise.equipment}}</p>
                           <hr>
                           <p>"{{exercise.description}}"</p>
-
-                        </mat-expansion-panel>
+                           </mat-expansion-panel>
                       </mat-accordion>
                     </div>
                   </mat-expansion-panel>
@@ -234,7 +242,7 @@
                       </mat-panel-title>
                     </mat-expansion-panel-header>
                     <hr>
-                    <p>Gender: {{element.sex}}</p>
+                    <p>Sex: {{element.sex}}</p>
                     <hr>
                     <p>Self Assessment: {{convertDifficulty(element.selfAssessment)}}</p>
                     <hr>
@@ -291,6 +299,22 @@
       </div>
       <div class="modal-footer">
         <p>To check your followed Fitness Providers, look at the link in your profile.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- modal for setting bookmark -->
+<div class="modal" id="bookmarkModal" (click)="vanishErrorBookmark()">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 *ngIf="!errorBookmark" class="modal-title">Successfully bookmarked {{bookmarkedName}}!</h4>
+        <h4 *ngIf="errorBookmark" class="modal-title">You already bookmarked {{bookmarkedName}}!</h4>
+      </div>
+      <div class="modal-footer">
+        <p>To check your bookmarked content, look at the Favourites page.</p>
       </div>
 
     </div>

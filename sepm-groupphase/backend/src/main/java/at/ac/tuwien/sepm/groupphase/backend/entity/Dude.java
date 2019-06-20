@@ -46,6 +46,12 @@ public class Dude {
     private Double weight;
     // in kilograms
 
+    @Column(nullable = false)
+    private String imagePath = "http://localhost:8080/downloadImage/kugelfisch.jpg";
+
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
+
     @ElementCollection
     private List<String> roles = new ArrayList<String>() {
         {
@@ -67,7 +73,40 @@ public class Dude {
         joinColumns = @JoinColumn(name = "dude_id"),
         inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private List<Course> courses;
+    private List<Course> courseBookmarks;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "dude_exercise_bookmarks",
+        joinColumns = @JoinColumn(name = "dude_id"),
+        inverseJoinColumns = {
+            @JoinColumn(name = "exercise_id", referencedColumnName = "id"),
+            @JoinColumn(name = "exercise_version", referencedColumnName = "version")
+        }
+    )
+    private List<Exercise> exerciseBookmarks;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "dude_workout_bookmarks",
+        joinColumns = @JoinColumn(name = "dude_id"),
+        inverseJoinColumns = {
+            @JoinColumn(name = "workout_id", referencedColumnName = "id"),
+            @JoinColumn(name = "workout_version", referencedColumnName = "version")
+        }
+    )
+    private List<Workout> workoutBookmarks;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "dude_training_schedule_bookmarks",
+        joinColumns = @JoinColumn(name = "dude_id"),
+        inverseJoinColumns = {
+            @JoinColumn(name = "training_schedule_id", referencedColumnName = "id"),
+            @JoinColumn(name = "training_schedule_version", referencedColumnName = "version")
+        }
+    )
+    private List<TrainingSchedule> trainingScheduleBookmarks;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creator")
     private List<Exercise> exercises;
@@ -160,6 +199,22 @@ public class Dude {
         this.weight = weight;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public List<String> getRoles() {
         return roles;
     }
@@ -176,12 +231,36 @@ public class Dude {
         this.fitnessProviders = fitnessProviders;
     }
 
-    public List<Course> getCourses() {
-        return courses;
+    public List<Course> getCourseBookmarks() {
+        return courseBookmarks;
     }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
+    public void setCourseBookmarks(List<Course> courseBookmarks) {
+        this.courseBookmarks = courseBookmarks;
+    }
+
+    public List<Exercise> getExerciseBookmarks() {
+        return exerciseBookmarks;
+    }
+
+    public void setExerciseBookmarks(List<Exercise> exerciseBookmarks) {
+        this.exerciseBookmarks = exerciseBookmarks;
+    }
+
+    public List<Workout> getWorkoutBookmarks() {
+        return workoutBookmarks;
+    }
+
+    public void setWorkoutBookmarks(List<Workout> workoutBookmarks) {
+        this.workoutBookmarks = workoutBookmarks;
+    }
+
+    public List<TrainingSchedule> getTrainingScheduleBookmarks() {
+        return trainingScheduleBookmarks;
+    }
+
+    public void setTrainingScheduleBookmarks(List<TrainingSchedule> trainingScheduleBookmarks) {
+        this.trainingScheduleBookmarks = trainingScheduleBookmarks;
     }
 
     public List<Exercise> getExercises() {
@@ -291,9 +370,14 @@ public class Dude {
         private LocalDate birthday;
         private Double height;
         private Double weight;
+        private String imagePath;
+        private Boolean isPrivate;
         private List<String> roles;
         private List<FitnessProvider> fitnessProviders;
-        private List<Course> courses;
+        private List<Course> courseBookmarks;
+        private List<Exercise> exerciseBookmarks;
+        private List<Workout> workoutBookmarks;
+        private List<TrainingSchedule> trainingScheduleBookmarks;
         private List<Exercise> exercises;
         private List<Workout> workouts;
         private List<TrainingSchedule> trainingSchedules;
@@ -353,6 +437,16 @@ public class Dude {
             return this;
         }
 
+        public DudeBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
+        public DudeBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public DudeBuilder roles(List<String> roles){
             this.roles = roles;
             return this;
@@ -363,8 +457,23 @@ public class Dude {
             return this;
         }
 
-        public DudeBuilder courses(List<Course> courses) {
-            this.courses = courses;
+        public DudeBuilder courseBookmarks(List<Course> courseBookmarks) {
+            this.courseBookmarks = courseBookmarks;
+            return this;
+        }
+
+        public DudeBuilder exerciseBookmarks(List<Exercise> exerciseBookmarks) {
+            this.exerciseBookmarks = exerciseBookmarks;
+            return this;
+        }
+
+        public DudeBuilder workoutBookmarks(List<Workout> workoutBookmarks) {
+            this.workoutBookmarks = workoutBookmarks;
+            return this;
+        }
+
+        public DudeBuilder trainingScheduleBookmarks(List<TrainingSchedule> trainingScheduleBookmarks) {
+            this.trainingScheduleBookmarks = trainingScheduleBookmarks;
             return this;
         }
 
@@ -405,9 +514,14 @@ public class Dude {
             dude.setBirthday(birthday);
             dude.setHeight(height);
             dude.setWeight(weight);
+            dude.setImagePath(imagePath);
+            dude.setIsPrivate(isPrivate);
             dude.setRoles(roles);
             dude.setFitnessProviders(fitnessProviders);
-            dude.setCourses(courses);
+            dude.setCourseBookmarks(courseBookmarks);
+            dude.setExerciseBookmarks(exerciseBookmarks);
+            dude.setWorkoutBookmarks(workoutBookmarks);
+            dude.setTrainingScheduleBookmarks(trainingScheduleBookmarks);
             dude.setExercises(exercises);
             dude.setWorkouts(workouts);
             dude.setTrainingSchedules(trainingSchedules);

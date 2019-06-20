@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.ICourseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IFitnessProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -31,13 +33,15 @@ import java.util.List;
 public class FitnessProviderEndpoint {
 
     private final IFitnessProviderService iFitnessProviderService;
+    private final IFileStorageService iFileStorageService;
     private final IFitnessProviderMapper fitnessProviderMapper;
     private final ICourseMapper courseMapper;
     private final IDudeMapper dudeMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(FitnessProviderEndpoint.class);
 
-    public FitnessProviderEndpoint(IFitnessProviderService iFitnessProviderService, IFitnessProviderMapper fitnessProviderMapper, ICourseMapper courseMapper, IDudeMapper dudeMapper) {
+    public FitnessProviderEndpoint(IFitnessProviderService iFitnessProviderService, IFitnessProviderMapper fitnessProviderMapper, ICourseMapper courseMapper, IDudeMapper dudeMapper,IFileStorageService iFileStorageService ) {
         this.iFitnessProviderService = iFitnessProviderService;
+        this.iFileStorageService = iFileStorageService;
         this.fitnessProviderMapper = fitnessProviderMapper;
         this.courseMapper = courseMapper;
         this.dudeMapper = dudeMapper;
@@ -95,7 +99,7 @@ public class FitnessProviderEndpoint {
 
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a fitness provider", authorizations = {@Authorization(value = "apiKey")})
-    public FitnessProviderDto updateFitnessProvider(@PathVariable("name") String name, @RequestBody FitnessProviderDto fitnessProvider) {
+    public FitnessProviderDto updateFitnessProvider(@PathVariable("name") String name, @Valid @RequestBody FitnessProviderDto fitnessProvider) {
         try {
             return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.update(name, fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(fitnessProvider)));
         } catch (ServiceException e){
@@ -117,12 +121,18 @@ public class FitnessProviderEndpoint {
     @ApiOperation(value = "Get all followers of the fitness provider with the given id", authorizations ={ @Authorization(value = "apiKey")})
     public DudeDto[] getDudesFollowingFitnessProvider(@PathVariable Long id) {
         LOGGER.info("Entering getDudesFollowingFitnessProvider with id: " + id);
-        List<Dude> dudes;
+        List<Dude> allDudes;
         try {
-            dudes = iFitnessProviderService.findById(id).getDudes();
+            allDudes = iFitnessProviderService.findById(id).getDudes();
         } catch (ServiceException e) {
             LOGGER.error("Could not getDudesFollowingFitnessProvider with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        List<Dude> dudes = new ArrayList<>();
+        for (Dude dude : allDudes) {
+            if (!dude.getIsPrivate()) {
+                dudes.add(dude);
+            }
         }
         DudeDto[] dudeDtos = new DudeDto[dudes.size()];
         for (int i = 0; i < dudes.size(); i++) {
@@ -166,6 +176,27 @@ public class FitnessProviderEndpoint {
             fitnessProviderDtos[i] = fitnessProviderMapper.fitnessProviderToFitnessProviderDto(fitnessProviders.get(i));
         }
         return fitnessProviderDtos;
+    }
+
+    @PostMapping("/{id}/uploadImage")
+    @ApiOperation(value = "Upload image for FitnessProvider", authorizations = {@Authorization(value = "apiKey")})
+    public String uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("Entering uploadImage with id: " + id);
+        String fileName = "fitness_provider_" + id + ".png";
+
+        try {
+            iFileStorageService.storeFile(fileName, file);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not uploadImage with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+
+        try {
+            return iFitnessProviderService.updateImagePath(id, fileName);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not updateImagePath with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 
 }

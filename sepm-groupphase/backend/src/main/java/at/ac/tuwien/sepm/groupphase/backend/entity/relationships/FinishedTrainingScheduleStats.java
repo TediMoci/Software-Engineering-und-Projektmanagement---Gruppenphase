@@ -2,13 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.entity.relationships;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
-import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.ActiveTrainingScheduleKey;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "finished_training_schedule_stats")
-@IdClass(ActiveTrainingScheduleKey.class)
 public class FinishedTrainingScheduleStats {
 
     @Id
@@ -16,25 +13,11 @@ public class FinishedTrainingScheduleStats {
     @SequenceGenerator(name = "seq_finished_id", sequenceName = "seq_finished_id")
     private Long id;
 
-    @Id
-    @Column(name = "dude_id")
-    private Long dudeId;
-
-    @Id
-    @Column(name = "training_schedule_id")
-    private Long trainingScheduleId;
-
-    @Id
-    @Column(name = "training_schedule_version")
-    private Integer trainingScheduleVersion;
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @MapsId("dude_id")
     @JoinColumn(name = "dude_id", referencedColumnName = "id")
     private Dude dude;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @MapsId("training_schedule_id")
     @JoinColumns({
         @JoinColumn(name = "training_schedule_id", referencedColumnName = "id"),
         @JoinColumn(name = "training_schedule_version", referencedColumnName = "version")
@@ -68,30 +51,6 @@ public class FinishedTrainingScheduleStats {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getDudeId() {
-        return dudeId;
-    }
-
-    public void setDudeId(Long dudeId) {
-        this.dudeId = dudeId;
-    }
-
-    public Long getTrainingScheduleId() {
-        return trainingScheduleId;
-    }
-
-    public void setTrainingScheduleId(Long trainingScheduleId) {
-        this.trainingScheduleId = trainingScheduleId;
-    }
-
-    public Integer getTrainingScheduleVersion() {
-        return trainingScheduleVersion;
-    }
-
-    public void setTrainingScheduleVersion(Integer trainingScheduleVersion) {
-        this.trainingScheduleVersion = trainingScheduleVersion;
     }
 
     public Dude getDude() {
@@ -174,9 +133,6 @@ public class FinishedTrainingScheduleStats {
     public String toString() {
         return "FinishedTrainingScheduleStats{" +
             "id=" + id +
-            ", dudeId=" + dudeId +
-            ", trainingScheduleId=" + trainingScheduleId +
-            ", trainingScheduleVersion=" + trainingScheduleVersion +
             ", totalHours=" + totalHours +
             ", totalDays=" + totalDays +
             ", totalCalorieConsumption=" + totalCalorieConsumption +
@@ -195,11 +151,6 @@ public class FinishedTrainingScheduleStats {
         FinishedTrainingScheduleStats that = (FinishedTrainingScheduleStats) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (dudeId != null ? !dudeId.equals(that.dudeId) : that.dudeId != null) return false;
-        if (trainingScheduleId != null ? !trainingScheduleId.equals(that.trainingScheduleId) : that.trainingScheduleId != null)
-            return false;
-        if (trainingScheduleVersion != null ? !trainingScheduleVersion.equals(that.trainingScheduleVersion) : that.trainingScheduleVersion != null)
-            return false;
         if (totalHours != null ? !totalHours.equals(that.totalHours) : that.totalHours != null) return false;
         if (totalDays != null ? !totalDays.equals(that.totalDays) : that.totalDays != null) return false;
         if (totalCalorieConsumption != null ? !totalCalorieConsumption.equals(that.totalCalorieConsumption) : that.totalCalorieConsumption != null)
@@ -217,9 +168,6 @@ public class FinishedTrainingScheduleStats {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (dudeId != null ? dudeId.hashCode() : 0);
-        result = 31 * result + (trainingScheduleId != null ? trainingScheduleId.hashCode() : 0);
-        result = 31 * result + (trainingScheduleVersion != null ? trainingScheduleVersion.hashCode() : 0);
         result = 31 * result + (totalHours != null ? totalHours.hashCode() : 0);
         result = 31 * result + (totalDays != null ? totalDays.hashCode() : 0);
         result = 31 * result + (totalCalorieConsumption != null ? totalCalorieConsumption.hashCode() : 0);
@@ -232,9 +180,6 @@ public class FinishedTrainingScheduleStats {
 
     public static final class FinishedTrainingScheduleStatsBuilder {
         private Long id;
-        private Long dudeId;
-        private Long trainingScheduleId;
-        private Integer trainingScheduleVersion;
         private Dude dude;
         private TrainingSchedule trainingSchedule;
         private Double totalHours;
@@ -250,21 +195,6 @@ public class FinishedTrainingScheduleStats {
 
         public FinishedTrainingScheduleStatsBuilder id(Long id) {
             this.id = id;
-            return this;
-        }
-
-        public FinishedTrainingScheduleStatsBuilder dudeId(Long dudeId) {
-            this.dudeId = dudeId;
-            return this;
-        }
-
-        public FinishedTrainingScheduleStatsBuilder trainingScheduleId(Long trainingScheduleId) {
-            this.trainingScheduleId = trainingScheduleId;
-            return this;
-        }
-
-        public FinishedTrainingScheduleStatsBuilder trainingScheduleVersion(Integer trainingScheduleVersion) {
-            this.trainingScheduleVersion = trainingScheduleVersion;
             return this;
         }
 
@@ -316,9 +246,6 @@ public class FinishedTrainingScheduleStats {
         public FinishedTrainingScheduleStats build() {
             FinishedTrainingScheduleStats finishedTrainingScheduleStats = new FinishedTrainingScheduleStats();
             finishedTrainingScheduleStats.setId(id);
-            finishedTrainingScheduleStats.setDudeId(dudeId);
-            finishedTrainingScheduleStats.setTrainingScheduleId(trainingScheduleId);
-            finishedTrainingScheduleStats.setTrainingScheduleVersion(trainingScheduleVersion);
             finishedTrainingScheduleStats.setDude(dude);
             finishedTrainingScheduleStats.setTrainingSchedule(trainingSchedule);
             finishedTrainingScheduleStats.setTotalHours(totalHours);

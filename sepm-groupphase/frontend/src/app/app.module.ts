@@ -44,6 +44,7 @@ import { CreateWorkoutComponent } from './components/create-workout/create-worko
 import { WorkoutExercisesComponent } from './components/workout-exercises/workout-exercises.component';
 import { CourseComponent } from './components/course/course.component';
 import { EditCourseComponent } from './components/edit-course/edit-course.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 import { OwnCoursesComponent } from './components/own-courses/own-courses.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { CreateExercisesForWorkoutComponent } from './components/create-exercises-for-workout/create-exercises-for-workout.component';
@@ -89,6 +90,11 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
+import { FavouriteExercisesComponent } from './components/favourite-exercises/favourite-exercises.component';
+import { FavouriteWorkoutsComponent } from './components/favourite-workouts/favourite-workouts.component';
+import { FavouriteTrainingSchedulesComponent } from './components/favourite-training-schedules/favourite-training-schedules.component';
+import { FavouriteCoursesComponent } from './components/favourite-courses/favourite-courses.component';
+import {StatisticTrainingscheduleComponent} from './components/statistic-trainingschedule/statistic-trainingschedule.component';
 
 @NgModule({
   declarations: [
@@ -138,6 +144,11 @@ import {
     CourseDudeViewComponent,
     FollowerDudeComponent,
     CreateTrainingScheduleRandomlyComponent,
+    FavouriteExercisesComponent,
+    FavouriteWorkoutsComponent,
+    FavouriteTrainingSchedulesComponent,
+    FavouriteCoursesComponent,
+    StatisticTrainingscheduleComponent
   ],
   imports: [
     MatAutocompleteModule,
@@ -179,7 +190,8 @@ import {
     FormsModule,
     BrowserAnimationsModule,
     NgKnifeModule,
-    DragDropModule
+    DragDropModule,
+    ImageCropperModule
   ],
   providers: [httpInterceptorProviders, Globals, WorkoutExercisesComponent, EditWorkoutExercisesComponent, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor,
     multi: true}],

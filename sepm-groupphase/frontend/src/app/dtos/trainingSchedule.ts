@@ -9,6 +9,7 @@ export class TrainingSchedule {
     public difficulty: number,
     public intervalLength: number,
     public trainingScheduleWorkouts: TrainingScheduleWorkoutDtoIn[],
-    public creatorId: number
+    public creatorId: number,
+    public isPrivate: boolean
   ) {}
 }

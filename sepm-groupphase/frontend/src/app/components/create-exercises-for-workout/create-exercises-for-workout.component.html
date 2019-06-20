@@ -1,9 +1,3 @@
-
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 <body>
 <div class="container-fluid">
 
@@ -15,7 +9,7 @@
         <div class="row-sm-1"></div>
         <div class="row-sm-10">
           <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
-          <img class="img-exercise" src="{{imagePathExercise}}" alt="exercise image">
+          <img class="img-exercise" [src]="imagePathExercise" height="200" *ngIf="imagePathExercise" alt="exercise image" >
         </div>
       </div>
       <div class="col-sm-9">
@@ -29,7 +23,7 @@
               <input type="text" name="nameForExercise" maxlength="50" class="form-control" id="nameForExercise" formControlName="nameForExercise"
                      aria-describedby="nameForExerciseHelp" placeholder="Enter name">
               <div *ngIf="submitted && !!registerForm.controls.nameForExercise.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.nameForExercise.errors.required">Name is
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.nameForExercise.errors.required">Name is
                   required!
                 </small>
               </div>
@@ -60,7 +54,7 @@
                 </div>
 
                 <div *ngIf="submitted && !!registerForm.controls.categoryExercise.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.categoryExercise.errors.required">Category is
+                  <small class="form-text text-danger" *ngIf="!!registerForm.controls.categoryExercise.errors.required">Category is
                     required!
                   </small>
                 </div>
@@ -73,7 +67,7 @@
                      aria-describedby="descriptionForExerciseHelp" placeholder="Enter description" maxlength="3000" > </textarea>
               <span>{{3000 - registerForm.controls.descriptionForExercise.value.length}} left</span>
               <div *ngIf="submitted && !!registerForm.controls.descriptionForExercise.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.descriptionForExercise.errors.required">Description is
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.descriptionForExercise.errors.required">Description is
                   required!
                 </small>
               </div>
@@ -89,12 +83,69 @@
                 </mat-select>
               </mat-form-field>
               <div *ngIf="submitted && !!registerForm.controls.muscleGroupExercise.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!registerForm.controls.muscleGroupExercise.errors.required">Muscle Group is
+                <small class="form-text text-danger" *ngIf="!!registerForm.controls.muscleGroupExercise.errors.required">Muscle Group is
                   required!
                 </small>
               </div>
             </div>
+
+            <div class="form-group">
+              <span class="isPrivate">Visibility of your exercise*</span>
+              <div class="gap_space">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="public" type="radio" class="custom-control-input" value=false name="isPrivate"
+                         formControlName="isPrivate">
+                  <label class="custom-control-label" for="public">Public</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input id="private" type="radio" class="custom-control-input" value=true name="isPrivate"
+                         formControlName="isPrivate">
+                  <label class="custom-control-label" for="private">Private</label>
+                </div>
+                <div *ngIf="submitted && !!registerForm.controls.isPrivate.errors" class="error">
+                  <small class="form-text text-danger" *ngIf="!!registerForm.controls.isPrivate.errors.required">Visibility of your exercise is required!
+                  </small>
+                </div>
+              </div>
+            </div>
+
           </form>
+
+          <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal" (change)="fileChangeEvent($event)" />
+          <div class="modal" id="cropModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+
+                <div class="modal-header">
+                  <h4 class="modal-title">Select a picture to upload for the exercise</h4>
+                </div>
+                <span  style="color:orange;  position: center; margin-left: auto; margin-right: auto; " *ngIf="message && crop">{{message}}</span>
+                <image-cropper
+                  [imageChangedEvent]="imageChangedEvent"
+                  [maintainAspectRatio]="true"
+                  [resizeToWidth]="0"
+                  (imageCropped)="imageCropped($event)"
+                  (imageLoaded)="imageLoaded()"
+                  (loadImageFailed)="loadImageFailed()"
+                ></image-cropper>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  <button (click)= "cropPicture()" class="btn btn-success" data-dismiss="modal" >Crop </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <button class="btn btn-upload" (click)="file.click()">Upload Picture</button>
+          </div>
+
+          <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+            <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
 
           <button type="button" (click)="addExercise()" class="btn btn-success float-right">Add</button>
           <a (click)="Back()" class="btn btn-link">Cancel</a>

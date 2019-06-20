@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -47,12 +48,21 @@ public class Exercise {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
+    @Column(nullable = false)
+    private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
+
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dude_id")
     private Dude creator;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exerciseBookmarks")
+    private List<Dude> bookmarkDudes;
 
     public Long getId() {
         return id;
@@ -110,6 +120,22 @@ public class Exercise {
         this.category = category;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public Set<WorkoutExercise> getWorkouts() {
         return workouts;
     }
@@ -148,6 +174,14 @@ public class Exercise {
 
     public void setRatingNum(Integer ratingNum) {
         this.ratingNum = ratingNum;
+    }
+
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
+    }
+
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
     }
 
     public static ExerciseBuilder builder() {
@@ -222,8 +256,11 @@ public class Exercise {
         private Integer ratingSum;
         private Category category;
         private Boolean isHistory;
+        private String imagePath;
+        private Boolean isPrivate;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
+        private List<Dude> bookmarkDudes;
 
         public ExerciseBuilder() {
         }
@@ -279,6 +316,16 @@ public class Exercise {
             return this;
         }
 
+        public ExerciseBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
+        public ExerciseBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public ExerciseBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -286,6 +333,11 @@ public class Exercise {
 
         public ExerciseBuilder creator(Dude creator) {
             this.creator = creator;
+            return this;
+        }
+
+        public ExerciseBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
             return this;
         }
 
@@ -301,8 +353,11 @@ public class Exercise {
             exercise.setRatingNum(ratingSum);
             exercise.setCategory(category);
             exercise.setHistory(isHistory);
+            exercise.setImagePath(imagePath);
+            exercise.setIsPrivate(isPrivate);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
+            exercise.setBookmarkDudes(bookmarkDudes);
             return exercise;
         }
     }

@@ -12,7 +12,7 @@ import {GetWorkout} from '../../dtos/get-workout';
 })
 export class OwnWorkoutsComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   workouts: GetWorkout[];
@@ -26,6 +26,7 @@ export class OwnWorkoutsComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     localStorage.setItem('chosenExercisesForEditWorkout', JSON.stringify('empty'));
     localStorage.setItem('firstAccess', JSON.stringify('true'));
 
@@ -78,6 +79,8 @@ export class OwnWorkoutsComponent implements OnInit {
         }
       );
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }
 

@@ -10,12 +10,17 @@ export class BrosComponent implements OnInit {
   imagePath: string = '/assets/img/kugelfisch.jpg';
   userName: string;
   dude: Dude;
+  error: any;
   constructor() { }
 
   ngOnInit() {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+  }
+
+  vanishError() {
+    this.error = false;
   }
 
 }

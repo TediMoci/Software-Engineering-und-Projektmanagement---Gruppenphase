@@ -1,17 +1,22 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.actors;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CourseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.FitnessProviderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.ICourseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IDudeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.actors.IFitnessProviderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IExerciseMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IStatsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.FinishedTrainingScheduleStats;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IDudeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
 import io.swagger.annotations.Api;
@@ -22,10 +27,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,21 +44,27 @@ public class DudeEndpoint {
 
     private final IDudeService iDudeService;
     private final ITrainingScheduleService iTrainingScheduleService;
+    private final IFileStorageService iFileStorageService;
     private final IDudeMapper dudeMapper;
     private final IFitnessProviderMapper fitnessProviderMapper;
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private final IExerciseMapper exerciseMapper;
     private final IWorkoutMapper workoutMapper;
+    private final ICourseMapper courseMapper;
+    private final IStatsMapper statsMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(DudeEndpoint.class);
 
-    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper) {
+    public DudeEndpoint(IDudeService iDudeService, ITrainingScheduleService iTrainingScheduleService, IFileStorageService iFileStorageService, IDudeMapper dudeMapper, IFitnessProviderMapper fitnessProviderMapper, ITrainingScheduleMapper trainingScheduleMapper, IExerciseMapper exerciseMapper, IWorkoutMapper workoutMapper, ICourseMapper courseMapper, IStatsMapper statsMapper) {
         this.iDudeService = iDudeService;
         this.iTrainingScheduleService = iTrainingScheduleService;
+        this.iFileStorageService = iFileStorageService;
         this.dudeMapper = dudeMapper;
         this.fitnessProviderMapper = fitnessProviderMapper;
         this.trainingScheduleMapper = trainingScheduleMapper;
         this.exerciseMapper = exerciseMapper;
         this.workoutMapper = workoutMapper;
+        this.courseMapper = courseMapper;
+        this.statsMapper = statsMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -61,7 +74,7 @@ public class DudeEndpoint {
         Dude dude = dudeMapper.dudeDtoToDude(dudeDto);
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.save(dude));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -72,10 +85,10 @@ public class DudeEndpoint {
         List<DudeDto> dudeListDTO = new ArrayList<>();
         try {
             List<Dude> dudeList = iDudeService.findAll();
-            for (int i=0; i< dudeList.size(); i++){
+            for (int i = 0; i < dudeList.size(); i++) {
                 dudeListDTO.add(dudeMapper.dudeToDudeDto(dudeList.get(i)));
             }
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         return dudeListDTO;
@@ -86,7 +99,7 @@ public class DudeEndpoint {
     public DudeDto findDudeById(@PathVariable("id") Long id) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findDudeById(id));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -96,30 +109,30 @@ public class DudeEndpoint {
     public DudeDto findDudeByName(String name) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.findByName(name));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
     @RequestMapping(value = "/bmi", method = RequestMethod.GET)
     @ApiOperation(value = "Get BMI of dude", authorizations = {@Authorization(value = "apiKey")})
-    public Double getBmi(Double height, Double weight){
+    public Double getBmi(Double height, Double weight) {
         return iDudeService.calculateBMI(height, weight);
     }
 
     @RequestMapping(value = "/age", method = RequestMethod.GET)
     @ApiOperation(value = "Get age of dude", authorizations = {@Authorization(value = "apiKey")})
-    public Integer getAge(@RequestParam("birthday")@DateTimeFormat(pattern = "\"yyyy-MM-dd\"") LocalDate birthday){
+    public Integer getAge(@RequestParam("birthday") @DateTimeFormat(pattern = "\"yyyy-MM-dd\"") LocalDate birthday) {
         return iDudeService.calculateAge(birthday);
     }
 
 
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {
+    public DudeDto updateDude(@PathVariable("name") String name, @Valid @RequestBody DudeDto dude) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -188,6 +201,7 @@ public class DudeEndpoint {
         ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
         for (int i = 0; i < exercises.size(); i++) {
             if (!exercises.get(i).getHistory()) {
+                LOGGER.info("images path of exercise " + exercises.get(i).getImagePath());
                 exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
             }
         }
@@ -246,23 +260,6 @@ public class DudeEndpoint {
         return trainingScheduleDtos;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
-    @ApiOperation(value = "Get Workouts by filters", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
-        List<Dude> dudes;
-        try {
-            dudes = iDudeService.findByFilter(filter, selfAssessment);
-        } catch (ServiceException e) {
-            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-        DudeDto[] dudeDtos = new DudeDto[dudes.size()];
-        for (int i = 0; i < dudes.size(); i++) {
-            dudeDtos[i] = dudeMapper.dudeToDudeDto(dudes.get(i));
-        }
-        return dudeDtos;
-    }
 
     @RequestMapping(value = "/{id}/activeTrainingSchedule", method = RequestMethod.GET)
     @ApiOperation(value = "Get active training schedule of dude", authorizations = {@Authorization(value = "apiKey")})
@@ -291,6 +288,50 @@ public class DudeEndpoint {
             }
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your active training schedule has expired.");
         }
+        if (activeTrainingSchedule.getAdaptive()
+            && ((tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) > 0)) {
+
+            if (!activeTrainingSchedule.getHasBeenAdapted().get((int) (tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) - 1)) {
+                Dude dude;
+                try {
+                    dude = iDudeService.findDudeById(id);
+                } catch (ServiceException e) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find dude with id " + id);
+                }
+                try {
+                    // check if previous intervals have been skipped - user has not been logged in and previous exDone and adaptive change have to be generated
+                    List<ExerciseDone> allExDone = activeTrainingSchedule.getDone();
+                    List<ExerciseDone> exDoneForIntervalOne = new ArrayList<>();
+                    int intervalLength = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
+                    int maxDay = 0;
+                    for (ExerciseDone eDone : allExDone) {
+                        if (eDone.getDay() > maxDay) {
+                            maxDay = eDone.getDay();
+                        }
+                        if (eDone.getDay() <= intervalLength) {
+                            exDoneForIntervalOne.add(eDone);
+                        }
+                    }
+                    int currentInterval = ((Period.between(activeTrainingSchedule.getStartDate(), LocalDate.now()).getDays()) / intervalLength) + 1;
+                    if (!(allExDone.size() == (exDoneForIntervalOne.size() * (currentInterval - 1)))) {
+                        int lastInterval = maxDay / intervalLength;
+                        lastInterval = lastInterval <= 0? 1 : lastInterval;
+                        for (int i = lastInterval + 1; i < currentInterval; i++) {
+                            LOGGER.debug("Update trainingSchedule for missed intervals");
+                            activeTrainingSchedule = iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude, i);
+                            activeTrainingSchedule.setDude(dude);
+                            activeTrainingSchedule.setDone(iTrainingScheduleService.findExDoneByActiveTrainingScheduleId(activeTrainingSchedule.getId()));
+                            activeTrainingSchedule.setTrainingSchedule(iTrainingScheduleService.findByIdAndVersion(activeTrainingSchedule.getTrainingScheduleId(), activeTrainingSchedule.getTrainingScheduleVersion()));
+                        }
+                    }
+                    LOGGER.debug("Update schedule for current interval");
+                    return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude, currentInterval));
+
+                } catch (ServiceException e) {
+                    throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Could not adapt activeTrainingSchedule with id " + activeTrainingSchedule.getId());
+                }
+            }
+        }
         return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(activeTrainingSchedule);
     }
 
@@ -311,6 +352,137 @@ public class DudeEndpoint {
             exerciseDoneDtos[i] = trainingScheduleMapper.exerciseDoneToExerciseDoneDto(exerciseDones.get(i));
         }
         return exerciseDoneDtos;
+    }
+
+    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @ApiOperation(value = "Get Workouts by filters", authorizations = {@Authorization(value = "apiKey")})
+    public DudeDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
+        List<Dude> dudes;
+        try {
+            dudes = iDudeService.findByFilter(filter, selfAssessment);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        DudeDto[] dudeDtos = new DudeDto[dudes.size()];
+        for (int i = 0; i < dudes.size(); i++) {
+            dudeDtos[i] = dudeMapper.dudeToDudeDto(dudes.get(i));
+        }
+        return dudeDtos;
+    }
+
+    @PostMapping("/{id}/uploadImage")
+    @ApiOperation(value = "Upload image for Dude", authorizations = {@Authorization(value = "apiKey")})
+    public String uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("Entering uploadImage with id: " + id);
+        String fileName = "dude_" + id + ".png";
+
+        try {
+            iFileStorageService.storeFile(fileName, file);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not uploadImage with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+
+        try {
+            return iDudeService.updateImagePath(id, fileName);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not updateImagePath with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/courses", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked courses of dude", authorizations = {@Authorization(value = "apiKey")})
+    public CourseDto[] getBookmarkedCourses(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedCourses with id: " + id);
+        List<Course> courses;
+        try {
+            courses = iDudeService.findDudeById(id).getCourseBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedCourses with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        CourseDto[] courseDtos = new CourseDto[courses.size()];
+        for (int i = 0; i < courses.size(); i++) {
+            courseDtos[i] = courseMapper.courseToCourseDto(courses.get(i));
+        }
+        return courseDtos;
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/exercises", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked exercises of dude", authorizations = {@Authorization(value = "apiKey")})
+    public ExerciseDto[] getBookmarkedExercises(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedExercises with id: " + id);
+        List<Exercise> exercises;
+        try {
+            exercises = iDudeService.findDudeById(id).getExerciseBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedExercises with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        ExerciseDto[] exerciseDtos = new ExerciseDto[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            exerciseDtos[i] = exerciseMapper.exerciseToExerciseDto(exercises.get(i));
+        }
+        return exerciseDtos;
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/workouts", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked workouts of dude", authorizations = {@Authorization(value = "apiKey")})
+    public WorkoutDto[] getBookmarkedWorkouts(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedWorkouts with id: " + id);
+        List<Workout> workouts;
+        try {
+            workouts = iDudeService.findDudeById(id).getWorkoutBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedWorkouts with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        WorkoutDto[] workoutDtos = new WorkoutDto[workouts.size()];
+        for (int i = 0; i < workouts.size(); i++) {
+            workoutDtos[i] = workoutMapper.workoutToWorkoutDto(workouts.get(i));
+        }
+        return workoutDtos;
+    }
+
+    @RequestMapping(value = "/{id}/bookmarks/trainingSchedules", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all bookmarked training schedules of dude", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleDto[] getBookmarkedTrainingSchedules(@PathVariable Long id) {
+        LOGGER.info("Entering getBookmarkedTrainingSchedules with id: " + id);
+        List<TrainingSchedule> trainingSchedules;
+        try {
+            trainingSchedules = iDudeService.findDudeById(id).getTrainingScheduleBookmarks();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getBookmarkedTrainingSchedules with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        TrainingScheduleDto[] trainingScheduleDtos = new TrainingScheduleDto[trainingSchedules.size()];
+        for (int i = 0; i < trainingSchedules.size(); i++) {
+            trainingScheduleDtos[i] = trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(trainingSchedules.get(i));
+        }
+        return trainingScheduleDtos;
+    }
+
+
+    @RequestMapping(value = "/{id}/statistics", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all statistics of formerly active training schedules of Dude", authorizations = {@Authorization(value = "apiKey")})
+    public FinishedTrainingScheduleStatsDto[] getStatisticsByDudeId(@PathVariable Long id) {
+        LOGGER.info("Entering getStatisticsByDudeId with id " + id);
+        List<FinishedTrainingScheduleStats> stats;
+        try {
+            stats = iDudeService.findDudeById(id).getFinishedTrainingScheduleStats();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getStatisticsByDudeId with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        FinishedTrainingScheduleStatsDto[] statsDtos = new FinishedTrainingScheduleStatsDto[stats.size()];
+        for (int i = 0; i < stats.size(); i++) {
+            statsDtos[i] = statsMapper.finishedTrainingScheduleStatsToFinishedTrainingScheduleStatsDto(stats.get(i));
+            LOGGER.debug("STATS INFO: " + statsDtos[i].toString() + ", " + statsDtos[i].getTrainingScheduleDto().toString());
+        }
+        return statsDtos;
     }
 }
 

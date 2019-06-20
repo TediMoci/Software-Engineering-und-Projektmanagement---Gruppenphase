@@ -29,7 +29,6 @@ public class WorkoutDto {
     @NotNull(message = "Difficulty must be given")
     @Min(value = 1, message = "Min difficulty value is 1") @Max(value = 3, message = "Max difficulty value is 3")
     private Integer difficulty;
-    // TODO: selfAssessment enum
 
     @ApiModelProperty(name = "Calorie consumption of Workout")
     @Min(value = 0, message = "Min for calorieConsumption is 0") @Max(value = 10000, message = "Max value for calorieConsumption is 10000")
@@ -38,6 +37,9 @@ public class WorkoutDto {
     @ApiModelProperty(name = "Rating of Workout")
     @Min(0) @Max(5)
     private Double rating = 0.0;
+
+    @ApiModelProperty(name = "Visibility of Workout")
+    private Boolean isPrivate = false;
 
     @ApiModelProperty(name = "Workout-Exercises that are part of the Workout")
     private WorkoutExerciseDtoIn[] workoutExercises;
@@ -99,6 +101,14 @@ public class WorkoutDto {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public WorkoutExerciseDtoIn[] getWorkoutExercises() {
@@ -179,6 +189,7 @@ public class WorkoutDto {
         private Integer difficulty;
         private Double calorieConsumption;
         private Double rating;
+        private Boolean isPrivate;
         private WorkoutExerciseDtoIn[] workoutExercises;
         private Long creatorId;
 
@@ -220,6 +231,11 @@ public class WorkoutDto {
             return this;
         }
 
+        public WorkoutDtoBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public WorkoutDtoBuilder workoutExercises(WorkoutExerciseDtoIn[] workoutExercises) {
             this.workoutExercises = workoutExercises;
             return this;
@@ -239,6 +255,7 @@ public class WorkoutDto {
             workoutDto.setDifficulty(difficulty);
             workoutDto.setCalorieConsumption(calorieConsumption);
             workoutDto.setRating(rating);
+            workoutDto.setIsPrivate(isPrivate);
             workoutDto.setWorkoutExercises(workoutExercises);
             workoutDto.setCreatorId(creatorId);
             return workoutDto;

@@ -13,7 +13,7 @@ import {CreateTrainingScheduleRandomService} from '../../services/create-trainin
 })
 export class CreateTrainingScheduleRandomlyComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   error: any;
@@ -36,7 +36,7 @@ export class CreateTrainingScheduleRandomlyComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-
+    this.imagePath = this.dude.imagePath;
     this.tsForm = this.formBuilder.group({
       tsName: ['', [Validators.required]],
       tsMinTarget: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],

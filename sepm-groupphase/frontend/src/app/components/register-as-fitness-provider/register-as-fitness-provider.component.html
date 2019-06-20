@@ -1,4 +1,4 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
+<div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -17,7 +17,7 @@
           <input type="text" name="name" maxlength="50" formControlName="name" class="form-control" id="name"
                  aria-describedby="nameHelp" placeholder="Enter username">
           <div *ngIf="submitted && !!registerForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.name.errors.required">Your username is
+            <small class="form-text text-danger" *ngIf="!!registerForm.controls.name.errors.required">Your username is
               required!
             </small>
           </div>
@@ -28,10 +28,10 @@
           <input knifeNoSpaces  type="password" name="password" formControlName="password" class="form-control" id="password"
                  placeholder="Enter password">
           <div *ngIf="submitted && !!registerForm.controls.password.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.required">Your password is
+            <small class="form-text text-danger" *ngIf="!!registerForm.controls.password.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.password.errors.minlength">Your password
+            <small class="form-text text-danger" *ngIf="!!registerForm.controls.password.errors.minlength">Your password
               must be at least 8 characters long!
             </small>
           </div>
@@ -42,10 +42,10 @@
           <input knifeNoSpaces type="password" name="passwordConfirmed" formControlName="passwordConfirmed" class="form-control" id="passwordConfirmed"
                  placeholder="Enter password">
           <div *ngIf="submitted && !!registerForm.controls.passwordConfirmed.errors" class="error">
-            <small class="form-text text-warning" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
+            <small class="form-text text-danger" *ngIf=" !!registerForm.controls.passwordConfirmed.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
+            <small class="form-text text-danger" *ngIf="!!registerForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
             </small>
           </div>
         </div>
@@ -55,10 +55,10 @@
           <input type="text" name="email" formControlName="email" class="form-control" id="email"
                  aria-describedby="emailHelp" placeholder="Enter email">
           <div *ngIf="submitted && !!registerForm.controls.email.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.required">Your email is
+            <small class="form-text text-danger" *ngIf="!!registerForm.controls.email.errors.required">Your email is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.email.errors.email">Your email is
+            <small class="form-text text-danger" *ngIf="!!registerForm.controls.email.errors.email">Your email is
               invalid!
             </small>
           </div>
@@ -70,7 +70,7 @@
           <input type="text" name="address" formControlName="address" class="form-control" id="address"
                  aria-describedby="addressHelp" placeholder="Enter address">
           <div *ngIf="submitted && !!registerForm.controls.address.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!registerForm.controls.address.errors.required">Your address is
+            <small class="form-text text-danger" *ngIf="!!registerForm.controls.address.errors.required">Your address is
               required!
             </small>
           </div>
