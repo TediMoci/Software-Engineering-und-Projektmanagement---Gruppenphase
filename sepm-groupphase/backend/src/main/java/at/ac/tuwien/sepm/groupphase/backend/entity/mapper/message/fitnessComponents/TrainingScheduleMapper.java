@@ -60,7 +60,6 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingSchedule.getDescription());
         builder.difficulty(trainingSchedule.getDifficulty());
         builder.intervalLength(trainingSchedule.getIntervalLength());
-        builder.rating(trainingSchedule.getRating());
         builder.isPrivate(trainingSchedule.getIsPrivate());
 
         if (trainingSchedule.getRatingNum()==0){
@@ -84,7 +83,6 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.description(trainingScheduleWorkout.getWorkout().getDescription());
         builder.difficulty(trainingScheduleWorkout.getWorkout().getDifficulty());
         builder.calorieConsumption(trainingScheduleWorkout.getWorkout().getCalorieConsumption());
-        builder.rating(trainingScheduleWorkout.getWorkout().getRating());
         builder.isPrivate(trainingScheduleWorkout.getWorkout().getIsPrivate());
 
         if (trainingScheduleWorkout.getWorkout().getRatingNum()==0){

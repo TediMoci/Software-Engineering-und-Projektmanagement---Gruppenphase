@@ -61,7 +61,6 @@ public class WorkoutMapper implements IWorkoutMapper {
         builder.description(workout.getDescription());
         builder.difficulty(workout.getDifficulty());
         builder.calorieConsumption(workout.getCalorieConsumption());
-        builder.rating(workout.getRating());
         builder.isPrivate(workout.getIsPrivate());
 
         if (workout.getRatingNum()==0){

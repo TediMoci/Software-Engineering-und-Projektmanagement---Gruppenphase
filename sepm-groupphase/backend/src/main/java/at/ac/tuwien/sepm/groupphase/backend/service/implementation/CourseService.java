@@ -26,7 +26,6 @@ public class CourseService implements ICourseService {
     private final IDudeRepository iDudeRepository;
     private final CourseBookmarkRepository courseBookmarkRepository;
     private final ICourseRatingRepository iCourseRatingRepository;
-    private final IDudeRepository iDudeRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseService.class);
 
     public CourseService(ICourseRepository iCourseRepository, ICourseRatingRepository iCourseRatingRepository, IDudeRepository iDudeRepository, CourseBookmarkRepository courseBookmarkRepository) {
@@ -34,7 +33,6 @@ public class CourseService implements ICourseService {
         this.iDudeRepository = iDudeRepository;
         this.courseBookmarkRepository = courseBookmarkRepository;
         this.iCourseRatingRepository = iCourseRatingRepository;
-        this.iDudeRepository = iDudeRepository;
     }
 
     @Override

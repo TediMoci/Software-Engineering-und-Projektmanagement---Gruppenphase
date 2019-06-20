@@ -103,14 +103,16 @@ public class TrainingScheduleServiceTest {
         validTrainingSchedule.setDescription("Description1");
         validTrainingSchedule.setDifficulty(1);
         validTrainingSchedule.setIntervalLength(3);
-        validTrainingSchedule.setRating(3.0);
+        validTrainingSchedule.setRatingSum(1);
+        validTrainingSchedule.setRatingNum(1);
         validTrainingSchedule.setWorkouts(validTrainingScheduleWorkouts1);
 
         validTrainingSchedule2.setName("TrainingSchedule2");
         validTrainingSchedule2.setDescription("Description2");
         validTrainingSchedule2.setDifficulty(2);
         validTrainingSchedule2.setIntervalLength(4);
-        validTrainingSchedule2.setRating(4.0);
+        validTrainingSchedule2.setRatingSum(1);
+        validTrainingSchedule2.setRatingNum(1);
         validTrainingSchedule2.setWorkouts(validTrainingScheduleWorkouts1);
 
         validTrainingSchedules.add(validTrainingSchedule2);
@@ -126,7 +128,8 @@ public class TrainingScheduleServiceTest {
         trainingSchedule.setDescription(ts.getDescription());
         trainingSchedule.setWorkouts(ts.getWorkouts());
         trainingSchedule.setIntervalLength(ts.getIntervalLength());
-        trainingSchedule.setRating(ts.getRating());
+        trainingSchedule.setRatingSum(ts.getRatingSum());
+        trainingSchedule.setRatingNum(ts.getRatingNum());
         trainingSchedule.setIsPrivate(ts.getIsPrivate());
         trainingSchedule.setCreator(ts.getCreator());
         trainingSchedule.setBookmarkDudes(ts.getBookmarkDudes());

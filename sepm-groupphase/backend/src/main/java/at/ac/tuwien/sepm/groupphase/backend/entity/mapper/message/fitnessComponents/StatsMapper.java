@@ -26,7 +26,12 @@ public class StatsMapper implements IStatsMapper {
         builderTs.description(ts.getDescription());
         builderTs.difficulty(ts.getDifficulty());
         builderTs.intervalLength(ts.getIntervalLength());
-        builderTs.rating(ts.getRating());
+
+        if (ts.getRatingNum()==0){
+            builderTs.rating(0.0);
+        } else {
+            builderTs.rating(roundToOne((double)(ts.getRatingSum())/(double)(ts.getRatingNum())));
+        }
         builderTs.creatorId(ts.getCreator().getId());
         builder.trainingSchedule(builderTs.build());
 
@@ -40,4 +45,9 @@ public class StatsMapper implements IStatsMapper {
 
         return builder.build();
     }
+
+    private double roundToOne(double value){
+        return Math.round(value * 10.0) / 10.0;
+    }
+
 }

@@ -104,32 +104,17 @@ public class CourseDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CourseDto courseDto = (CourseDto) o;
-
-        if (id != null ? !id.equals(courseDto.id) : courseDto.id != null) return false;
-        if (name != null ? !name.equals(courseDto.name) : courseDto.name != null) return false;
-        if (description != null ? !description.equals(courseDto.description) : courseDto.description != null)
-            return false;
-        if (imagePath != null ? !imagePath.equals(courseDto.imagePath) : courseDto.imagePath != null) return false;
-        return creatorId != null ? creatorId.equals(courseDto.creatorId) : courseDto.creatorId == null;
-
         return Objects.equals(getId(), courseDto.getId()) &&
             Objects.equals(getName(), courseDto.getName()) &&
             Objects.equals(getDescription(), courseDto.getDescription()) &&
+            Objects.equals(getImagePath(), courseDto.getImagePath()) &&
             Objects.equals(getRating(), courseDto.getRating()) &&
-            Objects.equals(getCreatorId(), courseDto.getCreatorId()) &&
-            Arrays.equals(getDudeDtos(), courseDto.getDudeDtos());
+            Objects.equals(getCreatorId(), courseDto.getCreatorId());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (imagePath != null ? imagePath.hashCode() : 0);
-        result = 31 * result + (creatorId != null ? creatorId.hashCode() : 0);
-        int result = Objects.hash(getId(), getName(), getDescription(), getRating(), getCreatorId());
-        result = 31 * result + Arrays.hashCode(getDudeDtos());
-        return result;
+        return Objects.hash(getId(), getName(), getDescription(), getImagePath(), getRating(), getCreatorId());
     }
 
     public static final class CourseDtoBuilder {
