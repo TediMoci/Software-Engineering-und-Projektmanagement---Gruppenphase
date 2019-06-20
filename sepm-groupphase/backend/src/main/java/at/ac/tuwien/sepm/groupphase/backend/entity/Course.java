@@ -122,12 +122,11 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(getId(), course.getId()) &&
-            Objects.equals(getName(), course.getName()) &&
-            Objects.equals(getDescription(), course.getDescription()) &&
-            Objects.equals(getRatingSum(), course.getRatingSum()) &&
-            Objects.equals(getRatingNum(), course.getRatingNum()) &&
-            Objects.equals(getCreator(), course.getCreator());
+        if (id != null ? !id.equals(course.id) : course.id != null) return false;
+        if (name != null ? !name.equals(course.name) : course.name != null) return false;
+        if (ratingNum != null ? !ratingNum.equals(course.ratingNum) : course.ratingNum != null) return false;
+        if (ratingSum != null ? !ratingSum.equals(course.ratingSum) : course.ratingSum != null) return false;
+        return description != null ? description.equals(course.description) : course.description == null;
     }
 
     @Override

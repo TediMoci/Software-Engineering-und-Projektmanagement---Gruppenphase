@@ -28,7 +28,7 @@ public class CourseDto {
     @ApiModelProperty(name = "Path of picture of Course")
     private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
 
-    @ApiModelProperty(name = "Rating of Exercise")
+    @ApiModelProperty(name = "Rating of Course")
     @Min(0) @Max(5)
     private Double rating = 0.0;
 
@@ -104,12 +104,15 @@ public class CourseDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CourseDto courseDto = (CourseDto) o;
-        return Objects.equals(getId(), courseDto.getId()) &&
-            Objects.equals(getName(), courseDto.getName()) &&
-            Objects.equals(getDescription(), courseDto.getDescription()) &&
-            Objects.equals(getImagePath(), courseDto.getImagePath()) &&
-            Objects.equals(getRating(), courseDto.getRating()) &&
-            Objects.equals(getCreatorId(), courseDto.getCreatorId());
+
+        if (id != null ? !id.equals(courseDto.id) : courseDto.id != null) return false;
+        if (name != null ? !name.equals(courseDto.name) : courseDto.name != null) return false;
+        if (description != null ? !description.equals(courseDto.description) : courseDto.description != null)
+            return false;
+        if (imagePath != null ? !imagePath.equals(courseDto.imagePath) : courseDto.imagePath != null) return false;
+        if (rating != null ? !rating.equals(courseDto.rating) : courseDto.rating != null) return false;
+        return creatorId != null ? creatorId.equals(courseDto.creatorId) : courseDto.creatorId == null;
+
     }
 
     @Override
