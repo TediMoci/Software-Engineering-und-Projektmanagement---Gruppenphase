@@ -785,13 +785,20 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
                 // increase/decrease
                 if (eDone.isDone()) {
-                    if (repsHelpIncrease > 100) {
+                    if (repsHelpIncrease > 200) {
                         // if maximum number of repetitions is exceeded: set default number of repetitions and increase number of sets by 1
-                        if (e.getSets() < 15) {
-                            e.setRepetitions((int) Math.round((double) (repsHelpIncrease * e.getSets()) / (e.getSets() + 1)));
-                            e.setSets(e.getSets() + 1);
+                        if (e.getSets() < 20) {
+                            int newReps = repsHelpIncrease;
+                            int i = 1;
+                            while (newReps > 200) {
+                                newReps = (int) Math.round((double) (repsHelpIncrease * e.getSets()) / (e.getSets() + i));
+                                i++;
+                            }
+                            e.setRepetitions(newReps);
+                            int newSets = e.getSets() + (i-1);
+                            e.setSets(newSets < 20? newSets : 20);
                         } else {
-                            e.setRepetitions(100);
+                            e.setRepetitions(200);
                         }
                     } else {
                         e.setRepetitions(repsHelpIncrease);
