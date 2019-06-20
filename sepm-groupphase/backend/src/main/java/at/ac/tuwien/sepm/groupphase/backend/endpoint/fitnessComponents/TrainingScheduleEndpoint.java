@@ -151,7 +151,7 @@ public class TrainingScheduleEndpoint {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Training Schedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto update(@PathVariable("id") long id, @RequestBody TrainingScheduleDto newTrainingSchedule) {
+    public TrainingScheduleDto update(@PathVariable("id") long id, @Valid @RequestBody TrainingScheduleDto newTrainingSchedule) {
         LOGGER.info("Updating workout with id: " + id);
         try {
             return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.update(id, trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(newTrainingSchedule)));

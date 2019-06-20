@@ -189,6 +189,7 @@ public class ExerciseServiceTest {
         Mockito.when(exerciseRepository.findById(anyLong())).thenReturn(null);
         exerciseService.delete(exercise.getId());
     }
+
     @Test
     public void whenFindByFilter_thenGetExerciseWhereFilterTrueAndNotExerciseWhereFilterFalse(){
         Mockito.when(exerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory("2",Category.Endurance)).thenReturn(validExercises2);

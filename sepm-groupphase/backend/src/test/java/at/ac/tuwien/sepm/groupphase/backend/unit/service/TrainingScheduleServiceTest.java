@@ -91,7 +91,11 @@ public class TrainingScheduleServiceTest {
         validWorkout2.setExercises(validWorkoutExercises1);
 
         TrainingScheduleWorkout validTrainingScheduleWorkout1 = new TrainingScheduleWorkout();
+        validTrainingScheduleWorkout1.setWorkout(validWorkout1);
+        validTrainingScheduleWorkout1.setDay(2);
         TrainingScheduleWorkout validTrainingScheduleWorkout2 = new TrainingScheduleWorkout();
+        validTrainingScheduleWorkout2.setWorkout(validWorkout2);
+        validTrainingScheduleWorkout2.setDay(3);
         validTrainingScheduleWorkouts1.add(validTrainingScheduleWorkout1);
         validTrainingScheduleWorkouts1.add(validTrainingScheduleWorkout2);
 
@@ -143,7 +147,6 @@ public class TrainingScheduleServiceTest {
         Mockito.when(trainingScheduleRepository.findByFilterWithDifficulty("2",2)).thenReturn(validTrainingSchedules);
         assertEquals(trainingScheduleRepository.findByFilterWithDifficulty("2",2), validTrainingSchedules);
         assertFalse(trainingScheduleRepository.findByFilterWithDifficulty("1",1).contains(validTrainingSchedules.get(0)));
-
     }
 
     @Test
@@ -208,5 +211,65 @@ public class TrainingScheduleServiceTest {
         Mockito.when(trainingScheduleRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalTs);
         Mockito.when(trainingScheduleBookmarkRepository.checkTrainingScheduleBookmark(1L, 1L, 1)).thenReturn(1);
         trainingScheduleService.saveTrainingScheduleBookmark(1L, 1L, 1);
+    }
+
+    @Test
+    public void whenUpdateOneTrainingSchedule_thenGetUpdatedTrainingSchedule() throws ServiceException {
+        TrainingSchedule trainingSchedule = buildTrainingSchedule(validTrainingSchedule2);
+        Optional<Workout> optionalWorkout = Optional.of(new Workout());
+        Mockito.when(trainingScheduleRepository.save(trainingSchedule)).thenReturn(trainingSchedule);
+        Mockito.when(trainingScheduleRepository.findById(1L)).thenReturn(validTrainingSchedule);
+        for (TrainingScheduleWorkout trainingScheduleWorkout : trainingSchedule.getWorkouts()) {
+            Mockito.when(workoutRepository.findByIdAndVersion(trainingScheduleWorkout.getWorkoutId(), trainingScheduleWorkout.getWorkoutVersion())).thenReturn(optionalWorkout);
+            Mockito.when(trainingScheduleWorkoutRepository.save(trainingScheduleWorkout)).thenReturn(trainingScheduleWorkout);
+        }
+        assertEquals(trainingScheduleService.update(1L, trainingSchedule), trainingSchedule);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenUpdateOneTrainingSchedule_ifTrainingScheduleNotFound_thenServiceException() throws ServiceException {
+        TrainingSchedule trainingSchedule = buildTrainingSchedule(validTrainingSchedule2);
+        Optional<Workout> optionalWorkout = Optional.of(new Workout());
+        Mockito.when(trainingScheduleRepository.save(trainingSchedule)).thenReturn(trainingSchedule);
+        Mockito.when(trainingScheduleRepository.findById(1L)).thenReturn(null);
+        assertEquals(trainingScheduleService.update(1L, trainingSchedule), trainingSchedule);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenUpdateOneTrainingScheduleWithInvalidDay_thenServiceException() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Workout workout = new Workout();
+        workout.setName("Workout1");
+        workout.setDifficulty(1);
+        workout.setCalorieConsumption(100.0);
+        workout.setCreator(dude);
+        WorkoutExercise validWorkoutExercise1 = new WorkoutExercise();
+        List<WorkoutExercise> validWorkoutExercises1 = new ArrayList<>();
+        validWorkoutExercises1.add(validWorkoutExercise1);
+        workout.setExercises(validWorkoutExercises1);
+
+        TrainingSchedule trainingSchedule = buildTrainingSchedule(validTrainingSchedule2);
+        TrainingScheduleWorkout invalidTrainingScheduleWorkout = new TrainingScheduleWorkout();
+        invalidTrainingScheduleWorkout.setWorkout(workout);
+        invalidTrainingScheduleWorkout.setDay(8);
+        List<TrainingScheduleWorkout> invalidTrainingScheduleWorkouts = new ArrayList<>();
+        invalidTrainingScheduleWorkouts.add(invalidTrainingScheduleWorkout);
+        trainingSchedule.setWorkouts(invalidTrainingScheduleWorkouts);
+
+        Optional<Workout> optionalWorkout = Optional.of(new Workout());
+        Mockito.when(trainingScheduleRepository.save(trainingSchedule)).thenReturn(trainingSchedule);
+        Mockito.when(trainingScheduleRepository.findById(1L)).thenReturn(validTrainingSchedule);
+        for (TrainingScheduleWorkout trainingScheduleWorkout : trainingSchedule.getWorkouts()) {
+            Mockito.when(workoutRepository.findByIdAndVersion(trainingScheduleWorkout.getWorkoutId(), trainingScheduleWorkout.getWorkoutVersion())).thenReturn(optionalWorkout);
+            Mockito.when(trainingScheduleWorkoutRepository.save(trainingScheduleWorkout)).thenReturn(trainingScheduleWorkout);
+        }
+        assertEquals(trainingScheduleService.update(1L, trainingSchedule), trainingSchedule);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenDeleteTrainingSchedule_ifTrainingScheduleNotFound_thenServiceException() throws ServiceException {
+        Mockito.when(trainingScheduleRepository.findById(anyLong())).thenReturn(null);
+        trainingScheduleService.delete(1L);
     }
 }

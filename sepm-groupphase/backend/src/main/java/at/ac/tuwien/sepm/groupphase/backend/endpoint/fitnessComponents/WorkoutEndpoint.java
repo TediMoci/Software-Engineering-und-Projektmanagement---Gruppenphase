@@ -118,7 +118,7 @@ public class WorkoutEndpoint {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Workout", authorizations = {@Authorization(value = "apiKey")})
-    public WorkoutDto update(@PathVariable("id") long id, @RequestBody WorkoutDto newWorkout) {
+    public WorkoutDto update(@PathVariable("id") long id, @Valid @RequestBody WorkoutDto newWorkout) {
         LOGGER.info("Updating workout with id: " + id);
         try {
             return workoutMapper.workoutToWorkoutDto(iWorkoutService.update(id, workoutMapper.workoutDtoToWorkout(newWorkout)));

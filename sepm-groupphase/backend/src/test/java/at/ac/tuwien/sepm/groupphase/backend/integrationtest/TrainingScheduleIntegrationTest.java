@@ -553,6 +553,5 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(3.4166,stats.getBody()[0].getTotalHours(),0.001);
         assertEquals(33.3333,stats.getBody()[0].getStrengthPercent(), 0.001);
         assertEquals(66.6666,stats.getBody()[0].getEndurancePercent(), 0.001);
-
     }
 }
