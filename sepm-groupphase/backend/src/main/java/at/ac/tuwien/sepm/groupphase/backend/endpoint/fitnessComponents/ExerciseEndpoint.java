@@ -120,7 +120,7 @@ public class ExerciseEndpoint {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update an Exercise", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto updateExercise(@PathVariable("id") long id, @RequestBody ExerciseDto newExercise) {
+    public ExerciseDto updateExercise(@PathVariable("id") long id, @Valid @RequestBody ExerciseDto newExercise) {
         LOGGER.info("Updating exercise with id: " + id);
         try {
             return exerciseMapper.exerciseToExerciseDto(iExerciseService.update(id, exerciseMapper.exerciseDtoToExercise(newExercise)));

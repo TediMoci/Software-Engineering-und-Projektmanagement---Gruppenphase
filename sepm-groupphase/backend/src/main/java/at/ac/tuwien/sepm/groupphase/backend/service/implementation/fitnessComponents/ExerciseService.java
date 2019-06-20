@@ -15,7 +15,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 

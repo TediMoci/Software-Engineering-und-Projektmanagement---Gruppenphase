@@ -99,7 +99,7 @@ public class FitnessProviderEndpoint {
 
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a fitness provider", authorizations = {@Authorization(value = "apiKey")})
-    public FitnessProviderDto updateFitnessProvider(@PathVariable("name") String name, @RequestBody FitnessProviderDto fitnessProvider) {
+    public FitnessProviderDto updateFitnessProvider(@PathVariable("name") String name, @Valid @RequestBody FitnessProviderDto fitnessProvider) {
         try {
             return fitnessProviderMapper.fitnessProviderToFitnessProviderDto(iFitnessProviderService.update(name, fitnessProviderMapper.fitnessProviderDtoToFitnessProvider(fitnessProvider)));
         } catch (ServiceException e){

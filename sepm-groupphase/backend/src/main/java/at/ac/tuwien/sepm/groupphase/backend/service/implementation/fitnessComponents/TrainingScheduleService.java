@@ -26,12 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.PersistenceException;
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -129,6 +128,16 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
+    public ActiveTrainingSchedule updateActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException {
+        try {
+            iActiveTrainingScheduleRepository.updateActiveTrainingSchedule(activeTrainingSchedule.getDudeId(), activeTrainingSchedule.getTrainingScheduleId(), activeTrainingSchedule.getTrainingScheduleVersion(), activeTrainingSchedule.getStartDate());
+            return iActiveTrainingScheduleRepository.findById(activeTrainingSchedule.getId());
+        }  catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public ActiveTrainingSchedule saveActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException {
         LOGGER.info("Entering saveActive for: " + activeTrainingSchedule);
         try {
@@ -222,14 +231,13 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         trainingSchedule.setIsPrivate(true);
         List<Workout> workouts = new ArrayList<>();
 
-        if (lowerDifficulty){
-            workouts.addAll(iWorkoutRepository.findByLowerDifficulty(trainingSchedule.getDifficulty(),maxTarget));
-        }
-        else{
-            workouts.addAll(iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty(),maxTarget));
+        if (lowerDifficulty) {
+            workouts.addAll(iWorkoutRepository.findByLowerDifficulty(trainingSchedule.getDifficulty(), maxTarget));
+        } else {
+            workouts.addAll(iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty(), maxTarget));
         }
 
-        sum_up(workouts,minTarget,maxTarget,days,duration);
+        sum_up(workouts, minTarget, maxTarget, days, duration);
 
         TrainingSchedule savedTrainingSchedule;
         try {
@@ -386,7 +394,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             TrainingSchedule oldTraining = iTrainingScheduleRepository.findById(id);
             if (oldTraining == null) throw new ServiceException("Could not find training schedule with id: " + id);
             newTraining.setId(id);
-            newTraining.setVersion(1+oldTraining.getVersion());
+            newTraining.setVersion(1 + oldTraining.getVersion());
 
             List<TrainingScheduleWorkout> trainingWorkouts = newTraining.getWorkouts();
             newTraining.setWorkouts(null);
@@ -413,16 +421,13 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             if (difficulty != null && intervalLength != null) {
                 trainingSchedules = iTrainingScheduleRepository.findByFilterWithDifficultyAndInterval(filter, difficulty, intervalLength);
                 trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithDifficultyAndInterval(filter, difficulty, intervalLength, dude));
-            }
-            else if(difficulty != null && intervalLength == null) {
+            } else if (difficulty != null && intervalLength == null) {
                 trainingSchedules = iTrainingScheduleRepository.findByFilterWithDifficulty(filter, difficulty);
                 trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithDifficulty(filter, difficulty, dude));
-            }
-            else if (difficulty == null & intervalLength != null) {
+            } else if (difficulty == null & intervalLength != null) {
                 trainingSchedules = iTrainingScheduleRepository.findByFilterWithInterval(filter, intervalLength);
                 trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithInterval(filter, intervalLength, dude));
-            }
-            else {
+            } else {
                 trainingSchedules = iTrainingScheduleRepository.findByFilterWithoutDifficultyAndInterval(filter);
                 trainingSchedules.addAll(iTrainingScheduleRepository.findOwnPrivateByFilterWithoutDifficultyAndInterval(filter, dude));
             }
@@ -773,7 +778,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
             if (!((exc.getCategory() == Category.Endurance || exc.getCategory() == Category.Other) && e.getSets() == 1 && e.getRepetitions() == 1)) {
                 // calculate new number of repetitions
-                double calculateDurationPerRepetition = ((double)e.getExDuration())/(((double)e.getRepetitions()) * ((double)e.getSets()));
+                double calculateDurationPerRepetition = ((double) e.getExDuration()) / (((double) e.getRepetitions()) * ((double) e.getSets()));
                 LOGGER.debug("Duration per Repetition: " + calculateDurationPerRepetition);
                 repsHelpIncrease = BigDecimal.valueOf(e.getRepetitions() + (percentPerExDay * e.getRepetitions())).setScale(0, RoundingMode.HALF_UP).intValue();
                 repsHelpDecrease = BigDecimal.valueOf(e.getRepetitions() - (percentPerExDay * e.getRepetitions())).setScale(0, RoundingMode.HALF_UP).intValue();
@@ -791,7 +796,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     } else {
                         e.setRepetitions(repsHelpIncrease);
                     }
-                    newDuration = (int)(calculateDurationPerRepetition * (e.getRepetitions() * e.getSets()));
+                    newDuration = (int) (calculateDurationPerRepetition * (e.getRepetitions() * e.getSets()));
                     e.setExDuration(newDuration > 1440 ? 1440 : newDuration);
                 } else {
                     if (repsHelpDecrease <= 1) {
@@ -802,8 +807,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     } else {
                         e.setRepetitions(repsHelpDecrease);
                     }
-                    newDuration = (int)(calculateDurationPerRepetition * (e.getRepetitions() * e.getSets()));
-                    e.setExDuration(newDuration > 1? newDuration : 1);
+                    newDuration = (int) (calculateDurationPerRepetition * (e.getRepetitions() * e.getSets()));
+                    e.setExDuration(newDuration > 1 ? newDuration : 1);
                 }
 
                 LOGGER.debug("Update workoutExercise after adaptive change");

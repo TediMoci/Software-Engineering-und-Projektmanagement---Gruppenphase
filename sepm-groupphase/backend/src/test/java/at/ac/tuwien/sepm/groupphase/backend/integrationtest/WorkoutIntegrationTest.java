@@ -81,12 +81,12 @@ public class WorkoutIntegrationTest {
         validWorkoutDto1.setName("Workout1");
         validWorkoutDto1.setDescription("Description1");
         validWorkoutDto1.setDifficulty(1);
-        validWorkoutDto1.setCalorieConsumption(100.0);
+        validWorkoutDto1.setCalorieConsumption(300.0);
 
         validWorkoutDto2.setName("Workout2");
         validWorkoutDto2.setDescription("Description2");
         validWorkoutDto2.setDifficulty(2);
-        validWorkoutDto2.setCalorieConsumption(200.0);
+        validWorkoutDto2.setCalorieConsumption(400.0);
 
         invalidWorkoutDto1.setName("Workout3");
         invalidWorkoutDto1.setDescription("Description3");
@@ -149,7 +149,6 @@ public class WorkoutIntegrationTest {
         return workoutDto;
     }
 
-
     @Test
     public void whenSaveOneWorkout_then201CreatedAndGetSavedWorkout() {
         HttpEntity<WorkoutDto> workoutRequest = new HttpEntity<>(validWorkoutDto1);
@@ -189,18 +188,18 @@ public class WorkoutIntegrationTest {
     }
 
     @Test
-    public void givenFindAllExercises_whenCreateOneMoreExercise_thenStatus200AndGetExercises(){
+    public void givenFindAllWorkouts_whenCreateOneMoreWorkout_thenStatus200AndGetWorkouts(){
         Long a = postWorkout(validWorkoutDto1);
         Long b = postWorkout(validWorkoutDto2);
-        ResponseEntity<ExerciseDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<ExerciseDto[]>() {
+        ResponseEntity<WorkoutDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<WorkoutDto[]>() {
             });
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         int foundWorkoutsLength = response.getBody().length;
 
         Long c = postWorkout(validWorkoutDto2);
-        ResponseEntity<ExerciseDto[]> responseAfter = REST_TEMPLATE
-            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<ExerciseDto[]>() {
+        ResponseEntity<WorkoutDto[]> responseAfter = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<WorkoutDto[]>() {
             });
         assertEquals(responseAfter.getBody().length, foundWorkoutsLength+1);
         workoutRepository.delete(a);

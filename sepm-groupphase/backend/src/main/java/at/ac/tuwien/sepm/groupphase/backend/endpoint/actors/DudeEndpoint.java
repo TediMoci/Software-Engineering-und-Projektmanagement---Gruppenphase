@@ -129,7 +129,7 @@ public class DudeEndpoint {
 
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Dude", authorizations = {@Authorization(value = "apiKey")})
-    public DudeDto updateDude(@PathVariable("name") String name, @RequestBody DudeDto dude) {
+    public DudeDto updateDude(@PathVariable("name") String name, @Valid @RequestBody DudeDto dude) {
         try {
             return dudeMapper.dudeToDudeDto(iDudeService.update(name, dudeMapper.dudeDtoToDude(dude)));
         } catch (ServiceException e) {
