@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 import java.util.List;
@@ -84,5 +85,4 @@ public interface IWorkoutService {
      * @throws ServiceException if an error occurred while trying to delete the bookmark for the Workout
      */
     void deleteWorkoutBookmark(Long dudeId, Long workoutId, Integer workoutVersion) throws ServiceException;
-
 }
