@@ -11,7 +11,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingSchedul
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.*;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
-import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.helperStructure.WorkoutExerciseDone;
@@ -56,7 +55,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private static Map<Integer, List<Workout>> finalList = new HashMap<Integer, List<Workout>>();
     private static Integer listPosition = 0;
 
-    public TrainingScheduleService(ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, IDudeRepository iDudeRepository, ITrainingScheduleRatingRepository iTrainingScheduleRatingRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
     // ----------------------------------------- start of variables for training schedule adaption -----------------------------------------
 
     // list of all exercises
@@ -93,7 +91,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     // ----------------------------------------- end of variables for training schedule adaption -----------------------------------------
 
-    public TrainingScheduleService(IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository, TrainingScheduleBookmarkRepository trainingScheduleBookmarkRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(ITrainingScheduleRatingRepository iTrainingScheduleRatingRepository, IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository, TrainingScheduleBookmarkRepository trainingScheduleBookmarkRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.workoutService = workoutService;
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
@@ -484,6 +482,18 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         }
     }
 
+    private void checkDudeTrainingScheduleExist(Long dudeId, Long trainingScheduleId) throws ServiceException {
+        try {
+            if (iDudeRepository.findById(dudeId).isEmpty()) {
+                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
+            } else if (iTrainingScheduleRepository.findById(trainingScheduleId)==null) {
+                throw new NoSuchElementException("Could not find Workout with id: " + trainingScheduleId);
+            }
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
     @Override
     public void deleteTrainingScheduleRating(Long dudeId, Long trainingScheduleId) throws ServiceException {
         LOGGER.info("Entering deleteTrainingScheduleRating with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId);
@@ -633,6 +643,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     // ----------------------------------------- start of methods for adapting training schedule automatically -----------------------------------------
+
     @Override
     public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude, int interval) throws ServiceException {
 
@@ -669,17 +680,6 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             w.setWorkout(wa);
         }
         ts.setWorkouts(workouts);
-    private void checkDudeTrainingScheduleExist(Long dudeId, Long trainingScheduleId) throws ServiceException {
-        try {
-            if (iDudeRepository.findById(dudeId).isEmpty()) {
-                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
-            } else if (iTrainingScheduleRepository.findById(trainingScheduleId)==null) {
-                throw new NoSuchElementException("Could not find Workout with id: " + trainingScheduleId);
-            }
-        } catch (NoSuchElementException e) {
-            throw new ServiceException(e.getMessage());
-        }
-    }
 
         LOGGER.debug("Count values needed for adaptive calculations of workouts");
         for (TrainingScheduleWorkout tsWa : workouts) {
@@ -948,7 +948,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         builder.description(oldTs.getDescription());
         builder.difficulty(oldTs.getDifficulty());
         builder.intervalLength(oldTs.getIntervalLength());
-        builder.rating(oldTs.getRating());
+        builder.ratingNum(oldTs.getRatingNum());
+        builder.ratingSum(oldTs.getRatingSum());
         builder.isPrivate(true);
         builder.isHistory(true);
 
@@ -959,7 +960,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             builderWa.description(tsWa.getWorkout().getDescription());
             builderWa.difficulty(tsWa.getWorkout().getDifficulty());
             builderWa.calorieConsumption(tsWa.getWorkout().getCalorieConsumption());
-            builderWa.rating(tsWa.getWorkout().getRating());
+            builderWa.ratingNum(tsWa.getWorkout().getRatingNum());
+            builderWa.ratingSum(tsWa.getWorkout().getRatingSum());
             builderWa.creator(activeTs.getDude());
             builderWa.isPrivate(true);
             builderWa.isHistory(true);

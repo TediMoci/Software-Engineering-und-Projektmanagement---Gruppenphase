@@ -31,20 +31,17 @@ public class WorkoutService implements IWorkoutService {
     private final IExerciseRepository iExerciseRepository;
     private final IWorkoutExerciseRepository iWorkoutExerciseRepository;
     private final IDudeRepository iDudeRepository;
-    private final IDudeRepository iDudeRepository;
     private final IWorkoutRatingRepository iWorkoutRatingRepository;
     private final WorkoutExerciseValidator workoutExerciseValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkoutService.class);
 
-    public WorkoutService(IWorkoutRepository iWorkoutRepository, WorkoutBookmarkRepository workoutBookmarkRepository, IExerciseRepository iExerciseRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, WorkoutExerciseValidator workoutExerciseValidator) {
-    public WorkoutService(IWorkoutRepository iWorkoutRepository, IExerciseRepository iExerciseRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IWorkoutRatingRepository iWorkoutRatingRepository, IDudeRepository iDudeRepository, WorkoutExerciseValidator workoutExerciseValidator) {
+    public WorkoutService(IWorkoutRepository iWorkoutRepository, WorkoutBookmarkRepository workoutBookmarkRepository, IExerciseRepository iExerciseRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IWorkoutRatingRepository iWorkoutRatingRepository, IDudeRepository iDudeRepository, WorkoutExerciseValidator workoutExerciseValidator) {
         this.iWorkoutRepository = iWorkoutRepository;
         this.workoutBookmarkRepository = workoutBookmarkRepository;
         this.iExerciseRepository = iExerciseRepository;
         this.iWorkoutExerciseRepository = iWorkoutExerciseRepository;
         this.iDudeRepository = iDudeRepository;
         this.iWorkoutRatingRepository = iWorkoutRatingRepository;
-        this.iDudeRepository = iDudeRepository;
         this.workoutExerciseValidator = workoutExerciseValidator;
     }
 

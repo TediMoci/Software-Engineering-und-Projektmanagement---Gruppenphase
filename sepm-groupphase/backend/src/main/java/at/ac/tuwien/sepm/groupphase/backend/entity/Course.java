@@ -114,7 +114,6 @@ public class Course {
             ", ratingSum=" + ratingSum +
             ", ratingNum=" + ratingNum +
             ", creator=" + creator +
-            ", dudes=" + dudes +
             '}';
     }
 
@@ -128,8 +127,7 @@ public class Course {
             Objects.equals(getDescription(), course.getDescription()) &&
             Objects.equals(getRatingSum(), course.getRatingSum()) &&
             Objects.equals(getRatingNum(), course.getRatingNum()) &&
-            Objects.equals(getCreator(), course.getCreator()) &&
-            Objects.equals(getDudes(), course.getDudes());
+            Objects.equals(getCreator(), course.getCreator());
     }
 
     @Override
@@ -180,6 +178,9 @@ public class Course {
 
         public CourseBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
             this.bookmarkDudes = bookmarkDudes;
+            return this;
+        }
+
         public CourseBuilder ratingNum(Integer ratingNum) {
             this.ratingNum = ratingNum;
             return this;
@@ -190,10 +191,6 @@ public class Course {
             return this;
         }
 
-        public CourseBuilder dudes(List<Dude> dudes) {
-            this.dudes = dudes;
-            return this;
-        }
 
         public Course build() {
             Course course = new Course();

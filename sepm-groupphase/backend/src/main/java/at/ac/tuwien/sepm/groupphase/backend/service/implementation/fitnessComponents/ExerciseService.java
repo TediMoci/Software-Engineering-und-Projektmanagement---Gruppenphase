@@ -28,7 +28,6 @@ public class ExerciseService implements IExerciseService {
     private final IExerciseRepository iExerciseRepository;
     private final ExerciseBookmarkRepository exerciseBookmarkRepository;
     private final IDudeRepository iDudeRepository;
-    private final IDudeRepository iDudeRepository;
     private final IExerciseRatingRepository iExerciseRatingRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExerciseService.class);
@@ -36,7 +35,6 @@ public class ExerciseService implements IExerciseService {
     public ExerciseService(IExerciseRepository iExerciseRepository, ExerciseBookmarkRepository exerciseBookmarkRepository, IDudeRepository iDudeRepository, IExerciseRatingRepository iExerciseRatingRepository) {
         this.iExerciseRepository = iExerciseRepository;
         this.exerciseBookmarkRepository = exerciseBookmarkRepository;
-        this.iDudeRepository = iDudeRepository;
         this.iDudeRepository = iDudeRepository;
         this.iExerciseRatingRepository = iExerciseRatingRepository;
     }
