@@ -616,4 +616,73 @@ public class TrainingScheduleIntegrationTest {
     public void givenNothing_whenDeleteOneTrainingSchedule_then400BadRequest(){
         REST_TEMPLATE.delete(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100");
     }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void givenInadequateWorkouts_whenCreateRandomTrainingScheduleWithSpecificParameters_then400BadRequest() {
+        TrainingScheduleRandomDto randomTrainingSchedule = new TrainingScheduleRandomDto();
+        randomTrainingSchedule.setName(trainingScheduleDto.getName());
+        randomTrainingSchedule.setDescription(trainingScheduleDto.getDescription());
+        randomTrainingSchedule.setDifficulty(trainingScheduleDto.getDifficulty());
+        randomTrainingSchedule.setIntervalLength(trainingScheduleDto.getIntervalLength());
+        randomTrainingSchedule.setDuration(100);
+        randomTrainingSchedule.setMinTarget(1.0);
+        randomTrainingSchedule.setMaxTarget(2.0);
+        randomTrainingSchedule.setLowerDifficulty(false);
+        randomTrainingSchedule.setCreatorId(trainingScheduleDto.getCreatorId());
+
+        HttpEntity<TrainingScheduleRandomDto> trainingScheduleRequest = new HttpEntity<>(randomTrainingSchedule);
+        ResponseEntity<TrainingScheduleDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/random", HttpMethod.POST, trainingScheduleRequest, TrainingScheduleDto.class);
+    }
+
+    @Test
+    public void givenWorkouts_whenCreateRandomTrainingSchedule_then201CreatedAndGetSavedTrainingSchedule() {
+        TrainingScheduleRandomDto randomTrainingSchedule = new TrainingScheduleRandomDto();
+        randomTrainingSchedule.setName(trainingScheduleDto.getName());
+        randomTrainingSchedule.setDescription(trainingScheduleDto.getDescription());
+        randomTrainingSchedule.setDifficulty(3);
+        randomTrainingSchedule.setIntervalLength(trainingScheduleDto.getIntervalLength());
+        randomTrainingSchedule.setDuration(1000);
+        randomTrainingSchedule.setMinTarget(100.0);
+        randomTrainingSchedule.setMaxTarget(300.0);
+        randomTrainingSchedule.setLowerDifficulty(true);
+        randomTrainingSchedule.setCreatorId(trainingScheduleDto.getCreatorId());
+
+        HttpEntity<TrainingScheduleRandomDto> trainingScheduleRequest = new HttpEntity<>(randomTrainingSchedule);
+        ResponseEntity<TrainingScheduleDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/random", HttpMethod.POST, trainingScheduleRequest, TrainingScheduleDto.class);
+        assertNotNull(response.getBody().getId());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        TrainingScheduleWorkoutDtoOut tsW1 = new TrainingScheduleWorkoutDtoOut();
+        tsW1.setName("Workout1");
+        tsW1.setDay(1);
+        tsW1.setCalorieConsumption(100.0);
+
+        TrainingScheduleWorkoutDtoOut tsW2 = new TrainingScheduleWorkoutDtoOut();
+        tsW2.setName("Workout1");
+        tsW2.setDay(2);
+        tsW2.setCalorieConsumption(100.0);
+
+        TrainingScheduleWorkoutDtoOut tsW3 = new TrainingScheduleWorkoutDtoOut();
+        tsW3.setName("Workout2");
+        tsW3.setDay(2);
+        tsW3.setCalorieConsumption(200.0);
+
+        TrainingScheduleWorkoutDtoOut tsW4 = new TrainingScheduleWorkoutDtoOut();
+        tsW4.setName("Workout2");
+        tsW4.setDay(3);
+        tsW4.setCalorieConsumption(200.0);
+
+        TrainingScheduleWorkoutDtoOut[] randomTrainingScheduleWorkouts = new TrainingScheduleWorkoutDtoOut[]{tsW1,tsW2,tsW3,tsW4};
+
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> tsWorkoutsRequest = REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + response.getBody().getId() + "/" + response.getBody().getVersion()+ "/workouts", HttpMethod.GET, null, TrainingScheduleWorkoutDtoOut[].class);
+        TrainingScheduleWorkoutDtoOut[] foundTrainingScheduleWorkouts = tsWorkoutsRequest.getBody();
+        assertEquals(randomTrainingScheduleWorkouts.length, foundTrainingScheduleWorkouts.length);
+        for (int i = 0; i < foundTrainingScheduleWorkouts.length; i++){
+            assertEquals(randomTrainingScheduleWorkouts[i].getName(), foundTrainingScheduleWorkouts[i].getName());
+            assertEquals(randomTrainingScheduleWorkouts[i].getCalorieConsumption(), foundTrainingScheduleWorkouts[i].getCalorieConsumption());
+            assertEquals(randomTrainingScheduleWorkouts[i].getDay(), foundTrainingScheduleWorkouts[i].getDay());
+        }
+    }
 }

@@ -81,12 +81,12 @@ public class WorkoutIntegrationTest {
         validWorkoutDto1.setName("Workout1");
         validWorkoutDto1.setDescription("Description1");
         validWorkoutDto1.setDifficulty(1);
-        validWorkoutDto1.setCalorieConsumption(100.0);
+        validWorkoutDto1.setCalorieConsumption(300.0);
 
         validWorkoutDto2.setName("Workout2");
         validWorkoutDto2.setDescription("Description2");
         validWorkoutDto2.setDifficulty(2);
-        validWorkoutDto2.setCalorieConsumption(200.0);
+        validWorkoutDto2.setCalorieConsumption(400.0);
 
         invalidWorkoutDto1.setName("Workout3");
         invalidWorkoutDto1.setDescription("Description3");
