@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.actors.DudeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.FinishedTrainingScheduleStats;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
@@ -48,6 +49,7 @@ public class TrainingScheduleIntegrationTest {
     private static final DudeDto dudeDto = new DudeDto();
     private static final TrainingScheduleDto trainingScheduleDto = new TrainingScheduleDto();
     private static final TrainingScheduleDto trainingScheduleDto2 = new TrainingScheduleDto();
+    private static final TrainingScheduleDto trainingScheduleDtoForAdaptiveChange = new TrainingScheduleDto();
     private static final TrainingScheduleDto invalidTrainingScheduleDto = new TrainingScheduleDto();
     private static final TrainingScheduleWorkoutDtoIn trainingScheduleWorkoutDtoIn1 = new TrainingScheduleWorkoutDtoIn();
     private static final TrainingScheduleWorkoutDtoIn trainingScheduleWorkoutDtoIn2 = new TrainingScheduleWorkoutDtoIn();
@@ -59,6 +61,7 @@ public class TrainingScheduleIntegrationTest {
     private static final ExerciseDto exerciseDto1 = new ExerciseDto();
     private static final ExerciseDto exerciseDto2 = new ExerciseDto();
     private static final ActiveTrainingScheduleDto activeTsDto = new ActiveTrainingScheduleDto();
+    private static final ActiveTrainingScheduleDto activeTsForAdaptivChangeDto = new ActiveTrainingScheduleDto();
 
     private static boolean initialized = false;
 
@@ -128,9 +131,20 @@ public class TrainingScheduleIntegrationTest {
         trainingScheduleDto2.setIntervalLength(2);
         trainingScheduleDto2.setRating(4.7);
 
+        trainingScheduleDtoForAdaptiveChange.setName("TrainingsScheduleAdaptive");
+        trainingScheduleDtoForAdaptiveChange.setDescription("DescriptionAdaptive");
+        trainingScheduleDtoForAdaptiveChange.setDifficulty(2);
+        trainingScheduleDtoForAdaptiveChange.setIntervalLength(2);
+        trainingScheduleDtoForAdaptiveChange.setRating(5.0);
+        trainingScheduleDtoForAdaptiveChange.setIsPrivate(true);
+
         activeTsDto.setStartDate(LocalDate.now());
         activeTsDto.setIntervalRepetitions(2);
         activeTsDto.setAdaptive(false);
+
+        activeTsForAdaptivChangeDto.setStartDate(LocalDate.now().minusDays(3));
+        activeTsForAdaptivChangeDto.setIntervalRepetitions(3);
+        activeTsForAdaptivChangeDto.setAdaptive(true);
 
         invalidTrainingScheduleDto.setName("TrainingScheduleInvalid");
     }
@@ -150,6 +164,7 @@ public class TrainingScheduleIntegrationTest {
             exerciseDto2.setCreatorId(dudeId);
             trainingScheduleDto.setCreatorId(dudeId);
             trainingScheduleDto2.setCreatorId(dudeId);
+            trainingScheduleDtoForAdaptiveChange.setCreatorId(dudeId);
 
             HttpEntity<ExerciseDto> exerciseRequest1 = new HttpEntity<>(exerciseDto1);
             ResponseEntity<ExerciseDto> exerciseResponse1 = REST_TEMPLATE
@@ -164,7 +179,6 @@ public class TrainingScheduleIntegrationTest {
 
             System.out.println("Created exerciseResponse1: " + exerciseResponse1.getBody());
             System.out.println("Created exerciseResponse2: " + exerciseResponse2.getBody());
-
 
             workoutExerciseDtoIn1.setExerciseId(exercise1Id);
             workoutExerciseDtoIn1.setExerciseVersion(exercise1Version);
@@ -186,17 +200,17 @@ public class TrainingScheduleIntegrationTest {
             HttpEntity<WorkoutDto> workoutRequest2 = new HttpEntity<>(workoutDto2);
             ResponseEntity<WorkoutDto> workoutResponse2 = REST_TEMPLATE
                 .exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest2, WorkoutDto.class);
-
             trainingScheduleWorkoutDtoIn1.setWorkoutId(workoutResponse1.getBody().getId());
             trainingScheduleWorkoutDtoIn1.setWorkoutVersion(workoutResponse1.getBody().getVersion());
             trainingScheduleWorkoutDtoIn2.setWorkoutId(workoutResponse2.getBody().getId());
             trainingScheduleWorkoutDtoIn2.setWorkoutVersion(workoutResponse2.getBody().getVersion());
-            trainingScheduleWorkoutDtoIn1.setWorkoutId(workoutResponse1.getBody().getId());
-            trainingScheduleWorkoutDtoIn1.setWorkoutVersion(workoutResponse1.getBody().getVersion());
             TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts = new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1, trainingScheduleWorkoutDtoIn2};
             trainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
             trainingScheduleDto2.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1});
 
+            trainingScheduleDtoForAdaptiveChange.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
+
+            activeTsForAdaptivChangeDto.setDudeId(dudeId);
             activeTsDto.setDudeId(dudeId);
 
             initialized = true;
@@ -424,11 +438,92 @@ public class TrainingScheduleIntegrationTest {
 
     @Test
     public void getActiveAdaptiveTrainingScheduleWhenChangeAdaptively_thenApplyChangeAndStatusOK(){
+        ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDtoForAdaptiveChange);
+        activeTsForAdaptivChangeDto.setTrainingScheduleId(tsResponse.getBody().getId());
+        activeTsForAdaptivChangeDto.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
+        HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsForAdaptivChangeDto);
+        ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
+        ActiveTrainingScheduleDto newActiveTs = new ActiveTrainingScheduleDto();
+        newActiveTs.setId(response.getBody().getId());
+        newActiveTs.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
+        newActiveTs.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
+        newActiveTs.setStartDate(LocalDate.now().minusDays(3));
+        newActiveTs.setTrainingScheduleId(tsResponse.getBody().getId());
+        newActiveTs.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
+        newActiveTs.setAdaptive(true);
+
+        HttpEntity<ActiveTrainingScheduleDto> activeTsR = new HttpEntity<>(newActiveTs);
+        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR, ActiveTrainingScheduleDto.class);
+
+        ResponseEntity<ActiveTrainingScheduleDto> adaptedSchedule = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/1/activeTrainingSchedule", HttpMethod.GET, null, ActiveTrainingScheduleDto.class);
+        assertNotEquals(response.getBody().getTrainingScheduleId(), adaptedSchedule.getBody().getTrainingScheduleId());
+
+        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkoutsAdaptive = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + adaptedSchedule.getBody().getTrainingScheduleId() + "/1/workouts/copyTS", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+        for (TrainingScheduleWorkoutDtoOut t: foundTrainingScheduleWorkoutsAdaptive.getBody()) {
+            assertNotEquals(workoutDto1.getId(), t.getId());
+            assertNotEquals(workoutDto2.getId(), t.getId());
+            assertNotEquals(workoutDto1.getCalorieConsumption(), t.getCalorieConsumption());
+            assertNotEquals(workoutDto2.getCalorieConsumption(), t.getCalorieConsumption());
+        }
+     }
+
+    @Test
+    public void getActiveAdaptiveTrainingScheduleWhenChangeAdaptivelyAndProblemOccurs_thenStatusI_AM_A_TEAPOT(){
 
     }
 
     @Test
-    public void getActiveAdaptiveTrainingScheduleWhenChangeAdaptivelyAndProblemAccurs_thenStatusI_AM_A_TEAPOT(){
+    public void whenMaximumNumberOfRepetitionsForWaExAndChangeAdaptivelyIncrease_thenIncreaseSetsAndNumberOfRepetitionsWontGetHigherThanMaximum(){
+
+    }
+
+    @Test
+    public void whenMaximumNumberOfSetsForWaExAndChangeAdaptivelyIncrease_thenNumberOfSetsWontBeIncreased(){
+
+    }
+
+    @Test
+    public void whenMinimumNumberOfRepetitionsForWaExAndChangeAdaptivelyDecrease_thenDecreaseSetsAndNumberOfRepetitionsWontGetLowerThanMinimum(){
+
+    }
+
+    @Test
+    public void whenMinimumNumberOfSetsForWaExAndChangeAdaptivelyDecrease_thenNumberOfSetsWontBeDecreased(){
+
+    }
+
+    @Test
+    public void givenDudesOneBeginnerOneAdvancedAndChangeAdaptively_thenChangeForBeginnerIsLowerThanForAdvanced(){
+
+    }
+
+    @Test
+    public void givenTrainingScheduleWithMoreThan70PercentExOfCategoryStrengthAndOneWithLessThan70PercentAndChangeAdaptively_thenChangeOfStrengthFocusedIsLower(){
+
+    }
+
+    @Test
+    public void givenExercisesOfCategoryEnduranceAndOtherWithOneRepetitionAndOneSetAndChangeAdaptively_thenExercisesWontBeChanged(){
+
+    }
+
+    // getter for class variables?
+    @Test
+    public void givenTrainingScheduleAndChangeAdaptively_thenCountVariablesForAdaptiveChangeCorrectly(){
+
+    }
+
+    @Test
+    public void givenTrainingScheduleAndChangeAdaptively_thenDurationAndCaloriesGetAdapted() {
+
+    }
+
+    @Test
+    public void givenTrainingScheduleAndChangeAdaptively_thenSetsAndOrRepetitionsGetAdapted(){
 
     }
 

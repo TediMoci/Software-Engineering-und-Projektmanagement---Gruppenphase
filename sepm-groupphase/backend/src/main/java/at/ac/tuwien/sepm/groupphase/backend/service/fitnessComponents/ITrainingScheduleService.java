@@ -69,10 +69,18 @@ public interface ITrainingScheduleService {
 
     /**
      *
-     * @param activeTrainingScheduleId of the ExerciseDones to be found
-     * @return List of ExerciseDone belonging to the achtiveTrainingSchedule with given id
-     * @throws ServiceException if an error occured while trying to find the ExerciseDone in the system
+     * @param activeTrainingSchedule with values used to update the activeTrainingSchedule
+     * @return updated ActiveTrainingSchedule
+     * @throws ServiceException if an error occured while trying to update the activeTrainingSchedule in the system
      */
+   ActiveTrainingSchedule updateActive(ActiveTrainingSchedule activeTrainingSchedule) throws ServiceException;
+
+        /**
+         *
+         * @param activeTrainingScheduleId of the ExerciseDones to be found
+         * @return List of ExerciseDone belonging to the achtiveTrainingSchedule with given id
+         * @throws ServiceException if an error occured while trying to find the ExerciseDone in the system
+         */
     List<ExerciseDone> findExDoneByActiveTrainingScheduleId(Long activeTrainingScheduleId) throws ServiceException;
 
         /**

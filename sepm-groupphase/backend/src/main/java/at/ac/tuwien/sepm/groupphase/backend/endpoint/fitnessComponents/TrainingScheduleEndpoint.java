@@ -93,6 +93,21 @@ public class TrainingScheduleEndpoint {
         }
     }
 
+    @RequestMapping(value = "/active/update", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Update an ActiveTrainingSchedule", authorizations = {@Authorization(value = "apiKey")})
+    public ActiveTrainingScheduleDto updateActiveTs(@RequestBody ActiveTrainingScheduleDto activeTrainingScheduleDto){
+        try {
+            ActiveTrainingSchedule activeTs = trainingScheduleMapper.activeTrainingScheduleDtoToActiveTrainingSchedule(activeTrainingScheduleDto);
+            activeTs.setStartDate(activeTrainingScheduleDto.getStartDate());
+            activeTs.setId(activeTrainingScheduleDto.getId());
+            return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.updateActive(activeTs));
+        } catch (ServiceException e) {
+            LOGGER.error("Could not edit activeTs of with dude");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
     @RequestMapping(value = "/active/{dudeId}", method = RequestMethod.DELETE)
     @ApiOperation(value = "Delete the current ActiveTrainingSchedule of Dude with given id", authorizations = {@Authorization(value = "apiKey")})
     public void deleteActive(@PathVariable Long dudeId) {

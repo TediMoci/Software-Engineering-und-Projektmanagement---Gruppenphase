@@ -165,6 +165,7 @@ public class SecurityConfiguration {
                     "/exercise/{id}",
                     "/trainingSchedule/{id}",
                     "/trainingSchedule/active/done",
+                    "/trainingSchedule/active/update",
                     "/course/{id}",
                     "/course/bookmark/{dudeId}/{courseId}",
                     "/exercise/bookmark/{dudeId}/{exerciseId}/{exerciseVersion}",

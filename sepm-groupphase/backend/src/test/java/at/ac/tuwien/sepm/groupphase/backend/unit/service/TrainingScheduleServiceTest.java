@@ -131,57 +131,6 @@ public class TrainingScheduleServiceTest {
     }
 
     @Test
-    public void whenMaximumNumberOfRepetitionsForWaExAndChangeAdaptivelyIncrease_thenIncreaseSetsAndNumberOfRepetitionsWontGetHigherThanMaximum(){
-
-    }
-
-    @Test
-    public void whenMaximumNumberOfSetsForWaExAndChangeAdaptivelyIncrease_thenNumberOfSetsWontBeIncreased(){
-
-    }
-
-    @Test
-    public void whenMinimumNumberOfRepetitionsForWaExAndChangeAdaptivelyDecrease_thenDecreaseSetsAndNumberOfRepetitionsWontGetLowerThanMinimum(){
-
-    }
-
-    @Test
-    public void whenMinimumNumberOfSetsForWaExAndChangeAdaptivelyDecrease_thenNumberOfSetsWontBeDecreased(){
-
-    }
-
-    @Test
-    public void givenDudesOneBeginnerOneAdvancedAndChangeAdaptively_thenChangeForBeginnerIsLowerThanForAdvanced(){
-
-    }
-
-    @Test
-    public void givenTrainingScheduleWithMoreThan70PercentExOfCategoryStrengthAndOneWithLessThan70PercentAndChangeAdaptively_thenChangeOfStrengthFocusedIsLower(){
-
-    }
-
-    @Test
-    public void givenExercisesOfCategoryEnduranceAndOtherWithOneRepetitionAndOneSetAndChangeAdaptively_thenExercisesWontBeChanged(){
-
-    }
-
-    // getter for class variables?
-    @Test
-    public void givenTrainingScheduleAndChangeAdaptively_thenCountVariablesForAdaptiveChangeCorrectly(){
-
-    }
-
-    @Test
-    public void givenTrainingScheduleAndChangeAdaptively_thenDurationAndCaloriesGetAdapted() {
-
-    }
-
-    @Test
-    public void givenTrainingScheduleAndChangeAdaptively_thenSetsAndOrRepetitionsGetAdapted(){
-
-    }
-
-    @Test
     public void whenCopyTrainingSchedule_thenCopyAndOriginalContainTheSameTsWa_Wa_WaExAndEx() throws ServiceException {
         TrainingSchedule ts = new TrainingSchedule();
         ts.setName(validTrainingSchedule.getName());
