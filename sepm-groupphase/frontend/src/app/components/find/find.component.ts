@@ -14,6 +14,8 @@ import {FitnessProviderFilter} from '../../dtos/fitness-provider-filter';
 import {DudeFilter} from '../../dtos/dude-filter';
 import {BookmarksService} from '../../services/bookmarks.service';
 import {TrainingSchedule} from '../../dtos/trainingSchedule';
+import {TrainingScheduleFilter} from '../../dtos/training-schedule-filter';
+import {TrainingScheduleService} from '../../services/training-schedule.service';
 
 @Component({
   selector: 'app-find',
@@ -32,6 +34,8 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMax: string = '';
   public filterDudeSelfAssessment: string = 'None';
   public filterExerciseMuscle: string = 'None';
+  public filterTrainingDifficulty: string = 'None';
+  public filterTrainingInterval: string = 'None';
 
   // Transfer Variables
   public inputTextActual: any;
@@ -41,9 +45,13 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMaxActual: string = '';
   public filterDudeSelfAssessmentActual: string = 'None';
   public filterExerciseMuscleActual: string = 'None';
+  public filterTrainingDifficultyActual: string = 'None';
+  public filterTrainingIntervalActual: string = 'None';
 
   entries: Array<any>;
+  entriesTS: Array<any>;
   exercisesForWorkouts: any;
+  workoutsForTrainingSchedules: any;
 
   imagePath: string;
   userName: string;
@@ -60,6 +68,24 @@ export class FindComponent implements OnInit {
   workoutFilter: WorkoutFilter;
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
+  trainingScheduleFilter: TrainingScheduleFilter;
+
+  interval: number;
+  d1: Array<any>;
+  d2: Array<any>
+  d3: Array<any>
+  d4: Array<any>
+  d5: Array<any>
+  d6: Array<any>
+  d7: Array<any>
+  exercisesForWorkouts1: any;
+  exercisesForWorkouts2: any;
+  exercisesForWorkouts3: any;
+  exercisesForWorkouts4: any;
+  exercisesForWorkouts5: any;
+  exercisesForWorkouts6: any;
+  exercisesForWorkouts7: any;
+  empty: any;
 
   // Router Objects
   selectedFP: FitnessProvider;
@@ -69,7 +95,7 @@ export class FindComponent implements OnInit {
   // Enums
   muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
 
-  constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService, private bookmarksService: BookmarksService) {}
+  constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService, private bookmarksService: BookmarksService, private trainingScheduleService: TrainingScheduleService) {}
 
   ngOnInit() {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'DUDE') {
@@ -300,8 +326,74 @@ export class FindComponent implements OnInit {
           }
         );
         break;
+      case 'Training Schedule':
+        console.log('difficulty: ' + this.filterTrainingDifficulty);
+        console.log('interval: ' + this.filterTrainingInterval);
+
+        switch (this.filterTrainingDifficulty) {
+          case 'None': this.filterTrainingDifficultyActual = null; break;
+          case  'Beginner': this.filterTrainingDifficultyActual = '1'; break;
+          case  'Advanced': this.filterTrainingDifficultyActual = '2'; break;
+          case  'Pro': this.filterTrainingDifficultyActual = '3'; break;
+        }
+
+        switch (this.filterTrainingInterval) {
+          case 'None': this.filterTrainingIntervalActual = null; break;
+          case  '1': this.filterTrainingIntervalActual = '1'; break;
+          case  '2': this.filterTrainingIntervalActual = '2'; break;
+          case  '3': this.filterTrainingIntervalActual = '3'; break;
+          case  '4': this.filterTrainingIntervalActual = '4'; break;
+          case  '5': this.filterTrainingIntervalActual = '5'; break;
+          case  '6': this.filterTrainingIntervalActual = '6'; break;
+          case  '7': this.filterTrainingIntervalActual = '7'; break;
+        }
+
+        this.trainingScheduleFilter = new TrainingScheduleFilter(
+          this.inputTextActual,
+          this.filterTrainingDifficultyActual,
+          this.filterTrainingIntervalActual);
+
+        if (this.isDude) {
+          this.findService.getAllTrainingSchedulesFiltered(this.trainingScheduleFilter, this.dude.id).subscribe(
+            (data) => {
+              console.log('get all training schedules');
+              this.entriesTS = data.sort(function (a, b) { // sort data alphabetically
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                  return -1;
+                }
+                if (a.name > b.name) {
+                  return 1;
+                }
+                return 0;
+              });
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        } else {
+          this.findService.getAllTrainingSchedulesFiltered(this.trainingScheduleFilter, 0).subscribe(
+            (data) => {
+              console.log('get all training schedules');
+              this.entriesTS = data.sort(function (a, b) { // sort data alphabetically
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                  return -1;
+                }
+                if (a.name > b.name) {
+                  return 1;
+                }
+                return 0;
+              });
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        }
+        break;
     }
   }
+
   getSelectedWorkoutExercises(workout: Workout) {
     this.workoutService.getExercisesOfWorkoutById(workout.id, workout.version).subscribe(
       (data) => {
@@ -319,12 +411,41 @@ export class FindComponent implements OnInit {
     );
   }
 
+  getSelectedTrainingScheduleWorkouts(trainingSchedule: TrainingSchedule) {
+    this.interval = trainingSchedule.intervalLength;
+    this.getAllWorkoutsPerDay(trainingSchedule);
+  }
+
+  getSelectedTSWorkoutExercises(id: number, version: number) {
+    this.workoutService.getExercisesOfWorkoutById(id, version).subscribe(
+      (data) => {
+        console.log('get all exercises of workout ' + id);
+        this.exercisesForWorkouts = data.sort(function (a, b) { // sort data alphabetically
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+      },
+      error => {
+        this.error = error;
+      }
+    );
+  }
+
   convertDifficulty(element: any) {
     switch (element) {
       case 1: return 'Beginner';
       case 2: return 'Advanced';
       case 3: return 'Pro';
     }
+  }
+
+  closeExercises() {
+    this.exercisesForWorkouts = this.empty;
   }
 
   setSelectedExercise(element: Exercise) {
@@ -393,6 +514,7 @@ export class FindComponent implements OnInit {
       }
     );
   }
+
   resetResults() {
     this.entries = null;
   }
@@ -410,4 +532,358 @@ export class FindComponent implements OnInit {
     this.errorBookmark = false;
   }
 
+  getAllWorkoutsPerDay(trainingSchedule: TrainingSchedule) {
+    switch (trainingSchedule.intervalLength) {
+      case 1:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 2:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 3:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 4:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 5:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 6:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });Array.from(data5);
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
+          (data6) => {
+            this.d6 = data6.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+      case 7:
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 1).subscribe(
+          (data1) => {
+            this.d1 = data1.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 2).subscribe(
+          (data2) => {
+            this.d2 = data2.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 3).subscribe(
+          (data3) => {
+            this.d3 = data3.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 4).subscribe(
+          (data4) => {
+            this.d4 = data4.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 5).subscribe(
+          (data5) => {
+            this.d5 = data5.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 6).subscribe(
+          (data6) => {
+            this.d6 = data6.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        this.trainingScheduleService.getAllWorkoutsByDay(trainingSchedule.id, trainingSchedule.version, 7).subscribe(
+          (data7) => {
+            this.d7 = data7.sort(function (a, b) { // sort data alphabetically
+              if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+              if (a.name > b.name) {return 1; }
+              return 0;
+            });
+          },
+          error => {
+            this.error = error;
+          }
+        );
+        break;
+    }
+  }
 }
