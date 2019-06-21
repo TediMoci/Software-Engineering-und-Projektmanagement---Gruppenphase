@@ -73,6 +73,7 @@ export class FindComponent implements OnInit {
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
   trainingScheduleFilter: TrainingScheduleFilter;
+  sortFilter: string = 'Name';
 
   interval: number;
   d1: Array<any>;
@@ -152,12 +153,8 @@ export class FindComponent implements OnInit {
             (data) => {
               console.log('get all exercises');
               this.entries = data.sort(function (a, b) { // sort data alphabetically
-                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                  return -1;
-                }
-                if (a.name > b.name) {
-                  return 1;
-                }
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+                if (a.name > b.name) {return 1; }
                 return 0;
               });
             },
@@ -170,12 +167,8 @@ export class FindComponent implements OnInit {
             (data) => {
               console.log('get all exercises');
               this.entries = data.sort(function (a, b) { // sort data alphabetically
-                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                  return -1;
-                }
-                if (a.name > b.name) {
-                  return 1;
-                }
+                if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+                if (a.name > b.name) {return 1; }
                 return 0;
               });
             },
@@ -556,6 +549,22 @@ export class FindComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+  sortAlphabetically() {
+    this.entries.sort(function (a, b) { // sort data alphabetically
+      if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+      if (a.name > b.name) {return 1; }
+      return 0;
+    });
+  }
+
+  sortEntriesByRating() {
+    this.entries.sort(function (a, b) { // sort data by rating
+      if (a.rating > b.rating) {return -1; }
+      if (a.rating < b.rating) {return 1; }
+      return 0;
+    });
   }
 
   resetResults() {

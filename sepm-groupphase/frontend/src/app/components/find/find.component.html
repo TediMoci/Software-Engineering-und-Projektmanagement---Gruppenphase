@@ -178,7 +178,21 @@
           <!--end of col-->
         </div>
         <hr>
+
+        <div class="row" *ngIf="category != 'Dudes' && category != 'Fitness Provider' && entries != undefined ">
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button"  data-toggle="dropdown" [(ngModel)]="sortFilter" ngDefaultControl>
+              Sort by: {{sortFilter}}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" (click)="sortFilter ='Rating' ; sortEntriesByRating()">Rating</a>
+              <a class="dropdown-item" (click)="sortFilter ='Name' ; sortAlphabetically()">Name</a>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
+
           <div [ngSwitch]="category" class="col">
             <!--start case-->
             <ul *ngSwitchCase="'Exercise'" style="list-style-type: none;" >
