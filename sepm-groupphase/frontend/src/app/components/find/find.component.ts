@@ -571,6 +571,7 @@ export class FindComponent implements OnInit {
 
   resetResults() {
     this.entries = null;
+    this.entriesTS = null;
   }
 
   followSelectedFitnessProvider(fitnessProvider: FitnessProvider) {
