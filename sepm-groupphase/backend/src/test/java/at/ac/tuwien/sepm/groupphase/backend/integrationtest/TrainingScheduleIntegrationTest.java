@@ -339,7 +339,7 @@ public class TrainingScheduleIntegrationTest {
 
             TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts = new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1, trainingScheduleWorkoutDtoIn2};
             trainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
-            trainingScheduleDto2.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1});
+            trainingScheduleDto2.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutDtoIn1, trainingScheduleWorkoutDtoIn2 });
             trainingScheduleMinSets.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutMinSets});
             trainingScheduleMaxSets.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutMaxSets});
             trainingScheduleMinReps.setTrainingScheduleWorkouts(new TrainingScheduleWorkoutDtoIn[]{trainingScheduleWorkoutMinReps});
@@ -909,9 +909,10 @@ public class TrainingScheduleIntegrationTest {
             totalDurationBeginner += w.getExDuration();
         }
 
-        // TODO: why are beginner calories higher than advanced calories? assert(totalCaloriesBeginner <= totalCaloriesAdvanced);
+        // TODO: why are beginner calories higher than advanced calories?
         assert(totalRepsBeginner <= totalRepsAdvanced);
         assert(totalDurationBeginner <= totalDurationAdvanced);
+        assert(totalCaloriesBeginner <= totalCaloriesAdvanced);
     }
 
     @Test
