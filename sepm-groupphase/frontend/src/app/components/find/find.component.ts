@@ -121,6 +121,8 @@ export class FindComponent implements OnInit {
   startSearch(category: string) {
     console.log('searchvalue: ' + this.inputText);
 
+    this.sortFilter = 'Name';
+
     if (this.inputText === undefined) {
       this.inputTextActual = null;
     } else {
