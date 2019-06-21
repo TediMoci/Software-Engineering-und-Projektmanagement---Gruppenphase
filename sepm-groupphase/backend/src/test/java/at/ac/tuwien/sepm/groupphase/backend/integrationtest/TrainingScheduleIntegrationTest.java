@@ -182,13 +182,13 @@ public class TrainingScheduleIntegrationTest {
         trainingScheduleDto.setDescription("Description1");
         trainingScheduleDto.setDifficulty(1);
         trainingScheduleDto.setIntervalLength(3);
-        trainingScheduleDto.setRating(3.0);
+        trainingScheduleDto.setRating(0.0);
 
         trainingScheduleDto2.setName("TrainingsSchedule2");
         trainingScheduleDto2.setDescription("Description2");
         trainingScheduleDto2.setDifficulty(2);
         trainingScheduleDto2.setIntervalLength(2);
-        trainingScheduleDto2.setRating(4.7);
+        trainingScheduleDto2.setRating(0.0);
 
         trainingScheduleDtoForAdaptiveChange.setName("TrainingsScheduleAdaptive");
         trainingScheduleDtoForAdaptiveChange.setDescription("DescriptionAdaptive");
@@ -201,28 +201,28 @@ public class TrainingScheduleIntegrationTest {
         trainingScheduleMinReps.setDescription("DescriptionMinReps");
         trainingScheduleMinReps.setDifficulty(2);
         trainingScheduleMinReps.setIntervalLength(2);
-        trainingScheduleMinReps.setRating(4.0);
+        trainingScheduleMinReps.setRating(0.0);
         trainingScheduleMinReps.setIsPrivate(true);
 
         trainingScheduleMaxReps.setName("TrainingsScheduleMaxReps");
         trainingScheduleMaxReps.setDescription("DescriptionMaxReps");
         trainingScheduleMaxReps.setDifficulty(2);
         trainingScheduleMaxReps.setIntervalLength(2);
-        trainingScheduleMaxReps.setRating(3.0);
+        trainingScheduleMaxReps.setRating(0.0);
         trainingScheduleMaxReps.setIsPrivate(true);
 
         trainingScheduleMinSets.setName("TrainingsScheduleMinSets");
         trainingScheduleMinSets.setDescription("DescriptionMinSets");
         trainingScheduleMinSets.setDifficulty(2);
         trainingScheduleMinSets.setIntervalLength(2);
-        trainingScheduleMinSets.setRating(2.0);
+        trainingScheduleMinSets.setRating(0.0);
         trainingScheduleMinSets.setIsPrivate(true);
 
         trainingScheduleMaxSets.setName("TrainingsScheduleMaxSets");
         trainingScheduleMaxSets.setDescription("DescriptionMaxSets");
         trainingScheduleMaxSets.setDifficulty(2);
         trainingScheduleMaxSets.setIntervalLength(2);
-        trainingScheduleMaxSets.setRating(1.0);
+        trainingScheduleMaxSets.setRating(0.0);
         trainingScheduleMaxSets.setIsPrivate(true);
 
         activeTsDto.setStartDate(LocalDate.now());
@@ -1035,14 +1035,37 @@ public class TrainingScheduleIntegrationTest {
 
     @Test
     public void givenWorkouts_whenCreateRandomTrainingSchedule_then201CreatedAndGetSavedTrainingSchedule() {
+        WorkoutDto workout1 = new WorkoutDto();
+        workout1.setName("Workout1");
+        workout1.setDescription("Description1");
+        workout1.setDifficulty(1);
+        workout1.setCalorieConsumption(30.0);
+        workout1.setCreatorId(workoutDto1.getCreatorId());
+        workout1.setIsPrivate(false);
+        workout1.setWorkoutExercises(workoutDto1.getWorkoutExercises());
+
+        WorkoutDto workout2 = new WorkoutDto();
+        workout2.setName("Workout2");
+        workout2.setDescription("Description2");
+        workout2.setDifficulty(2);
+        workout2.setCalorieConsumption(60.0);
+        workout2.setCreatorId(workoutDto1.getCreatorId());
+        workout2.setIsPrivate(false);
+        workout2.setWorkoutExercises(workoutDto1.getWorkoutExercises());
+
+        HttpEntity<WorkoutDto> workoutRequest = new HttpEntity<>(workout1);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest, WorkoutDto.class);
+        HttpEntity<WorkoutDto> workoutRequest2 = new HttpEntity<>(workout2);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest2, WorkoutDto.class);
+
         TrainingScheduleRandomDto randomTrainingSchedule = new TrainingScheduleRandomDto();
         randomTrainingSchedule.setName(trainingScheduleDto.getName());
         randomTrainingSchedule.setDescription(trainingScheduleDto.getDescription());
         randomTrainingSchedule.setDifficulty(3);
         randomTrainingSchedule.setIntervalLength(trainingScheduleDto.getIntervalLength());
         randomTrainingSchedule.setDuration(1000);
-        randomTrainingSchedule.setMinTarget(100.0);
-        randomTrainingSchedule.setMaxTarget(300.0);
+        randomTrainingSchedule.setMinTarget(30.0);
+        randomTrainingSchedule.setMaxTarget(90.0);
         randomTrainingSchedule.setLowerDifficulty(true);
         randomTrainingSchedule.setCreatorId(trainingScheduleDto.getCreatorId());
 
@@ -1055,22 +1078,22 @@ public class TrainingScheduleIntegrationTest {
         TrainingScheduleWorkoutDtoOut tsW1 = new TrainingScheduleWorkoutDtoOut();
         tsW1.setName("Workout1");
         tsW1.setDay(1);
-        tsW1.setCalorieConsumption(100.0);
+        tsW1.setCalorieConsumption(30.0);
 
         TrainingScheduleWorkoutDtoOut tsW2 = new TrainingScheduleWorkoutDtoOut();
         tsW2.setName("Workout1");
         tsW2.setDay(2);
-        tsW2.setCalorieConsumption(100.0);
+        tsW2.setCalorieConsumption(30.0);
 
         TrainingScheduleWorkoutDtoOut tsW3 = new TrainingScheduleWorkoutDtoOut();
         tsW3.setName("Workout2");
         tsW3.setDay(2);
-        tsW3.setCalorieConsumption(200.0);
+        tsW3.setCalorieConsumption(60.0);
 
         TrainingScheduleWorkoutDtoOut tsW4 = new TrainingScheduleWorkoutDtoOut();
         tsW4.setName("Workout2");
         tsW4.setDay(3);
-        tsW4.setCalorieConsumption(200.0);
+        tsW4.setCalorieConsumption(60.0);
 
         TrainingScheduleWorkoutDtoOut[] randomTrainingScheduleWorkouts = new TrainingScheduleWorkoutDtoOut[]{tsW1,tsW2,tsW3,tsW4};
 
