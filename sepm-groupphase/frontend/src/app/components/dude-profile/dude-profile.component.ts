@@ -55,7 +55,7 @@ export class DudeProfileComponent implements OnInit {
   tsIntervalLenght: number;
   tsTrue: boolean = false;
   // Sorted Workouts by day
-  selectedWorkout: any = [];
+  selectedWorkout: null;
   exercisesForWorkouts: any;
   exercisesForWorkoutsStatus: Array<ExerciseDone>;
   workoutsPerDay: Array<any> = [];
@@ -238,6 +238,7 @@ export class DudeProfileComponent implements OnInit {
       }
     );
   }
+
   getExercisesStatus(id: number, selectedDay: number) {
     for (const elem of this.exercisesForWorkoutsStatus) {
       if (elem.exerciseId === id && elem.day === selectedDay) {
@@ -277,6 +278,7 @@ export class DudeProfileComponent implements OnInit {
         elem.done = value;
       }
     }
+
   }
 
   initDuration(intervalLength: number, intervalReps: number) {
@@ -346,23 +348,26 @@ export class DudeProfileComponent implements OnInit {
     return Math.floor(delta / interval) * interval;
   }
 
-
   imageLoaded() {
     // show cropper
   }
+
   loadImageFailed() {
     // show message
     this.crop = true;
     this.message = 'Only images are supported.';
 
   }
+
   fileChangeEvent(event: any): void {
     this.crop = false;
     this.imageChangedEvent = event;
   }
+
   imageCropped(image: string) {
     this.croppedImage = image;
   }
+
   cropPicture() {
     if (this.croppedImage.length === 0) {
       return;
@@ -386,16 +391,13 @@ export class DudeProfileComponent implements OnInit {
     );
   }
 
-  dummy(t: boolean) {
-    this.doneChecked =  t;
-  }
-
    getLinkPicture() {
     if (this.timeStamp) {
       return this.imagePath + '?' + this.timeStamp;
     }
     return this.imagePath;
   }
+
   convertPrivate() {
     if (this.isPrivate === true) {
       return 'Private';

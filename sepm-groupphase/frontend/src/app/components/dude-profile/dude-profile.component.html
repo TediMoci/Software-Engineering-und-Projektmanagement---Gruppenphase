@@ -63,6 +63,7 @@
 
       <div class="col-sm-9">
         <h1>Current Training Schedule</h1>
+        <p>Tick the done button in an exercise to mark your progress!</p>
         <hr>
         <div *ngIf="activeTs && tsTrue">
           <div class="row">
@@ -104,7 +105,7 @@
 
             <section>
               <mat-card class="detailsContent">
-                <h2>{{selectedWorkout.name}} for day {{selectedDay}}</h2>
+                <h2>Day {{selectedDay}}: {{selectedWorkout.name}}</h2>
                 <p>Difficulty: {{convertDifficulty(selectedWorkout.difficulty)}}</p>
                 <p>Calorie Consumption: {{selectedWorkout.calorieConsumption}}</p>
                 <hr>
