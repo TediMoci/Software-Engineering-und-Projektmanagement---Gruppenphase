@@ -37,3 +37,20 @@
     line-height: 20px;
   }
 }
+
+.btn-rating {
+  background: lightskyblue;
+  color: white;
+  text-align: center;
+  -webkit-text-size-adjust: auto;
+}
+.btn-rating:hover {
+  background: deepskyblue;
+}
+.modalRating{
+  margin: auto;
+}
+
+.modal-header {
+  margin: auto;
+}

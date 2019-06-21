@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -19,7 +20,10 @@
         <div class="row">
           <div class="col">
             <h1>{{workoutName}}</h1>
-            <p>Rating: <ngb-rating  [(rate)]="rating" max="5"></ngb-rating> {{rating}}/5</p>
+            <div class="rating">
+              <ngb-rating  [rate]="workout.rating" [readonly]="true" max="5"></ngb-rating>
+              {{workout.rating}}/5
+            </div>
             <p> Difficulty: {{difficulty}}</p>
             <p> Calorie Consumption: {{calories}} kcal</p>
             <p> Description: {{description}} </p>
@@ -35,9 +39,35 @@
                 </ul>
               </li>
             </ul>
+            <span *ngIf="dude.id != workout.creatorId">
+              <button type="button" class="btn btn-rating" data-toggle="modal" data-target="#favoriteModal"><i class="fas fa-star"></i></button>
+            </span>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<!-- modal for setting bookmark -->
+<div class="modal" id="favoriteModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 *ngIf="workout != undefined " class="modal-title">Rate {{workout.name}}</h4>
+      </div>
+      <div class="modalRating">
+        <ngb-rating  [(rate)]="ratingForItem" max="5"></ngb-rating>
+        {{ratingForItem}}/5
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="ratingForItem = 0" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="button" (click)="rateItem(workout)" class="btn btn-success" data-dismiss="modal">Rate</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+

@@ -4,6 +4,9 @@ import {WorkoutExercise} from '../../dtos/workoutExercise';
 import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
 import {WorkoutWithRating} from '../../dtos/workout-with-rating';
+import {GetByIDService} from '../../services/get-by-id.service';
+import {version} from 'punycode';
+import {RatingService} from '../../services/rating.service';
 
 @Component({
   selector: 'app-workout',
@@ -24,7 +27,8 @@ export class WorkoutComponent implements OnInit {
   dude: Dude;
   isPrivate: boolean;
   rating: number;
-  constructor(private workoutService: WorkoutService) {
+  ratingForItem: number = 0;
+  constructor(private workoutService: WorkoutService, private getByIDService: GetByIDService, private ratingService: RatingService) {
   }
 
   ngOnInit() {
@@ -66,6 +70,29 @@ export class WorkoutComponent implements OnInit {
 
   setSelectedExercise(element: WorkoutExercise) {
     localStorage.setItem('selectedExercise', JSON.stringify(element));
+  }
+
+  rateItem(item: any) {
+    console.log('rating ' + typeof item + item.name  );
+    this.ratingService.rateWorkout(this.dude.id, item, this.ratingForItem).subscribe(
+      (dataFavorite) => {
+        this.getWorkout(this.workout.id, this.workout.version);
+      },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
+  }
+
+  getWorkout(id: number, vs: number) {
+    this.getByIDService.getWorkoutByID(id, vs).subscribe(
+      (data) => {
+        this.workout = data;
+        localStorage.setItem('selectedWorkout', JSON.stringify(data));
+        this.ngOnInit();
+      },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
   }
   convertPrivate() {
     if (this.isPrivate === true) {
