@@ -9,6 +9,7 @@ import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
 import {WorkoutService} from '../../services/workout.service';
 import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
+import {ExerciseDone} from '../../dtos/exercise-done';
 
 @Component({
   selector: 'app-dude-profile',
@@ -56,9 +57,13 @@ export class DudeProfileComponent implements OnInit {
   // Sorted Workouts by day
   selectedWorkout: any = [];
   exercisesForWorkouts: any;
+  exercisesForWorkoutsStatus: Array<ExerciseDone>;
   workoutsPerDay: Array<any> = [];
   // Display variables
   tabs: Array<string>;
+  // Internal logic and ngModels
+  doneChecked: boolean;
+  selectedDay: number;
 
   constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private authService: AuthService) {}
   ngOnInit() {
@@ -170,6 +175,37 @@ export class DudeProfileComponent implements OnInit {
                   }
                 );
               }
+              this.profileService.getExercisesDoneByDudeId(this.dude.id).subscribe(
+                (data3) => {
+                  console.log('get done value of all exercises of dude with id ' + this.dude.id );
+                  this.exercisesForWorkoutsStatus = data3;
+                  console.log('loaded: ' + JSON.stringify(this.exercisesForWorkoutsStatus) );
+                },
+                error => {
+                  this.error = error;
+                }
+              );
+              this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(
+                this.trainingSchedule.id,
+                this.trainingSchedule.version).subscribe(
+                (data4) => {
+                  console.log('get all workouts created of training schedule with id ' + this.trainingSchedule.id);
+                  this.tsWorkouts = data4.sort(function (a, b) { // sort data alphabetically
+                    if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                      return -1;
+                    }
+                    if (a.name > b.name) {
+                      return 1;
+                    }
+                    return 0;
+                  });
+                  console.log('loaded ' + JSON.stringify(this.tsWorkouts));
+                  this.intOverview();
+                },
+                error => {
+                  this.error = error;
+                }
+              );
             },
             error => {
               this.error = error;
@@ -201,6 +237,48 @@ export class DudeProfileComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+  getExercisesStatus(id: number, selectedDay: number) {
+    for (const elem of this.exercisesForWorkoutsStatus) {
+      if (elem.exerciseId === id && elem.day === selectedDay) {
+        return elem.done;
+      }
+    }
+  }
+
+  setExercisesStatus(id: number, version: number,  selectedDay: number, value: boolean) {
+    const exerciseDone: ExerciseDone = new ExerciseDone(
+      this.activeTs.id,
+      this.dude.id,
+      this.trainingSchedule.id,
+      this.trainingSchedule.version,
+      id,
+      version,
+      this.selectedWorkout.id,
+      this.selectedWorkout.version,
+      this.selectedDay,
+      value
+    );
+
+    this.trainingScheduleService.markExercisesAsDone(exerciseDone).subscribe(
+      (data) => {
+        console.log('Changed workout ' + id + ' of day ' + selectedDay + ' to ' + value.valueOf());
+        for (const elem of this.exercisesForWorkoutsStatus) {
+          if (elem.exerciseId === id && elem.day === selectedDay) {
+            elem.done = value;
+          }
+        }
+      },
+      error => {
+        this.error = error;
+      });
+    for (const elem of this.exercisesForWorkoutsStatus) {
+      if (elem.exerciseId === id && elem.day === selectedDay) {
+        elem.done = value;
+      }
+    }
+
   }
 
   initDuration(intervalLength: number, intervalReps: number) {
@@ -260,7 +338,7 @@ export class DudeProfileComponent implements OnInit {
 
   getDateDifference(date1: Date, date2: Date) {
     const diff = Math.abs(date1.getTime() - date2.getTime());
-    const delta = Math.ceil(diff / (1000 * 3600 * 24));
+    const delta =  Math.ceil( diff / (1000 * 3600 * 24));
 
     return delta - 1;
 
@@ -270,23 +348,26 @@ export class DudeProfileComponent implements OnInit {
     return Math.floor(delta / interval) * interval;
   }
 
-
   imageLoaded() {
     // show cropper
   }
+
   loadImageFailed() {
     // show message
     this.crop = true;
     this.message = 'Only images are supported.';
 
   }
+
   fileChangeEvent(event: any): void {
     this.crop = false;
     this.imageChangedEvent = event;
   }
+
   imageCropped(image: string) {
     this.croppedImage = image;
   }
+
   cropPicture() {
     if (this.croppedImage.length === 0) {
       return;
@@ -316,6 +397,7 @@ export class DudeProfileComponent implements OnInit {
     }
     return this.imagePath;
   }
+
   convertPrivate() {
     if (this.isPrivate === true) {
       return 'Private';
