@@ -3,6 +3,7 @@ import {Dude} from '../../dtos/dude';
 import {Exercise} from '../../dtos/exercise';
 import {ExerciseWithRating} from '../../dtos/exercise-with-rating';
 import {RatingService} from '../../services/rating.service';
+import {GetByIDService} from '../../services/get-by-id.service';
 
 @Component({
   selector: 'app-exercise',
@@ -25,7 +26,7 @@ export class ExerciseComponent implements OnInit {
   rating: number;
   ratingForItem: number = 0;
   error: any;
-  constructor(private ratingService: RatingService) { }
+  constructor(private ratingService: RatingService, private getByIDService: GetByIDService) { }
 
   ngOnInit() {
 
@@ -55,7 +56,21 @@ export class ExerciseComponent implements OnInit {
   rateItem(item: any) {
     console.log('rating ' + typeof item + item.name  );
     this.ratingService.rateExercise(this.dude.id, item, this.ratingForItem).subscribe(
-      (dataFavorite) => {this.ngOnInit(); },
+      (dataFavorite) => {
+        this.getExercise(this.exercise.id, this.exercise.version);
+        },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
+  }
+
+  getExercise(id: number, version: number) {
+    this.getByIDService.getExerciseByID(id, version).subscribe(
+      (data) => {
+        this.exercise = data;
+        localStorage.setItem('selectedExercise', JSON.stringify(data));
+        this.ngOnInit();
+      },
       errorFavorite => {
         this.error = errorFavorite;
       });

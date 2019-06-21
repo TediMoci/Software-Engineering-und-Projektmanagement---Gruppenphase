@@ -19,17 +19,17 @@ export class GetByIDService {
     console.log('Get course with id: ' + courseId);
     return  this.httpClient.get<CourseWithRating>(this.BaseUri + '/course/' + courseId);
   }
-  getExerciseByID(exerciseId: number): Observable<ExerciseWithRating> {
+  getExerciseByID(exerciseId: number, exerciseVs: number): Observable<ExerciseWithRating> {
     console.log('Get exercise with id: ' + exerciseId);
-    return  this.httpClient.get<ExerciseWithRating>(this.BaseUri + '/exercise/' + exerciseId);
+    return  this.httpClient.get<ExerciseWithRating>(this.BaseUri + '/exercise/' + exerciseId + '/' + exerciseVs);
   }
-  getWorkoutByID(workoutId: number): Observable<WorkoutWithRating> {
+  getWorkoutByID(workoutId: number, workoutVs: number): Observable<WorkoutWithRating> {
     console.log('Get workout with id: ' + workoutId);
-    return  this.httpClient.get<WorkoutWithRating>(this.BaseUri + '/workout/' + workoutId);
+    return  this.httpClient.get<WorkoutWithRating>(this.BaseUri + '/workout/' + workoutId + '/' + workoutVs);
   }
-  getTraingScheduleByID(traingscheduleId: number): Observable<TrainingScheduleWithRating> {
+  getTraingScheduleByID(traingscheduleId: number, traingscheduleVs): Observable<TrainingScheduleWithRating> {
     console.log('Get training schedule with id: ' + traingscheduleId);
-    return  this.httpClient.get<TrainingScheduleWithRating>(this.BaseUri + '/trainingSchedule/' + traingscheduleId);
+    return  this.httpClient.get<TrainingScheduleWithRating>(this.BaseUri + '/trainingSchedule/' + traingscheduleId+ '/' + traingscheduleVs);
   }
 
 
