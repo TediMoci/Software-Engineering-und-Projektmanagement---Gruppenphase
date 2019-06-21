@@ -554,19 +554,49 @@ export class FindComponent implements OnInit {
   }
 
   sortAlphabetically() {
-    this.entries.sort(function (a, b) { // sort data alphabetically
-      if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
-      if (a.name > b.name) {return 1; }
-      return 0;
-    });
+    if (this.entries != null) {
+      this.entries.sort(function (a, b) { // sort data alphabetically
+        if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+    if (this.entriesTS != null) {
+      this.entriesTS.sort(function (a, b) { // sort data alphabetically
+        if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+    }
   }
 
   sortEntriesByRating() {
-    this.entries.sort(function (a, b) { // sort data by rating
-      if (a.rating > b.rating) {return -1; }
-      if (a.rating < b.rating) {return 1; }
-      return 0;
-    });
+    if (this.entries != null) {
+      this.entries.sort(function (a, b) { // sort data by rating
+        if (a.rating > b.rating) {return -1; }
+        if (a.rating < b.rating) {return 1; }
+        return 0;
+      });
+    }
+    if (this.entriesTS != null) {
+      this.entriesTS.sort(function (a, b) { // sort data by rating
+        if (a.rating > b.rating) {
+          return -1;
+        }
+        if (a.rating < b.rating) {
+          return 1;
+        }
+        return 0;
+      });
+    }
   }
 
   resetResults() {

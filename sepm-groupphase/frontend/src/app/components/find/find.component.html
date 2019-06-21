@@ -41,7 +41,8 @@
               <label ngbButtonLabel class="btn-secondary">
                 <input ngbButton type="radio" (click)="resetResults()" value="Training Schedule"> Training Schedule
               </label>
-
+            </div>
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="category">
               <label ngbButtonLabel class="btn-secondary">
                 <input ngbButton type="radio"(click)="resetResults()"  value="Dudes"> Dudes
               </label>
@@ -179,7 +180,7 @@
         </div>
         <hr>
 
-        <div class="row" *ngIf="category != 'Dudes' && category != 'Fitness Provider' && entries != undefined ">
+        <div class="row" *ngIf="category != 'Dudes' && category != 'Fitness Provider' && (entries != undefined || entriesTS != undefined) ">
           <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button"  data-toggle="dropdown" [(ngModel)]="sortFilter" ngDefaultControl>
               Sort by: {{sortFilter}}
