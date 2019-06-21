@@ -14,6 +14,7 @@ import {FitnessProviderFilter} from '../dtos/fitness-provider-filter';
 import {DudeFilter} from '../dtos/dude-filter';
 import {TrainingScheduleFilter} from '../dtos/training-schedule-filter';
 import {TrainingSchedule} from '../dtos/trainingSchedule';
+import {ExerciseWithRating} from '../dtos/exercise-with-rating';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class FindService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) {  }
 
-  getAllExercisesFilterd(exerciseFilter: ExerciseFilter, dudeId: number): Observable<Exercise[]> {
+  getAllExercisesFilterd(exerciseFilter: ExerciseFilter, dudeId: number): Observable<ExerciseWithRating[]> {
     console.log('get all exercises');
     let params = new HttpParams();
     if (exerciseFilter.filter != null) {
@@ -39,7 +40,7 @@ export class FindService {
 
     console.log('get all exercises with params: ' + params.toString());
 
-    return this.httpClient.get<Exercise[]>(this.BaseUri + '/exercise/filtered' + '/' + dudeId, {params: params});
+    return this.httpClient.get<ExerciseWithRating[]>(this.BaseUri + '/exercise/filtered' + '/' + dudeId, {params: params});
   }
 
   getAllCoursesFilterd(courseFilter: CourseFilter): Observable<Course[]> {

@@ -16,6 +16,8 @@ import {BookmarksService} from '../../services/bookmarks.service';
 import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {TrainingScheduleFilter} from '../../dtos/training-schedule-filter';
 import {TrainingScheduleService} from '../../services/training-schedule.service';
+import {RatingService} from '../../services/rating.service';
+import {subscribeOn} from 'rxjs/operators';
 
 @Component({
   selector: 'app-find',
@@ -60,6 +62,8 @@ export class FindComponent implements OnInit {
   errorBookmark: any;
   dude: Dude;
   bookmarkedName: string;
+  selectedItem: any;
+  ratingForItem: number = 0;
 
   // Filter Objects
   courceFilter: CourseFilter;
@@ -72,12 +76,12 @@ export class FindComponent implements OnInit {
 
   interval: number;
   d1: Array<any>;
-  d2: Array<any>
-  d3: Array<any>
-  d4: Array<any>
-  d5: Array<any>
-  d6: Array<any>
-  d7: Array<any>
+  d2: Array<any>;
+  d3: Array<any>;
+  d4: Array<any>;
+  d5: Array<any>;
+  d6: Array<any>;
+  d7: Array<any>;
   exercisesForWorkouts1: any;
   exercisesForWorkouts2: any;
   exercisesForWorkouts3: any;
@@ -95,7 +99,9 @@ export class FindComponent implements OnInit {
   // Enums
   muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
 
-  constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService, private bookmarksService: BookmarksService, private trainingScheduleService: TrainingScheduleService) {}
+  constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService,
+              private bookmarksService: BookmarksService, private trainingScheduleService: TrainingScheduleService,
+              private ratingService: RatingService) {}
 
   ngOnInit() {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'DUDE') {
@@ -434,6 +440,18 @@ export class FindComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+  rateItem(item: any) {
+
+    if (this.category === 'Exercise') {
+      console.log('rating ' + typeof item + item.name  );
+      this.ratingService.rateExercise(this.dude.id, item, this.ratingForItem).subscribe(
+        (dataFavorite) => {},
+        errorFavorite => {
+          this.errorBookmark = errorFavorite;
+        });
+    }
   }
 
   convertDifficulty(element: any) {
@@ -779,7 +797,7 @@ export class FindComponent implements OnInit {
               if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
               if (a.name > b.name) {return 1; }
               return 0;
-            });Array.from(data5);
+            }); Array.from(data5);
           },
           error => {
             this.error = error;

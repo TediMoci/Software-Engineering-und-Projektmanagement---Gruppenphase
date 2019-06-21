@@ -19,7 +19,9 @@
   background: lightskyblue;
   min-height: 700px;
 }
-
+.rating{
+  padding-right: 10px;
+}
 .row-sm-1 {
   padding: 20px;
   margin-bottom: 50px;
@@ -59,7 +61,7 @@
 }
 
 .modal-header {
-  text-align: center;
+  margin: auto;
 }
 
 .btn-favourite {
@@ -68,7 +70,19 @@
   text-align: center;
   -webkit-text-size-adjust: auto;
 }
+.btn-rating {
+  background: lightskyblue;
+  color: white;
+  text-align: center;
+  -webkit-text-size-adjust: auto;
+}
+.btn-rating:hover {
+  background: deepskyblue;
+}
 
 .btn-favourite:hover {
   background: palevioletred;
+}
+.modalRating{
+  margin: auto;
 }
