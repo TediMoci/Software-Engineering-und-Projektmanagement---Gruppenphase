@@ -8,6 +8,8 @@ import {WorkoutService} from '../../services/workout.service';
 import {ActiveTrainingSchedule} from '../../dtos/active-training-schedule';
 import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
 import {TrainingScheduleWithRating} from '../../dtos/training-schedule-with-rating';
+import {RatingService} from '../../services/rating.service';
+import {GetByIDService} from '../../services/get-by-id.service';
 
 @Component({
   selector: 'app-training-schedule',
@@ -33,6 +35,7 @@ export class TrainingScheduleComponent implements OnInit {
   newActiveTs: GetActiveTrainingSchedule;
   selectedWorkout: any = [];
   rating: number;
+  ratingForItem: number = 0;
 
   workoutsPerDay: Array<any> = [];
 
@@ -43,7 +46,9 @@ export class TrainingScheduleComponent implements OnInit {
 
   constructor(private trainingScheduleService: TrainingScheduleService,
               private workoutService: WorkoutService,
-              private formBuilder: FormBuilder) {}
+              private formBuilder: FormBuilder,
+              private ratingService: RatingService,
+              private getByIDService: GetByIDService) {}
 
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
@@ -98,6 +103,30 @@ export class TrainingScheduleComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+
+  rateItem(item: any) {
+    console.log('rating ' + typeof item + item.name  );
+    this.ratingService.rateTrainingSchedule(this.dude.id, item, this.ratingForItem).subscribe(
+      (dataFavorite) => {
+        this.getWorkout(this.trainingSchedule.id, this.trainingSchedule.version);
+      },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
+  }
+
+  getWorkout(id: number, vs: number) {
+    this.getByIDService.getTraingScheduleByID(id, vs).subscribe(
+      (data) => {
+        this.trainingSchedule = data;
+        localStorage.setItem('selectedTrainingSchedule', JSON.stringify(data));
+        this.ngOnInit();
+      },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
   }
 
   makeTsActive() {
