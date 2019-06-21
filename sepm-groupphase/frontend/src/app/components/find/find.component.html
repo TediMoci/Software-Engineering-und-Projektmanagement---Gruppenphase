@@ -222,12 +222,19 @@
                       <mat-panel-title style="font-size: large">
                         {{element.name}}
                       </mat-panel-title>
+
+                      <div class="rating">
+                        <ngb-rating  [rate]="element.rating" [readonly]="true" max="5"></ngb-rating>
+                        {{element.rating}}/5
+                      </div>
+
                     </mat-expansion-panel-header>
                     <p>Provided by: <a *ngIf="selectedFP" [routerLink]="['/fitnessProvider']" class="btn2 btn-link">{{selectedFP.name}}</a> </p>
                     <hr>
                     <p>"{{element.description}}"</p>
                     <div *ngIf="isDude" class="fav">
                     <button type="button" (click)="bookmarkCourse(element)" class="btn btn-favourite" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-heart"></i></button>
+                      <button type="button" (click)="selectedItem = element" class="btn btn-rating" data-toggle="modal" data-target="#favoriteModal"><i class="fas fa-star"></i></button>
                     </div>
                   </mat-expansion-panel>
                 </mat-accordion>
@@ -243,6 +250,12 @@
                       <mat-panel-title style="font-size: large;">
                         {{element.name}}
                       </mat-panel-title>
+
+                      <div class="rating">
+                        <ngb-rating  [rate]="element.rating" [readonly]="true" max="5"></ngb-rating>
+                        {{element.rating}}/5
+                      </div>
+
                     </mat-expansion-panel-header>
                     <hr>
                     <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
@@ -251,6 +264,9 @@
                     <p>"{{element.description}}"</p>
                     <div *ngIf="isDude" class="fav">
                     <button type="button" (click)="bookmarkWorkout(element)" class="btn btn-favourite" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-heart"></i></button>
+                      <span *ngIf="dude.id != element.creatorId">
+                        <button type="button" (click)="selectedItem = element" class="btn btn-rating" data-toggle="modal" data-target="#favoriteModal"><i class="fas fa-star"></i></button>
+                      </span>
                     </div>
                       <hr>
                     <p style="font-size: medium">Exercises:</p>
@@ -339,6 +355,12 @@
                       <mat-panel-title style="font-size: large;">
                         {{element.name}}
                       </mat-panel-title>
+
+                      <div class="rating">
+                        <ngb-rating  [rate]="element.rating" [readonly]="true" max="5"></ngb-rating>
+                        {{element.rating}}/5
+                      </div>
+
                     </mat-expansion-panel-header>
                     <hr>
                     <p>Difficulty: {{convertDifficulty(element.difficulty)}}</p>
@@ -347,6 +369,9 @@
                     <p>"{{element.description}}"</p>
                     <div *ngIf="isDude" class="fav">
                       <button type="button" (click)="bookmarkTrainingSchedule(element)" class="btn btn-favourite" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-heart"></i></button>
+                      <span *ngIf="dude.id != element.creatorId">
+                        <button type="button" (click)="selectedItem = element" class="btn btn-rating" data-toggle="modal" data-target="#favoriteModal"><i class="fas fa-star"></i></button>
+                      </span>
                     </div>
                     <hr>
                     <p style="font-size: medium">Workouts:</p>

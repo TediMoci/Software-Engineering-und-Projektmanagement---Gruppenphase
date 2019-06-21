@@ -447,11 +447,36 @@ export class FindComponent implements OnInit {
     if (this.category === 'Exercise') {
       console.log('rating ' + typeof item + item.name  );
       this.ratingService.rateExercise(this.dude.id, item, this.ratingForItem).subscribe(
-        (dataFavorite) => {},
+        (dataFavorite) => {this.startSearch(this.category); },
         errorFavorite => {
           this.errorBookmark = errorFavorite;
         });
     }
+    if (this.category === 'Course') {
+      console.log('rating ' + typeof item + item.name  );
+      this.ratingService.rateCourse(this.dude.id, item, this.ratingForItem).subscribe(
+        (dataFavorite) => {this.startSearch(this.category); },
+        errorFavorite => {
+          this.errorBookmark = errorFavorite;
+        });
+    }
+    if (this.category === 'Workout') {
+      console.log('rating ' + typeof item + item.name  );
+      this.ratingService.rateWorkout(this.dude.id, item, this.ratingForItem).subscribe(
+        (dataFavorite) => {this.startSearch(this.category); },
+        errorFavorite => {
+          this.errorBookmark = errorFavorite;
+        });
+    }
+    if (this.category === 'Training Schedule') {
+      console.log('rating ' + typeof item + item.name  );
+      this.ratingService.rateTrainingSchedule(this.dude.id, item, this.ratingForItem).subscribe(
+        (dataFavorite) => {this.startSearch(this.category); },
+        errorFavorite => {
+          this.errorBookmark = errorFavorite;
+        });
+    }
+    this.ratingForItem  = 0;
   }
 
   convertDifficulty(element: any) {

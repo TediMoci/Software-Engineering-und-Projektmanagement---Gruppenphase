@@ -15,6 +15,9 @@ import {DudeFilter} from '../dtos/dude-filter';
 import {TrainingScheduleFilter} from '../dtos/training-schedule-filter';
 import {TrainingSchedule} from '../dtos/trainingSchedule';
 import {ExerciseWithRating} from '../dtos/exercise-with-rating';
+import {CourseWithRating} from '../dtos/course-with-rating';
+import {WorkoutWithRating} from '../dtos/workout-with-rating';
+import {TrainingScheduleWithRating} from '../dtos/training-schedule-with-rating';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +46,7 @@ export class FindService {
     return this.httpClient.get<ExerciseWithRating[]>(this.BaseUri + '/exercise/filtered' + '/' + dudeId, {params: params});
   }
 
-  getAllCoursesFilterd(courseFilter: CourseFilter): Observable<Course[]> {
+  getAllCoursesFilterd(courseFilter: CourseFilter): Observable<CourseWithRating[]> {
     console.log('get all courses');
     let params = new HttpParams();
     if (courseFilter.filter != null) {
@@ -51,10 +54,10 @@ export class FindService {
     }
     console.log('get all courses with params: ' + params.toString());
 
-    return this.httpClient.get<Course[]>(this.BaseUri + '/course/filtered', {params: params});
+    return this.httpClient.get<CourseWithRating[]>(this.BaseUri + '/course/filtered', {params: params});
   }
 
-  getAllWorkoutsFilterd(workoutFilter: WorkoutFilter, dudeId: number): Observable<Workout[]> {
+  getAllWorkoutsFilterd(workoutFilter: WorkoutFilter, dudeId: number): Observable<WorkoutWithRating[]> {
     console.log('get all workouts');
     let params = new HttpParams();
     if (workoutFilter.filter != null) {
@@ -72,7 +75,7 @@ export class FindService {
 
     console.log('get all workouts with params: ' + params.toString());
 
-    return this.httpClient.get<Workout[]>(this.BaseUri + '/workout/filtered' + '/' + dudeId, {params: params});
+    return this.httpClient.get<WorkoutWithRating[]>(this.BaseUri + '/workout/filtered' + '/' + dudeId, {params: params});
   }
 
   getAllFitnessProviderFiltered(fitnessProviderFilter: FitnessProviderFilter): Observable<FitnessProvider[]> {
@@ -110,7 +113,7 @@ export class FindService {
     return  this.httpClient.get<FitnessProvider>(this.BaseUri + '/fitnessProvider/' + creatorId);
   }
 
-  getAllTrainingSchedulesFiltered(trainingScheduleFilter: TrainingScheduleFilter, dudeId: number): Observable<TrainingSchedule[]> {
+  getAllTrainingSchedulesFiltered(trainingScheduleFilter: TrainingScheduleFilter, dudeId: number): Observable<TrainingScheduleWithRating[]> {
     console.log('get all training schedules');
     let params = new HttpParams();
     if (trainingScheduleFilter.filter != null) {
@@ -125,6 +128,6 @@ export class FindService {
 
     console.log('get all training schedules with params: ' + params.toString());
 
-    return this.httpClient.get<TrainingSchedule[]>(this.BaseUri + '/trainingSchedule/filtered' + '/' + dudeId, {params: params});
+    return this.httpClient.get<TrainingScheduleWithRating[]>(this.BaseUri + '/trainingSchedule/filtered' + '/' + dudeId, {params: params});
   }
 }
