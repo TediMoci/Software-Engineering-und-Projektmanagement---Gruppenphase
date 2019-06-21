@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {Exercise} from '../../dtos/exercise';
 import {ExerciseWithRating} from '../../dtos/exercise-with-rating';
+import {RatingService} from '../../services/rating.service';
 
 @Component({
   selector: 'app-exercise',
@@ -22,7 +23,9 @@ export class ExerciseComponent implements OnInit {
   dude: Dude;
   isPrivate: boolean;
   rating: number;
-  constructor() { }
+  ratingForItem: number = 0;
+  error: any;
+  constructor(private ratingService: RatingService) { }
 
   ngOnInit() {
 
@@ -47,6 +50,15 @@ export class ExerciseComponent implements OnInit {
     } else {
       return 'Public';
     }
+  }
+
+  rateItem(item: any) {
+    console.log('rating ' + typeof item + item.name  );
+    this.ratingService.rateExercise(this.dude.id, item, this.ratingForItem).subscribe(
+      (dataFavorite) => {this.ngOnInit(); },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
   }
 
 }

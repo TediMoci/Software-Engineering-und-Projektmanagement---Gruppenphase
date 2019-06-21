@@ -4,6 +4,8 @@ import {Course} from '../../dtos/course';
 import {Dude} from '../../dtos/dude';
 import {CourseWithRating} from '../../dtos/course-with-rating';
 import {FindService} from '../../services/find.service';
+import {RatingService} from '../../services/rating.service';
+import {GetByIDService} from '../../services/get-by-id.service';
 
 @Component({
   selector: 'app-course-dude-view',
@@ -23,7 +25,8 @@ export class CourseDudeViewComponent implements OnInit {
   course: CourseWithRating;
   rating: number;
   error: any;
-  constructor(private findService: FindService) { }
+  ratingForItem: number = 0;
+  constructor(private findService: FindService, private ratingService: RatingService, private getByIDService: GetByIDService) { }
 
   ngOnInit() {
 
@@ -47,5 +50,28 @@ export class CourseDudeViewComponent implements OnInit {
         this.error = error;
       }
     );
+  }
+
+  rateItem(item: any) {
+      console.log('rating ' + typeof item + item.name  );
+      this.ratingService.rateCourse(this.dude.id, item, this.ratingForItem).subscribe(
+        (dataFavorite) => {
+          this.getCourse(this.course.id);
+        },
+        errorFavorite => {
+          this.error = errorFavorite;
+        });
+  }
+
+  getCourse(id: number) {
+    this.getByIDService.getCourseByID(id).subscribe(
+      (data) => {
+        this.course = data;
+        localStorage.setItem('selectedCourse', JSON.stringify(data));
+        this.ngOnInit();
+      },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
   }
 }
