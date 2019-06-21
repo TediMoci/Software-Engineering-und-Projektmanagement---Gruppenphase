@@ -55,13 +55,13 @@ export class DudeProfileComponent implements OnInit {
   tsIntervalLenght: number;
   tsTrue: boolean = false;
   // Sorted Workouts by day
-  selectedWorkout: null;
+  selectedWorkout: any = [];
   exercisesForWorkouts: any;
   exercisesForWorkoutsStatus: Array<ExerciseDone>;
   workoutsPerDay: Array<any> = [];
   // Display variables
   tabs: Array<string>;
-  // Internal locgic and ngModels
+  // Internal logic and ngModels
   doneChecked: boolean;
   selectedDay: number;
 

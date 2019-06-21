@@ -97,10 +97,10 @@
               </button>
             </mat-card>
           </div>
-          <div class="details" *ngIf="selectedWorkout != null">
+          <div class="details" *ngIf="selectedWorkout.length !== 0">
 
             <section>
-              <button class="hideButton" mat-flat-button (click)="selectedWorkout = null">Hide details</button>
+              <button class="hideButton" mat-flat-button (click)="selectedWorkout = []">Hide details</button>
             </section>
 
             <section>
