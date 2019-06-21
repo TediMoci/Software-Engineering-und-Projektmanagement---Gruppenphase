@@ -19,7 +19,6 @@ export class FollowerDudeComponent implements OnInit {
   sex: any;
   selfAssessment: string;
   dude: Dude;
-  error: any;
   constructor() { }
 
   ngOnInit() {

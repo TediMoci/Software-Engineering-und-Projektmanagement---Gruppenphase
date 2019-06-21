@@ -1,11 +1,4 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <div class="container-fluid">
 
   <div class="container">
@@ -30,13 +23,13 @@
                 <input ngbButton type="radio" (click)="resetResults()" value="Course"> Course
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()" value="Workout"> Workout
+                <input ngbButton type="radio" (click)="resetResults()" value="Workout"> Workout
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()"  value="Dudes"> Dudes
+                <input ngbButton type="radio" (click)="resetResults()"  value="Dudes"> Dudes
               </label>
               <label ngbButtonLabel class="btn-secondary">
-                <input ngbButton type="radio"(click)="resetResults()"  value="Fitness Provider"> Fitness Provider
+                <input ngbButton type="radio" (click)="resetResults()"  value="Fitness Provider"> Fitness Provider
               </label>
             </div>
             <div class="card-body row no-gutters align-items-center">
@@ -44,6 +37,13 @@
               <div class="col-lg">
                 <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find '+ category" [(ngModel)]="inputText" />
               </div>
+
+              <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+                <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
               <!--end of col-->
               <div class="col-auto">
                 <button class="btn btn-md btn-success" (click)="startSearch(category)" type="submit"><i class="fas fa-search"></i></button>

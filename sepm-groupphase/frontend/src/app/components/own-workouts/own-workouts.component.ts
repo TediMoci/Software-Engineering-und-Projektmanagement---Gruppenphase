@@ -79,6 +79,8 @@ export class OwnWorkoutsComponent implements OnInit {
         }
       );
   }
-
+  vanishError() {
+    this.error = false;
+  }
 }
 

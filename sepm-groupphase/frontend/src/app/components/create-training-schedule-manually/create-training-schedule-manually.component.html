@@ -1,11 +1,6 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
       integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 
 <!-- start of first view -->
 
@@ -34,7 +29,7 @@
                        formControlName="tsName"
                        aria-describedby="tsNameHelp" placeholder="Enter name">
                 <div *ngIf="submitted && !!tsForm.controls.tsName.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsName.errors.required">Name is
+                  <small class="form-text text-danger" *ngIf="!!tsForm.controls.tsName.errors.required">Name is
                     required!
                   </small>
                 </div>
@@ -61,7 +56,7 @@
                     <label class="custom-control-label" for="pro">Pro</label>
                   </div>
                   <div *ngIf="submitted && !!tsForm.controls.tsDifficulty.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDifficulty.errors.required">
+                    <small class="form-text text-danger" *ngIf="!!tsForm.controls.tsDifficulty.errors.required">
                       Difficulty level is
                       required!
                     </small>
@@ -76,7 +71,7 @@
                        aria-describedby="tsDescriptionHelp" placeholder="Enter description"></textarea>
                 <span>{{3000 - tsForm.controls.tsDescription.value.length}} left</span>
                 <div *ngIf="submitted && !!tsForm.controls.tsDescription.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDescription.errors.required">Description is
+                  <small class="form-text text-danger" *ngIf="!!tsForm.controls.tsDescription.errors.required">Description is
                     required!
                   </small>
                 </div>
@@ -98,27 +93,40 @@
                     <label class="custom-control-label" for="private">Private</label>
                   </div>
                   <div *ngIf="submitted && !!tsForm.controls.isPrivate.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="!!tsForm.controls.isPrivate.errors.required">Visibility of your training schedule is required!
+                    <small class="form-text text-danger" *ngIf="!!tsForm.controls.isPrivate.errors.required">Visibility of your training schedule is required!
                     </small>
                   </div>
                 </div>
+
               </div>
+              <span class="Interval">Interval*</span>
+              <div class="form-group">
+                <!--start dropdown-->
+                <mat-form-field>
+                  <mat-label>{{showCurrentDays()}}</mat-label>
+                  <mat-select formControlName="tsInterval">
+                    <mat-option *ngFor="let days of intervalDays" [value]="days" (click)="setChosenInterval(days)">
+                      {{days}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <!--end dropdown-->
+                <div *ngIf="submitted && !!tsForm.controls.tsInterval.errors" class="error">
+                  <small class="form-text text-danger" *ngIf="!!tsForm.controls.tsInterval.errors.required">Interval is
+                    required!
+                  </small>
+                </div>
+              </div>
+
             </form>
         </div>
 
-        <mat-label>Interval*</mat-label>
-        <div class="row">
-          <!--start dropdown-->
-          <mat-form-field>
-            <mat-label>{{showCurrentDays()}}</mat-label>
-            <mat-select>
-              <mat-option *ngFor="let days of intervalDays" [value]="days" (click)="setChosenInterval(days)">
-                {{days}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <!--end dropdown-->
+        <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+          <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+
 
         <div class="row">
           <div class="addWA">

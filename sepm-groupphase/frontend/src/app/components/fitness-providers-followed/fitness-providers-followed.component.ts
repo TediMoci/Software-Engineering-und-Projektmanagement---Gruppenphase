@@ -67,4 +67,7 @@ export class FitnessProvidersFollowedComponent implements OnInit {
         }
       );
   }
+  vanishError() {
+    this.error = false;
+  }
 }

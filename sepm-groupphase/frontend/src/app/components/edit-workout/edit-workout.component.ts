@@ -79,7 +79,7 @@ export class EditWorkoutComponent implements OnInit {
       nameForEditWorkout: ['', [Validators.required]],
       difficultyLevelEditWorkout: [this.difficulty, [Validators.required]],
       descriptionForEditWorkout: ['', [Validators.required]],
-      calorieConsumptionEditWorkout: ['', [Validators.required]],
+      calorieConsumptionEditWorkout: ['', [Validators.required, Validators.min(1), Validators.max(9999)]],
       isPrivate: [this.isPrivate, [Validators.required]]
     });
 

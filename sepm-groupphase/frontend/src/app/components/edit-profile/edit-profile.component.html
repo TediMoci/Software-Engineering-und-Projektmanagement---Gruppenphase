@@ -1,9 +1,3 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <h3 class="editTitle" align="center">Edit Dude-Profile </h3>
 
 <div class="pt-3">
@@ -16,10 +10,10 @@
           <input ngModel = "{{userName}}" type="text" name="name" maxlength="50" formControlName="name" class="form-control" id="nameEdit"
                  aria-describedby="nameEditHelp">
           <div *ngIf="submitted && !!editForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.name.errors.required">Your name is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.name.errors.required">Your name is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.name.errors.nameCheck">Your name is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.name.errors.nameCheck">Your name is
               already taken!
             </small>
           </div>
@@ -29,10 +23,10 @@
           <label for="passwordEdit">Password*</label>
           <input ngModel="{{password}}" knifeNoSpaces type="password" formControlName="password" name="password" class="form-control" id="passwordEdit">
           <div *ngIf="submitted && !!editForm.controls.password.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.password.errors.required">Your password is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.password.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.password.errors.minlength">Your password
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.password.errors.minlength">Your password
               must be at least 8 characters long!
             </small>
           </div>
@@ -42,10 +36,10 @@
           <label for="passwordConfirmedEdit">Password Confirmed*</label>
           <input ngModel="{{password}}" knifeNoSpaces  type="password" formControlName="passwordConfirmed" name="passwordConfirmed" class="form-control" id="passwordConfirmedEdit">
           <div *ngIf="submitted && !!editForm.controls.passwordConfirmed.errors" class="error">
-            <small class="form-text text-warning" *ngIf=" !!editForm.controls.passwordConfirmed.errors.required">Your password is
+            <small class="form-text text-danger" *ngIf=" !!editForm.controls.passwordConfirmed.errors.required">Your password is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.passwordConfirmed.errors.passwordCheck"> Confirmed password does not match
             </small>
           </div>
         </div>
@@ -62,10 +56,10 @@
           <input ngModel="{{email}}" type="text" name="email" class="form-control" id="emailEdit" formControlName="email"
                  aria-describedby="emailHelp">
           <div *ngIf="submitted && !!editForm.controls.email.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.email.errors.required">Your email is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.email.errors.required">Your email is
               required!
             </small>
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.email.errors.email">Your email is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.email.errors.email">Your email is
               invalid!
             </small>
           </div>
@@ -90,7 +84,7 @@
             </div>
 
             <div *ngIf="submitted && !!editForm.controls.sex.errors" class="error">
-              <small class="form-text text-warning" *ngIf="!!editForm.controls.sex.errors.required">Your gender is
+              <small class="form-text text-danger" *ngIf="!!editForm.controls.sex.errors.required">Your gender is
                 required!
               </small>
             </div>
@@ -115,7 +109,7 @@
               <label class="custom-control-label" for="proEdit">Pro</label>
             </div>
             <div *ngIf="submitted && !!editForm.controls.selfAssessment.errors" class="error">
-              <small class="form-text text-warning" *ngIf="!!editForm.controls.selfAssessment.errors.required">Your self-assessment is
+              <small class="form-text text-danger" *ngIf="!!editForm.controls.selfAssessment.errors.required">Your self-assessment is
                 required!
               </small>
             </div>
@@ -127,7 +121,7 @@
           <input ngModel="{{birthday}}" type="date" name="birthday" class="form-control" formControlName="birthday" id="birthdayEdit"
                  aria-describedby="birthdayHelp">
           <div *ngIf="submitted && !!editForm.controls.birthday.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.birthday.errors.required">Your birthday is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.birthday.errors.required">Your birthday is
               required!
             </small>
           </div>
@@ -138,7 +132,7 @@
           <input ngModel="{{height}}" knifeOnlyNumbers type="text" maxlength="3" class="form-control" formControlName="height" id="heightEdit"
                  aria-describedby="heightHelp">
           <div *ngIf="submitted && !!editForm.controls.height.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.height.errors.required">Your height is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.height.errors.required">Your height is
               required!
             </small>
           </div>
@@ -149,7 +143,7 @@
           <input ngModel="{{weight}}" knifeOnlyNumbers type="text" maxlength="3" name="weight" formControlName="weight" class="form-control" id="weightEdit"
                  aria-describedby="weightHelp">
           <div *ngIf="submitted && !!editForm.controls.weight.errors" class="error">
-            <small class="form-text text-warning" *ngIf="!!editForm.controls.weight.errors.required">Your weight is
+            <small class="form-text text-danger" *ngIf="!!editForm.controls.weight.errors.required">Your weight is
               required!
             </small>
           </div>
@@ -170,11 +164,18 @@
               <label class="custom-control-label" for="private">Private</label>
             </div>
             <div *ngIf="submitted && !!editForm.controls.isPrivate.errors" class="error">
-              <small class="form-text text-warning" *ngIf="!!editForm.controls.isPrivate.errors.required">Visibility of your profile is required!
+              <small class="form-text text-danger" *ngIf="!!editForm.controls.isPrivate.errors.required">Visibility of your profile is required!
               </small>
             </div>
           </div>
         </div>
+
+        <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+          <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
         <button type="button" (click)="editUser()" class="btn btn-success float-right">Submit</button>
         <a [routerLink]="['/dude-profile']" class="btn btn-link">Cancel</a>
       </form>

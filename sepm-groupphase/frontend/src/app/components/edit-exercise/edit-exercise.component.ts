@@ -49,8 +49,8 @@ export class EditExerciseComponent implements OnInit {
       name: ['', [Validators.required]],
       equipment: ['', [Validators.required]],
       category: [this.oldExercise.category, [Validators.required]],
-      description: [''],
-      muscleGroup: [''],
+      description: ['', [Validators.required]],
+      muscleGroup: ['', [Validators.required]],
       isPrivate: ['']
     });
 

@@ -79,6 +79,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     this.tsForm = this.formBuilder.group({
       tsName: ['', [Validators.required]],
       tsDifficulty: ['', [Validators.required]],
+      tsInterval: ['', [Validators.required]],
       tsDescription: ['', [Validators.required]],
       isPrivate: ['', [Validators.required]]
     });

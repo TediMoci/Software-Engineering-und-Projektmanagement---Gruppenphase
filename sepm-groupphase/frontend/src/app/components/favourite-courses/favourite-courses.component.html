@@ -1,11 +1,4 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">{{ error }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <div class="container-fluid">
 
   <div class="container">
@@ -26,6 +19,12 @@
              <button type="button" (click)="setToDeleteCourseBookmark(element)" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash"></i></button>
           </li>
         </ul>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}
+        <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
 
     </div>
