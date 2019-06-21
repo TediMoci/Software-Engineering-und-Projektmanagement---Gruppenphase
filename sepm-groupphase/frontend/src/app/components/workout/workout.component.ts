@@ -3,6 +3,7 @@ import {Dude} from '../../dtos/dude';
 import {WorkoutExercise} from '../../dtos/workoutExercise';
 import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
+import {WorkoutWithRating} from '../../dtos/workout-with-rating';
 
 @Component({
   selector: 'app-workout',
@@ -18,10 +19,11 @@ export class WorkoutComponent implements OnInit {
   calories: number;
   description: string;
   error: any;
-  workout: Workout;
+  workout: WorkoutWithRating;
   exercises: WorkoutExercise[];
   dude: Dude;
   isPrivate: boolean;
+  rating: number;
   constructor(private workoutService: WorkoutService) {
   }
 
@@ -43,6 +45,7 @@ export class WorkoutComponent implements OnInit {
     }
     this.calories = this.workout.calorieConsumption;
     this.description = this.workout.description;
+    this.rating = this.workout.rating;
 
     this.workoutService.getExercisesOfWorkoutById(this.workout.id, this.workout.version).subscribe(
       (data) => {

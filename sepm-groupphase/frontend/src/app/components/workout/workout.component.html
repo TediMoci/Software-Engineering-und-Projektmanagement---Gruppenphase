@@ -19,6 +19,7 @@
         <div class="row">
           <div class="col">
             <h1>{{workoutName}}</h1>
+            <p>Rating: <ngb-rating  [(rate)]="rating" max="5"></ngb-rating> {{rating}}/5</p>
             <p> Difficulty: {{difficulty}}</p>
             <p> Calorie Consumption: {{calories}} kcal</p>
             <p> Description: {{description}} </p>

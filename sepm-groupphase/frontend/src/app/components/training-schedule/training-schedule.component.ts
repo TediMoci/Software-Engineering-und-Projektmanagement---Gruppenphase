@@ -7,6 +7,7 @@ import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
 import {ActiveTrainingSchedule} from '../../dtos/active-training-schedule';
 import {GetActiveTrainingSchedule} from '../../dtos/get-active-training-schedule';
+import {TrainingScheduleWithRating} from '../../dtos/training-schedule-with-rating';
 
 @Component({
   selector: 'app-training-schedule',
@@ -23,7 +24,7 @@ export class TrainingScheduleComponent implements OnInit {
   tabs: Array<string>;
   tabContent: any;
   selected = new FormControl(0);
-  trainingSchedule: TrainingSchedule;
+  trainingSchedule: TrainingScheduleWithRating;
   tsWorkouts: any;
   error: any;
   isPrivate: boolean;
@@ -31,6 +32,7 @@ export class TrainingScheduleComponent implements OnInit {
   toSaveActiveTs: ActiveTrainingSchedule;
   newActiveTs: GetActiveTrainingSchedule;
   selectedWorkout: any = [];
+  rating: number;
 
   workoutsPerDay: Array<any> = [];
 
@@ -51,6 +53,7 @@ export class TrainingScheduleComponent implements OnInit {
     this.imagePath = this.dude.imagePath;
     this.isPrivate = this.trainingSchedule.isPrivate;
     this.tabs = this.initTabs(this.trainingSchedule.intervalLength);
+    this.rating = this.trainingSchedule.rating;
     console.log(this.trainingSchedule.trainingScheduleWorkouts);
 
     this.tsForm = this.formBuilder.group({

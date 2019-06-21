@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Dude} from '../../dtos/dude';
 import {Exercise} from '../../dtos/exercise';
+import {ExerciseWithRating} from '../../dtos/exercise-with-rating';
 
 @Component({
   selector: 'app-exercise',
@@ -17,9 +18,10 @@ export class ExerciseComponent implements OnInit {
   category: string;
   muscleGroup: string;
   description: string;
-  exercise: Exercise;
+  exercise: ExerciseWithRating;
   dude: Dude;
   isPrivate: boolean;
+  rating: number;
   constructor() { }
 
   ngOnInit() {
@@ -36,6 +38,7 @@ export class ExerciseComponent implements OnInit {
     this.category = this.exercise.category;
     this.description = this.exercise.description;
     this.isPrivate = this.exercise.isPrivate;
+    this.rating = this.exercise.rating;
   }
 
   convertPrivate() {

@@ -13,6 +13,7 @@
         <div class="row">
           <div class="col">
             <h1>{{courseName}}</h1>
+            <p>Rating: <ngb-rating  [(rate)]="rating" max="5"></ngb-rating> {{rating}}/5</p>
             <p>{{description}}</p>
             <p>Provided by: {{fitnessProviderName}}</p>
           </div>

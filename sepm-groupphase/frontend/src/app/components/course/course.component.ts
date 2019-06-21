@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FitnessProvider} from '../../dtos/fitness-provider';
 import {Course} from '../../dtos/course';
+import {FindService} from '../../services/find.service';
+import {CourseWithRating} from '../../dtos/course-with-rating';
 
 @Component({
   selector: 'app-course',
@@ -15,8 +17,9 @@ export class CourseComponent implements OnInit {
   fitnessProvider: FitnessProvider;
   courseName: string;
   description: string;
-  course: Course;
-  constructor() { }
+  course: CourseWithRating;
+  rating: number;
+  constructor(private findService: FindService) { }
 
   ngOnInit() {
 
@@ -27,6 +30,7 @@ export class CourseComponent implements OnInit {
     this.courseName = this.course.name;
     this.imagePath2 = this.course.imagePath;
     this.description = this.course.description;
+    this.rating = this.course.rating;
   }
 
 }
