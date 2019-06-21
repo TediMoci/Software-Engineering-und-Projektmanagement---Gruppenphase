@@ -39,6 +39,9 @@ public class TrainingScheduleDto {
     @Min(1) @Max(5)
     private Double rating = 1.0;
 
+    @ApiModelProperty(name = "Visibility of TrainingSchedule")
+    private Boolean isPrivate = false;
+
     @ApiModelProperty(name = "TrainingSchedule-Workouts that are part of the TrainingSchedule")
     private TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts;
 
@@ -99,6 +102,14 @@ public class TrainingScheduleDto {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public TrainingScheduleWorkoutDtoIn[] getTrainingScheduleWorkouts() {
@@ -179,6 +190,7 @@ public class TrainingScheduleDto {
         private Integer difficulty;
         private Integer intervalLength;
         private Double rating;
+        private Boolean isPrivate;
         private TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts;
         private Long creatorId;
 
@@ -220,6 +232,11 @@ public class TrainingScheduleDto {
             return this;
         }
 
+        public TrainingScheduleDtoBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public TrainingScheduleDtoBuilder trainingScheduleWorkouts(TrainingScheduleWorkoutDtoIn[] trainingScheduleWorkouts) {
             this.trainingScheduleWorkouts = trainingScheduleWorkouts;
             return this;
@@ -239,6 +256,7 @@ public class TrainingScheduleDto {
             trainingScheduleDto.setDifficulty(difficulty);
             trainingScheduleDto.setIntervalLength(intervalLength);
             trainingScheduleDto.setRating(rating);
+            trainingScheduleDto.setIsPrivate(isPrivate);
             trainingScheduleDto.setTrainingScheduleWorkouts(trainingScheduleWorkouts);
             trainingScheduleDto.setCreatorId(creatorId);
             return trainingScheduleDto;

@@ -1,3 +1,4 @@
+/**
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.DetailedMessageDTO;
@@ -186,3 +187,4 @@ public class MessageEndpointTest extends BaseIntegrationTest {
             .build()));
     }
 }
+**/

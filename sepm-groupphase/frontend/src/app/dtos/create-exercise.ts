@@ -5,6 +5,7 @@ export class CreateExercise {
     public category: string,
     public description:  string,
     public muscleGroup: string,
-    public creatorId: number
+    public creatorId: number,
+    public isPrivate: boolean
   ) {}
 }

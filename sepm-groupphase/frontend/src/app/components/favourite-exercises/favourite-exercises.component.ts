@@ -11,7 +11,7 @@ import {BookmarksService} from '../../services/bookmarks.service';
 })
 export class FavouriteExercisesComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   favExercises: Exercise[];
@@ -23,6 +23,7 @@ export class FavouriteExercisesComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.favouritesService.getAllExercisesBookmarkedByDudeId(this.dude.id).subscribe(
       (data) => {
         console.log('get all exercises bookmarked by dude with name ' + this.dude.name + ' and id ' + this.dude.id);

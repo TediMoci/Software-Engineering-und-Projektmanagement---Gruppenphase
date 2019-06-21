@@ -5,9 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.Exerc
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Sex;
-import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,8 +52,8 @@ public class ExerciseIntegrationTest {
 
     @BeforeClass
     public static void beforeClass() {
-        dudeDto.setName("Dude1");
-        dudeDto.setPassword("qqqqqqqq");
+        dudeDto.setName("DudeExercise1");
+        dudeDto.setPassword("1234567890");
         dudeDto.setEmail("test@email.com");
         dudeDto.setSex(Sex.Male);
         dudeDto.setSelfAssessment(1);
@@ -97,11 +95,6 @@ public class ExerciseIntegrationTest {
         }
     }
 
-    @After
-    public void deleteEntitiesAfterTest(){
-        exerciseRepository.deleteAll();
-    }
-
     private Long postExercise(ExerciseDto exercise) {
         HttpEntity<ExerciseDto> exerciseRequest = new HttpEntity<>(exercise);
         ResponseEntity<ExerciseDto> response = REST_TEMPLATE
@@ -127,7 +120,10 @@ public class ExerciseIntegrationTest {
             .exchange(BASE_URL + port + EXERCISE_ENDPOINT, HttpMethod.POST, exerciseRequest, ExerciseDto.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         ExerciseDto responseExerciseDto = response.getBody();
-        assertNotNull(responseExerciseDto.getId());
+        Long id = responseExerciseDto.getId();
+        assertNotNull(id);
+        exerciseRepository.delete(id);
+
         responseExerciseDto.setId(validExerciseDto1.getId());
         assertEquals(validExerciseDto1, responseExerciseDto);
     }
@@ -145,6 +141,7 @@ public class ExerciseIntegrationTest {
         assertEquals(foundExercise.getName(), validExerciseDto1.getName());
         assertEquals(foundExercise.getDescription(), validExerciseDto1.getDescription());
         assertEquals(foundExercise.getCreatorId(), validExerciseDto1.getCreatorId());
+        exerciseRepository.delete(i);
     }
 
     @Test(expected = HttpClientErrorException.class)
@@ -154,45 +151,63 @@ public class ExerciseIntegrationTest {
 
     @Test
     public void givenTwoExercises_whenFindExerciseByName_thenGetExercises(){
-        postExercise(validExerciseDto1);
-        postExercise(validExerciseDto1);
-        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "?name=" + validExerciseDto1.getName(), ExerciseDto[].class);
+        ExerciseDto exercise1 = exerciseDtoBuilder(validExerciseDto1);
+        ExerciseDto exercise2 = exerciseDtoBuilder(validExerciseDto2);
+        exercise1.setName("SpecialName1");
+        exercise2.setName("SpecialName2");
+        Long a = postExercise(exercise1);
+        Long b = postExercise(exercise2);
+
+        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/1?name=SpecialName", ExerciseDto[].class);
         assertEquals(foundExercises.length,2);
+        exerciseRepository.delete(a);
+        exerciseRepository.delete(b);
     }
 
     @Test
     public void givenNothing_whenFindExerciseByName_thenGetEmptyArray(){
-        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "?name=" + validExerciseDto1.getName(), ExerciseDto[].class);
+        ExerciseDto[] foundExercises = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/1?name=randomName", ExerciseDto[].class);
         assertEquals(foundExercises.length,0);
     }
 
     @Test
-    public void givenTwoExercises_whenFindAll_thenStatus200AndGetExercises(){
-        postExercise(validExerciseDto1);
-        postExercise(validExerciseDto1);
+    public void givenFindAllExercises_whenCreateOneMoreExercise_thenStatus200AndGetExercises(){
+        Long a = postExercise(validExerciseDto1);
+        Long b = postExercise(validExerciseDto1);
         ResponseEntity<ExerciseDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<ExerciseDto[]>() {
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<ExerciseDto[]>() {
             });
         assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody().length, 2);
+        int foundExercisesLength = response.getBody().length;
+
+        Long c = postExercise(validExerciseDto1);
+        ResponseEntity<ExerciseDto[]> responseAfter = REST_TEMPLATE
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<ExerciseDto[]>() {
+            });
+        assertEquals(responseAfter.getBody().length, foundExercisesLength+1);
+        exerciseRepository.delete(a);
+        exerciseRepository.delete(b);
+        exerciseRepository.delete(c);
     }
 
     @Test
-    public void givenTwoExercises_whenDeleteOneExercise_thenGetArrayWithOneExercise(){
+    public void givenTwoExercises_whenDeleteOneExercise_thenGetArrayWithOneLessExercise(){
         Long a = postExercise(validExerciseDto1);
         Long b = postExercise(validExerciseDto2);
-        ExerciseDto[] foundExercisesInitial = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all", ExerciseDto[].class);
-        assertEquals(foundExercisesInitial.length, 2);
+        ExerciseDto[] foundExercisesInitial = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all/1", ExerciseDto[].class);
+        int initialLength = foundExercisesInitial.length;
 
         REST_TEMPLATE.delete(BASE_URL + port + EXERCISE_ENDPOINT + "/" + a);
 
-        ExerciseDto[] foundExercisesAfter = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all", ExerciseDto[].class);
-        assertEquals(foundExercisesAfter.length, 1);
+        ExerciseDto[] foundExercisesAfter = REST_TEMPLATE.getForObject(BASE_URL + port + EXERCISE_ENDPOINT + "/all/1", ExerciseDto[].class);
+        assertEquals(foundExercisesAfter.length, initialLength-1);
+        exerciseRepository.delete(a);
+        exerciseRepository.delete(b);
     }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
     public void givenNothing_whenDeleteOneExercise_then400BadRequest(){
-        REST_TEMPLATE.delete(BASE_URL + port + EXERCISE_ENDPOINT + "/11");
+        REST_TEMPLATE.delete(BASE_URL + port + EXERCISE_ENDPOINT + "/110");
     }
 
     @Test
@@ -209,6 +224,7 @@ public class ExerciseIntegrationTest {
         responseExerciseDto.setId(validExerciseDto2.getId());
         responseExerciseDto.setVersion(validExerciseDto2.getVersion());
         assertEquals(validExerciseDto2, responseExerciseDto);
+        exerciseRepository.delete(a);
     }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
@@ -219,35 +235,45 @@ public class ExerciseIntegrationTest {
         Long savedExerciseId = response1.getBody().getId();
         HttpEntity<ExerciseDto> exerciseRequest2 = new HttpEntity<>(validExerciseDto2);
         REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/" + savedExerciseId+1, HttpMethod.PUT, exerciseRequest2, ExerciseDto.class);
+        exerciseRepository.delete(savedExerciseId);
     }
 
     @Test()
     public void whenSaveTwoAndFilterByCharacter2_thenGetFilteredExercise(){
         ExerciseDto e1 = exerciseDtoBuilder(validExerciseDto1);
         ExerciseDto e2 = exerciseDtoBuilder(validExerciseDto2);
+        e2.setName("FilterName2");
         Long a = postExercise(e1);
         Long b = postExercise(e2);
         e1.setId(a);
         e2.setId(b);
         ResponseEntity<ExerciseDto[]> response3 = REST_TEMPLATE
-            .exchange(BASE_URL + port + EXERCISE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, ExerciseDto[].class);
+            .exchange(BASE_URL + port + EXERCISE_ENDPOINT +"/filtered/1"+"?filter=FilterName2", HttpMethod.GET, null, ExerciseDto[].class);
         assertEquals(e2, response3.getBody() == null ? null : response3.getBody()[0]);
+        exerciseRepository.delete(a);
+        exerciseRepository.delete(b);
     }
 
     @Test
     public void givenDudeAndExercise_whenDudeBookmarksExercise_thenExerciseInBookmarkedExercises() {
+        dudeDto.setName("DudeExercise2");
+        HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dudeDto);
+        ResponseEntity<DudeDto> dudeResponse = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
+        Long dudeId = dudeResponse.getBody().getId();
+
         ExerciseDto exerciseDto = exerciseDtoBuilder(validExerciseDto1);
         Long exerciseId = postExercise(exerciseDto);
-        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + 1 + "/" + exerciseId + "/1", HttpMethod.PUT, null, Void.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + dudeId + "/" + exerciseId + "/1", HttpMethod.PUT, null, Void.class);
 
         ResponseEntity<ExerciseDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + 1 + "/bookmarks/exercises", HttpMethod.GET, null, ExerciseDto[].class);
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + dudeId + "/bookmarks/exercises", HttpMethod.GET, null, ExerciseDto[].class);
         assertEquals(1, response.getBody().length);
-        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + 1 + "/" + exerciseId + "/1", HttpMethod.DELETE, null, Void.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + dudeId + "/" + exerciseId + "/1", HttpMethod.DELETE, null, Void.class);
     }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
     public void givenDude_whenDudeBookmarksNonExistingExercise_then400BadRequest() {
-        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + 1 + "/" + 1 + "/1", HttpMethod.PUT, null, Void.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + EXERCISE_ENDPOINT + "/bookmark/" + 1 + "/" + 0 + "/1", HttpMethod.PUT, null, Void.class);
     }
 }

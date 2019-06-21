@@ -45,7 +45,10 @@ public class ExerciseDto {
     private Category category;
 
     @ApiModelProperty(name = "Path of picture of Exercise")
-    private String imagePath = "/assets/img/exercise.png";
+    private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
+
+    @ApiModelProperty(name = "Visibility of Exercise")
+    private Boolean isPrivate = false;
 
     @ApiModelProperty(name = "Workout-Exercise relationships that the Exercise is part of")
     private Set<WorkoutExercise> workouts;
@@ -123,6 +126,14 @@ public class ExerciseDto {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public Set<WorkoutExercise> getWorkouts() {
@@ -206,6 +217,7 @@ public class ExerciseDto {
         private Double rating;
         private Category category;
         private String imagePath;
+        private Boolean isPrivate;
         private Set<WorkoutExercise> workouts;
         private Long creatorId;
 
@@ -257,6 +269,11 @@ public class ExerciseDto {
             return this;
         }
 
+        public ExerciseDtoBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public ExerciseDtoBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -278,6 +295,7 @@ public class ExerciseDto {
             exerciseDto.setRating(rating);
             exerciseDto.setCategory(category);
             exerciseDto.setImagePath(imagePath);
+            exerciseDto.setIsPrivate(isPrivate);
             exerciseDto.setWorkouts(workouts);
             exerciseDto.setCreatorId(creatorId);
             return exerciseDto;

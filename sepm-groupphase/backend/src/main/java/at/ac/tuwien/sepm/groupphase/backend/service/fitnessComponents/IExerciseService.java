@@ -26,25 +26,28 @@ public interface IExerciseService {
 
     /**
      * @param name of the Exercises to find
+     * @param dudeId of the Dude that called the method
      * @return Exercises with name beginning with the given name-string
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
-    List<Exercise> findByName(String name) throws ServiceException;
+    List<Exercise> findByName(String name, Long dudeId) throws ServiceException;
 
     /**
+     * @param dudeId of the Dude that called the method
      * @return all Exercises in the system
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
-    List<Exercise> findAll() throws ServiceException;
+    List<Exercise> findAll(Long dudeId) throws ServiceException;
 
     /**
      * @param filter containing the string to be filtered for across all string-values of the entity
      * @param muscleGroup to be filtered for
      * @param category to be filtered for
+     * @param dudeId of the Dude that called the method
      * @return all Exercises in the system according to the given filters
      * @throws ServiceException if an error occurred while trying to find the Exercises in the system
      */
-    List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category) throws ServiceException;
+    List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category, Long dudeId) throws ServiceException;
 
     /**
      * @param id of Exercise to be found

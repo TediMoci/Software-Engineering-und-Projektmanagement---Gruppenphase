@@ -23,6 +23,7 @@ export class FitnessProviderProfileComponent implements OnInit {
   courses: Course[];
   description: string;
   currentUser: FitnessProvider;
+  timeStamp: any;
 
   message: string;
   imageChangedEvent: any = '';
@@ -31,14 +32,6 @@ export class FitnessProviderProfileComponent implements OnInit {
   constructor(private fitnessProviderProfile: FitnessProviderProfileService, private ownCoursesService: OwnCoursesService, private authService: AuthService) { }
 
   ngOnInit() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.authService.getUserByNameFromFitnessProvider(this.currentUser.name).subscribe((data) => {
-        localStorage.setItem('currentUser', JSON.stringify(data));
-      },
-      error => {
-        this.error = error;
-      }
-    );
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.currentUser.name;
     this.imagePath = this.currentUser.imagePath;
@@ -98,6 +91,15 @@ export class FitnessProviderProfileComponent implements OnInit {
         this.error = error;
       }
     );
+    this.authService.getUserByNameFromFitnessProvider(this.currentUser.name).subscribe((data) => {
+        this.currentUser.imagePath = data.imagePath;
+        this.setLinkPicture(this.currentUser.imagePath);
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
   fileChangeEvent(event: any): void {
     this.crop = false;
@@ -108,5 +110,17 @@ export class FitnessProviderProfileComponent implements OnInit {
   }
   cropPicture() {
     this.uploadPicture(this.croppedImage);
+  }
+
+  setLinkPicture(url: string) {
+    this.imagePath = url;
+    this.timeStamp = (new Date()).getTime();
+  }
+
+  getLinkPicture() {
+    if (this.timeStamp) {
+      return this.imagePath + '?' + this.timeStamp;
+    }
+    return this.imagePath;
   }
 }

@@ -94,6 +94,7 @@ import { FavouriteExercisesComponent } from './components/favourite-exercises/fa
 import { FavouriteWorkoutsComponent } from './components/favourite-workouts/favourite-workouts.component';
 import { FavouriteTrainingSchedulesComponent } from './components/favourite-training-schedules/favourite-training-schedules.component';
 import { FavouriteCoursesComponent } from './components/favourite-courses/favourite-courses.component';
+import {StatisticTrainingscheduleComponent} from './components/statistic-trainingschedule/statistic-trainingschedule.component';
 
 @NgModule({
   declarations: [
@@ -147,6 +148,7 @@ import { FavouriteCoursesComponent } from './components/favourite-courses/favour
     FavouriteWorkoutsComponent,
     FavouriteTrainingSchedulesComponent,
     FavouriteCoursesComponent,
+    StatisticTrainingscheduleComponent
   ],
   imports: [
     MatAutocompleteModule,

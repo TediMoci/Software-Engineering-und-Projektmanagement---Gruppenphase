@@ -8,6 +8,7 @@ export class Exercise {
     public muscleGroup: string,
     public category: string,
     public creatorId: number,
-    public imagePath: string
+    public imagePath: string,
+    public isPrivate: boolean
   ) {}
 }

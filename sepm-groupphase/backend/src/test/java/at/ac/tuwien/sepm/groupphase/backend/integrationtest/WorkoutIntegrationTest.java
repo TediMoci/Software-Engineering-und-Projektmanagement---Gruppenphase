@@ -57,7 +57,7 @@ public class WorkoutIntegrationTest {
 
     @BeforeClass
     public static void beforeClass() {
-        dudeDto.setName("Dude1");
+        dudeDto.setName("DudeWorkout1");
         dudeDto.setPassword("qqqqqqqq");
         dudeDto.setEmail("test@email.com");
         dudeDto.setSex(Sex.Male);
@@ -81,12 +81,12 @@ public class WorkoutIntegrationTest {
         validWorkoutDto1.setName("Workout1");
         validWorkoutDto1.setDescription("Description1");
         validWorkoutDto1.setDifficulty(1);
-        validWorkoutDto1.setCalorieConsumption(100.0);
+        validWorkoutDto1.setCalorieConsumption(300.0);
 
         validWorkoutDto2.setName("Workout2");
         validWorkoutDto2.setDescription("Description2");
         validWorkoutDto2.setDifficulty(2);
-        validWorkoutDto2.setCalorieConsumption(200.0);
+        validWorkoutDto2.setCalorieConsumption(400.0);
 
         invalidWorkoutDto1.setName("Workout3");
         invalidWorkoutDto1.setDescription("Description3");
@@ -138,6 +138,16 @@ public class WorkoutIntegrationTest {
         return response.getBody().getId();
     }
 
+    private WorkoutDto workoutDtoBuilder(WorkoutDto e){
+        WorkoutDto workoutDto = new WorkoutDto();
+        workoutDto.setName(e.getName());
+        workoutDto.setDescription(e.getDescription());
+        workoutDto.setWorkoutExercises(e.getWorkoutExercises());
+        workoutDto.setCalorieConsumption(e.getCalorieConsumption());
+        workoutDto.setDifficulty(e.getDifficulty());
+        workoutDto.setCreatorId(e.getCreatorId());
+        return workoutDto;
+    }
 
     @Test
     public void whenSaveOneWorkout_then201CreatedAndGetSavedWorkout() {
@@ -178,10 +188,36 @@ public class WorkoutIntegrationTest {
     }
 
     @Test
-    public void givenTwoWorkouts_whenFindWorkoutByName_thenGetWorkouts(){
+    public void givenFindAllWorkouts_whenCreateOneMoreWorkout_thenStatus200AndGetWorkouts(){
         Long a = postWorkout(validWorkoutDto1);
-        Long b = postWorkout(validWorkoutDto1);
-        WorkoutDto[] foundWorkouts = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "?name=" + validWorkoutDto1.getName(), WorkoutDto[].class);
+        Long b = postWorkout(validWorkoutDto2);
+        ResponseEntity<WorkoutDto[]> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<WorkoutDto[]>() {
+            });
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        int foundWorkoutsLength = response.getBody().length;
+
+        Long c = postWorkout(validWorkoutDto2);
+        ResponseEntity<WorkoutDto[]> responseAfter = REST_TEMPLATE
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", HttpMethod.GET, null, new ParameterizedTypeReference<WorkoutDto[]>() {
+            });
+        assertEquals(responseAfter.getBody().length, foundWorkoutsLength+1);
+        workoutRepository.delete(a);
+        workoutRepository.delete(b);
+        workoutRepository.delete(c);
+    }
+
+    @Test
+    public void givenTwoWorkouts_whenFindWorkoutByName_thenGetWorkouts(){
+        WorkoutDto workoutDto1 = workoutDtoBuilder(validWorkoutDto1);
+        WorkoutDto workoutDto2 = workoutDtoBuilder(validWorkoutDto2);
+        workoutDto1.setName("SpecialName");
+        workoutDto2.setName("SpecialName");
+
+        Long a = postWorkout(workoutDto1);
+        Long b = postWorkout(workoutDto2);
+
+        WorkoutDto[] foundWorkouts = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/1?name=SpecialName", WorkoutDto[].class);
         assertEquals(foundWorkouts.length,2);
         workoutRepository.delete(a);
         workoutRepository.delete(b);
@@ -189,35 +225,22 @@ public class WorkoutIntegrationTest {
 
     @Test
     public void whenFindWorkoutByName_whenNameNotFound_thenGetEmptyArray(){
-        WorkoutDto[] foundWorkouts = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "?name=" + "randomName", WorkoutDto[].class);
+        WorkoutDto[] foundWorkouts = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/1?name=" + "randomName", WorkoutDto[].class);
         assertEquals(foundWorkouts.length,0);
     }
 
     @Test
-    public void givenTwoWorkouts_whenFindAll_thenStatus200AndGetWorkouts(){
+    public void givenAllWorkouts_whenDeleteOneWorkout_thenGetArrayWithOneLessWorkout(){
         Long a = postWorkout(validWorkoutDto1);
         Long b = postWorkout(validWorkoutDto1);
-        ResponseEntity<WorkoutDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/all", HttpMethod.GET, null, new ParameterizedTypeReference<WorkoutDto[]>() {
-            });
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody().length, 2);
-        workoutRepository.delete(a);
-        workoutRepository.delete(b);
-    }
-
-    @Test
-    public void givenTwoWorkouts_whenDeleteTwoWorkouts_thenGetArrayWithOneThenNoWorkout(){
-        Long a = postWorkout(validWorkoutDto1);
-        Long b = postWorkout(validWorkoutDto1);
-        WorkoutDto[] foundWorkoutsInitial = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/all", WorkoutDto[].class);
-        assertEquals(2, foundWorkoutsInitial.length);
+        WorkoutDto[] foundWorkoutsInitial = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", WorkoutDto[].class);
+        int foundSize = foundWorkoutsInitial.length;
         REST_TEMPLATE.delete(BASE_URL + port + WORKOUT_ENDPOINT + "/" + a);
-        WorkoutDto[] foundWorkoutsAfter = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/all", WorkoutDto[].class);
-        assertEquals(1, foundWorkoutsAfter.length);
+        WorkoutDto[] foundAfterOneWorkoutDeleted = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", WorkoutDto[].class);
+        assertEquals(foundSize-1, foundAfterOneWorkoutDeleted.length);
         REST_TEMPLATE.delete(BASE_URL + port + WORKOUT_ENDPOINT + "/" + b);
-        WorkoutDto[] foundNoWorkouts = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/all", WorkoutDto[].class);
-        assertEquals(0, foundNoWorkouts.length);
+        WorkoutDto[] foundAfterTwoWorkoutsDeleted = REST_TEMPLATE.getForObject(BASE_URL + port + WORKOUT_ENDPOINT + "/all/1", WorkoutDto[].class);
+        assertEquals(foundSize-2, foundAfterTwoWorkoutsDeleted.length);
     }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
@@ -254,10 +277,16 @@ public class WorkoutIntegrationTest {
 
     @Test()
     public void whenSaveTwoAndFilterByCharacter2_thenGetOneResult(){
-        Long a = postWorkout(validWorkoutDto1);
-        Long b = postWorkout(validWorkoutDto2);
+        WorkoutDto workoutDto1 = workoutDtoBuilder(validWorkoutDto1);
+        WorkoutDto workoutDto2 = workoutDtoBuilder(validWorkoutDto2);
+        workoutDto1.setName("FilterName1");
+        workoutDto2.setName("FilterName2");
+
+        Long a = postWorkout(workoutDto1);
+        Long b = postWorkout(workoutDto2);
+
         ResponseEntity<WorkoutDto[]> response3 = REST_TEMPLATE
-            .exchange(BASE_URL + port + WORKOUT_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, WorkoutDto[].class);
+            .exchange(BASE_URL + port + WORKOUT_ENDPOINT +"/filtered/1"+"?filter=FilterName1", HttpMethod.GET, null, WorkoutDto[].class);
         assertEquals(1, response3.getBody() == null ? 0 : response3.getBody().length);
         workoutRepository.delete(a);
         workoutRepository.delete(b);
@@ -265,17 +294,24 @@ public class WorkoutIntegrationTest {
 
     @Test
     public void givenDudeAndWorkout_whenDudeBookmarksWorkout_thenWorkoutInBookmarkedWorkouts() {
+        dudeDto.setName("DudeWorkout2");
+        HttpEntity<DudeDto> dudeRequest = new HttpEntity<>(dudeDto);
+        ResponseEntity<DudeDto> dudeResponse = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest, DudeDto.class);
+        Long dudeId = dudeResponse.getBody().getId();
+
         HttpEntity<WorkoutDto> workoutRequest = new HttpEntity<>(validWorkoutDto1);
         ResponseEntity<WorkoutDto> workoutResponse = REST_TEMPLATE
             .exchange(BASE_URL + port + WORKOUT_ENDPOINT, HttpMethod.POST, workoutRequest, WorkoutDto.class);
         Long workoutId = workoutResponse.getBody().getId();
 
-        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/bookmark/" + 1 + "/" + workoutId + "/1", HttpMethod.PUT, null, Void.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/bookmark/" + dudeId + "/" + workoutId + "/1", HttpMethod.PUT, null, Void.class);
 
         ResponseEntity<WorkoutDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + 1 + "/bookmarks/workouts", HttpMethod.GET, null, WorkoutDto[].class);
+            .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + dudeId + "/bookmarks/workouts", HttpMethod.GET, null, WorkoutDto[].class);
         assertEquals(1, response.getBody().length);
-        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/bookmark/" + 1 + "/" + workoutId + "/1", HttpMethod.DELETE, null, Void.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/bookmark/" + dudeId + "/" + workoutId + "/1", HttpMethod.DELETE, null, Void.class);
+        workoutRepository.delete(workoutId);
     }
 
     @Test(expected = HttpClientErrorException.BadRequest.class)

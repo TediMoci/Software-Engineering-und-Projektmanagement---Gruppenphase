@@ -28,7 +28,7 @@ export class CreateCourseComponent implements OnInit {
 
   ngOnInit() {
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
-
+    this.createCourseService.setFileStorage(undefined);
     this.userName = this.fitnessProvider.name;
     this.imagePath = this.fitnessProvider.imagePath;
     this.registerForm = this.formBuilder.group({

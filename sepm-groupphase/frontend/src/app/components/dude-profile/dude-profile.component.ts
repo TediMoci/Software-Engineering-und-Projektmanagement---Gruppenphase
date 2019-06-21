@@ -30,6 +30,7 @@ export class DudeProfileComponent implements OnInit {
   bmi: number;
   description: string;
   email: string;
+  isPrivate: boolean;
   dude: Dude;
   dateNow: Date;
   globalTimeDelta: number;
@@ -38,6 +39,7 @@ export class DudeProfileComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;
+  timeStamp: any;
 
   // Active Schedule variables
   activeTs: GetActiveTrainingSchedule;
@@ -47,14 +49,13 @@ export class DudeProfileComponent implements OnInit {
   // original Schedule
   trainingSchedule: TrainingSchedule;
   tsName: string;
-  tsDiscription: string;
+  tsDescription: string;
   tsDifficulty: number;
   tsWorkouts: any;
-  tsDuration: number;
   tsIntervalLenght: number;
   tsTrue: boolean = false;
   // Sorted Workouts by day
-  selectedWorkout: Workout = null;
+  selectedWorkout: any = [];
   exercisesForWorkouts: any;
   exercisesForWorkoutsStatus: Array<ExerciseDone>;
   workoutsPerDay: Array<any> = [];
@@ -69,16 +70,9 @@ export class DudeProfileComponent implements OnInit {
     this.dateNow = new Date();
     console.log('Current Date: ' + this.dateNow);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
-    this.authService.getUserByNameFromDude(this.dude.name).subscribe((data) => {
-      localStorage.setItem('loggedInDude', JSON.stringify(data));
-      },
-      error => {
-        this.error = error;
-      }
-    );
-    this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
-    this.imagePath = this.dude.imagePath;
+    this.setLinkPicture(this.dude.imagePath);
+    console.log(this.imagePath);
     if (this.dude.selfAssessment === 1) {
       this.skill = 'Beginner';
     } else if (this.dude.selfAssessment === 2) {
@@ -92,7 +86,7 @@ export class DudeProfileComponent implements OnInit {
     this.sex = this.dude.sex;
     this.description = this.dude.description;
     this.email = this.dude.email;
-
+    this.isPrivate = this.dude.isPrivate;
     this.profileService.getAge(this.dude.birthday, this.dude.name).subscribe(
       (data) => {
         console.log('calculate age of dude with name ' + this.dude.name);
@@ -108,9 +102,9 @@ export class DudeProfileComponent implements OnInit {
         console.log('calculate bmi of dude with name ' + this.dude.name);
         this.bmi = data;
       },
-        error => {
+      error => {
         this.error = error;
-        }
+      }
     );
 
     this.profileService.getActiveSchedule(this.dude.id).subscribe(
@@ -125,15 +119,62 @@ export class DudeProfileComponent implements OnInit {
         this.trainingScheduleService.getTrainingScheduleByIdandVersion(this.ActiveTsId, this.ActiveTsVersion)
           .subscribe(
             (data2) => {
+              console.log('This is the copied training schedule: ');
               console.log('loaded Ts: ' + JSON.stringify(data2));
               this.trainingSchedule = data2;
               this.tsTrue = true;
               this.tsName = this.trainingSchedule.name;
-              this.tsDiscription = this.trainingSchedule.description;
+              this.tsDescription = this.trainingSchedule.description;
               this.tsDifficulty = this.trainingSchedule.difficulty;
               this.tsIntervalLenght = this.trainingSchedule.intervalLength;
-              this.globalTimeDelta = this.getDateDifference( this.dateNow, this.startDate);
+              this.globalTimeDelta = this.getDateDifference(this.dateNow, this.startDate);
               this.tabs = this.initTabs(this.trainingSchedule.intervalLength, this.globalTimeDelta);
+              console.log('Trying to get trainingScheduleWorkouts');
+              if (this.activeTs.adaptive === true) {
+                this.trainingScheduleService.getWorkoutsOfCopyTrainingScheduleByIdAndVersion(
+                  this.trainingSchedule.id,
+                  this.trainingSchedule.version).subscribe(
+                  (data3) => {
+                    console.log('get all workouts created of training schedule with id ' + this.trainingSchedule.id);
+                    this.tsWorkouts = data3.sort(function (a, b) { // sort data alphabetically
+                      if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                        return -1;
+                      }
+                      if (a.name > b.name) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                    console.log('loaded ' + JSON.stringify(this.tsWorkouts));
+                    this.intOverview();
+                  },
+                  error => {
+                    this.error = error;
+                  }
+                );
+              } else {
+                this.trainingScheduleService.getWorkoutsOfTrainingScheduleById(
+                  this.trainingSchedule.id,
+                  this.trainingSchedule.version).subscribe(
+                  (data3) => {
+                    console.log('get all workouts created of training schedule with id ' + this.trainingSchedule.id);
+                    this.tsWorkouts = data3.sort(function (a, b) { // sort data alphabetically
+                      if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+                        return -1;
+                      }
+                      if (a.name > b.name) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                    console.log('loaded ' + JSON.stringify(this.tsWorkouts));
+                    this.intOverview();
+                  },
+                  error => {
+                    this.error = error;
+                  }
+                );
+              }
               this.profileService.getExercisesDoneByDudeId(this.dude.id).subscribe(
                 (data3) => {
                   console.log('get done value of all exercises of dude with id ' + this.dude.id );
@@ -182,8 +223,12 @@ export class DudeProfileComponent implements OnInit {
       (data) => {
         console.log('get all exercises of workout ' + workout.name);
         this.exercisesForWorkouts = data.sort(function (a, b) { // sort data alphabetically
-          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
-          if (a.name > b.name) {return 1; }
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
           return 0;
         });
         console.log();
@@ -240,9 +285,9 @@ export class DudeProfileComponent implements OnInit {
 
   initTabs(interval: number, daysPassed: number) {
     const tabs: Array<string> = [];
-    for (let _i = 1 ; _i <= interval; _i++) {
+    for (let _i = 1; _i <= interval; _i++) {
       const prog = this.prog(interval, daysPassed);
-      tabs.push('Day ' + (_i + prog ));
+      tabs.push('Day ' + (_i + prog));
     }
     console.log(tabs.toString());
     return tabs;
@@ -264,9 +309,12 @@ export class DudeProfileComponent implements OnInit {
 
   convertDifficulty(element: number) {
     switch (element) {
-      case 1: return 'Beginner';
-      case 2: return 'Advanced';
-      case 3: return 'Pro';
+      case 1:
+        return 'Beginner';
+      case 2:
+        return 'Advanced';
+      case 3:
+        return 'Pro';
     }
   }
 
@@ -275,7 +323,6 @@ export class DudeProfileComponent implements OnInit {
       .subscribe(() => {
           console.log('ended schedule successfully');
           this.tsTrue = false;
-          this.ngOnInit();
         },
         error => {
           this.error = error;
@@ -286,6 +333,7 @@ export class DudeProfileComponent implements OnInit {
   vanishError() {
     this.error = false;
   }
+
   getDateDifference(date1: Date, date2: Date) {
     const diff = Math.abs(date1.getTime() - date2.getTime());
     const delta =  Math.ceil( diff / (1000 * 3600 * 24));
@@ -293,6 +341,7 @@ export class DudeProfileComponent implements OnInit {
     return delta - 1;
 
   }
+
   prog(interval: number, delta: number) {
     return Math.floor(delta / interval) * interval;
   }
@@ -307,20 +356,6 @@ export class DudeProfileComponent implements OnInit {
     this.message = 'Only images are supported.';
 
   }
-
-  uploadPicture(files) {
-    if (files.length === 0) {
-      return;
-    }
-    const imageFile = new File([files.file], 'file', { type: files.file.type });
-    this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe(data => {
-      console.log('upload picture' + data);
-      },
-      error => {
-        this.error = error;
-      }
-    );
-  }
   fileChangeEvent(event: any): void {
     this.crop = false;
     this.imageChangedEvent = event;
@@ -329,10 +364,49 @@ export class DudeProfileComponent implements OnInit {
     this.croppedImage = image;
   }
   cropPicture() {
-    this.uploadPicture(this.croppedImage);
+    if (this.croppedImage.length === 0) {
+      return;
+    }
+    const imageFile = new File([this.croppedImage.file], 'file', { type: this.croppedImage.file.type });
+    this.profileService.uploadPictureDudes(this.dude.id, imageFile).subscribe((data) => {
+      console.log('i am here ' + data);
+      },
+      error => {
+        this.error = error;
+      }
+    );
+    this.authService.getUserByNameFromDude(this.dude.name).subscribe((data) => {
+        this.dude.imagePath = data.imagePath;
+        this.setLinkPicture(this.dude.imagePath);
+        localStorage.setItem('loggedInDude', JSON.stringify(this.dude));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
+
   dummy(t: boolean) {
     this.doneChecked =  t;
   }
 
+   getLinkPicture() {
+    if (this.timeStamp) {
+      return this.imagePath + '?' + this.timeStamp;
+    }
+    return this.imagePath;
+  }
+  convertPrivate() {
+    if (this.isPrivate === true) {
+      return 'Private';
+    } else {
+      return 'Public';
+    }
+  }
+
+   setLinkPicture(url: string) {
+    this.imagePath = url;
+    this.timeStamp = (new Date()).getTime();
+    console.log(this.timeStamp);
+  }
 }

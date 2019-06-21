@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Dude} from '../../dtos/dude';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 import {TrainingSchedule} from '../../dtos/trainingSchedule';
 import {WorkoutFilter} from '../../dtos/workout-filter';
-import {Router} from '@angular/router';
 import {FindService} from '../../services/find.service';
 import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
@@ -23,6 +23,8 @@ export class EditTrainingScheduleComponent implements OnInit {
   error: any;
   userName: string;
   submitted: boolean = false;
+  isPrivate: boolean;
+  isPrivateResult: boolean;
 
   editTSForm: FormGroup;
   prevRoute: string;
@@ -60,7 +62,8 @@ export class EditTrainingScheduleComponent implements OnInit {
 
   trainingScheduleWorkouts: TrainingScheduleWorkoutDtoIn[] = [];
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private findService: FindService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private editTrainingScheduleService: EditTrainingScheduleService) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private findService: FindService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private editTrainingScheduleService: EditTrainingScheduleService) {
+  }
 
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
@@ -82,13 +85,14 @@ export class EditTrainingScheduleComponent implements OnInit {
     this.description = this.oldTrainingSchedule.description;
     this.difficulty = JSON.stringify(this.oldTrainingSchedule.difficulty);
     this.interval = this.oldTrainingSchedule.intervalLength;
-
+    this.isPrivate = this.oldTrainingSchedule.isPrivate;
     this.generalTSData = true;
 
     this.editTSForm = this.formBuilder.group({
       nameForEditTS: ['', [Validators.required]],
       difficultyLevelEditTS: [this.difficulty, [Validators.required]],
       descriptionForEditTS: ['', [Validators.required]],
+      isPrivate: ['']
     });
     this.getAllWorkoutsPerDay();
   }
@@ -398,7 +402,7 @@ export class EditTrainingScheduleComponent implements OnInit {
       this.filterWorkoutCaloriesMinActual,
       this.filterWorkoutCaloriesMaxActual);
 
-    this.findService.getAllWorkoutsFilterd(this.workoutFilter).subscribe(
+    this.findService.getAllWorkoutsFilterd(this.workoutFilter, this.dude.id).subscribe(
       (data) => {
         this.searchRes = data.sort(function (a, b) { // sort data alphabetically
           if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
@@ -477,7 +481,15 @@ export class EditTrainingScheduleComponent implements OnInit {
     } else {
       // remove item when dragged outside of the dragging areas
       console.log('delete entry');
-      event.previousContainer.data.splice(event.previousIndex, 1);
+      if (!(event.previousContainer.id === 'searchRes1' ||
+        event.previousContainer.id === 'searchRes2' ||
+        event.previousContainer.id === 'searchRes3' ||
+        event.previousContainer.id === 'searchRes4' ||
+        event.previousContainer.id === 'searchRes5' ||
+        event.previousContainer.id === 'searchRes6' ||
+        event.previousContainer.id === 'searchRes7')) {
+        event.previousContainer.data.splice(event.previousIndex, 1);
+      }
     }
   }
 
@@ -493,6 +505,11 @@ export class EditTrainingScheduleComponent implements OnInit {
 
   editTrainingSchedule() {
     this.submitted = true;
+    if (this.editTSForm.controls.isPrivate.value === '') {
+      this.isPrivateResult = this.oldTrainingSchedule.isPrivate;
+    } else {
+      this.isPrivateResult = this.editTSForm.controls.isPrivate.value;
+    }
 
     switch (this.interval) {
       case 1:
@@ -771,7 +788,8 @@ export class EditTrainingScheduleComponent implements OnInit {
       this.editTSForm.controls.difficultyLevelEditTS.value,
       this.oldTrainingSchedule.intervalLength,
       this.trainingScheduleWorkouts,
-      this.oldTrainingSchedule.creatorId
+      this.oldTrainingSchedule.creatorId,
+      this.isPrivateResult
     );
 
     if (this.editTSForm.invalid) {
@@ -782,7 +800,7 @@ export class EditTrainingScheduleComponent implements OnInit {
     this.editTrainingScheduleService.editTrainingSchedule(trainingSchedule).subscribe(
       () => {
         console.log(trainingSchedule);
-        this.router.navigate(['myTrainingSchedules']);
+        this.router.navigate(['myContent']);
       },
       error => {
         this.error = error;
@@ -795,5 +813,5 @@ export class EditTrainingScheduleComponent implements OnInit {
     this.generalTSData = !this.generalTSData;
     this.router.navigate(['myTrainingSchedules']);
   }
-
 }
+

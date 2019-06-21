@@ -48,6 +48,9 @@ public class WorkoutExerciseDtoOut {
     @ApiModelProperty(name = "Path of image of Exercise")
     private String imagePath;
 
+    @ApiModelProperty(name = "Visibility of Exercise")
+    private Boolean isPrivate;
+
     public Long getId() {
         return id;
     }
@@ -144,16 +147,24 @@ public class WorkoutExerciseDtoOut {
         this.sets = sets;
     }
 
-    public static WorkoutExerciseDtoOutBuilder builder() {
-        return new WorkoutExerciseDtoOutBuilder();
-    }
-
     public String getImagePath() {
         return imagePath;
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
+    public static WorkoutExerciseDtoOutBuilder builder() {
+        return new WorkoutExerciseDtoOutBuilder();
     }
 
     @Override
@@ -227,6 +238,7 @@ public class WorkoutExerciseDtoOut {
         private Integer repetitions;
         private Integer sets;
         private String imagePath;
+        private Boolean isPrivate;
 
         public WorkoutExerciseDtoOutBuilder() {
         }
@@ -296,6 +308,11 @@ public class WorkoutExerciseDtoOut {
             return this;
         }
 
+        public WorkoutExerciseDtoOutBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public WorkoutExerciseDtoOut build() {
             WorkoutExerciseDtoOut workoutExerciseDtoOut = new WorkoutExerciseDtoOut();
             workoutExerciseDtoOut.setId(id);
@@ -311,6 +328,7 @@ public class WorkoutExerciseDtoOut {
             workoutExerciseDtoOut.setRepetitions(repetitions);
             workoutExerciseDtoOut.setSets(sets);
             workoutExerciseDtoOut.setImagePath(imagePath);
+            workoutExerciseDtoOut.setIsPrivate(isPrivate);
             return workoutExerciseDtoOut;
         }
     }

@@ -64,7 +64,7 @@ public class TrainingScheduleEndpoint {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new TrainingSchedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto save(@RequestBody TrainingScheduleDto trainingScheduleDto) {
+    public TrainingScheduleDto save(@Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
         try {
@@ -90,6 +90,21 @@ public class TrainingScheduleEndpoint {
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
             }
+        }
+    }
+
+    @RequestMapping(value = "/active/update", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Update an ActiveTrainingSchedule", authorizations = {@Authorization(value = "apiKey")})
+    public ActiveTrainingScheduleDto updateActiveTs(@RequestBody ActiveTrainingScheduleDto activeTrainingScheduleDto){
+        try {
+            ActiveTrainingSchedule activeTs = trainingScheduleMapper.activeTrainingScheduleDtoToActiveTrainingSchedule(activeTrainingScheduleDto);
+            activeTs.setStartDate(activeTrainingScheduleDto.getStartDate());
+            activeTs.setId(activeTrainingScheduleDto.getId());
+            return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.updateActive(activeTs));
+        } catch (ServiceException e) {
+            LOGGER.error("Could not edit activeTs of with dude");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
@@ -128,7 +143,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Deleting Training Schedule with id " + id);
         try {
             iTrainingScheduleService.delete(id);
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             LOGGER.error("Could not delete Training Schedule with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
@@ -136,23 +151,23 @@ public class TrainingScheduleEndpoint {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Training Schedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto update(@PathVariable("id") long id, @RequestBody TrainingScheduleDto newTrainingSchedule) {
+    public TrainingScheduleDto update(@PathVariable("id") long id, @Valid @RequestBody TrainingScheduleDto newTrainingSchedule) {
         LOGGER.info("Updating workout with id: " + id);
         try {
             return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.update(id, trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(newTrainingSchedule)));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             LOGGER.error("Could not update Training Schedule with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get training schedules by name", authorizations = {@Authorization(value = "apiKey")})
-    public List<TrainingScheduleDto> findByName(@RequestParam String name) {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<TrainingScheduleDto> findByName(@RequestParam String name, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
         List<TrainingSchedule> trainingSchedules;
         try {
-            trainingSchedules = iTrainingScheduleService.findByName(name);
+            trainingSchedules = iTrainingScheduleService.findByName(name, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not find training schedules with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -183,7 +198,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
         List<TrainingScheduleWorkout> trainingScheduleWorkouts;
         try {
-            trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
+            trainingScheduleWorkouts = iTrainingScheduleService.findByIdAndVersion(id, version).getWorkouts();
         } catch (ServiceException e) {
             LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -195,16 +210,37 @@ public class TrainingScheduleEndpoint {
         return trainingScheduleWorkoutDtoOuts;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/{version}/workouts/copyTs", method = RequestMethod.GET)
+    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public TrainingScheduleWorkoutDtoOut[] getAllWorkoutsByCopyTrainingScheduleIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
+        LOGGER.info("Entering getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+        List<TrainingScheduleWorkout> trainingScheduleWorkouts;
+        try {
+            trainingScheduleWorkouts = iTrainingScheduleService.findByIdAndVersion(id, version).getWorkouts();
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+        TrainingScheduleWorkoutDtoOut[] trainingScheduleWorkoutDtoOuts = new TrainingScheduleWorkoutDtoOut[trainingScheduleWorkouts.size()];
+        for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
+            trainingScheduleWorkoutDtoOuts[i] = trainingScheduleMapper.trainingScheduleWorkoutToTrainingScheduleWorkoutDtoOut(trainingScheduleWorkouts.get(i));
+        }
+        return trainingScheduleWorkoutDtoOuts;
+    }
+
+    @RequestMapping(value = "/filtered/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Training Schedule by filters", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer selfAssessment) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; selfAssessment: " + selfAssessment);
-        //todo: change Request Params
+    public TrainingScheduleDto[] findByFilter(
+        @RequestParam(defaultValue = "") String filter,
+        @RequestParam(required = false) Integer difficulty,
+        @RequestParam(required = false) Integer intervalLength,
+        @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength + "; dudeId: " + dudeId);
         List<TrainingSchedule> trainingSchedules;
         try {
-            trainingSchedules = iTrainingScheduleService.findByFilter(filter, selfAssessment);
+            trainingSchedules = iTrainingScheduleService.findByFilter(filter, difficulty, intervalLength, dudeId);
         } catch (ServiceException e) {
-            LOGGER.error("Could not findByFilter with filter: " + filter + "; and selfAssessment: " + selfAssessment);
+            LOGGER.error("Could not findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; intervalLength: " + intervalLength);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
         TrainingScheduleDto[] trainingScheduleDtos = new TrainingScheduleDto[trainingSchedules.size()];

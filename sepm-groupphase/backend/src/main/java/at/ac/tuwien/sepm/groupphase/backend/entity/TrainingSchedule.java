@@ -38,6 +38,9 @@ public class TrainingSchedule {
     @Column(nullable = false, name = "is_history")
     private Boolean isHistory = false;
 
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "trainingSchedule")
     private List<TrainingScheduleWorkout> workouts;
 
@@ -113,6 +116,14 @@ public class TrainingSchedule {
 
     public void setHistory(Boolean history) {
         isHistory = history;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public List<TrainingScheduleWorkout> getWorkouts() {
@@ -206,6 +217,7 @@ public class TrainingSchedule {
         private Integer intervalLength;
         private Double rating;
         private Boolean isHistory;
+        private Boolean isPrivate;
         private List<TrainingScheduleWorkout> workouts;
         private Dude creator;
         private List<ActiveTrainingSchedule> activeUsages;
@@ -254,6 +266,11 @@ public class TrainingSchedule {
             return this;
         }
 
+        public TrainingScheduleBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public TrainingScheduleBuilder workouts(List<TrainingScheduleWorkout> workouts) {
             this.workouts = workouts;
             return this;
@@ -283,6 +300,7 @@ public class TrainingSchedule {
             trainingSchedule.setIntervalLength(intervalLength);
             trainingSchedule.setRating(rating);
             trainingSchedule.setHistory(isHistory);
+            trainingSchedule.setIsPrivate(isPrivate);
             trainingSchedule.setWorkouts(workouts);
             trainingSchedule.setCreator(creator);
             trainingSchedule.setActiveUsages(activeUsages);

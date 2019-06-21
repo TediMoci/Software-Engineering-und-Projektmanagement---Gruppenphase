@@ -6,6 +6,7 @@ export class Workout {
     public description: string,
     public difficulty: number,
     public calorieConsumption: number,
-    public creatorId: number
+    public creatorId: number,
+    public isPrivate: boolean
   ) {}
 }

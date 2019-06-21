@@ -164,13 +164,13 @@ public class WorkoutServiceTest {
         workouts.add(workout);
         workouts.add(workout);
         Mockito.when(workoutRepository.findByName(anyString())).thenReturn(workouts);
-        assertEquals(workoutService.findByName(workout.getName()),workouts);
+        assertEquals(workoutService.findByName(workout.getName(), 1L),workouts);
     }
 
     @Test(expected = ServiceException.class)
     public void whenFindByName_ifDataAccessException_thenServiceException() throws ServiceException {
         Mockito.when(workoutRepository.findByName(anyString())).thenThrow(Mockito.mock(DataAccessException.class));
-        workoutService.findByName("anyName");
+        workoutService.findByName("anyName", 1L);
     }
 
     @Test
@@ -180,13 +180,13 @@ public class WorkoutServiceTest {
         workouts.add(workout);
         workouts.add(workout);
         Mockito.when(workoutRepository.findAll()).thenReturn(workouts);
-        assertEquals(workoutService.findAll(),workouts);
+        assertEquals(workoutService.findAll(1L),workouts);
     }
 
     @Test(expected = ServiceException.class)
     public void whenFindAll_ifDataAccessException_thenServiceException() throws ServiceException {
         Mockito.when(workoutRepository.findAll()).thenThrow(Mockito.mock(DataAccessException.class));
-        workoutService.findAll();
+        workoutService.findAll(1L);
     }
 
     @Test
@@ -238,6 +238,7 @@ public class WorkoutServiceTest {
         }
         workoutService.update(1L, workout);
     }
+
     @Test
     public void whenFindByFilter_thenGetWorkoutWhereFilterTrueAndNotWorkoutWhereFilterFalse(){
         Mockito.when(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null)).thenReturn(validWorkouts2);

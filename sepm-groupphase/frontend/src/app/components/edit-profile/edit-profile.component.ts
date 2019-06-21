@@ -20,12 +20,15 @@ export class EditProfileComponent implements OnInit {
   birthday: any;
   height: number;
   weight: number;
+  isPrivate: boolean;
   oldDude: any;
   male: boolean = false;
   female: boolean = false;
   other: boolean = false;
   beginner: boolean = false;
   advanced: boolean = false;
+  private: boolean = false;
+  public: boolean = false;
   password: any;
   pro: boolean = false;
 
@@ -43,7 +46,7 @@ export class EditProfileComponent implements OnInit {
     this.height = this.oldDude.height;
     this.weight = this.oldDude.weight;
     this.password = this.oldDude.password;
-
+    this.isPrivate = this.oldDude.isPrivate;
     if (this.oldDude.sex === 'Male') {
       this.male = true;
     } else if (this.oldDude.sex === 'Female') {
@@ -59,6 +62,11 @@ export class EditProfileComponent implements OnInit {
     } else {
       this.pro = true;
     }
+    if (this.oldDude.isPrivate === true) {
+      this.private = true;
+    } else {
+      this.public = true;
+    }
     this.editForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
@@ -68,6 +76,7 @@ export class EditProfileComponent implements OnInit {
       birthday: ['', [Validators.required]],
       height: ['', [Validators.required]],
       weight: ['', [Validators.required]],
+      isPrivate: [this.oldDude.isPrivate, [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirmed: ['', Validators.required]
     }, {
@@ -89,7 +98,8 @@ export class EditProfileComponent implements OnInit {
       this.editForm.controls.birthday.value,
       this.editForm.controls.height.value,
       this.editForm.controls.weight.value,
-      this.oldDude.imagePath
+      this.oldDude.imagePath,
+      this.editForm.controls.isPrivate.value
     );
 
     if (this.editForm.invalid) {

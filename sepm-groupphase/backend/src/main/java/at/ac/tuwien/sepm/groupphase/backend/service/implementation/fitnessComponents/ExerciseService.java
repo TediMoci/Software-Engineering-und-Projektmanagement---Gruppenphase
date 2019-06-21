@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.MuscleGroup;
@@ -52,45 +53,63 @@ public class ExerciseService implements IExerciseService {
     }
 
     @Override
-    public List<Exercise> findByName(String name) throws ServiceException {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<Exercise> findByName(String name, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Exercise> exercises;
         try {
-            return iExerciseRepository.findByName(name);
+            exercises = iExerciseRepository.findByName(name);
+            exercises.addAll(iExerciseRepository.findOwnPrivateByName(name, dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return exercises;
     }
 
     @Override
-    public List<Exercise> findAll() throws ServiceException {
-        LOGGER.info("Entering findAll");
+    public List<Exercise> findAll(Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Exercise> exercises;
         try {
-            return iExerciseRepository.findAll();
+            exercises = iExerciseRepository.findAll();
+            exercises.addAll(iExerciseRepository.findOwnPrivate(dude));
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return exercises;
     }
 
     @Override
-    public List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category) throws ServiceException {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category);
+    public List<Exercise> findByFilter(String filter, MuscleGroup muscleGroup, Category category, Long dudeId) throws ServiceException {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category + "; dudeId: " + dudeId);
+        Dude dude = new Dude();
+        dude.setId(dudeId);
+        List<Exercise> exercises;
         try {
             if (category != null) {
                 if (muscleGroup != null) {
-                    return iExerciseRepository.findByFilterWithMuscleGroupAndWithCategory(filter, muscleGroup, category);
+                    exercises = iExerciseRepository.findByFilterWithMuscleGroupAndWithCategory(filter, muscleGroup, category);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithMuscleGroupAndWithCategory(filter, muscleGroup, category, dude));
                 } else {
-                    return iExerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory(filter, category);
+                    exercises = iExerciseRepository.findByFilterWithoutMuscleGroupAndWithCategory(filter, category);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithoutMuscleGroupAndWithCategory(filter, category, dude));
                 }
             } else {
                 if (muscleGroup != null) {
-                    return iExerciseRepository.findByFilterWithMuscleGroupAndWithoutCategory(filter, muscleGroup);
+                    exercises = iExerciseRepository.findByFilterWithMuscleGroupAndWithoutCategory(filter, muscleGroup);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithMuscleGroupAndWithoutCategory(filter, muscleGroup, dude));
                 } else {
-                    return iExerciseRepository.findByFilterWithoutMuscleGroupAndWithoutCategory(filter);
+                    exercises = iExerciseRepository.findByFilterWithoutMuscleGroupAndWithoutCategory(filter);
+                    exercises.addAll(iExerciseRepository.findOwnPrivateByFilterWithoutMuscleGroupAndWithoutCategory(filter, dude));
                 }
             }
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+        return exercises;
     }
 
     @Override
@@ -144,7 +163,7 @@ public class ExerciseService implements IExerciseService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        String imagePath = "/assets/img/" + fileName;
+        String imagePath = "http://localhost:8080/downloadImage/" + fileName;
         exercise.setImagePath(imagePath);
         iExerciseRepository.save(exercise);
         return imagePath;

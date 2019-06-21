@@ -25,6 +25,8 @@ export class EditWorkoutComponent implements OnInit {
   editWorkoutForm: FormGroup;
   submitted: boolean = false;
   prevRoute: string;
+  isPrivate: boolean;
+  isPrivateResult: boolean;
 
   workoutExercises: WorkoutExercise[] = [];
   newAddedExercises: WorkoutEx[];
@@ -53,11 +55,13 @@ export class EditWorkoutComponent implements OnInit {
       this.description = JSON.parse(localStorage.getItem('descriptionForEditWorkout'));
       this.calorie = JSON.parse(localStorage.getItem('calorieConsumptionForEditWorkout'));
       this.difficulty = JSON.parse(localStorage.getItem('difficultyEdit'));
+      this.isPrivate = JSON.parse(localStorage.getItem('isPrivateEdit'));
     } else {
       this.name = this.workout.name;
       this.calorie = this.workout.calorieConsumption;
       this.description = this.workout.description;
       this.difficulty = JSON.stringify(this.workout.difficulty);
+      this.isPrivate = this.workout.isPrivate;
     }
 
     if (JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) === 'empty') {
@@ -75,7 +79,8 @@ export class EditWorkoutComponent implements OnInit {
       nameForEditWorkout: ['', [Validators.required]],
       difficultyLevelEditWorkout: [this.difficulty, [Validators.required]],
       descriptionForEditWorkout: ['', [Validators.required]],
-      calorieConsumptionEditWorkout: ['', [Validators.required]]
+      calorieConsumptionEditWorkout: ['', [Validators.required]],
+      isPrivate: [this.isPrivate, [Validators.required]]
     });
 
     localStorage.setItem('previousRoute', JSON.stringify('/edit-workout'));
@@ -87,6 +92,7 @@ export class EditWorkoutComponent implements OnInit {
     localStorage.setItem('descriptionForEditWorkout', JSON.stringify(this.editWorkoutForm.controls.descriptionForEditWorkout.value));
     localStorage.setItem('calorieConsumptionForEditWorkout', JSON.stringify(this.editWorkoutForm.controls.calorieConsumptionEditWorkout.value));
     localStorage.setItem('difficultyEdit', JSON.stringify(this.editWorkoutForm.controls.difficultyLevelEditWorkout.value));
+    localStorage.setItem('isPrivateEdit', JSON.stringify(this.editWorkoutForm.controls.isPrivate.value));
   }
 
   editWorkout() {
@@ -94,6 +100,12 @@ export class EditWorkoutComponent implements OnInit {
     localStorage.setItem('previousPreviousRoute', JSON.stringify('/'));
 
     this.submitted = true;
+
+    if (this.editWorkoutForm.controls.isPrivate.value === '') {
+      this.isPrivateResult = this.workout.isPrivate;
+    } else {
+      this.isPrivateResult = this.editWorkoutForm.controls.isPrivate.value;
+    }
 
     if (JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout')) === 'empty') {
       for (let counter1 = 0; counter1 < this.workoutExercises.length; counter1++){
@@ -110,15 +122,19 @@ export class EditWorkoutComponent implements OnInit {
     } else {
       this.newAddedExercises = JSON.parse(localStorage.getItem('chosenExercisesForEditWorkout'));
 
-      for (let counter = 0; counter < this.newAddedExercises.length; counter++) {
-        const currentEx = this.newAddedExercises[counter].exercise;
-        this.newAddedExercisesIn.push(new WorkoutExerciseDtoIn(
-          currentEx.id,
-          currentEx.version,
-          this.newAddedExercises[counter].exDuration,
-          this.newAddedExercises[counter].repetitions,
-          this.newAddedExercises[counter].sets
-        ));
+      if (this.newAddedExercises === null) {
+        this.newAddedExercisesIn = [];
+      } else {
+        for (let counter = 0; counter < this.newAddedExercises.length; counter++) {
+          const currentEx = this.newAddedExercises[counter].exercise;
+          this.newAddedExercisesIn.push(new WorkoutExerciseDtoIn(
+            currentEx.id,
+            currentEx.version,
+            this.newAddedExercises[counter].exDuration,
+            this.newAddedExercises[counter].repetitions,
+            this.newAddedExercises[counter].sets
+          ));
+        }
       }
       console.log(this.newAddedExercisesIn);
     }
@@ -131,7 +147,8 @@ export class EditWorkoutComponent implements OnInit {
       this.editWorkoutForm.controls.difficultyLevelEditWorkout.value,
       this.editWorkoutForm.controls.calorieConsumptionEditWorkout.value,
       this.newAddedExercisesIn,
-      this.workout.creatorId
+      this.workout.creatorId,
+      this.isPrivateResult
     );
 
     if (this.editWorkoutForm.invalid) {
@@ -147,7 +164,7 @@ export class EditWorkoutComponent implements OnInit {
         localStorage.removeItem('calorieConsumptionForEditWorkout');
         localStorage.removeItem('chosenExercisesForEditWorkout');
         localStorage.removeItem('difficultyEdit');
-        this.router.navigate(['myWorkouts']);
+        this.router.navigate(['myContent']);
       },
       error => {
         this.error = error;

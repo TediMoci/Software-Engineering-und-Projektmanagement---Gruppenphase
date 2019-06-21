@@ -110,6 +110,7 @@ public class DudeIntegrationTest  {
         DudeDto dudeResponse = response.getBody();
         dude.setId(dudeResponse.getId());
         dude.setPassword(dudeResponse.getPassword());
+        dude.setImagePath(dudeResponse.getImagePath());
         assertEquals(dude,dudeResponse);
     }
 

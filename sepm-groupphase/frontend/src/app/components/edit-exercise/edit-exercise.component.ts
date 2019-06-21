@@ -27,7 +27,8 @@ export class EditExerciseComponent implements OnInit {
   equipment: string;
   description: string;
   muscleGroup: string;
-
+  isPrivate: boolean;
+  isPrivateResult: boolean;
   message: string;
   imageChangedEvent: any = '';
   croppedImage: any = '';
@@ -39,15 +40,18 @@ export class EditExerciseComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.oldExercise = JSON.parse(localStorage.getItem('selectedExercise'));
+    this.editExerciseService.setFileStorage(undefined);
     this.userName = this.dude.name;
     this.imagePath = this.dude.imagePath;
     this.imagePath2 = this.oldExercise.imagePath;
+    this.isPrivate = this.oldExercise.isPrivate;
     this.editExForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       equipment: ['', [Validators.required]],
       category: [this.oldExercise.category, [Validators.required]],
       description: [''],
-      muscleGroup: ['']
+      muscleGroup: [''],
+      isPrivate: ['']
     });
 
     this.name = this.oldExercise.name;
@@ -67,7 +71,11 @@ export class EditExerciseComponent implements OnInit {
 
   editExercise() {
     this.submitted = true;
-
+    if (this.editExForm.controls.isPrivate.value === '') {
+      this.isPrivateResult = this.oldExercise.isPrivate;
+    } else {
+      this.isPrivateResult = this.editExForm.controls.isPrivate.value;
+    }
     const exercise: Exercise = new Exercise(
       this.oldExercise.id,
       this.oldExercise.version,
@@ -77,7 +85,8 @@ export class EditExerciseComponent implements OnInit {
       this.editExForm.controls.muscleGroup.value,
       this.editExForm.controls.category.value,
       this.oldExercise.creatorId,
-      this.oldExercise.imagePath
+      this.oldExercise.imagePath,
+      this.isPrivateResult
     );
 
     if (this.editExForm.invalid) {
@@ -88,14 +97,15 @@ export class EditExerciseComponent implements OnInit {
     this.editExerciseService.editExercise(exercise, this.oldExercise).subscribe(
       (data) => {
         if (this.editExerciseService.getFileStorage() !== undefined) {
-          this.editExerciseService.uploadPictureForExercise(data.id, data.version, this.editExerciseService.getFileStorage()).subscribe(() => {
+          this.editExerciseService.uploadPictureForExercise(data.id, data.version, this.editExerciseService.getFileStorage()).subscribe((dataPicture) => {
+            console.log(dataPicture);
             },
             error => {
               this.error = error;
             }
           );
         }
-        this.router.navigate(['/myExercises']);
+        this.router.navigate(['/myContent']);
       },
       error => {
         this.error = error;
@@ -117,7 +127,6 @@ export class EditExerciseComponent implements OnInit {
     this.message = 'Only images are supported.';
 
   }
-
   uploadPicture(files) {
     if (files.length === 0) {
       return;

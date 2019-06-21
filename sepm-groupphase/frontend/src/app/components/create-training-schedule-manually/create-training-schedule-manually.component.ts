@@ -10,7 +10,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CreateTrainingSchedule} from '../../dtos/create-trainingSchedule';
 import {CreateTrainingScheduleService} from '../../services/create-training-schedule.service';
 import {TrainingScheduleWorkoutDtoIn} from '../../dtos/trainingScheduleWorkoutDtoIn';
-import {TrainingSchedule} from '../../dtos/trainingSchedule';
 
 @Component({
   selector: 'app-create-training-schedule-manually',
@@ -80,7 +79,8 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     this.tsForm = this.formBuilder.group({
       tsName: ['', [Validators.required]],
       tsDifficulty: ['', [Validators.required]],
-      tsDescription: ['', [Validators.required]]
+      tsDescription: ['', [Validators.required]],
+      isPrivate: ['', [Validators.required]]
     });
   }
 
@@ -118,7 +118,15 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     } else {
       // remove item when dragged outside of the dragging areas
       console.log('delete entry');
-      event.previousContainer.data.splice(event.previousIndex, 1);
+      if (!(event.previousContainer.id === 'searchRes1' ||
+        event.previousContainer.id === 'searchRes2' ||
+        event.previousContainer.id === 'searchRes3' ||
+        event.previousContainer.id === 'searchRes4' ||
+        event.previousContainer.id === 'searchRes5' ||
+        event.previousContainer.id === 'searchRes6' ||
+        event.previousContainer.id === 'searchRes7')) {
+        event.previousContainer.data.splice(event.previousIndex, 1);
+      }
     }
   }
 
@@ -215,7 +223,7 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
       this.filterWorkoutCaloriesMinActual,
       this.filterWorkoutCaloriesMaxActual);
 
-    this.findService.getAllWorkoutsFilterd(this.workoutFilter).subscribe(
+    this.findService.getAllWorkoutsFilterd(this.workoutFilter, this.dude.id).subscribe(
       (data) => {
         this.searchRes = data.sort(function (a, b) { // sort data alphabetically
           if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
@@ -271,6 +279,11 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
 
   createTrainingSchedule() {
     this.submitted = true;
+
+    if (this.tsForm.invalid) {
+      console.log('input is invalid');
+      return;
+    }
 
     switch (this.interval) {
       case 1:
@@ -547,7 +560,8 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
       this.tsForm.controls.tsDifficulty.value,
       this.interval,
       this.trainingScheduleWorkouts,
-      this.dude.id
+      this.dude.id,
+      this.tsForm.controls.isPrivate.value
     );
     this.createTrainingScheduleService.addTrainingSchedule(this.trainingSchedule).subscribe(
       () => {

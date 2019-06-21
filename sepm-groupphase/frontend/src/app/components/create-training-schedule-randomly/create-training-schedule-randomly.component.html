@@ -7,7 +7,7 @@
   </button>
 </div>
 
-<div  class="container-fluid">
+<div class="container-fluid">
 
   <div class="container">
     <div class="row">
@@ -38,56 +38,76 @@
               </div>
             </div>
 
-            <div class="form-group-sh">
+            <div class="form-group">
               <!--start - field-->
               <label for="tsMinTarget">Minimum Calorie Consumption*</label>
               <input type="number" name="tsMinTarget" class="form-control" id="tsMinTarget"
                      formControlName="tsMinTarget"
                      aria-describedby="tsMinTargetHelp" placeholder="Enter minimum calories">
               <div *ngIf="submitted && !!tsForm.controls.tsMinTarget.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.required">Minimum calorie consumption is
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.required">Minimum
+                  calorie consumption is
                   required!
                 </small>
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.min">Minimum calorie consumption must
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.min">Minimum calorie
+                  consumption must
                   be at least 1!
                 </small>
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.max">Minimum calorie consumption can
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMinTarget.errors.max">Minimum calorie
+                  consumption can
                   be 9999 max!
                 </small>
               </div>
-              <!--end - field-->
-              <!--start - field-->
+            </div>
+
+            <!--end - field-->
+            <!--start - field-->
+            <div class="form-group">
               <label for="tsMaxTarget">Maximum Calorie Consumption*</label>
               <input type="number" name="tsMaxTarget" class="form-control" id="tsMaxTarget"
                      formControlName="tsMaxTarget"
                      aria-describedby="tsMaxTargetHelp" placeholder="Enter maximum calories">
               <div *ngIf="submitted && !!tsForm.controls.tsMaxTarget.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.required">Maximum calorie consumption is
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.required">Maximum
+                  calorie consumption is
                   required!
                 </small>
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.min">Maximum calorie consumption must
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.min">Maximum calorie
+                  consumption must
                   be at least 1!
                 </small>
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.max">Maximum calorie consumption can
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsMaxTarget.errors.max">Maximum calorie
+                  consumption can
                   be 9999 max!
                 </small>
               </div>
-              <!--end - field-->
-              <!--start - field-->
+            </div>
+
+
+            <!--end - field-->
+            <!--start - field-->
+            <div class="form-group">
               <label for="tsDuration">Maximum duration per day in minutes*</label>
               <input type="number" name="tsDuration" class="form-control" id="tsDuration" formControlName="tsDuration"
                      aria-describedby="tsDurationHelp" placeholder="Enter maximum duration">
               <div *ngIf="submitted && !!tsForm.controls.tsDuration.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.required">Maximum duration is required!</small>
-              <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.min">Maximum duration must
-                be at least 1 min!
-              </small>
-              <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.max">Maximum duration can
-                be 1440 min max!
-              </small>
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.required">Maximum
+                  duration is required!
+                </small>
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.min">Maximum duration
+                  must
+                  be at least 1 min!
+                </small>
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsDuration.errors.max">Maximum duration
+                  can
+                  be 1440 min max!
+                </small>
               </div>
-              <!--end - field-->
-              <!--start - field-->
+            </div>
+
+            <!--end - field-->
+            <!--start - field-->
+            <div class="form-group">
               <mat-form-field>
                 <mat-label>Interval Length*</mat-label>
                 <mat-select formControlName="tsInterval">
@@ -97,24 +117,26 @@
                 </mat-select>
               </mat-form-field>
               <div *ngIf="submitted && !!tsForm.controls.tsInterval.errors" class="error">
-                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsInterval.errors.required">Interval is required!</small>
+                <small class="form-text text-warning" *ngIf="!!tsForm.controls.tsInterval.errors.required">Interval is
+                  required!
+                </small>
               </div>
               <!--end - field-->
               <!--start - field-->
-              <mat-checkbox color="primary" class= "RadioButton" formControlName="tsOnlyMyDifficulty">Tick to include easier workouts than your self assessment!</mat-checkbox>
+              <mat-checkbox color="primary" class="RadioButton" formControlName="tsOnlyMyDifficulty">Tick to include
+                easier workouts than your self assessment!
+              </mat-checkbox>
               <!--end - field-->
             </div>
           </form>
-
-
-
-
         </div>
 
         <div class="row-buttons">
           <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
           <button type="button" (click)="createTrainingSchedule()" class="btn btn-success float-right">Create</button>
-          <p><small>Fields marked with * are mandatory!</small></p>
+          <p>
+            <small>Fields marked with * are mandatory!</small>
+          </p>
         </div>
       </div>
     </div>

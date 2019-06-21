@@ -12,14 +12,12 @@ import {CreateExerciseService} from '../../services/create-exercise.service';
 export class CreateExerciseComponent implements OnInit {
   error: any;
   imagePath: string = 'assets/img/kugelfisch.jpg';
-  imagePathExercise: string = 'assets/img/exercise.png';
-  imgURL: any;
+  imgURL: string = 'assets/img/exercise.png';
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
   dude: Dude;
   muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
-
   exerciseID: number;
   message: string;
   imageChangedEvent: any = '';
@@ -29,7 +27,7 @@ export class CreateExerciseComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.createExerciseService.getFileStorage());
+    this.createExerciseService.setFileStorage(undefined);
     localStorage.removeItem('exerciseID');
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.imagePath = this.dude.imagePath;
@@ -39,7 +37,8 @@ export class CreateExerciseComponent implements OnInit {
       equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
       descriptionForExercise: ['', [Validators.required]],
-      muscleGroupExercise: ['', [Validators.required]]
+      muscleGroupExercise: ['', [Validators.required]],
+      isPrivate: ['', [Validators.required]]
     });
   }
 
@@ -55,7 +54,8 @@ export class CreateExerciseComponent implements OnInit {
       this.registerForm.controls.categoryExercise.value,
       this.registerForm.controls.descriptionForExercise.value,
       this.registerForm.controls.muscleGroupExercise.value,
-      this.dude.id
+      this.dude.id,
+      this.registerForm.controls.isPrivate.value
     );
 
     if (this.registerForm.invalid) {
@@ -66,6 +66,7 @@ export class CreateExerciseComponent implements OnInit {
     this.createExerciseService.addExercise(exercise).subscribe(
       (data) => {
         if (this.createExerciseService.getFileStorage() !== undefined) {
+          console.log('execute upload picture method');
           console.log(this.createExerciseService.getFileStorage());
           this.createExerciseService.uploadPictureForExercise(data.id, 1, this.createExerciseService.getFileStorage()).subscribe(
             () => {

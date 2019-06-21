@@ -62,7 +62,8 @@ export class EditWorkoutExercisesComponent implements OnInit {
                 this.gottenExercises[counter].muscleGroup,
                 this.gottenExercises[counter].category,
                 this.gottenExercises[counter].creatorId,
-                this.gottenExercises[counter].imagePath),
+                this.gottenExercises[counter].imagePath,
+                this.gottenExercises[counter].isPrivate),
                 this.gottenExercises[counter].repetitions,
                 this.gottenExercises[counter].sets,
                 this.gottenExercises[counter].exDuration,
@@ -99,7 +100,7 @@ export class EditWorkoutExercisesComponent implements OnInit {
 
   findExercisesByName() {
     this.exerciseName = this.registerForm.value.name;
-    this.workoutExercisesService.getExercisesByName(this.exerciseName).subscribe(
+    this.workoutExercisesService.getExercisesByName(this.exerciseName, this.dude.id).subscribe(
       (data) => {
         console.log('get all exercises by name ' + this.exerciseName);
         console.log(data);

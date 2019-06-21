@@ -10,6 +10,7 @@ export class Dude {
     public birthday: Date,
     public height: number,
     public weight: number,
-    public imagePath: string
+    public imagePath: string,
+    public isPrivate: boolean
   ) {}
 }

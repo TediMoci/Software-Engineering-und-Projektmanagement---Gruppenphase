@@ -60,13 +60,13 @@ public class WorkoutEndpoint {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Workouts by name", authorizations = {@Authorization(value = "apiKey")})
-    public List<WorkoutDto> findByName(@RequestParam String name) {
-        LOGGER.info("Entering findByName with name: " + name);
+    public List<WorkoutDto> findByName(@RequestParam String name, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
         List<Workout> workouts;
         try {
-            workouts = iWorkoutService.findByName(name);
+            workouts = iWorkoutService.findByName(name, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not find workouts with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -78,13 +78,13 @@ public class WorkoutEndpoint {
         return workoutDtos;
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get all Workouts", authorizations = {@Authorization(value = "apiKey")})
-    public List<WorkoutDto> findAll() {
-        LOGGER.info("Entering findAll");
+    public List<WorkoutDto> findAll(@PathVariable Long dudeId) {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
         List<Workout> workouts;
         try {
-            workouts = iWorkoutService.findAll();
+            workouts = iWorkoutService.findAll(dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not find all workouts");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -96,14 +96,15 @@ public class WorkoutEndpoint {
         return workoutDtos;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @RequestMapping(value = "/filtered/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Workouts by filters", authorizations = {@Authorization(value = "apiKey")})
     public WorkoutDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) Integer difficulty,
-                                     @RequestParam(defaultValue = "0.0") Double calorieLower, @RequestParam(defaultValue = "10000.0") Double calorieUpper) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper);
+                                     @RequestParam(defaultValue = "0.0") Double calorieLower, @RequestParam(defaultValue = "10000.0") Double calorieUpper,
+                                     @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper + "; dudeId: " + dudeId);
         List<Workout> workouts;
         try {
-            workouts = iWorkoutService.findByFilter(filter, difficulty, calorieLower, calorieUpper);
+            workouts = iWorkoutService.findByFilter(filter, difficulty, calorieLower, calorieUpper, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not findByFilter with filter: " + filter + "; and difficulty: " + difficulty + "; calorieLower: " + calorieLower + "; calorieUpper: " + calorieUpper);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -117,7 +118,7 @@ public class WorkoutEndpoint {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Workout", authorizations = {@Authorization(value = "apiKey")})
-    public WorkoutDto update(@PathVariable("id") long id, @RequestBody WorkoutDto newWorkout) {
+    public WorkoutDto update(@PathVariable("id") long id, @Valid @RequestBody WorkoutDto newWorkout) {
         LOGGER.info("Updating workout with id: " + id);
         try {
             return workoutMapper.workoutToWorkoutDto(iWorkoutService.update(id, workoutMapper.workoutDtoToWorkout(newWorkout)));

@@ -1,3 +1,4 @@
+/**
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest.base;
 
 import at.ac.tuwien.sepm.groupphase.backend.configuration.JacksonConfiguration;
@@ -62,3 +63,4 @@ public abstract class BaseIntegrationTest {
             .with(" ");
     }
 }
+**/

@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.implementation.actors;
 import at.ac.tuwien.sepm.groupphase.backend.entity.FitnessProvider;
+import at.ac.tuwien.sepm.groupphase.backend.exception.FileStorageException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IFitnessProviderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.actors.IFitnessProviderService;
 import at.ac.tuwien.sepm.groupphase.backend.validators.actors.FitnessProviderValidator;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +23,14 @@ import java.util.NoSuchElementException;
 public class FitnessProviderService implements IFitnessProviderService {
 
     private final IFitnessProviderRepository iFitnessProviderRepository;
+    private final FileStorageRepository fileStorageRepository;
     private final FitnessProviderValidator fitnessProviderValidator;
     private final PasswordEncoder passwordEncoder;
     private static final Logger LOGGER = LoggerFactory.getLogger(FitnessProviderService.class);
 
-    @Autowired
-    public FitnessProviderService(IFitnessProviderRepository iFitnessProviderRepository, FitnessProviderValidator fitnessProviderValidator, PasswordEncoder passwordEncoder) {
+    public FitnessProviderService(IFitnessProviderRepository iFitnessProviderRepository, FileStorageRepository fileStorageRepository, FitnessProviderValidator fitnessProviderValidator, PasswordEncoder passwordEncoder) {
         this.iFitnessProviderRepository = iFitnessProviderRepository;
+        this.fileStorageRepository = fileStorageRepository;
         this.fitnessProviderValidator = fitnessProviderValidator;
         this.passwordEncoder = passwordEncoder;
     }
@@ -39,11 +43,22 @@ public class FitnessProviderService implements IFitnessProviderService {
         } catch (ValidationException e){
             throw new ServiceException(e.getMessage());
         }
+        FitnessProvider savedFP;
         try {
-            return iFitnessProviderRepository.save(fitnessProvider);
+            savedFP = iFitnessProviderRepository.save(fitnessProvider);
         } catch (DataAccessException e) {
             throw new ServiceException(e.getMessage());
         }
+
+        String fileName = "fitness_provider_" + savedFP.getId() + ".png";
+        try {
+            MultipartFile multipartFile = fileStorageRepository.loadMultipartFile("kugelfisch2.png");
+            fileStorageRepository.storeFile(fileName, multipartFile);
+        } catch (FileStorageException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        savedFP.setImagePath(updateImagePath(savedFP.getId(), fileName));
+        return savedFP;
     }
 
     @Override
@@ -120,7 +135,7 @@ public class FitnessProviderService implements IFitnessProviderService {
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
-        String imagePath = "/assets/img/" + fileName;
+        String imagePath = "http://localhost:8080/downloadImage/" + fileName;
         fitnessProvider.setImagePath(imagePath);
         iFitnessProviderRepository.save(fitnessProvider);
         return imagePath;

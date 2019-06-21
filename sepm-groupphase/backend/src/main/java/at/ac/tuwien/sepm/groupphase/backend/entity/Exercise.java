@@ -43,7 +43,10 @@ public class Exercise {
     private Boolean isHistory = false;
 
     @Column(nullable = false)
-    private String imagePath = "/assets/img/exercise.png";
+    private String imagePath = "http://localhost:8080/downloadImage/exercise.png";
+
+    @Column(nullable = false, name = "is_private")
+    private Boolean isPrivate = false;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "exercise")
     private Set<WorkoutExercise> workouts;
@@ -125,6 +128,14 @@ public class Exercise {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public Set<WorkoutExercise> getWorkouts() {
@@ -228,6 +239,7 @@ public class Exercise {
         private Category category;
         private Boolean isHistory;
         private String imagePath;
+        private Boolean isPrivate;
         private Set<WorkoutExercise> workouts;
         private Dude creator;
         private List<Dude> bookmarkDudes;
@@ -286,6 +298,11 @@ public class Exercise {
             return this;
         }
 
+        public ExerciseBuilder isPrivate(Boolean isPrivate) {
+            this.isPrivate = isPrivate;
+            return this;
+        }
+
         public ExerciseBuilder workouts(Set<WorkoutExercise> workouts) {
             this.workouts = workouts;
             return this;
@@ -313,6 +330,7 @@ public class Exercise {
             exercise.setCategory(category);
             exercise.setHistory(isHistory);
             exercise.setImagePath(imagePath);
+            exercise.setIsPrivate(isPrivate);
             exercise.setWorkouts(workouts);
             exercise.setCreator(creator);
             exercise.setBookmarkDudes(bookmarkDudes);

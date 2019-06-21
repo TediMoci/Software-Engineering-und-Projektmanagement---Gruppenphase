@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutKey;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -38,15 +39,32 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
      * @return Workouts with name beginning with the given name-string
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE w.name LIKE ?1% AND w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE w.name LIKE ?1% AND w.isHistory=false AND w.isPrivate=false")
     List<Workout> findByName(String name) throws DataAccessException;
+
+    /**
+     * @param name of the Workouts to find
+     * @param dude that called the method
+     * @return Workouts with name beginning with the given name-string
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE w.name LIKE ?1% AND w.isHistory=false AND w.isPrivate=true AND w.creator=?2")
+    List<Workout> findOwnPrivateByName(String name, Dude dude) throws DataAccessException;
 
     /**
      * @return all Workouts in the database
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE w.isHistory=false ORDER BY w.id")
+    @Query("SELECT w FROM Workout w WHERE w.isHistory=false AND w.isPrivate=false ORDER BY w.id")
     List<Workout> findAll() throws DataAccessException;
+
+    /**
+     * @param dude that called the method
+     * @return all Workouts in the database
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE w.isHistory=false AND w.isPrivate=true AND w.creator=?1 ORDER BY w.id")
+    List<Workout> findOwnPrivate(Dude dude) throws DataAccessException;
 
     /**
      * @param filter containing the string to be filtered for across all string-values of the entity
@@ -56,7 +74,8 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
      * @return all Workouts in the database according to the given filters
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.difficulty=?2 AND w.calorieConsumption>=?3 AND w.calorieConsumption<=?4 AND w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.difficulty=?2 " +
+        "AND w.calorieConsumption>=?3 AND w.calorieConsumption<=?4 AND w.isHistory=false AND w.isPrivate=false")
     List<Workout> findByFilterWithDifficulty(String filter, Integer difficulty, Double calorieLower, Double calorieUpper) throws DataAccessException;
 
     /**
@@ -66,8 +85,34 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
      * @return all Workouts in the database according to the given filters
      * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
      */
-    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.calorieConsumption>=?2 AND w.calorieConsumption<=?3 AND w.isHistory=false")
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.calorieConsumption>=?2 " +
+        "AND w.calorieConsumption<=?3 AND w.isHistory=false AND w.isPrivate=false")
     List<Workout> findByFilterWithoutDifficulty(String filter, Double calorieLower, Double calorieUpper) throws DataAccessException;
+
+    /**
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param difficulty to be filtered for
+     * @param calorieLower lower bound for calorieConsumption
+     * @param calorieUpper upper bound for calorieConsumption
+     * @param dude that called the method
+     * @return all Workouts in the database according to the given filters
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.difficulty=?2 " +
+        "AND w.calorieConsumption>=?3 AND w.calorieConsumption<=?4 AND w.isHistory=false AND w.isPrivate=true AND w.creator=?5")
+    List<Workout> findOwnPrivateByFilterWithDifficulty(String filter, Integer difficulty, Double calorieLower, Double calorieUpper, Dude dude) throws DataAccessException;
+
+    /**
+     * @param filter containing the string to be filtered for across all string-values of the entity
+     * @param calorieLower lower bound for calorieConsumption
+     * @param calorieUpper upper bound for calorieConsumption
+     * @param dude that called the method
+     * @return all Workouts in the database according to the given filters
+     * @throws DataAccessException if an error occurred while trying to find the Workouts in the database
+     */
+    @Query("SELECT w FROM Workout w WHERE (w.name LIKE %?1% OR w.description LIKE %?1%) AND w.calorieConsumption>=?2 " +
+        "AND w.calorieConsumption<=?3 AND w.isHistory=false AND w.isPrivate=true AND w.creator=?4")
+    List<Workout> findOwnPrivateByFilterWithoutDifficulty(String filter, Double calorieLower, Double calorieUpper, Dude dude) throws DataAccessException;
 
     /**
      * @param id of Workout to be found
@@ -113,5 +158,13 @@ public interface IWorkoutRepository extends JpaRepository<Workout, WorkoutKey> {
     @Transactional
     @Query("UPDATE Workout w SET w.isHistory=true WHERE w.id=:id AND w.isHistory=false")
     void delete(@Param("id")long id) throws DataAccessException;
+
+    /**
+     * @param id of Workout to delete
+     * @throws DataAccessException if an error occured while trying to delete the Workout with given id
+     */
+    @Modifying
+    @Transactional
+    void deleteById(Long id) throws DataAccessException;
 
 }

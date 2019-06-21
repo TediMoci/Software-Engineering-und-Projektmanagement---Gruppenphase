@@ -63,13 +63,13 @@ public class ExerciseEndpoint {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get exercises with given name", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findByName(@RequestParam String name) {
-        LOGGER.info("Entering findByName with name: " + name);
+    public ExerciseDto[] findByName(@RequestParam String name, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByName with name: " + name + "; dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findByName(name);
+            exercises = iExerciseService.findByName(name, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not findByName with name: " + name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -81,13 +81,13 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get all exercises", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto[] findAll() {
-        LOGGER.info("Entering findAll");
+    public ExerciseDto[] findAll(@PathVariable Long dudeId) {
+        LOGGER.info("Entering findAll with dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findAll();
+            exercises = iExerciseService.findAll(dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not find all exercises");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -99,14 +99,14 @@ public class ExerciseEndpoint {
         return exerciseDtos;
     }
 
-    @RequestMapping(value = "/filtered", method = RequestMethod.GET)
+    @RequestMapping(value = "/filtered/{dudeId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get Exercises by filters", authorizations = {@Authorization(value = "apiKey")})
     public ExerciseDto[] findByFilter(@RequestParam(defaultValue = "") String filter, @RequestParam(required = false) MuscleGroup muscleGroup,
-                                      @RequestParam(required = false) Category category) {
-        LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category);
+                                      @RequestParam(required = false) Category category, @PathVariable Long dudeId) {
+        LOGGER.info("Entering findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category + "; dudeId: " + dudeId);
         List<Exercise> exercises;
         try {
-            exercises = iExerciseService.findByFilter(filter, muscleGroup, category);
+            exercises = iExerciseService.findByFilter(filter, muscleGroup, category, dudeId);
         } catch (ServiceException e) {
             LOGGER.error("Could not findByFilter with filter: " + filter + "; muscleGroup: " + muscleGroup + "; category: " + category);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -120,7 +120,7 @@ public class ExerciseEndpoint {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update an Exercise", authorizations = {@Authorization(value = "apiKey")})
-    public ExerciseDto updateExercise(@PathVariable("id") long id, @RequestBody ExerciseDto newExercise) {
+    public ExerciseDto updateExercise(@PathVariable("id") long id, @Valid @RequestBody ExerciseDto newExercise) {
         LOGGER.info("Updating exercise with id: " + id);
         try {
             return exerciseMapper.exerciseToExerciseDto(iExerciseService.update(id, exerciseMapper.exerciseDtoToExercise(newExercise)));
@@ -146,13 +146,14 @@ public class ExerciseEndpoint {
     @ApiOperation(value = "Upload image for Exercise", authorizations = {@Authorization(value = "apiKey")})
     public String uploadImage(@PathVariable Long id, @PathVariable Integer version, @RequestParam("file") MultipartFile file) {
         LOGGER.info("Entering uploadImage with id: " + id + "; version: " + version);
-        String fileName = "exercise_" + id + "_" + version;
-        if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
-            fileName += ".png";
-        } else {
-            fileName += ".jpg";
+        String fileName = "exercise_" + id + "_" + version + ".png";
+
+        try {
+            iFileStorageService.storeFile(fileName, file);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not uploadImage with id: " + id + "; version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        iFileStorageService.storeFile(fileName, file);
 
         try {
             return iExerciseService.updateImagePath(id, version, fileName);
