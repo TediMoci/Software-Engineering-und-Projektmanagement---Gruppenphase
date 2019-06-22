@@ -258,4 +258,85 @@ public class CourseIntegrationTest {
         REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/bookmark/" + dudeId + "/" + 1, HttpMethod.PUT, null, Void.class);
     }
 
+    @Test
+    public void givenDudesAndCourse_whenDudeRatesCourse_thenGetRatedCourse() {
+        DudeDto ratingDude1 = new DudeDto();
+        ratingDude1.setName("FitnessProviderRating1");
+        ratingDude1.setPassword("123456789");
+        ratingDude1.setEmail("john1@dude.com");
+        ratingDude1.setDescription("Description 1");
+        ratingDude1.setBirthday(LocalDate.of(1982,1,1));
+        ratingDude1.setSex(Sex.Male);
+        ratingDude1.setSelfAssessment(1);
+        ratingDude1.setHeight(185.0);
+        ratingDude1.setWeight(85.0);
+        HttpEntity<DudeDto> dudeRequest1 = new HttpEntity<>(ratingDude1);
+        ResponseEntity<DudeDto> responseDude1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest1, DudeDto.class);
+        Long dudeId1 = responseDude1.getBody().getId();
+
+        DudeDto ratingDude2 = new DudeDto();
+        ratingDude2.setName("FitnessProviderRating2");
+        ratingDude2.setPassword("123456789");
+        ratingDude2.setEmail("john1@dude.com");
+        ratingDude2.setDescription("Description 1");
+        ratingDude2.setBirthday(LocalDate.of(1982,1,1));
+        ratingDude2.setSex(Sex.Male);
+        ratingDude2.setSelfAssessment(1);
+        ratingDude2.setHeight(185.0);
+        ratingDude2.setWeight(85.0);
+        HttpEntity<DudeDto> dudeRequest2 = new HttpEntity<>(ratingDude2);
+        ResponseEntity<DudeDto> responseDude2 = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest2, DudeDto.class);
+        Long dudeId2 = responseDude2.getBody().getId();
+
+        HttpEntity<CourseDto> courseRequest = new HttpEntity<>(validCourseDto1);
+        ResponseEntity<CourseDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest, CourseDto.class);
+        Long courseId = response.getBody().getId();
+
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/rating/" + dudeId1 + "/" + courseId + "/5", HttpMethod.POST, null, Void.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/rating/" + dudeId2 + "/" + courseId + "/4", HttpMethod.POST, null, Void.class);
+        CourseDto foundCourse = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/" + courseId, CourseDto.class);
+        Double expectedRating = 4.5;
+        assertEquals(foundCourse.getRating(), expectedRating);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenDudeRatesCourse_ifDudeOrCourseNotExists() {
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/rating/" + 1 + "/" + 100 + "/3", HttpMethod.POST, null, Void.class);
+    }
+
+    @Test
+    public void givenDudesRatesCourse_whenDudeDeletesRating_thenGetRatingZero() {
+        DudeDto ratingDude1 = new DudeDto();
+        ratingDude1.setName("FitnessProviderRating3");
+        ratingDude1.setPassword("123456789");
+        ratingDude1.setEmail("john1@dude.com");
+        ratingDude1.setDescription("Description 1");
+        ratingDude1.setBirthday(LocalDate.of(1982,1,1));
+        ratingDude1.setSex(Sex.Male);
+        ratingDude1.setSelfAssessment(1);
+        ratingDude1.setHeight(185.0);
+        ratingDude1.setWeight(85.0);
+        HttpEntity<DudeDto> dudeRequest1 = new HttpEntity<>(ratingDude1);
+        ResponseEntity<DudeDto> responseDude1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest1, DudeDto.class);
+        Long dudeId1 = responseDude1.getBody().getId();
+
+        HttpEntity<CourseDto> courseRequest = new HttpEntity<>(validCourseDto1);
+        ResponseEntity<CourseDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + COURSE_ENDPOINT, HttpMethod.POST, courseRequest, CourseDto.class);
+        Long courseId = response.getBody().getId();
+
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/rating/" + dudeId1 + "/" + courseId + "/5", HttpMethod.POST, null, Void.class);
+        CourseDto foundCourse = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/" + courseId, CourseDto.class);
+        Double expectedRating = 5.0;
+        assertEquals(foundCourse.getRating(), expectedRating);
+
+        REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/rating/" + dudeId1 + "/" + courseId, HttpMethod.DELETE, null, Void.class);
+        foundCourse = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/" + courseId, CourseDto.class);
+        expectedRating = 0.0;
+        assertEquals(foundCourse.getRating(), expectedRating);
+    }
 }
