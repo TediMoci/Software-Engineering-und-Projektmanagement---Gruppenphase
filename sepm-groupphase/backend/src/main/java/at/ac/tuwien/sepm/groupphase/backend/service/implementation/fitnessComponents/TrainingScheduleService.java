@@ -150,7 +150,10 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             throw new ServiceException("No Dude in database with id: " + activeTrainingSchedule.getDudeId());
         }
 
-        activeTrainingSchedule.setStartDate(LocalDate.now());
+        if(activeTrainingSchedule.getStartDate() == null) {
+            activeTrainingSchedule.setStartDate(LocalDate.now());
+        }
+
         List<Boolean> hasBeenAdapted = new ArrayList<>();
         for (int i = 0; i < activeTrainingSchedule.getIntervalRepetitions() - 1; i++) {
             hasBeenAdapted.add(false);

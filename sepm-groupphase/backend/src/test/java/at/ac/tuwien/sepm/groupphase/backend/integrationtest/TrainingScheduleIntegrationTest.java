@@ -273,9 +273,6 @@ public class TrainingScheduleIntegrationTest {
             Long exercise2Id = exerciseResponse2.getBody().getId();
             Integer exercise2Version = exerciseResponse2.getBody().getVersion();
 
-            System.out.println("Created exerciseResponse1: " + exerciseResponse1.getBody());
-            System.out.println("Created exerciseResponse2: " + exerciseResponse2.getBody());
-
             workoutExerciseDtoIn1.setExerciseId(exercise1Id);
             workoutExerciseDtoIn1.setExerciseVersion(exercise1Version);
             workoutExerciseDtoIn2.setExerciseId(exercise2Id);
@@ -286,8 +283,8 @@ public class TrainingScheduleIntegrationTest {
             workoutExerciseDtoMinReps.setExerciseVersion(exercise2Version);
             workoutExerciseDtoMaxSets.setExerciseId(exercise1Id);
             workoutExerciseDtoMaxSets.setExerciseVersion(exercise1Version);
-            workoutExerciseDtoMinSets.setExerciseId(exercise2Id);
-            workoutExerciseDtoMinSets.setExerciseVersion(exercise2Version);
+            workoutExerciseDtoMinSets.setExerciseId(exercise1Id);
+            workoutExerciseDtoMinSets.setExerciseVersion(exercise1Version);
 
             WorkoutExerciseDtoIn[] workoutExerciseDtoIns = new WorkoutExerciseDtoIn[]{workoutExerciseDtoIn1, workoutExerciseDtoIn2};
             workoutDto1.setWorkoutExercises(workoutExerciseDtoIns);
@@ -302,9 +299,6 @@ public class TrainingScheduleIntegrationTest {
             workoutMinReps.setCreatorId(dudeId);
             workoutMaxSets.setCreatorId(dudeId);
             workoutMinSets.setCreatorId(dudeId);
-
-            System.out.println("Creating workoutDto1: " + workoutDto1);
-            System.out.println("Creating workoutDto2: " + workoutDto2);
 
             HttpEntity<WorkoutDto> workoutRequest = new HttpEntity<>(workoutDto1);
             ResponseEntity<WorkoutDto> workoutResponse1 = REST_TEMPLATE
@@ -442,19 +436,6 @@ public class TrainingScheduleIntegrationTest {
         assertEquals(0, foundTrainingSchedules.getBody() != null? foundTrainingSchedules.getBody().size() : 0);
     }
 
-    // TODO: uncomment when findByFilter for TrainingSchedules has been implemented
-    /*
-     @Test()
-    public void whenSaveTwoTrainingSchedulesOfDifferentDifficultyAndFilterByDifficulty2_thenGetOneResult(){
-        TrainingScheduleDto a = postTrainingSchedule(trainingScheduleDto).getBody();
-        TrainingScheduleDto b = postTrainingSchedule(trainingScheduleDto2).getBody();
-        ResponseEntity<TrainingScheduleDto[]> response = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT +"/filtered"+"?filter=2", HttpMethod.GET, null, TrainingScheduleDto[].class);
-        assertEquals(1, response.getBody() == null ? 0 : response.getBody().length);
-        clearRepository();
-    }
-     */
-
     @Test
     public void givenDudeAndTs_whenDudeBookmarksTs_thenTsInBookmarkedTss() {
         ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDto);
@@ -578,21 +559,12 @@ public class TrainingScheduleIntegrationTest {
         ResponseEntity<TrainingScheduleDto> tsResponse = postTrainingSchedule(trainingScheduleDtoForAdaptiveChange);
         activeTsForAdaptivChangeDto.setTrainingScheduleId(tsResponse.getBody().getId());
         activeTsForAdaptivChangeDto.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
+
+
+
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsForAdaptivChangeDto);
         ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
-        ActiveTrainingScheduleDto newActiveTs = new ActiveTrainingScheduleDto();
-        newActiveTs.setId(response.getBody().getId());
-        newActiveTs.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
-        newActiveTs.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
-        newActiveTs.setStartDate(LocalDate.now().minusDays(3));
-        newActiveTs.setTrainingScheduleId(tsResponse.getBody().getId());
-        newActiveTs.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
-        newActiveTs.setAdaptive(true);
-
-        HttpEntity<ActiveTrainingScheduleDto> activeTsR = new HttpEntity<>(newActiveTs);
-        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR, ActiveTrainingScheduleDto.class);
 
         ResponseEntity<ActiveTrainingScheduleDto> adaptedSchedule = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsForAdaptivChangeDto.getDudeId() + "/activeTrainingSchedule", HttpMethod.GET, null, ActiveTrainingScheduleDto.class);
@@ -628,18 +600,6 @@ public class TrainingScheduleIntegrationTest {
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsForAdaptivChangeDto);
         ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
-        ActiveTrainingScheduleDto newActiveTs = new ActiveTrainingScheduleDto();
-        newActiveTs.setId(response.getBody().getId());
-        newActiveTs.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
-        newActiveTs.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
-        newActiveTs.setStartDate(LocalDate.now().minusDays(3));
-        newActiveTs.setTrainingScheduleId(tsResponse.getBody().getId());
-        newActiveTs.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
-        newActiveTs.setAdaptive(true);
-
-        HttpEntity<ActiveTrainingScheduleDto> activeTsR = new HttpEntity<>(newActiveTs);
-        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR, ActiveTrainingScheduleDto.class);
 
         ResponseEntity<ExerciseDoneDto[]> exerciseDoneResponse = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsForAdaptivChangeDto.getDudeId() + "/activeTrainingSchedule/done",
@@ -678,18 +638,6 @@ public class TrainingScheduleIntegrationTest {
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsForAdaptivChangeDto);
         ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
-        ActiveTrainingScheduleDto newActiveTs = new ActiveTrainingScheduleDto();
-        newActiveTs.setId(response.getBody().getId());
-        newActiveTs.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
-        newActiveTs.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
-        newActiveTs.setStartDate(LocalDate.now().minusDays(3));
-        newActiveTs.setTrainingScheduleId(tsResponse.getBody().getId());
-        newActiveTs.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
-        newActiveTs.setAdaptive(true);
-
-        HttpEntity<ActiveTrainingScheduleDto> activeTsR = new HttpEntity<>(newActiveTs);
-        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR, ActiveTrainingScheduleDto.class);
 
         ResponseEntity<ExerciseDoneDto[]> exerciseDoneResponse = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsForAdaptivChangeDto.getDudeId() + "/activeTrainingSchedule/done",
@@ -728,18 +676,6 @@ public class TrainingScheduleIntegrationTest {
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsForAdaptivChangeDto);
         ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
-        ActiveTrainingScheduleDto newActiveTs = new ActiveTrainingScheduleDto();
-        newActiveTs.setId(response.getBody().getId());
-        newActiveTs.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
-        newActiveTs.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
-        newActiveTs.setStartDate(LocalDate.now().minusDays(3));
-        newActiveTs.setTrainingScheduleId(tsResponse.getBody().getId());
-        newActiveTs.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
-        newActiveTs.setAdaptive(true);
-
-        HttpEntity<ActiveTrainingScheduleDto> activeTsR = new HttpEntity<>(newActiveTs);
-        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR, ActiveTrainingScheduleDto.class);
 
         ResponseEntity<ActiveTrainingScheduleDto> adaptedSchedule = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsForAdaptivChangeDto.getDudeId() + "/activeTrainingSchedule", HttpMethod.GET, null, ActiveTrainingScheduleDto.class);
@@ -767,29 +703,17 @@ public class TrainingScheduleIntegrationTest {
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsForAdaptivChangeDto);
         ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
-        ActiveTrainingScheduleDto newActiveTs = new ActiveTrainingScheduleDto();
-        newActiveTs.setId(response.getBody().getId());
-        newActiveTs.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
-        newActiveTs.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
-        newActiveTs.setStartDate(LocalDate.now().minusDays(3));
-        newActiveTs.setTrainingScheduleId(tsResponse.getBody().getId());
-        newActiveTs.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
-        newActiveTs.setAdaptive(true);
-
-        HttpEntity<ActiveTrainingScheduleDto> activeTsR = new HttpEntity<>(newActiveTs);
-        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR, ActiveTrainingScheduleDto.class);
 
         ResponseEntity<ActiveTrainingScheduleDto> adaptedSchedule = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsForAdaptivChangeDto.getDudeId() + "/activeTrainingSchedule", HttpMethod.GET, null, ActiveTrainingScheduleDto.class);
+        Long newTsId = adaptedSchedule.getBody().getTrainingScheduleId();
 
         ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkoutsAdaptive = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + adaptedSchedule.getBody().getTrainingScheduleId() + "/1/workouts/copyTs", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + newTsId + "/1/workouts/copyTs", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
 
         List<WorkoutExerciseDtoOut> foundWorkoutExercises = new ArrayList<>();
         for (TrainingScheduleWorkoutDtoOut t: foundTrainingScheduleWorkoutsAdaptive.getBody()) {
             assertNotEquals(workoutMinSets.getId(), t.getId());
-            assertNotEquals(workoutMinSets.getCalorieConsumption(), t.getCalorieConsumption());
             foundWorkoutExercises.addAll(REST_TEMPLATE.exchange(BASE_URL + port + WORKOUT_ENDPOINT + "/" + t.getId() + "/" + t.getVersion() + "/exercises", HttpMethod.GET, null, new ParameterizedTypeReference<List<WorkoutExerciseDtoOut>>(){}).getBody());
         }
         for (WorkoutExerciseDtoOut w: foundWorkoutExercises) {
@@ -806,18 +730,6 @@ public class TrainingScheduleIntegrationTest {
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest = new HttpEntity<>(activeTsForAdaptivChangeDto);
         ResponseEntity<ActiveTrainingScheduleDto> response = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest, ActiveTrainingScheduleDto.class);
-        ActiveTrainingScheduleDto newActiveTs = new ActiveTrainingScheduleDto();
-        newActiveTs.setId(response.getBody().getId());
-        newActiveTs.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
-        newActiveTs.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
-        newActiveTs.setStartDate(LocalDate.now().minusDays(3));
-        newActiveTs.setTrainingScheduleId(tsResponse.getBody().getId());
-        newActiveTs.setTrainingScheduleVersion(tsResponse.getBody().getVersion());
-        newActiveTs.setAdaptive(true);
-
-        HttpEntity<ActiveTrainingScheduleDto> activeTsR = new HttpEntity<>(newActiveTs);
-        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR, ActiveTrainingScheduleDto.class);
 
         ResponseEntity<ExerciseDoneDto[]> exerciseDoneResponse = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsForAdaptivChangeDto.getDudeId() + "/activeTrainingSchedule/done",
@@ -848,18 +760,6 @@ public class TrainingScheduleIntegrationTest {
         HttpEntity<ActiveTrainingScheduleDto> activeTsRequest2 = new HttpEntity<>(activeTsForAdaptivChangeDto);
         ResponseEntity<ActiveTrainingScheduleDto> response2 = REST_TEMPLATE
             .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active", HttpMethod.POST, activeTsRequest2, ActiveTrainingScheduleDto.class);
-        ActiveTrainingScheduleDto newActiveTs2 = new ActiveTrainingScheduleDto();
-        newActiveTs2.setId(response2.getBody().getId());
-        newActiveTs2.setIntervalRepetitions(activeTsForAdaptivChangeDto.getIntervalRepetitions());
-        newActiveTs2.setDudeId(activeTsForAdaptivChangeDto.getDudeId());
-        newActiveTs2.setStartDate(LocalDate.now().minusDays(3));
-        newActiveTs2.setTrainingScheduleId(tsResponse2.getBody().getId());
-        newActiveTs2.setTrainingScheduleVersion(tsResponse2.getBody().getVersion());
-        newActiveTs2.setAdaptive(true);
-
-        HttpEntity<ActiveTrainingScheduleDto> activeTsR2 = new HttpEntity<>(newActiveTs2);
-        ResponseEntity<ActiveTrainingScheduleDto> updatedSchedule2 = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/active/update", HttpMethod.PUT, activeTsR2, ActiveTrainingScheduleDto.class);
 
         ResponseEntity<ExerciseDoneDto[]> exerciseDoneResponse2 = REST_TEMPLATE
             .exchange(BASE_URL + port + DUDE_ENDPOINT + "/" + activeTsForAdaptivChangeDto.getDudeId() + "/activeTrainingSchedule/done",
@@ -909,7 +809,6 @@ public class TrainingScheduleIntegrationTest {
             totalDurationBeginner += w.getExDuration();
         }
 
-        // TODO: why are beginner calories higher than advanced calories?
         assert(totalRepsBeginner <= totalRepsAdvanced);
         assert(totalDurationBeginner <= totalDurationAdvanced);
         assert(totalCaloriesBeginner <= totalCaloriesAdvanced);

@@ -141,6 +141,9 @@ public class TrainingScheduleMapper implements ITrainingScheduleMapper {
         builder.trainingScheduleId(activeTrainingScheduleDto.getTrainingScheduleId());
         builder.trainingScheduleVersion(activeTrainingScheduleDto.getTrainingScheduleVersion());
         builder.intervalRepetitions(activeTrainingScheduleDto.getIntervalRepetitions());
+        if (activeTrainingScheduleDto.getStartDate() != null){
+            builder.startDate(activeTrainingScheduleDto.getStartDate());
+        }
         builder.isAdaptive(activeTrainingScheduleDto.getAdaptive());
 
         return builder.build();
