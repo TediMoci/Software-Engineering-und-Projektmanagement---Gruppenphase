@@ -259,7 +259,7 @@ public class CourseIntegrationTest {
     }
 
     @Test
-    public void givenDudesAndCourse_whenDudeRatesCourse_thenGetRatedCourse() {
+    public void givenDudesAndCourse_whenDudesRateCourse_thenGetRatedCourse() {
         DudeDto ratingDude1 = new DudeDto();
         ratingDude1.setName("FitnessProviderRating1");
         ratingDude1.setPassword("123456789");
@@ -308,7 +308,7 @@ public class CourseIntegrationTest {
     }
 
     @Test
-    public void givenDudesRatesCourse_whenDudeDeletesRating_thenGetRatingZero() {
+    public void givenDudeRatesCourse_whenDudeDeletesRating_thenGetRatingZero() {
         DudeDto ratingDude1 = new DudeDto();
         ratingDude1.setName("FitnessProviderRating3");
         ratingDude1.setPassword("123456789");
@@ -336,7 +336,7 @@ public class CourseIntegrationTest {
 
         REST_TEMPLATE.exchange(BASE_URL + port + COURSE_ENDPOINT + "/rating/" + dudeId1 + "/" + courseId, HttpMethod.DELETE, null, Void.class);
         foundCourse = REST_TEMPLATE.getForObject(BASE_URL + port + COURSE_ENDPOINT + "/" + courseId, CourseDto.class);
-        expectedRating = 0.0;
-        assertEquals(foundCourse.getRating(), expectedRating);
+        Double expectedRating0 = 0.0;
+        assertEquals(foundCourse.getRating(), expectedRating0);
     }
 }
