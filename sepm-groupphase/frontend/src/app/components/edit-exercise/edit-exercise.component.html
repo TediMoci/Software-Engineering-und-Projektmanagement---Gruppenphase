@@ -82,16 +82,22 @@
             </div>
 
             <div class="form-group">
-              <label for="editExMuscleGroup">Muscle Group</label>
-              <input ngModel="{{muscleGroup}}" type="text" name="muscleGroup" class="form-control"
-                     id="editExMuscleGroup" formControlName="muscleGroup"
-                     aria-describedby="editExMuscleGroup">
+
+              <mat-form-field>
+                <mat-label>Muscle Group*</mat-label>
+                <mat-select formControlName="muscleGroup">
+                  <mat-option *ngFor="let muscle of muscleGroup" [value]="muscle">
+                    {{muscle}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               <div *ngIf="submitted && !!editExForm.controls.muscleGroup.errors" class="error">
                 <small class="form-text text-danger"
                        *ngIf="!!editExForm.controls.muscleGroup.errors.required">Muscle Group is
                   required!
                 </small>
               </div>
+
             </div>
 
             <div *ngIf="isPrivate" class="privateShow">

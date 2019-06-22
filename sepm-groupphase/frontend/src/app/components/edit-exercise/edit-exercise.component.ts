@@ -26,7 +26,7 @@ export class EditExerciseComponent implements OnInit {
   name: string;
   equipment: string;
   description: string;
-  muscleGroup: string;
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
   isPrivate: boolean;
   isPrivateResult: boolean;
   message: string;
@@ -50,14 +50,13 @@ export class EditExerciseComponent implements OnInit {
       equipment: ['', [Validators.required]],
       category: [this.oldExercise.category, [Validators.required]],
       description: ['', [Validators.required]],
-      muscleGroup: ['', [Validators.required]],
+      muscleGroup: [this.oldExercise.muscleGroup, [Validators.required]],
       isPrivate: ['']
     });
 
     this.name = this.oldExercise.name;
     this.equipment = this.oldExercise.equipment;
     this.description = this.oldExercise.description;
-    this.muscleGroup = this.oldExercise.muscleGroup;
 
     if (this.oldExercise.category === 'Endurance') {
       this.endurance = true;
