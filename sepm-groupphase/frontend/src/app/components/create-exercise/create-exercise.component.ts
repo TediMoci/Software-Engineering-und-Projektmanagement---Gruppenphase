@@ -37,7 +37,7 @@ export class CreateExerciseComponent implements OnInit {
       equipmentExercise: [''],
       categoryExercise: ['', [Validators.required]],
       descriptionForExercise: ['', [Validators.required]],
-      muscleGroupExercise: ['', [Validators.required]],
+      muscleGroupExercise: [this.muscleGroup[0], [Validators.required]],
       isPrivate: ['', [Validators.required]]
     });
   }

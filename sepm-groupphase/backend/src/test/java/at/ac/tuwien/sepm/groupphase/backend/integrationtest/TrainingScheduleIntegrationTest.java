@@ -1005,4 +1005,86 @@ public class TrainingScheduleIntegrationTest {
             assertEquals(randomTrainingScheduleWorkouts[i].getDay(), foundTrainingScheduleWorkouts[i].getDay());
         }
     }
+
+    @Test
+    public void givenDudesAndTrainingSchedule_whenDudesRateTrainingSchedule_thenGetRatedTrainingSchedule() {
+        DudeDto ratingDude1 = new DudeDto();
+        ratingDude1.setName("TrainingRating1");
+        ratingDude1.setPassword("123456789");
+        ratingDude1.setEmail("john1@dude.com");
+        ratingDude1.setDescription("Description 1");
+        ratingDude1.setBirthday(LocalDate.of(1982,1,1));
+        ratingDude1.setSex(Sex.Male);
+        ratingDude1.setSelfAssessment(1);
+        ratingDude1.setHeight(185.0);
+        ratingDude1.setWeight(85.0);
+        HttpEntity<DudeDto> dudeRequest1 = new HttpEntity<>(ratingDude1);
+        ResponseEntity<DudeDto> responseDude1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest1, DudeDto.class);
+        Long dudeId1 = responseDude1.getBody().getId();
+
+        DudeDto ratingDude2 = new DudeDto();
+        ratingDude2.setName("TrainingRating2");
+        ratingDude2.setPassword("123456789");
+        ratingDude2.setEmail("john1@dude.com");
+        ratingDude2.setDescription("Description 1");
+        ratingDude2.setBirthday(LocalDate.of(1982,1,1));
+        ratingDude2.setSex(Sex.Male);
+        ratingDude2.setSelfAssessment(1);
+        ratingDude2.setHeight(185.0);
+        ratingDude2.setWeight(85.0);
+        HttpEntity<DudeDto> dudeRequest2 = new HttpEntity<>(ratingDude2);
+        ResponseEntity<DudeDto> responseDude2 = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest2, DudeDto.class);
+        Long dudeId2 = responseDude2.getBody().getId();
+
+        HttpEntity<TrainingScheduleDto> request = new HttpEntity<>(trainingScheduleDto2);
+        ResponseEntity<TrainingScheduleDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT, HttpMethod.POST, request, TrainingScheduleDto.class);
+        Long trainingScheduleId = response.getBody().getId();
+
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/rating/" + dudeId1 + "/" + trainingScheduleId + "/1", HttpMethod.POST, null, Void.class);
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/rating/" + dudeId2 + "/" + trainingScheduleId + "/4", HttpMethod.POST, null, Void.class);
+        TrainingScheduleDto foundTrainingSchedule = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + trainingScheduleId + "/1", TrainingScheduleDto.class);
+        Double expectedRating = 2.5;
+        assertEquals(foundTrainingSchedule.getRating(), expectedRating);
+    }
+
+    @Test(expected = HttpClientErrorException.BadRequest.class)
+    public void whenDudeRatesTrainingSchedule_ifDudeOrTrainingScheduleNotExists_then400BadRequest() {
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/rating/" + 1 + "/" + 100 + "/3", HttpMethod.POST, null, Void.class);
+    }
+
+    @Test
+    public void givenDudeRatedTrainingSchedule_whenDudeDeletesRating_thenGetRatingZero() {
+        DudeDto ratingDude1 = new DudeDto();
+        ratingDude1.setName("TrainingRating3");
+        ratingDude1.setPassword("123456789");
+        ratingDude1.setEmail("john1@dude.com");
+        ratingDude1.setDescription("Description 1");
+        ratingDude1.setBirthday(LocalDate.of(1982,1,1));
+        ratingDude1.setSex(Sex.Male);
+        ratingDude1.setSelfAssessment(1);
+        ratingDude1.setHeight(185.0);
+        ratingDude1.setWeight(85.0);
+        HttpEntity<DudeDto> dudeRequest1 = new HttpEntity<>(ratingDude1);
+        ResponseEntity<DudeDto> responseDude1 = REST_TEMPLATE
+            .exchange(BASE_URL + port + DUDE_ENDPOINT, HttpMethod.POST, dudeRequest1, DudeDto.class);
+        Long dudeId1 = responseDude1.getBody().getId();
+
+        HttpEntity<TrainingScheduleDto> request = new HttpEntity<>(trainingScheduleDto2);
+        ResponseEntity<TrainingScheduleDto> response = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT, HttpMethod.POST, request, TrainingScheduleDto.class);
+        Long trainingScheduleId = response.getBody().getId();
+
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/rating/" + dudeId1 + "/" + trainingScheduleId + "/4", HttpMethod.POST, null, Void.class);
+        TrainingScheduleDto foundTrainingSchedule = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + trainingScheduleId + "/1", TrainingScheduleDto.class);
+        Double expectedRating = 4.0;
+        assertEquals(foundTrainingSchedule.getRating(), expectedRating);
+
+        REST_TEMPLATE.exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/rating/" + dudeId1 + "/" + trainingScheduleId, HttpMethod.DELETE, null, Void.class);
+        foundTrainingSchedule = REST_TEMPLATE.getForObject(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/" + trainingScheduleId + "/1", TrainingScheduleDto.class);
+        Double expectedRating0 = 0.0;
+        assertEquals(foundTrainingSchedule.getRating(), expectedRating0);
+    }
 }
