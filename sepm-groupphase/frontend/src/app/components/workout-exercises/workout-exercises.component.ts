@@ -5,6 +5,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {WorkoutEx} from '../../dtos/workoutEx';
 import {Router} from '@angular/router';
 import {WorkoutExercisesService} from '../../services/workout-exercises.service';
+import {ExerciseFilter} from '../../dtos/exercise-filter';
+import {FindService} from '../../services/find.service';
 
 @Component({
   selector: 'app-workout-exercises',
@@ -26,7 +28,15 @@ export class WorkoutExercisesComponent implements OnInit {
   newExercises: any;
   error: any;
 
-  constructor(private workoutExercisesService: WorkoutExercisesService, private formBuilder: FormBuilder, private router: Router) {
+  // Filter
+  muscleGroup: string[] = ['None', 'Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
+  filterExerciseCategoryActual: string;
+  filterExerciseMuscleActual: string;
+  exerciseFilter: ExerciseFilter;
+  inputTextActual: string;
+
+  constructor(private workoutExercisesService: WorkoutExercisesService, private formBuilder: FormBuilder, private router: Router,
+              private findService: FindService) {
   }
 
   ngOnInit() {
@@ -51,7 +61,9 @@ export class WorkoutExercisesComponent implements OnInit {
     localStorage.setItem('previousPreviousRoute', JSON.stringify('/workout-exercises'));
 
     this.registerForm = this.formBuilder.group({
-      name: [''],
+      inputText: [''],
+      filterExerciseCategory: ['None'],
+      filterExerciseMuscle: ['None']
     });
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
@@ -76,17 +88,45 @@ export class WorkoutExercisesComponent implements OnInit {
   }
 
   findExercisesByName() {
-    this.exerciseName = this.registerForm.value.name;
-    this.workoutExercisesService.getExercisesByName(this.exerciseName, this.dude.id).subscribe(
-      (data) => {
-        console.log('get all exercises by name ' + this.exerciseName);
-        console.log(data);
-        this.exercises = data;
-      },
-      error => {
-        this.error = error;
-      }
+    console.log('searchvalue: ' + this.registerForm.controls.inputText.value);
+
+    if (this.registerForm.controls.inputText.value === undefined) {
+      this.inputTextActual = null;
+    } else {
+      this.inputTextActual = this.registerForm.controls.inputText.value;
+    }
+
+    if (this.registerForm.controls.filterExerciseCategory.value === 'None') {
+      this.filterExerciseCategoryActual = null;
+    } else {
+      this.filterExerciseCategoryActual = this.registerForm.controls.filterExerciseCategory.value;
+    }
+
+    if (this.registerForm.controls.filterExerciseMuscle.value === 'None') {
+      this.filterExerciseMuscleActual = null;
+    } else {
+      this.filterExerciseMuscleActual = this.registerForm.controls.filterExerciseMuscle.value;
+    }
+
+    this.exerciseFilter = new ExerciseFilter(
+      this.inputTextActual,
+      this.filterExerciseCategoryActual,
+      this.filterExerciseMuscleActual
     );
+    console.log('name: ' + this.exerciseFilter.filter);
+    this.findService.getAllExercisesFilterd(this.exerciseFilter, 0).subscribe(
+        (data) => {
+          console.log('get all exercises');
+          this.exercises = data.sort(function (a, b) { // sort data alphabetically
+            if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {return -1; }
+            if (a.name > b.name) {return 1; }
+            return 0;
+          });
+        },
+        error => {
+          this.error = error;
+        }
+      );
   }
 
   removeFromChosenExercises(element: WorkoutEx) {

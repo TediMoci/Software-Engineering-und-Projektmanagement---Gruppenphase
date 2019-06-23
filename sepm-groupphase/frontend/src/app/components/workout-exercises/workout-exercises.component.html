@@ -24,9 +24,43 @@
           <span class="anchor" id="formRegister"></span>
           <form [formGroup]="registerForm">
             <div class="form-group">
-              <input class="form-control" type="text" name="search" formControlName="name" autocomplete="off">
-              <p></p>
-              <button type="button" (click)="findExercisesByName()" class="btn btn-secondary">Search</button>
+              <div class="row">
+                <div class="card-body row no-gutters align-items-center">
+                  <!-- Search form -->
+                  <div class="col-lg">
+                    <input id="typeahead-basic" type="text" class="form-control" [placeholder]="'Find Exercise'" formControlName="inputText" />
+                  </div>
+                  <!--end of col-->
+                  <div class="col-auto">
+                    <button class="btn btn-md btn-success" (click)="findExercisesByName()" type="submit"><i class="fas fa-search"></i></button>
+                  </div>
+                </div>
+                <div class="col">
+                  <div>
+                    <p>Filter for Exercise</p>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonExerciseCategory" data-toggle="dropdown" formControlName="filterExerciseCategory" ngDefaultControl>
+                        Category: {{registerForm.controls.filterExerciseCategory.value}}
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" (click)="registerForm.controls.filterExerciseCategory.setValue('None'); findExercisesByName()">None</a>
+                        <a class="dropdown-item" (click)="registerForm.controls.filterExerciseCategory.setValue('Strength'); findExercisesByName()">Strength</a>
+                        <a class="dropdown-item" (click)="registerForm.controls.filterExerciseCategory.setValue('Endurance'); findExercisesByName()">Endurance</a>
+                        <a class="dropdown-item" (click)="registerForm.controls.filterExerciseCategory.setValue('Other'); findExercisesByName()">Other</a>
+                      </div>
+                    </div>
+                    <div class="dropdown" style="margin-top: 10px">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonExerciseMuscle" data-toggle="dropdown" formControlName="filterExerciseMuscle" ngDefaultControl>
+                        Muscle Group: {{registerForm.controls.filterExerciseMuscle.value}}
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" *ngFor="let elem of muscleGroup" (click)="registerForm.controls.filterExerciseMuscle.setValue(elem); findExercisesByName()">{{elem}}</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <button type="button" [routerLink]="['/create-exercise-for-workout']" class="btn btn-secondary">Add new
                 Exercise
               </button>
