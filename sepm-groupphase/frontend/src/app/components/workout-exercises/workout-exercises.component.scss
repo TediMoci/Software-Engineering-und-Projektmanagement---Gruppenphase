@@ -43,7 +43,7 @@
     height: 400px;
     width: 670px;
     line-height: 40px;
-    overflow: scroll;
+    overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
   .btn{
@@ -55,7 +55,7 @@
   margin-left: 30px;
   ul{
     height: 600px;
-    overflow: scroll;
+    overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
   .btn{
