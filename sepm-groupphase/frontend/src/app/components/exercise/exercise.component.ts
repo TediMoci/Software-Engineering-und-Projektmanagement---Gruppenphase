@@ -29,7 +29,6 @@ export class ExerciseComponent implements OnInit {
   constructor(private ratingService: RatingService, private getByIDService: GetByIDService) { }
 
   ngOnInit() {
-
     this.exercise = JSON.parse(localStorage.getItem('selectedExercise'));
     console.log(this.exercise);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
@@ -43,6 +42,14 @@ export class ExerciseComponent implements OnInit {
     this.description = this.exercise.description;
     this.isPrivate = this.exercise.isPrivate;
     this.rating = this.exercise.rating;
+    this.getByIDService.getExerciseByID(this.exercise.id, this.exercise.version).subscribe(
+      (data) => {
+        this.exercise = data;
+        localStorage.setItem('selectedExercise', JSON.stringify(data));
+      },
+      errorFavorite => {
+        this.error = errorFavorite;
+      });
   }
 
   convertPrivate() {
