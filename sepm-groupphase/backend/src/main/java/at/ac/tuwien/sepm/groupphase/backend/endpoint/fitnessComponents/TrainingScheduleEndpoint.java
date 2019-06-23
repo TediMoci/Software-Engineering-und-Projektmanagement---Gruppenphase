@@ -251,22 +251,20 @@ public class TrainingScheduleEndpoint {
     }
 
     @RequestMapping(value = "/{id}/{version}/workouts/{day}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version in given day", authorizations = {@Authorization(value = "apiKey")})
     public List<WorkoutDto> getAllWorkoutsByTrainingScheduleIdAndVersionAndDay(@PathVariable Long id, @PathVariable Integer version, @PathVariable Integer day) {
-        LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version);
+        LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version + "; and day: " + day);
         List<TrainingScheduleWorkout> trainingScheduleWorkouts;
         try {
-            trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
+            trainingScheduleWorkouts = iTrainingScheduleService.findByTrainingScheduleIdVersionAndDay(id, version, day);
             List<WorkoutDto> workoutDtos = new ArrayList<>();
             for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
-                if (trainingScheduleWorkouts.get(i).getDay().equals(day)){
                     Workout w = iWorkoutService.findByIdAndVersion(trainingScheduleWorkouts.get(i).getWorkoutId(), trainingScheduleWorkouts.get(i).getWorkoutVersion());
                     workoutDtos.add(workoutMapper.workoutToWorkoutDto(w));
-                }
             }
             return workoutDtos;
         } catch (ServiceException e) {
-            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version);
+            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version + "; and day: " + day);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
