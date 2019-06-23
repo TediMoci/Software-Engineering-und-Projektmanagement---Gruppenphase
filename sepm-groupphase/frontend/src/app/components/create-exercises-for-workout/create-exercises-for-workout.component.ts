@@ -28,8 +28,10 @@ export class CreateExercisesForWorkoutComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   crop: boolean = false;
-  constructor(private workoutExercisesComponent: WorkoutExercisesComponent , private editWorkoutExercisesComponent: EditWorkoutExercisesComponent, private createExerciseService: CreateExerciseService , private formBuilder: FormBuilder, private router: Router ) {
-  }
+  constructor(private workoutExercisesComponent: WorkoutExercisesComponent,
+              private editWorkoutExercisesComponent: EditWorkoutExercisesComponent,
+              private createExerciseService: CreateExerciseService ,
+              private formBuilder: FormBuilder, private router: Router ) { }
 
   ngOnInit() {
     localStorage.setItem('previousRoute', JSON.stringify('/create-exercise-for-workout'));

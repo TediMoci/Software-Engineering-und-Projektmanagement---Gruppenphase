@@ -5,7 +5,6 @@ import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
 import {WorkoutWithRating} from '../../dtos/workout-with-rating';
 import {GetByIDService} from '../../services/get-by-id.service';
-import {version} from 'punycode';
 import {RatingService} from '../../services/rating.service';
 
 @Component({
