@@ -815,16 +815,6 @@ public class TrainingScheduleIntegrationTest {
     }
 
     @Test
-    public void givenTrainingScheduleWithMoreThan70PercentExOfCategoryStrengthAndOneWithLessThan70PercentAndChangeAdaptively_thenChangeOfStrengthFocusedIsLower(){
-
-    }
-
-    @Test
-    public void givenExercisesOfCategoryEnduranceAndOtherWithOneRepetitionAndOneSetAndChangeAdaptively_thenExercisesWontBeChanged(){
-
-    }
-
-    @Test
     public void whenTrainingScheduleEnds_ThenGetCorrectlyCalculatedValuesForStatistic (){
         ActiveTrainingScheduleDto activeTrainingScheduleDto =  postTsAndActiveTs().getBody();
 
