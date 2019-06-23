@@ -46,7 +46,7 @@ public class Workout {
     @Column(nullable = false, name = "is_private")
     private Boolean isPrivate = false;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workout")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "workout")
     private List<WorkoutExercise> exercises;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "workout")
