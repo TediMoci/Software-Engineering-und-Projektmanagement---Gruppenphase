@@ -64,9 +64,12 @@ export class DudeProfileComponent implements OnInit {
   // Internal logic and ngModels
   doneChecked: boolean;
   selectedDay: number;
+  noSchedule: boolean = false;
 
-  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService, private trainingScheduleService: TrainingScheduleService, private authService: AuthService) {}
+  constructor(private globals: Globals, private profileService: ProfileService, private workoutService: WorkoutService,
+              private trainingScheduleService: TrainingScheduleService, private authService: AuthService) {}
   ngOnInit() {
+
     this.dateNow = new Date();
     console.log('Current Date: ' + this.dateNow);
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
@@ -110,6 +113,7 @@ export class DudeProfileComponent implements OnInit {
     this.profileService.getActiveSchedule(this.dude.id).subscribe(
       (data) => {
         console.log('checking for active training schedule ' + JSON.stringify(data));
+        this.noSchedule = false;
         this.activeTs = data;
         console.log(this.activeTs);
         this.ActiveTsId = this.activeTs.trainingScheduleId;
@@ -214,6 +218,7 @@ export class DudeProfileComponent implements OnInit {
       },
       error => {
         this.error = error;
+        this.noSchedule = true;
       }
     );
   }
@@ -325,6 +330,7 @@ export class DudeProfileComponent implements OnInit {
       .subscribe(() => {
           console.log('ended schedule successfully');
           this.tsTrue = false;
+          this.noSchedule = true;
         },
         error => {
           this.error = error;
