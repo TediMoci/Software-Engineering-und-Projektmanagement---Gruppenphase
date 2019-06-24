@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import java.util.List;
 
@@ -166,4 +167,13 @@ public interface ITrainingScheduleService {
      * @throws ServiceException if an error occurred while trying to rate the TrainingSchedule
      */
     void deleteTrainingScheduleRating(Long dudeId, Long trainingScheduleId) throws ServiceException;
+
+    /**
+     * @param id of training Schedule
+     * @param version of training Schedule
+     * @param day of workouts
+     * @return List of TrainingScheduleWorkouts used in the given TrainingSchedule in the given day
+     * @throws ServiceException if an error occurred while trying to find all TrainingScheduleWorkouts in the given trainingScheduleWorkout
+     */
+    List<TrainingScheduleWorkout> findByTrainingScheduleIdVersionAndDay(Long id, Integer version, Integer day) throws ServiceException;
 }

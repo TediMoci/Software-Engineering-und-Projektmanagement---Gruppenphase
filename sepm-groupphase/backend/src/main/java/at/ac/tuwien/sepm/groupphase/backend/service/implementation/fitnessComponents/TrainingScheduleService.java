@@ -393,6 +393,21 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
+    public List<TrainingScheduleWorkout> findByTrainingScheduleIdVersionAndDay(Long id, Integer version, Integer day) throws ServiceException {
+        LOGGER.info("Entering findByTrainingScheduleIdVersionAndDay with id: " + id + "; and version: " + version + "; and day: " + day);
+        try {
+            iTrainingScheduleRepository.findByIdAndVersion(id, version).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            return iTrainingScheduleWorkoutRepository.findByTrainingScheduleIdVersionAndDay(id, version, day);
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public TrainingSchedule update(long id, TrainingSchedule newTraining) throws ServiceException {
         LOGGER.info("Updating training schedule with id: " + id);
         try {

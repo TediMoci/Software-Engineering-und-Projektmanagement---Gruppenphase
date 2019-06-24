@@ -39,11 +39,14 @@
         <p>{{description}}</p>
         <h3>Our Courses</h3>
         <p>Click the course name to find out more!</p>
+        <div class="courses">
         <ul>
+
           <li *ngFor='let element of courses'>
           <a [routerLink]="['/course']" (click)="setChosenCourse(element)" class="btn3 btn-link">{{element.name}}</a>
           </li>
         </ul>
+        </div>
       </div>
 
       <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal" (change)="fileChangeEvent($event)" />
