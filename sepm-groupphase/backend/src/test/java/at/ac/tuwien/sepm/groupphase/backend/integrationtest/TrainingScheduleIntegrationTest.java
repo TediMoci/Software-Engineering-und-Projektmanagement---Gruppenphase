@@ -543,14 +543,14 @@ public class TrainingScheduleIntegrationTest {
 
     @Test(expected = HttpClientErrorException.BadRequest.class)
     public void whenGetAllWorkoutsByTrainingScheduleIdAndVersionAndDay_withInvalidIdAndVersion_thenStatusBAD_REQUEST(){
-        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/100/100/workouts/1", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+        ResponseEntity<WorkoutDto[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1000/100/workouts/1", HttpMethod.GET, null, new ParameterizedTypeReference<WorkoutDto[]>(){});
     }
 
     @Test
     public void whenGetAllWorkoutsByTrainingScheduleIdAndVersionAndDay_withInvalidDay_thenResponseArrayEmpty(){
-        ResponseEntity<TrainingScheduleWorkoutDtoOut[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
-            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1/1/workouts/100", HttpMethod.GET, null, new ParameterizedTypeReference<TrainingScheduleWorkoutDtoOut[]>(){});
+        ResponseEntity<WorkoutDto[]> foundTrainingScheduleWorkouts = REST_TEMPLATE
+            .exchange(BASE_URL + port + TRAININGSCHEDULE_ENDPOINT + "/1/1/workouts/100", HttpMethod.GET, null, new ParameterizedTypeReference<WorkoutDto[]>(){});
         assertEquals(0, foundTrainingScheduleWorkouts.getBody().length);
     }
 
