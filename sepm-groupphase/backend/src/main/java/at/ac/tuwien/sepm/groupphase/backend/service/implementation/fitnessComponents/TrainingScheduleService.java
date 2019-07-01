@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingS
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
+import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.*;
 import at.ac.tuwien.sepm.groupphase.backend.enumerations.Category;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -24,11 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -42,6 +43,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     private final IDudeRepository iDudeRepository;
     private final IWorkoutExerciseRepository iWorkoutExerciseRepository;
     private final IExerciseRepository iExerciseRepository;
+    private final IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository;
     private final TrainingScheduleValidator trainingScheduleValidator;
     private final TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator;
     private final IWorkoutService workoutService;
@@ -85,7 +87,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     // ----------------------------------------- end of variables for training schedule adaption -----------------------------------------
 
-    public TrainingScheduleService(IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.workoutService = workoutService;
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
@@ -95,6 +97,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         this.iActiveTrainingScheduleRepository = iActiveTrainingScheduleRepository;
         this.iExerciseDoneRepository = iExerciseDoneRepository;
         this.iDudeRepository = iDudeRepository;
+        this.iFinishedTrainingScheduleRepository = iFinishedTrainingScheduleRepository;
         this.trainingScheduleValidator = trainingScheduleValidator;
         this.trainingScheduleWorkoutValidator = trainingScheduleWorkoutValidator;
     }
@@ -250,13 +253,67 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     public void deleteActive(Long dudeId) throws ServiceException {
         LOGGER.info("Entering deleteActive with dudeId: " + dudeId);
         ActiveTrainingSchedule activeTrainingSchedule;
+
+        int strength = 0;
+        int endurance = 0;
+        int other = 0;
+        double strengthPercent;
+        double endurancePercent;
+        double otherPercent;
+        double totalCalories = 0;
+        double totalDuration = 0;
+        double totalHours;
+        int totalDays ;
+        int totalIntervalRepetitions;
+
         try {
             activeTrainingSchedule = iDudeRepository.findById(dudeId).get().getActiveTrainingSchedule();
         } catch (NoSuchElementException e) {
             throw new ServiceException(e.getMessage());
         }
+        try{
+            for (int i = 0; i < activeTrainingSchedule.getDone().size(); i++) {
+                if (activeTrainingSchedule.getDone().get(i).getDone()){
+                    totalCalories += activeTrainingSchedule.getDone().get(i).getWorkout().getCalorieConsumption();
+                    totalDuration += activeTrainingSchedule.getDone().get(i).getWorkoutExercise().getExDuration();
+                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Strength){
+                        strength++;
+                    }
+                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Endurance){
+                        endurance++;
+                    }
+                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Other){
+                        other++;
+                    }
+                }
+            }
 
-        // TODO (Amir): stat-calculations and -saving for activeTrainingSchedule
+            totalHours = totalDuration/60.0;
+            totalDays = (int)totalHours/24;
+            strengthPercent = ((double)strength/ activeTrainingSchedule.getDone().size())*100.0;
+            endurancePercent = ((double)endurance/ activeTrainingSchedule.getDone().size())*100.0;
+            otherPercent = ((double)other/ activeTrainingSchedule.getDone().size())*100.0;
+            LocalDate startDate = LocalDate.from(activeTrainingSchedule.getStartDate());
+            totalIntervalRepetitions = (int)startDate.until(LocalDate.now(), ChronoUnit.DAYS)/activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
+
+            FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder result = new FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder();
+            result.dudeId(activeTrainingSchedule.getDude().getId());
+            result.trainingScheduleId(activeTrainingSchedule.getTrainingScheduleId());
+            result.trainingScheduleVersion(activeTrainingSchedule.getTrainingScheduleVersion());
+            result.trainingSchedule(activeTrainingSchedule.getTrainingSchedule());
+            result.dude(activeTrainingSchedule.getDude());
+            result.totalHours(totalHours);
+            result.totalDays(totalDays);
+            result.totalCalorieConsumption(totalCalories);
+            result.totalIntervalRepetitions(totalIntervalRepetitions);
+            result.strengthPercent(strengthPercent);
+            result.endurancePercent(endurancePercent);
+            result.otherPercent(otherPercent);
+
+            iFinishedTrainingScheduleRepository.save(result.build());
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
 
         try {
             // delete exerciseDone from to delete activeTrainingSchedule
