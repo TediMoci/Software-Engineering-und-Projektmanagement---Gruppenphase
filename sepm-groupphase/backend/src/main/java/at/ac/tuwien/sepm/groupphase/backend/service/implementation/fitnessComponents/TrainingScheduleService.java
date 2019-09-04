@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
+import at.ac.tuwien.sepm.groupphase.backend.entity.compositeKeys.WorkoutExerciseKey;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
@@ -25,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -136,7 +139,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         activeTrainingSchedule.setStartDate(LocalDate.now());
         List<Boolean> hasBeenAdapted = new ArrayList<>();
-        for (int i = 0; i < activeTrainingSchedule.getIntervalRepetitions()-1; i++) {
+        for (int i = 0; i < activeTrainingSchedule.getIntervalRepetitions() - 1; i++) {
             hasBeenAdapted.add(false);
         }
         activeTrainingSchedule.setHasBeenAdapted(hasBeenAdapted);
@@ -288,22 +291,22 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     copiedTs.add(activeTrainingSchedule.getDone().get(i).getTrainingSchedule());
                 }
 
-                if (activeTrainingSchedule.getDone().get(i).getDone()){
+                if (activeTrainingSchedule.getDone().get(i).getDone()) {
                     totalCalories += activeTrainingSchedule.getDone().get(i).getWorkout().getCalorieConsumption();
                     totalDuration += activeTrainingSchedule.getDone().get(i).getWorkoutExercise().getExDuration();
                     totalDays++;
-                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Strength){
+                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Strength) {
                         strength++;
                     }
-                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Endurance){
+                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Endurance) {
                         endurance++;
                     }
-                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Other){
+                    if (activeTrainingSchedule.getDone().get(i).getExercise().getCategory() == Category.Other) {
                         other++;
                     }
                 }
 
-                if(!foundOriginal && activeTrainingSchedule.getDone().get(i).getDay() == 1) {
+                if (!foundOriginal && activeTrainingSchedule.getDone().get(i).getDay() == 1) {
                     originalTs = activeTrainingSchedule.getDone().get(i).getTrainingSchedule();
                     foundOriginal = true;
                 }
@@ -311,12 +314,12 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 iExerciseDoneRepository.delete(activeTrainingSchedule.getDone().get(i));
             }
 
-            totalHours = totalDuration/60.0;
-            strengthPercent = ((double)strength/ totalDays)*100.0;
-            endurancePercent = ((double)endurance/ totalDays)*100.0;
-            otherPercent = ((double)other/ totalDays)*100.0;
+            totalHours = totalDuration / 60.0;
+            strengthPercent = totalDays == 0 ? 0 : ((double) strength / totalDays) * 100.0;
+            endurancePercent = totalDays == 0 ? 0 : ((double) endurance / totalDays) * 100.0;
+            otherPercent = totalDays == 0 ? 0 : ((double) other / totalDays) * 100.0;
             LocalDate startDate = LocalDate.from(activeTrainingSchedule.getStartDate());
-            totalIntervalRepetitions = (int)startDate.until(LocalDate.now(), ChronoUnit.DAYS)/originalTs.getIntervalLength();
+            totalIntervalRepetitions = (int) startDate.until(LocalDate.now(), ChronoUnit.DAYS) / originalTs.getIntervalLength();
 
             FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder result = new FinishedTrainingScheduleStats.FinishedTrainingScheduleStatsBuilder();
             result.trainingSchedule(originalTs);
@@ -482,7 +485,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     // ----------------------------------------- start of methods for adapting training schedule automatically -----------------------------------------
     @Override
-    public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException {
+    public ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude, int interval) throws ServiceException {
 
         resetVariables();
         // old trainingSchedule
@@ -492,7 +495,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         selfAssessment = dude.getSelfAssessment();
         intervalRepetitions = activeSchedule.getIntervalRepetitions();
 
-        t = ((Period.between(startDate, LocalDate.now()).getDays()) / oldTs.getIntervalLength()) + 1;
+        //t = ((Period.between(startDate, LocalDate.now()).getDays()) / oldTs.getIntervalLength()) + 1;
+        t = interval;
         LOGGER.debug("IntervalNumber: " + t);
         if (t == 1) {
             return activeSchedule;
@@ -642,7 +646,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
         List<Boolean> hasBeenAdapted = activeSchedule.getHasBeenAdapted();
         LocalDate tempDate = LocalDate.from(activeSchedule.getStartDate());
-        hasBeenAdapted.set((int)(tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / ts.getIntervalLength())-1, true);
+        hasBeenAdapted.set((int) (tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / ts.getIntervalLength()) - 1, true);
         builderATs.hasBeenAdapted(hasBeenAdapted);
 
         try {
@@ -704,14 +708,14 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                     if (repsHelpIncrease > 100) {
                         // if maximum number of repetitions is exceeded: set default number of repetitions and increase number of sets by 1
                         if (e.getSets() < 15) {
-                            e.setRepetitions((int) Math.round((double)(repsHelpIncrease * e.getSets())/(e.getSets() + 1)));
+                            e.setRepetitions((int) Math.round((double) (repsHelpIncrease * e.getSets()) / (e.getSets() + 1)));
                             e.setSets(e.getSets() + 1);
                         } else {
                             e.setRepetitions(100);
                         }
                     } else {
                         e.setRepetitions(repsHelpIncrease);
-                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions(): 1440);
+                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) < 1440 ? calculateDurationPerRepetition * e.getRepetitions() : 1440);
                     }
                 } else {
                     if (repsHelpDecrease <= 1) {
@@ -721,7 +725,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                         }
                     } else {
                         e.setRepetitions(repsHelpDecrease);
-                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) > 1 ? calculateDurationPerRepetition * e.getRepetitions(): 1);
+                        e.setExDuration((calculateDurationPerRepetition * e.getRepetitions()) > 1 ? calculateDurationPerRepetition * e.getRepetitions() : 1);
                     }
                 }
 
@@ -744,8 +748,8 @@ public class TrainingScheduleService implements ITrainingScheduleService {
                 totalCalories += workoutHelp.getCaloriesConsumption() * ex.getRepetitions() * ex.getSets();
             }
             totalCalories = Math.round(totalCalories);
-            totalCalories = totalCalories < 1? 1 : totalCalories;
-            totalCalories = totalCalories > 9999? 9999 : totalCalories;
+            totalCalories = totalCalories < 1 ? 1 : totalCalories;
+            totalCalories = totalCalories > 9999 ? 9999 : totalCalories;
             workoutHelp.getWorkout().setCalorieConsumption(totalCalories);
             totalCalories = 0;
             LOGGER.debug("Update workout after adaptive change");
@@ -889,6 +893,20 @@ public class TrainingScheduleService implements ITrainingScheduleService {
         this.intervalLength = 0;
         this.selfAssessment = 0;
         this.numOfExPerDay = new int[]{0, 0, 0, 0, 0, 0, 0};
+    }
+
+    @Override
+    public List<ExerciseDone> findExDoneByActiveTrainingScheduleId(Long activeTrainingScheduleId) throws ServiceException {
+        try {
+            List<ExerciseDone> eDone = iExerciseDoneRepository.findByActiveTrainingScheduleId(activeTrainingScheduleId);
+            List<WorkoutExercise> waEx = new ArrayList<>();
+            for (ExerciseDone e : eDone) {
+                e.setWorkoutExercise(iWorkoutExerciseRepository.findById(new WorkoutExerciseKey(e.getExerciseId(), e.getExerciseVersion(), e.getWorkoutId(), e.getWorkoutVersion())).get());
+            }
+            return eDone;
+        } catch (DataAccessException e) {
+            throw new ServiceException(e.getMessage());
+        }
     }
 
     // ----------------------------------------- end of methods for adapting training schedule automatically -----------------------------------------

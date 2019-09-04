@@ -299,7 +299,7 @@ public class DudeEndpoint {
         if (activeTrainingSchedule.getAdaptive()
             && ((tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) > 0)) {
 
-            if (!activeTrainingSchedule.getHasBeenAdapted().get((int)(tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength())-1)) {
+            if (!activeTrainingSchedule.getHasBeenAdapted().get((int) (tempDate.until(LocalDate.now(), ChronoUnit.DAYS) / activeTrainingSchedule.getTrainingSchedule().getIntervalLength()) - 1)) {
                 Dude dude;
                 try {
                     dude = iDudeService.findDudeById(id);
@@ -307,7 +307,34 @@ public class DudeEndpoint {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find dude with id " + id);
                 }
                 try {
-                    return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude));
+                    // check if previous intervals have been skipped - user has not been logged in and previous exDone and adaptive change have to be generated
+                    List<ExerciseDone> allExDone = activeTrainingSchedule.getDone();
+                    List<ExerciseDone> exDoneForIntervalOne = new ArrayList<>();
+                    int intervalLength = activeTrainingSchedule.getTrainingSchedule().getIntervalLength();
+                    int maxDay = 0;
+                    for (ExerciseDone eDone : allExDone) {
+                        if (eDone.getDay() > maxDay) {
+                            maxDay = eDone.getDay();
+                        }
+                        if (eDone.getDay() <= intervalLength) {
+                            exDoneForIntervalOne.add(eDone);
+                        }
+                    }
+                    int currentInterval = ((Period.between(activeTrainingSchedule.getStartDate(), LocalDate.now()).getDays()) / intervalLength) + 1;
+                    if (!(allExDone.size() == (exDoneForIntervalOne.size() * (currentInterval - 1)))) {
+                        int lastInterval = maxDay / intervalLength;
+                        lastInterval = lastInterval <= 0? 1 : lastInterval;
+                        for (int i = lastInterval + 1; i < currentInterval; i++) {
+                            LOGGER.debug("Update trainingSchedule for missed intervals");
+                            activeTrainingSchedule = iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude, i);
+                            activeTrainingSchedule.setDude(dude);
+                            activeTrainingSchedule.setDone(iTrainingScheduleService.findExDoneByActiveTrainingScheduleId(activeTrainingSchedule.getId()));
+                            activeTrainingSchedule.setTrainingSchedule(iTrainingScheduleService.findByIdAndVersion(activeTrainingSchedule.getTrainingScheduleId(), activeTrainingSchedule.getTrainingScheduleVersion()));
+                        }
+                    }
+                    LOGGER.debug("Update schedule for current interval");
+                    return trainingScheduleMapper.activeTrainingScheduleToActiveTrainingScheduleDto(iTrainingScheduleService.calculatePercentageOfChangeForInterval(activeTrainingSchedule, dude, currentInterval));
+
                 } catch (ServiceException e) {
                     throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Could not adapt activeTrainingSchedule with id " + activeTrainingSchedule.getId());
                 }
@@ -342,7 +369,7 @@ public class DudeEndpoint {
         List<FinishedTrainingScheduleStats> stats;
         try {
             stats = iDudeService.findDudeById(id).getFinishedTrainingScheduleStats();
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             LOGGER.error("Could not getStatisticsByDudeId with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

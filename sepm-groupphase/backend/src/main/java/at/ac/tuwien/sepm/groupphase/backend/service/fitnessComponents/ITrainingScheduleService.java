@@ -69,20 +69,29 @@ public interface ITrainingScheduleService {
 
     /**
      *
-     * @param activeSchedule
-     * @param dude
-     * @return
-     * @throws ServiceException
+     * @param activeTrainingScheduleId of the ExerciseDones to be found
+     * @return List of ExerciseDone belonging to the achtiveTrainingSchedule with given id
+     * @throws ServiceException if an error occured while trying to find the ExerciseDone in the system
      */
-    ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude) throws ServiceException;
+    List<ExerciseDone> findExDoneByActiveTrainingScheduleId(Long activeTrainingScheduleId) throws ServiceException;
+
+        /**
+         * adapt an activeTrainingSchedule according to an adaptive change algorithm
+         * @param activeSchedule on which the adaptive change should be applied
+         * @param dude who the activeSchedule belongs to
+         * @param interval current repetition of the interval
+         * @return altered ActiveTrainingSchedule
+         * @throws ServiceException if an error occured while trying to change the activeTrainingSchedule adaptively
+         */
+    ActiveTrainingSchedule calculatePercentageOfChangeForInterval(ActiveTrainingSchedule activeSchedule, Dude dude, int interval) throws ServiceException;
 
     /**
      *
-     * @param activeTs
-     * @param dudeId
-     * @param oldTs
-     * @return
-     * @throws ServiceException
+     * @param activeTs activeTrainingSchedule the copy should belong to
+     * @param dudeId of the dude who the activeTrainingSchedule belongs to
+     * @param oldTs trainingSchedule used in the last interval
+     * @return copy of the given old trainingSchedule with new data that has been saved to the database containing the copied content
+     * @throws ServiceException if an error occured while trying to copy the given trainingSchedule
      */
     TrainingSchedule copyOldTrainingSchedule(ActiveTrainingSchedule activeTs, Long dudeId, TrainingSchedule oldTs) throws ServiceException;
 

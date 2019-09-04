@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Entering save for: " + trainingScheduleDto);
         TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
         try {
-            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days,duration,minTarget,maxTarget,trainingSchedule));
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days, duration, minTarget, maxTarget, trainingSchedule));
         } catch (ServiceException e) {
             LOGGER.error("Could not save: " + trainingScheduleDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -118,7 +119,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Deleting Training Schedule with id " + id);
         try {
             iTrainingScheduleService.delete(id);
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             LOGGER.error("Could not delete Training Schedule with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
@@ -130,7 +131,7 @@ public class TrainingScheduleEndpoint {
         LOGGER.info("Updating workout with id: " + id);
         try {
             return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.update(id, trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(newTrainingSchedule)));
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             LOGGER.error("Could not update Training Schedule with id: " + id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
