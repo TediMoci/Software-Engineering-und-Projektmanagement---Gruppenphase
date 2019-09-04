@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Course;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.ICourseMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ICourseService;
+import at.ac.tuwien.sepm.groupphase.backend.service.IFileStorageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -24,11 +26,13 @@ import java.util.List;
 public class CourseEndpoint {
 
     private final ICourseService iCourseService;
+    private final IFileStorageService iFileStorageService;
     private final ICourseMapper courseMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseEndpoint.class);
 
-    public CourseEndpoint(ICourseService iCourseService, ICourseMapper courseMapper) {
+    public CourseEndpoint(ICourseService iCourseService, IFileStorageService iFileStorageService, ICourseMapper courseMapper) {
         this.iCourseService = iCourseService;
+        this.iFileStorageService = iFileStorageService;
         this.courseMapper = courseMapper;
     }
 
@@ -132,6 +136,50 @@ public class CourseEndpoint {
             iCourseService.delete(id);
         } catch (ServiceException e){
             LOGGER.error("Could not delete course with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/{id}/uploadImage")
+    @ApiOperation(value = "Upload image for Course", authorizations = {@Authorization(value = "apiKey")})
+    public String uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        LOGGER.info("Entering uploadImage with id: " + id);
+        String fileName = "course_" + id;
+        if (file.getContentType().substring(file.getContentType().length() - 3).equals("png")) {
+            fileName += ".png";
+        } else {
+            fileName += ".jpg";
+        }
+        iFileStorageService.storeFile(fileName, file);
+
+        try {
+            return iCourseService.updateImagePath(id, fileName);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not updateImagePath with id: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{courseId}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Dude with given id bookmarks Course with given id", authorizations = {@Authorization(value = "apiKey")})
+    public void saveCourseBookmark(@PathVariable Long dudeId, @PathVariable Long courseId) {
+        LOGGER.info("Entering saveCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
+        try {
+            iCourseService.saveCourseBookmark(dudeId, courseId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{courseId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with given id deletes bookmark for Course with given id", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteCourseBookmark(@PathVariable Long dudeId, @PathVariable Long courseId) {
+        LOGGER.info("Entering deleteCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
+        try {
+            iCourseService.deleteCourseBookmark(dudeId, courseId);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteCourseBookmark with dudeId: " + dudeId + "; courseId: " + courseId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }

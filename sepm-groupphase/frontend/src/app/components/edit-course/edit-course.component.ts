@@ -14,8 +14,8 @@ import {Exercise} from '../../dtos/exercise';
 export class EditCourseComponent implements OnInit {
 
   error: any;
-  imagePath: string = 'assets/img/kugelfisch2.jpg';
-  imagePath2: string = 'assets/img/exercise.png';
+  imagePath: string;
+  imagePath2: string;
   userName: string;
   submitted: boolean = false;
   courseName: string;
@@ -23,6 +23,11 @@ export class EditCourseComponent implements OnInit {
   oldCourse: Course;
   editCourseForm: FormGroup;
   fitnessProvider: FitnessProvider;
+
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private editCourseService: EditCourseService, private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {
@@ -31,6 +36,8 @@ export class EditCourseComponent implements OnInit {
     this.oldCourse = JSON.parse(localStorage.getItem('selectedCourse'));
 
     this.userName = this.fitnessProvider.name;
+    this.imagePath = this.fitnessProvider.imagePath;
+    this.imagePath2 = this.oldCourse.imagePath;
     this.editCourseForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]]
@@ -48,7 +55,8 @@ export class EditCourseComponent implements OnInit {
       this.oldCourse.id,
       this.editCourseForm.controls.name.value,
       this.editCourseForm.controls.description.value,
-      this.oldCourse.creatorId
+      this.oldCourse.creatorId,
+      this.oldCourse.imagePath
     );
 
     if (this.editCourseForm.invalid) {
@@ -59,6 +67,16 @@ export class EditCourseComponent implements OnInit {
     this.editCourseService.editCourse(course, this.oldCourse).subscribe(
       (data) => {
         localStorage.setItem('selectedCourse', JSON.stringify(data));
+        if (this.editCourseService.getFileStorage() !== undefined) {
+          console.log(this.editCourseService.getFileStorage());
+          this.editCourseService.uploadPictureForCourse(data.id, this.editCourseService.getFileStorage()).subscribe(
+            () => {
+            },
+            error => {
+              this.error = error;
+            }
+          );
+        }
         this.router.navigate(['/myCourses']);
       },
       error => {
@@ -66,10 +84,38 @@ export class EditCourseComponent implements OnInit {
       }
     );
   }
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
 
+  }
+
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    this.imagePath2 = files.base64;
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
+    console.log(imageFile);
+    this.editCourseService.setFileStorage(imageFile);
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
   vanishError() {
     this.error = false;
   }
-
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
+  }
 }
 

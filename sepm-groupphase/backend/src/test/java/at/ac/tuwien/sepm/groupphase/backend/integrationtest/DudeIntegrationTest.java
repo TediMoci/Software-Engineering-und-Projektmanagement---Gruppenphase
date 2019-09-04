@@ -151,7 +151,6 @@ public class DudeIntegrationTest  {
         assertEquals(response.getBody().size(),2);
     }
 
-
     @Test
     public void givenDude_whenFindDudeById_thenGetDude(){
         Long i = postDude(testDude1);

@@ -14,7 +14,7 @@ import {WorkoutExercise} from '../../dtos/workoutExercise';
 })
 export class EditWorkoutExercisesComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   registerForm: FormGroup;
@@ -61,10 +61,12 @@ export class EditWorkoutExercisesComponent implements OnInit {
                 this.gottenExercises[counter].equipment,
                 this.gottenExercises[counter].muscleGroup,
                 this.gottenExercises[counter].category,
-                this.gottenExercises[counter].creatorId),
+                this.gottenExercises[counter].creatorId,
+                this.gottenExercises[counter].imagePath),
                 this.gottenExercises[counter].repetitions,
                 this.gottenExercises[counter].sets,
-                this.gottenExercises[counter].exDuration));
+                this.gottenExercises[counter].exDuration,
+               ));
         }
       }
       localStorage.setItem('firstAccess', JSON.stringify('false'));
@@ -79,6 +81,7 @@ export class EditWorkoutExercisesComponent implements OnInit {
     });
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.workoutExForm = this.formBuilder.group({
       repetitions: ['', [Validators.required]],
       sets: ['', [Validators.required]],

@@ -31,6 +31,9 @@ export class FindService {
     if (exerciseFilter.category != null) {
       params = params.set('category', exerciseFilter.category);
     }
+    if (exerciseFilter.muscle != null) {
+      params = params.set('muscleGroup', exerciseFilter.muscle);
+    }
 
     console.log('get all exercises with params: ' + params.toString());
 
@@ -85,7 +88,7 @@ export class FindService {
     this.httpClient.put(this.BaseUri + '/dudes/' + dudeId + '/follow/' + fitnessProviderId, null).subscribe();
   }
 
-  getAllDudesFiltered(dudeFilter: DudeFilter): Observable<Dude[]>{
+  getAllDudesFiltered(dudeFilter: DudeFilter): Observable<Dude[]> {
     console.log('get all dudes filtered');
     let params = new HttpParams();
     if (dudeFilter.filter != null) {
@@ -97,5 +100,10 @@ export class FindService {
     console.log('get all dudes with params: ' + params.toString());
 
     return this.httpClient.get<Dude[]>(this.BaseUri + '/dudes/filtered', {params: params});
+  }
+
+  getOneFitnessProvider(creatorId: number): Observable<FitnessProvider> {
+    console.log('Get creator of Course with id: ' + creatorId + ', ' + this.BaseUri + '/fitnessProvider/' + creatorId);
+    return  this.httpClient.get<FitnessProvider>(this.BaseUri + '/fitnessProvider/' + creatorId);
   }
 }

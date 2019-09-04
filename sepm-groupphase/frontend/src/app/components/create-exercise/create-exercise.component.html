@@ -15,7 +15,7 @@
         <div class="row-sm-1"></div>
         <div class="row-sm-10">
           <h4 style="text-decoration: underline; text-align: center">{{userName}}</h4>
-          <img class="img-exercise" src="{{imagePathExercise}}" alt="exercise image">
+          <img class="img-exercise" [src]="imgURL" height="200" *ngIf="imgURL" alt="exercise image" >
         </div>
       </div>
       <div class="col-sm-9">
@@ -80,15 +80,54 @@
               </div>
 
               <div class="form-group">
-                <label for="muscleGroupExercise">Muscle Group</label>
-                <input type="text" name="muscleGroupExercise" class="form-control" id="muscleGroupExercise" formControlName="muscleGroupExercise"
-                       aria-describedby="muscleGroupExercise" ngModel="No muscle group given">
+                <mat-form-field>
+                  <mat-label>Muscle Group*</mat-label >
+                  <mat-select formControlName="muscleGroupExercise">
+                    <mat-option *ngFor="let muscle of muscleGroup" [value]="muscle">
+                      {{muscle}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div *ngIf="submitted && !!registerForm.controls.muscleGroupExercise.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="!!registerForm.controls.muscleGroupExercise.errors.required">Muscle Group is
+                    required!
+                  </small>
+                </div>
               </div>
           </form>
 
-            <button type="button" (click)="addExercise()" class="btn btn-success float-right">Add</button>
-            <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+          <input #file type="file" style="display: none" accept='image/*' data-toggle="modal" data-target="#cropModal" (change)="fileChangeEvent($event)" />
+          <div class="modal" id="cropModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+
+                <div class="modal-header">
+                  <h4 class="modal-title">Select a picture to upload for the exercise</h4>
+                </div>
+                <span  style="color:orange;  position: center; margin-left: auto; margin-right: auto; " *ngIf="message && crop">{{message}}</span>
+                <image-cropper
+                  [imageChangedEvent]="imageChangedEvent"
+                  [maintainAspectRatio]="true"
+                  [resizeToWidth]="0"
+                  (imageCropped)="imageCropped($event)"
+                  (imageLoaded)="imageLoaded()"
+                  (loadImageFailed)="loadImageFailed()"
+                ></image-cropper>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  <button (click)= "cropPicture()" class="btn btn-success" data-dismiss="modal" >Crop </button>
+                </div>
+              </div>
+            </div>
           </div>
+
+        <div>
+          <button class="btn btn-upload" (click)="file.click()">Upload Picture</button>
+        </div>
+
+          <button (click)="addExercise()" class="btn btn-success float-right">Add</button>
+            <a [routerLink]="['/create']" class="btn btn-link">Cancel</a>
+        </div>
         <p><small>Fields marked with * are mandatory!</small></p>
         </div>
     </div>

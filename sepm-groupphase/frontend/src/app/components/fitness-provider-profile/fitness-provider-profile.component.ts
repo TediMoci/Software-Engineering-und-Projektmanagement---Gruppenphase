@@ -13,7 +13,7 @@ import {AuthService} from '../../services/auth.service';
 
 export class FitnessProviderProfileComponent implements OnInit {
   error: any;
-  imagePath: string = 'assets/img/kugelfisch2.jpg';
+  imagePath: string;
   userName: string;
   address: string;
   email: string;
@@ -23,11 +23,25 @@ export class FitnessProviderProfileComponent implements OnInit {
   courses: Course[];
   description: string;
   currentUser: FitnessProvider;
+
+  message: string;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  crop: boolean = false;
   constructor(private fitnessProviderProfile: FitnessProviderProfileService, private ownCoursesService: OwnCoursesService, private authService: AuthService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.authService.getUserByNameFromFitnessProvider(this.currentUser.name).subscribe((data) => {
+        localStorage.setItem('currentUser', JSON.stringify(data));
+      },
+      error => {
+        this.error = error;
+      }
+    );
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.currentUser.name;
+    this.imagePath = this.currentUser.imagePath;
     this.address = this.currentUser.address;
     this.email = this.currentUser.email;
     this.phoneNumber = this.currentUser.phoneNumber;
@@ -60,5 +74,39 @@ export class FitnessProviderProfileComponent implements OnInit {
 
   vanishError() {
     this.error = false;
+  }
+
+  imageLoaded() {
+    // show cropper
+  }
+  loadImageFailed() {
+    // show message
+    this.crop = true;
+    this.message = 'Only images are supported.';
+
+  }
+  uploadPicture(files) {
+    if (files.length === 0) {
+      return;
+    }
+    console.log(files.file);
+    const imageFile = new File([files.file], 'file', { type: files.file.type });
+    this.fitnessProviderProfile.uploadPictureForFitnessProvider(this.currentUser.id, imageFile).subscribe(data => {
+        console.log('upload picture' + data);
+      },
+      error => {
+        this.error = error;
+      }
+    );
+  }
+  fileChangeEvent(event: any): void {
+    this.crop = false;
+    this.imageChangedEvent = event;
+  }
+  imageCropped(image: string) {
+    this.croppedImage = image;
+  }
+  cropPicture() {
+    this.uploadPicture(this.croppedImage);
   }
 }

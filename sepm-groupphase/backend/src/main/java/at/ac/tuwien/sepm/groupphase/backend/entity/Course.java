@@ -17,12 +17,15 @@ public class Course {
     @Column(nullable = false, length = 3000)
     private String description = "No description given.";
 
+    @Column(nullable = false)
+    private String imagePath = "/assets/img/exercise.png";
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fitness_provider_id")
     private FitnessProvider creator;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "courses")
-    private List<Dude> dudes;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "courseBookmarks")
+    private List<Dude> bookmarkDudes;
 
     public Long getId() {
         return id;
@@ -48,6 +51,14 @@ public class Course {
         this.description = description;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public FitnessProvider getCreator() {
         return creator;
     }
@@ -56,12 +67,12 @@ public class Course {
         this.creator = creator;
     }
 
-    public List<Dude> getDudes() {
-        return dudes;
+    public List<Dude> getBookmarkDudes() {
+        return bookmarkDudes;
     }
 
-    public void setDudes(List<Dude> dudes) {
-        this.dudes = dudes;
+    public void setBookmarkDudes(List<Dude> bookmarkDudes) {
+        this.bookmarkDudes = bookmarkDudes;
     }
 
     public static CourseBuilder builder() {
@@ -102,8 +113,9 @@ public class Course {
         private Long id;
         private String name;
         private String description;
+        private String imagePath;
         private FitnessProvider creator;
-        private List<Dude> dudes;
+        private List<Dude> bookmarkDudes;
 
         public CourseBuilder() {
         }
@@ -123,13 +135,18 @@ public class Course {
             return this;
         }
 
+        public CourseBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public CourseBuilder creator(FitnessProvider creator) {
             this.creator = creator;
             return this;
         }
 
-        public CourseBuilder dudes(List<Dude> dudes) {
-            this.dudes = dudes;
+        public CourseBuilder bookmarkDudes(List<Dude> bookmarkDudes) {
+            this.bookmarkDudes = bookmarkDudes;
             return this;
         }
 
@@ -138,8 +155,9 @@ public class Course {
             course.setId(id);
             course.setName(name);
             course.setDescription(description);
+            course.setImagePath(imagePath);
             course.setCreator(creator);
-            course.setDudes(dudes);
+            course.setBookmarkDudes(bookmarkDudes);
             return course;
         }
     }

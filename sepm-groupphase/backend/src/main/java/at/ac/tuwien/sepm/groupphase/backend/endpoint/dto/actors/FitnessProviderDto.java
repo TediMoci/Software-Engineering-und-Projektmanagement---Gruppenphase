@@ -43,6 +43,9 @@ public class FitnessProviderDto {
     @Size(max = 200, message = "Max length for website is 200")
     private String website = "No website given.";
 
+    @ApiModelProperty(name = "Path of profile-picture of Fitness Provider")
+    private String imagePath = "/assets/img/kugelfisch2.jpg";
+
     public Long getId() {
         return id;
     }
@@ -107,6 +110,14 @@ public class FitnessProviderDto {
         this.website = website;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public String toString() {
         return "FitnessProviderDto{" +
@@ -160,6 +171,7 @@ public class FitnessProviderDto {
         private String email;
         private String phoneNumber;
         private String website;
+        private String imagePath;
 
         public FitnessProviderDtoBuilder(){
 
@@ -199,6 +211,12 @@ public class FitnessProviderDto {
             this.website = website;
             return this;
         }
+
+        public FitnessProviderDtoBuilder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
         public FitnessProviderDto build() {
             FitnessProviderDto fitnessProviderDto = new FitnessProviderDto();
             fitnessProviderDto.setId(id);
@@ -209,6 +227,7 @@ public class FitnessProviderDto {
             fitnessProviderDto.setEmail(email);
             fitnessProviderDto.setPhoneNumber(phoneNumber);
             fitnessProviderDto.setWebsite(website);
+            fitnessProviderDto.setImagePath(imagePath);
 
             return fitnessProviderDto;
         }

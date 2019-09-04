@@ -1,14 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.unit.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.WorkoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Dude;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Exercise;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.WorkoutExercise;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.actors.IDudeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutExerciseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.IWorkoutRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.fitnessComponents.WorkoutBookmarkRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,7 +48,13 @@ public class WorkoutServiceTest {
     private IWorkoutExerciseRepository workoutExerciseRepository;
 
     @MockBean
+    private WorkoutBookmarkRepository workoutBookmarkRepository;
+
+    @MockBean
     private IExerciseRepository exerciseRepository;
+
+    @MockBean
+    private IDudeRepository dudeRepository;
 
     @Autowired
     private IWorkoutService workoutService;
@@ -236,6 +243,30 @@ public class WorkoutServiceTest {
         Mockito.when(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null)).thenReturn(validWorkouts2);
         assertEquals(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null), validWorkouts2);
         assertFalse(workoutRepository.findByFilterWithDifficulty("2",2,200.0,null).contains(validWorkout1));
+    }
+
+    @Test
+    public void whenBookmarkOneWorkout_thenSuccess() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<Workout> optionalWorkout = Optional.of(validWorkout1);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(workoutRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalWorkout);
+        Mockito.when(workoutBookmarkRepository.checkWorkoutBookmark(1L, 1L, 1)).thenReturn(0);
+        workoutService.saveWorkoutBookmark(1L, 1L, 1);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void whenBookmarkOneAlreadyBookmarkedWorkout_thenServiceException() throws ServiceException {
+        Dude dude = new Dude();
+        dude.setId(1L);
+        Optional<Dude> optionalDude = Optional.of(dude);
+        Optional<Workout> optionalWorkout = Optional.of(validWorkout1);
+        Mockito.when(dudeRepository.findById(1L)).thenReturn(optionalDude);
+        Mockito.when(workoutRepository.findByIdAndVersion(1L, 1)).thenReturn(optionalWorkout);
+        Mockito.when(workoutBookmarkRepository.checkWorkoutBookmark(1L, 1L, 1)).thenReturn(1);
+        workoutService.saveWorkoutBookmark(1L, 1L, 1);
     }
 
 }

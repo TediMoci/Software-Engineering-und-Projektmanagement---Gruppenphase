@@ -10,8 +10,8 @@ import {Dude} from '../../dtos/dude';
 })
 export class CourseDudeViewComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
-  imagePath2: string = 'assets/img/exercise.png';
+  imagePath: string;
+  imagePath2: string;
   userName: string;
   dude: Dude;
   fitnessProviderName: string;
@@ -25,10 +25,12 @@ export class CourseDudeViewComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.fitnessProvider = JSON.parse(localStorage.getItem('selectedFitnessProvider'));
     this.fitnessProviderName = this.fitnessProvider.name;
     this.course = JSON.parse(localStorage.getItem('selectedCourse'));
     this.courseName = this.course.name;
+    this.imagePath2 = this.course.imagePath;
     this.description = this.course.description;
   }
 

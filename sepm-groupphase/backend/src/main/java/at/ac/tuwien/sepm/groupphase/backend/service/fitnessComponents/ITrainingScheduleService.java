@@ -38,7 +38,7 @@ public interface ITrainingScheduleService {
      * @return the saved TrainingSchedule
      * @throws ServiceException if an error occurred while trying to save the TrainingSchedule in the system
      */
-    TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException;
+    TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule, boolean lowerDifficulty) throws ServiceException;
 
     /**
      * @param id of TrainingSchedule to be found
@@ -125,4 +125,20 @@ public interface ITrainingScheduleService {
      * @throws ServiceException
      */
     List<TrainingSchedule> findByFilter(String filter, Integer selfAssessment) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param trainingScheduleId of the TrainingSchedule that the Dude wants to bookmark
+     * @param trainingScheduleVersion of the TrainingSchedule that the Dude wants to bookmark
+     * @throws ServiceException if an error occurred while trying to bookmark the TrainingSchedule
+     */
+    void saveTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException;
+
+    /**
+     * @param dudeId of the Dude
+     * @param trainingScheduleId of the TrainingSchedule that the Dude wants to delete the bookmark for
+     * @param trainingScheduleVersion of the TrainingSchedule that the Dude wants to delete the bookmark for
+     * @throws ServiceException if an error occurred while trying to delete the bookmark for the TrainingSchedule
+     */
+    void deleteTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException;
 }

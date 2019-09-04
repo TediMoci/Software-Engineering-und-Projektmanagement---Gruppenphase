@@ -12,6 +12,8 @@ import {Workout} from '../../dtos/workout';
 import {WorkoutService} from '../../services/workout.service';
 import {FitnessProviderFilter} from '../../dtos/fitness-provider-filter';
 import {DudeFilter} from '../../dtos/dude-filter';
+import {BookmarksService} from '../../services/bookmarks.service';
+import {TrainingSchedule} from '../../dtos/trainingSchedule';
 
 @Component({
   selector: 'app-find',
@@ -29,6 +31,7 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMin: string = '';
   public filterWorkoutCaloriesMax: string = '';
   public filterDudeSelfAssessment: string = 'None';
+  public filterExerciseMuscle: string = 'None';
 
   // Transfer Variables
   public inputTextActual: any;
@@ -37,14 +40,19 @@ export class FindComponent implements OnInit {
   public filterWorkoutCaloriesMinActual: string = '';
   public filterWorkoutCaloriesMaxActual: string = '';
   public filterDudeSelfAssessmentActual: string = 'None';
+  public filterExerciseMuscleActual: string = 'None';
 
-  entries: any;
+  entries: Array<any>;
   exercisesForWorkouts: any;
 
   imagePath: string;
   userName: string;
+  isDude: boolean;
   error: any;
+  errorBookmark: any;
   dude: Dude;
+
+  bookmarkedName: string;
 
   // Filter Objects
   courceFilter: CourseFilter;
@@ -54,19 +62,27 @@ export class FindComponent implements OnInit {
   fitnessProviderFilter: FitnessProviderFilter;
   dudeFilter: DudeFilter;
 
+  // Router Objects
+  selectedFP: FitnessProvider;
+
   followedFP: String;
 
-  constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService) {}
+  // Enums
+  muscleGroup: string[] = ['Other', 'Chest', 'Back', 'Arms', 'Shoulders', 'Legs', 'Calves', 'Core'];
+
+  constructor(private findService: FindService, private authService: AuthService, private workoutService: WorkoutService, private bookmarksService: BookmarksService) {}
 
   ngOnInit() {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'DUDE') {
       this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
       this.userName = this.dude.name;
-      this.imagePath = '/assets/img/kugelfisch.jpg';
+      this.imagePath = this.dude.imagePath;
+      this.isDude = true;
     } if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'FITNESS_PROVIDER') {
       this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
       this.userName = this.fitnessProvider.name;
-      this.imagePath = '/assets/img/kugelfisch2.jpg';
+      this.imagePath = this.fitnessProvider.imagePath;
+      this.isDude = false;
     }
   }
 
@@ -88,9 +104,17 @@ export class FindComponent implements OnInit {
           this.filterExerciseCategoryActual = this.filterExerciseCategory;
         }
 
+        if (this.filterExerciseMuscle === 'None') {
+          this.filterExerciseMuscleActual = null;
+        } else {
+          this.filterExerciseMuscleActual = this.filterExerciseMuscle;
+        }
+
         this.exerciseFilter = new ExerciseFilter(
           this.inputTextActual,
-          this.filterExerciseCategoryActual);
+          this.filterExerciseCategoryActual,
+          this.filterExerciseMuscleActual
+        );
         console.log('name: ' + this.exerciseFilter.filter);
         this.findService.getAllExercisesFilterd(this.exerciseFilter).subscribe(
           (data) => {
@@ -272,7 +296,63 @@ export class FindComponent implements OnInit {
   }
   setSelectedWorkout(element: Workout) {
     localStorage.setItem('selectedWorkout', JSON.stringify(element));
-    console.log(localStorage.getItem('selectedWorkout'));
+  }
+  setSelectedTrainingSchedule(element: TrainingSchedule) {
+    localStorage.setItem('selectedTrainingSchedule', JSON.stringify(element));
+  }
+
+  bookmarkCourse(element: Course) {
+    this.bookmarkedName = element.name;
+    this.bookmarksService.bookmarkCourse(this.dude.id, element.id).subscribe(
+      (dataBookmark) => {},
+        errorBookmark => {
+        this.errorBookmark = errorBookmark;
+      }
+    );
+  }
+
+  bookmarkExercise(element: Exercise) {
+    this.bookmarkedName = element.name;
+    this.bookmarksService.bookmarkExercise(this.dude.id, element.id, element.version).subscribe(
+      (dataBookmark) => {},
+      errorBookmark => {
+        this.errorBookmark = errorBookmark;
+      }
+    );
+  }
+
+  bookmarkWorkout(element: Workout) {
+    this.bookmarkedName = element.name;
+    this.bookmarksService.bookmarkWorkout(this.dude.id, element.id, element.version).subscribe(
+      (dataBookmark) => {},
+      errorBookmark => {
+        this.errorBookmark = errorBookmark;
+      }
+    );
+  }
+
+  bookmarkTrainingSchedule(element: TrainingSchedule) {
+    this.bookmarkedName = element.name;
+    this.bookmarksService.bookmarkTrainingSchedule(this.dude.id, element.id, element.version).subscribe(
+      (dataBookmark) => {},
+      errorBookmark => {
+        this.errorBookmark = errorBookmark;
+      }
+    );
+  }
+
+  setSelectedFPofCourse(element: Course) {
+    this.findService.getOneFitnessProvider(element.creatorId).subscribe(
+      (data) => {
+        this.selectedFP = data;
+        console.log('Loaded FP: ' + this.selectedFP.name);
+        localStorage.setItem('selectedFitnessProvider', JSON.stringify(data));
+        console.log('FP in LS' + localStorage.getItem('selectedFitnessProvider'));
+      },
+      error => {
+        this.error = error;
+      }
+    );
   }
   resetResults() {
     this.entries = null;
@@ -285,6 +365,10 @@ export class FindComponent implements OnInit {
 
   vanishError() {
     this.error = false;
+  }
+
+  vanishErrorBookmark() {
+    this.errorBookmark = false;
   }
 
 }

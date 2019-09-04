@@ -20,8 +20,7 @@ import {EditWorkoutExercisesComponent} from '../edit-workout-exercises/edit-work
 export class EditWorkoutComponent implements OnInit {
 
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
-  imagePathExercise: string = 'assets/img/exercise.png';
+  imagePath: string;
   userName: string;
   editWorkoutForm: FormGroup;
   submitted: boolean = false;
@@ -45,6 +44,7 @@ export class EditWorkoutComponent implements OnInit {
 
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.prevRoute = JSON.parse(localStorage.getItem('previousRoute'));
     this.workout = JSON.parse(localStorage.getItem('selectedWorkout'));
 

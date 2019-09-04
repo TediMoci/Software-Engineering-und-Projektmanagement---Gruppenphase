@@ -8,15 +8,21 @@ import {FitnessProvider} from '../../dtos/fitness-provider';
 })
 export class CreateForFitnessProviderComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch2.jpg';
+  imagePath: string;
   userName: string;
   fitnessProvider: FitnessProvider;
+  error: any;
+
   constructor() { }
 
   ngOnInit() {
 
     this.fitnessProvider = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.fitnessProvider.name;
+    this.imagePath = this.fitnessProvider.imagePath;
+  }
+  vanishError() {
+    this.error = false;
   }
 
 }

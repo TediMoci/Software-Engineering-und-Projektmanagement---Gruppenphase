@@ -18,7 +18,7 @@ import {TrainingScheduleWorkoutDtoIn} from '../../dtos/trainingScheduleWorkoutDt
 })
 export class CreateTrainingScheduleManuallyComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   error: any;
@@ -64,12 +64,16 @@ export class CreateTrainingScheduleManuallyComponent implements OnInit {
     '7 Days'
   ];
 
-  constructor(private router: Router, private findService: FindService, private formBuilder: FormBuilder, private workoutService: WorkoutService, private createTrainingScheduleService: CreateTrainingScheduleService) {
+  constructor(private router: Router, private findService: FindService,
+              private formBuilder: FormBuilder,
+              private workoutService: WorkoutService,
+              private createTrainingScheduleService: CreateTrainingScheduleService) {
   }
 
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.generalTSData = true;
 
     this.tsForm = this.formBuilder.group({

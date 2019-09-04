@@ -2,12 +2,15 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.fitnessComponents;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.fitnessComponents.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrainingSchedule;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Workout;
 import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.ITrainingScheduleMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.mapper.message.fitnessComponents.IWorkoutMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ActiveTrainingSchedule;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.ExerciseDone;
 import at.ac.tuwien.sepm.groupphase.backend.entity.relationships.TrainingScheduleWorkout;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.ITrainingScheduleService;
+import at.ac.tuwien.sepm.groupphase.backend.service.fitnessComponents.IWorkoutService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -16,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,25 +31,32 @@ public class TrainingScheduleEndpoint {
     private final ITrainingScheduleService iTrainingScheduleService;
     private final ITrainingScheduleMapper trainingScheduleMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainingScheduleEndpoint.class);
+    private final IWorkoutService iWorkoutService;
+    private final IWorkoutMapper workoutMapper;
 
-    public TrainingScheduleEndpoint(ITrainingScheduleService iTrainingScheduleService, ITrainingScheduleMapper trainingScheduleMapper) {
+    public TrainingScheduleEndpoint(ITrainingScheduleService iTrainingScheduleService, ITrainingScheduleMapper trainingScheduleMapper, IWorkoutService iWorkoutService, IWorkoutMapper workoutMapper) {
         this.iTrainingScheduleService = iTrainingScheduleService;
         this.trainingScheduleMapper = trainingScheduleMapper;
+        this.iWorkoutService = iWorkoutService;
+        this.workoutMapper = workoutMapper;
     }
 
-    @RequestMapping(value = "/{days}/{duration}/{minTarget}/{maxTarget}", method = RequestMethod.POST)
+    @RequestMapping(value = "/random", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Save a new random Training Schedule", authorizations = {@Authorization(value = "apiKey")})
-    public TrainingScheduleDto saveRandom(
-        @PathVariable("days") int days, @PathVariable("duration") int duration,
-        @PathVariable("minTarget") double minTarget, @PathVariable("maxTarget") double maxTarget,
-        @Valid @RequestBody TrainingScheduleDto trainingScheduleDto) {
-        LOGGER.info("Entering save for: " + trainingScheduleDto);
-        TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleDtoToTrainingSchedule(trainingScheduleDto);
+    public TrainingScheduleDto saveRandom(@Valid @RequestBody TrainingScheduleRandomDto trainingScheduleRandomDto) {
+        LOGGER.info("Entering save for: " + trainingScheduleRandomDto);
+        TrainingSchedule trainingSchedule = trainingScheduleMapper.trainingScheduleRandomDtoToTrainingSchedule(trainingScheduleRandomDto);
         try {
-            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(days, duration, minTarget, maxTarget, trainingSchedule));
+            return trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(iTrainingScheduleService.saveRandom(
+                trainingScheduleRandomDto.getIntervalLength(),
+                trainingScheduleRandomDto.getDuration(),
+                trainingScheduleRandomDto.getMinTarget(),
+                trainingScheduleRandomDto.getMaxTarget(),
+                trainingSchedule,
+                trainingScheduleRandomDto.isLowerDifficulty()));
         } catch (ServiceException e) {
-            LOGGER.error("Could not save: " + trainingScheduleDto);
+            LOGGER.error("Could not save: " + trainingScheduleRandomDto);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -171,7 +180,7 @@ public class TrainingScheduleEndpoint {
     @RequestMapping(value = "/{id}/{version}/workouts", method = RequestMethod.GET)
     @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
     public TrainingScheduleWorkoutDtoOut[] getAllWorkoutsByTrainingScheduleIdAndVersion(@PathVariable Long id, @PathVariable Integer version) {
-        LOGGER.info("Entering getAllExercisesByWorkoutIdAndVersion with id: " + id + "; and version: " + version);
+        LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersion with id: " + id + "; and version: " + version);
         List<TrainingScheduleWorkout> trainingScheduleWorkouts;
         try {
             trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
@@ -221,5 +230,50 @@ public class TrainingScheduleEndpoint {
             trainingScheduleDtos[i] = trainingScheduleMapper.trainingScheduleToTrainingScheduleDto(trainingSchedules.get(i));
         }
         return trainingScheduleDtos;
+    }
+
+    @RequestMapping(value = "/{id}/{version}/workouts/{day}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get workouts that are part of this trainings schedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public List<WorkoutDto> getAllWorkoutsByTrainingScheduleIdAndVersionAndDay(@PathVariable Long id, @PathVariable Integer version, @PathVariable Integer day) {
+        LOGGER.info("Entering getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version);
+        List<TrainingScheduleWorkout> trainingScheduleWorkouts;
+        try {
+            trainingScheduleWorkouts = iTrainingScheduleService.findById(id).getWorkouts();
+            List<WorkoutDto> workoutDtos = new ArrayList<>();
+            for (int i = 0; i < trainingScheduleWorkouts.size(); i++) {
+                if (trainingScheduleWorkouts.get(i).getDay().equals(day)){
+                    Workout w = iWorkoutService.findByIdAndVersion(trainingScheduleWorkouts.get(i).getWorkoutId(), trainingScheduleWorkouts.get(i).getWorkoutVersion());
+                    workoutDtos.add(workoutMapper.workoutToWorkoutDto(w));
+                }
+            }
+            return workoutDtos;
+        } catch (ServiceException e) {
+            LOGGER.error("Could not getAllWorkoutsByTrainingScheduleIdAndVersionAndDay with id: " + id + "; and version: " + version);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{trainingScheduleId}/{trainingScheduleVersion}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Dude with given id bookmarks TrainingSchedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void saveTrainingScheduleBookmark(@PathVariable Long dudeId, @PathVariable Long trainingScheduleId, @PathVariable Integer trainingScheduleVersion) {
+        LOGGER.info("Entering saveTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            iTrainingScheduleService.saveTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{trainingScheduleId}/{trainingScheduleVersion}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with given id deletes bookmark for TrainingSchedule with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteTrainingScheduleBookmark(@PathVariable Long dudeId, @PathVariable Long trainingScheduleId, @PathVariable Integer trainingScheduleVersion) {
+        LOGGER.info("Entering deleteTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            iTrainingScheduleService.deleteTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 }

@@ -10,7 +10,7 @@ import {Statistics} from '../../dtos/statistics';
 })
 export class HistoryComponent implements OnInit {
 
-  imagePath: string = '/assets/img/kugelfisch.jpg';
+  imagePath: string;
   userName: string;
   dude: Dude;
   stats: Statistics[];
@@ -47,6 +47,7 @@ export class HistoryComponent implements OnInit {
 
   vanishError() {
     this.error = false;
+    this.imagePath = this.dude.imagePath;
   }
 
 }

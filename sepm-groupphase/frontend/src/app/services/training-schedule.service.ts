@@ -6,8 +6,7 @@ import {TrainingScheduleWo} from '../dtos/training-schedule-wo';
 import {TrainingSchedule} from '../dtos/trainingSchedule';
 import {ActiveTrainingSchedule} from '../dtos/active-training-schedule';
 import {GetActiveTrainingSchedule} from '../dtos/get-active-training-schedule';
-import {WorkoutExercise} from '../dtos/workoutExercise';
-import {TrainingScheduleWorkout} from '../dtos/trainingScheduleWorkout';
+import {Workout} from '../dtos/workout';
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +37,10 @@ export class TrainingScheduleService {
   saveActiveSchedule(activeTs: ActiveTrainingSchedule): Observable<GetActiveTrainingSchedule> {
     console.log('save active training schedule: ' + JSON.stringify(activeTs));
     return this.httpClient.post<GetActiveTrainingSchedule>(this.BaseUri + '/active', activeTs);
+  }
+
+  getAllWorkoutsByDay(trainingScheduleId: number, trainingScheduleVersion: number, day: number): Observable<Workout[]> {
+    console.log('get all workouts belonging to the training schedule with id ' + trainingScheduleId + ' on day ' + day);
+    return this.httpClient.get<Workout[]>(this.BaseUri + '/' + trainingScheduleId + '/' + trainingScheduleVersion + '/workouts/' + day);
   }
 }

@@ -17,4 +17,9 @@ export class FitnessProviderCoursesService {
     console.log('get all courses created by fitness provider with name ' + fitnessProvider.name + ' and id ' + fitnessProvider.id);
     return this.httpClient.get<Course[]>(this.fitnessProviderBaseUri + '/' + fitnessProvider.id + '/courses');
   }
+
+  getFitnessProviderById(id: number): Observable<FitnessProvider> {
+    console.log('get fitnessProvider with id ' + id);
+    return this.httpClient.get<FitnessProvider>(this.fitnessProviderBaseUri + '/' + id);
+  }
 }

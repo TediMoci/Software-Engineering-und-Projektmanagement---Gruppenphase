@@ -194,4 +194,19 @@ public class DudeService implements IDudeService {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @Override
+    public String updateImagePath(Long id, String fileName) throws ServiceException {
+        LOGGER.info("Entering updateImagePath with id: " + id + "; fileName: " + fileName);
+        Dude dude;
+        try {
+            dude = iDudeRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        String imagePath = "/assets/img/" + fileName;
+        dude.setImagePath(imagePath);
+        iDudeRepository.save(dude);
+        return imagePath;
+    }
 }

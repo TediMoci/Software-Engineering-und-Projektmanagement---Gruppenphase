@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-
+import javax.persistence.PersistenceException;
 import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,6 +40,7 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     private final ITrainingScheduleRepository iTrainingScheduleRepository;
     private final ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository;
+    private final TrainingScheduleBookmarkRepository trainingScheduleBookmarkRepository;
     private final IWorkoutRepository iWorkoutRepository;
     private final IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository;
     private final IExerciseDoneRepository iExerciseDoneRepository;
@@ -90,10 +91,11 @@ public class TrainingScheduleService implements ITrainingScheduleService {
 
     // ----------------------------------------- end of variables for training schedule adaption -----------------------------------------
 
-    public TrainingScheduleService(IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
+    public TrainingScheduleService(IWorkoutService workoutService, IExerciseRepository iExerciseRepository, IFinishedTrainingScheduleRepository iFinishedTrainingScheduleRepository, ITrainingScheduleBookmarkRepository iTrainingScheduleBookmarkRepository, IWorkoutBookmarkRepository iWorkoutBookmarkRepository, IWorkoutExerciseRepository iWorkoutExerciseRepository, IDudeRepository iDudeRepository, ITrainingScheduleRepository iTrainingScheduleRepository, ITrainingScheduleWorkoutRepository iTrainingScheduleWorkoutRepository, IWorkoutRepository iWorkoutRepository, IActiveTrainingScheduleRepository iActiveTrainingScheduleRepository, IExerciseDoneRepository iExerciseDoneRepository, TrainingScheduleValidator trainingScheduleValidator, TrainingScheduleWorkoutValidator trainingScheduleWorkoutValidator) {
         this.workoutService = workoutService;
         this.iTrainingScheduleRepository = iTrainingScheduleRepository;
         this.iTrainingScheduleWorkoutRepository = iTrainingScheduleWorkoutRepository;
+        this.trainingScheduleBookmarkRepository = trainingScheduleBookmarkRepository;
         this.iWorkoutExerciseRepository = iWorkoutExerciseRepository;
         this.iWorkoutRepository = iWorkoutRepository;
         this.iExerciseRepository = iExerciseRepository;
@@ -214,12 +216,19 @@ public class TrainingScheduleService implements ITrainingScheduleService {
     }
 
     @Override
-    public TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule) throws ServiceException {
+    public TrainingSchedule saveRandom(int days, int duration, double minTarget, double maxTarget, TrainingSchedule trainingSchedule, boolean lowerDifficulty) throws ServiceException {
         LOGGER.info("Entering save for: " + trainingSchedule);
         trainingSchedule.setWorkouts(null);
+        List<Workout> workouts = new ArrayList<>();
 
-        List<Workout> workouts = iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty());
-        sum_up(workouts, minTarget, maxTarget, days, duration);
+        if (lowerDifficulty){
+            workouts.addAll(iWorkoutRepository.findByLowerDifficulty(trainingSchedule.getDifficulty(),maxTarget));
+        }
+        else{
+            workouts.addAll(iWorkoutRepository.findByDifficulty(trainingSchedule.getDifficulty(),maxTarget));
+        }
+
+        sum_up(workouts,minTarget,maxTarget,days,duration);
 
         TrainingSchedule savedTrainingSchedule;
         try {
@@ -371,13 +380,13 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             TrainingSchedule oldTraining = iTrainingScheduleRepository.findById(id);
             if (oldTraining == null) throw new ServiceException("Could not find training schedule with id: " + id);
             newTraining.setId(id);
-            newTraining.setVersion(1 + oldTraining.getVersion());
-            iTrainingScheduleRepository.delete(id);
+            newTraining.setVersion(1+oldTraining.getVersion());
 
             List<TrainingScheduleWorkout> trainingWorkouts = newTraining.getWorkouts();
             newTraining.setWorkouts(null);
             validateTrainingScheduleWorkouts(trainingWorkouts);
 
+            iTrainingScheduleRepository.delete(id);
             Long dbId = iTrainingScheduleRepository.save(newTraining).getId();
             iTrainingScheduleRepository.updateNew(newTraining.getId(), dbId);
             saveTrainingScheduleWorkouts(trainingWorkouts, newTraining);
@@ -481,6 +490,42 @@ public class TrainingScheduleService implements ITrainingScheduleService {
             allDuration = allDuration + w.getExDuration();
         }
         return allDuration;
+    }
+
+    @Override
+    public void saveTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException {
+        LOGGER.info("Entering saveTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            if (iDudeRepository.findById(dudeId).isEmpty()) {
+                throw new NoSuchElementException("Could not find Dude with id: " + dudeId);
+            } else if (iTrainingScheduleRepository.findByIdAndVersion(trainingScheduleId, trainingScheduleVersion).isEmpty()) {
+                throw new NoSuchElementException("Could not find TrainingSchedule with id: " + trainingScheduleId);
+            }
+        } catch (NoSuchElementException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            if (trainingScheduleBookmarkRepository.checkTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion) != 0) {
+                throw new ServiceException("You already have this training schedule bookmarked!");
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        try {
+            trainingScheduleBookmarkRepository.saveTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteTrainingScheduleBookmark(Long dudeId, Long trainingScheduleId, Integer trainingScheduleVersion) throws ServiceException {
+        LOGGER.info("Entering deleteTrainingScheduleBookmark with dudeId: " + dudeId + "; trainingScheduleId: " + trainingScheduleId + "; trainingScheduleVersion: " + trainingScheduleVersion);
+        try {
+            trainingScheduleBookmarkRepository.deleteTrainingScheduleBookmark(dudeId, trainingScheduleId, trainingScheduleVersion);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        }
     }
 
     // ----------------------------------------- start of methods for adapting training schedule automatically -----------------------------------------

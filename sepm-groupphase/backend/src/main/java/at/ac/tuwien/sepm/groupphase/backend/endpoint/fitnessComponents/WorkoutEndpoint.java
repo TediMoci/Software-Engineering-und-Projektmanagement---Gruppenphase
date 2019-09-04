@@ -157,4 +157,28 @@ public class WorkoutEndpoint {
         return workoutExerciseDtoOuts;
     }
 
+    @RequestMapping(value = "/bookmark/{dudeId}/{workoutId}/{workoutVersion}", method = RequestMethod.PUT)
+    @ApiOperation(value = "Dude with given id bookmarks Workout with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void saveWorkoutBookmark(@PathVariable Long dudeId, @PathVariable Long workoutId, @PathVariable Integer workoutVersion) {
+        LOGGER.info("Entering saveWorkoutBookmark with dudeId: " + dudeId + "; workoutId: " + workoutId + "; workoutVersion: " + workoutVersion);
+        try {
+            iWorkoutService.saveWorkoutBookmark(dudeId, workoutId, workoutVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not saveWorkoutBookmark with dudeId: " + dudeId + "; workoutId: " + workoutId + "; workoutVersion: " + workoutVersion);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(value = "/bookmark/{dudeId}/{workoutId}/{workoutVersion}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Dude with given id deletes bookmark for Workout with given id and version", authorizations = {@Authorization(value = "apiKey")})
+    public void deleteWorkoutBookmark(@PathVariable Long dudeId, @PathVariable Long workoutId, @PathVariable Integer workoutVersion) {
+        LOGGER.info("Entering deleteWorkoutBookmark with dudeId: " + dudeId + "; workoutId: " + workoutId + "; workoutVersion: " + workoutVersion);
+        try {
+            iWorkoutService.deleteWorkoutBookmark(dudeId, workoutId, workoutVersion);
+        } catch (ServiceException e) {
+            LOGGER.error("Could not deleteWorkoutBookmark with dudeId: " + dudeId + "; workoutId: " + workoutId + "; workoutVersion: " + workoutVersion);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
 }

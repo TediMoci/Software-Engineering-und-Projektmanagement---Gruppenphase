@@ -21,6 +21,7 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.rating(exerciseDto.getRating());
         builder.category(exerciseDto.getCategory());
         builder.isHistory(false);
+        builder.imagePath(exerciseDto.getImagePath());
         builder.version(exerciseDto.getVersion());
 
         Dude.DudeBuilder dudeBuilder = new Dude.DudeBuilder();
@@ -42,6 +43,7 @@ public class ExerciseMapper implements IExerciseMapper {
         builder.muscleGroup(exercise.getMuscleGroup());
         builder.rating(exercise.getRating());
         builder.category(exercise.getCategory());
+        builder.imagePath(exercise.getImagePath());
         builder.version(exercise.getVersion());
         builder.creatorId(exercise.getCreator().getId());
 

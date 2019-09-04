@@ -3,6 +3,7 @@ export class Course {
     public id: number,
     public name: string,
     public description: string,
-    public creatorId: number
+    public creatorId: number,
+    public imagePath: string
   ) {}
 }

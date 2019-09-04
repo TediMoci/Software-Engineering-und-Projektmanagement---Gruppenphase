@@ -15,8 +15,7 @@ import {WorkoutExerciseDtoIn} from '../../dtos/workoutExerciseDtoIn';
 export class CreateWorkoutComponent implements OnInit {
 
   error: any;
-  imagePath: string = 'assets/img/kugelfisch.jpg';
-  imagePathExercise: string = 'assets/img/exercise.png';
+  imagePath: string;
   userName: string;
   registerForm: FormGroup;
   submitted: boolean = false;
@@ -35,6 +34,7 @@ export class CreateWorkoutComponent implements OnInit {
   ngOnInit() {
     this.dude = JSON.parse(localStorage.getItem('loggedInDude'));
     this.userName = this.dude.name;
+    this.imagePath = this.dude.imagePath;
     this.prevRoute = JSON.parse(localStorage.getItem('previousRoute'));
     console.log(this.prevRoute);
 
