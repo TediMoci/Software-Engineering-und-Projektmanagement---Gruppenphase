@@ -7,7 +7,7 @@
     <groupId>at.ac.tuwien.sepm.groupphase</groupId>
     <artifactId>backend</artifactId>
     <version>4.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>jar</packaging> <packaging>jar</packaging>
 
     <properties>
         <!-- project settings -->

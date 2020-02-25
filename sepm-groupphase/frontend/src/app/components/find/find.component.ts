@@ -83,13 +83,7 @@ export class FindComponent implements OnInit {
   d5: Array<any>;
   d6: Array<any>;
   d7: Array<any>;
-  exercisesForWorkouts1: any;
-  exercisesForWorkouts2: any;
-  exercisesForWorkouts3: any;
-  exercisesForWorkouts4: any;
-  exercisesForWorkouts5: any;
-  exercisesForWorkouts6: any;
-  exercisesForWorkouts7: any;
+
   empty: any;
 
   // Router Objects
